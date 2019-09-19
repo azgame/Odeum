@@ -57,13 +57,19 @@ void App::Initialize(CoreApplicationView^ applicationView)
 // Called when the CoreWindow object is created (or re-created).
 void App::SetWindow(CoreWindow^ window)
 {
-	window->SizeChanged += 
+	window->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
+
+	PointerVisualizationSettings^ visualizationSettings = PointerVisualizationSettings::GetForCurrentView();
+	visualizationSettings->IsContactFeedbackEnabled = false;
+	visualizationSettings->IsBarrelButtonFeedbackEnabled = false;
+	
+	window->SizeChanged +=
 		ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &App::OnWindowSizeChanged);
 
 	window->VisibilityChanged +=
 		ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &App::OnVisibilityChanged);
 
-	window->Closed += 
+	window->Closed +=
 		ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &App::OnWindowClosed);
 
 	DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
