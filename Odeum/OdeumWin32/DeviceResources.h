@@ -19,6 +19,14 @@ public:
 
 	bool Render();
 
+	ID3D12Device* GetD3Device() const					{ return m_device; }
+	ID3D12GraphicsCommandList* GetCommandList() const	{ return m_commandList; }
+	ID3D12CommandAllocator* GetCommandAllocator() const	{ return m_commandAllocator; }
+	ID3D12Resource* GetBackBuffer(int i) const			{ return m_backBufferRenderTarget[i]; }
+	ID3D12DescriptorHeap* GetRTVHeap() const			{ return m_renderTargetViewHeap; }
+	ID3D12CommandQueue* GetCommandQ() const				{ return m_commandQueue; }
+	IDXGISwapChain3* GetSwapChain() const				{ return m_swapChain; }
+
 private:
 	bool								m_vsync_enabled;
 	ID3D12Device*						m_device;

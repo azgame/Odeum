@@ -3,6 +3,7 @@
 
 #include "pch.h"
 #include "DeviceResources.h"
+#include "Model.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -23,7 +24,12 @@ public:
 private:
 	bool Render();
 
-	DeviceResources* m_deviceResources;
+	ID3D12Device*								m_device;
+	DeviceResources*							m_deviceResources;
+	ID3D12GraphicsCommandList*					m_commandList;
+	ID3D12RootSignature*						m_rootSignature;
+	ID3D12PipelineState*						m_pipelineState;
+	Model*										m_triangle;
 };
 
 #endif // !_RENDERER_H_

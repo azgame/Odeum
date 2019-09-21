@@ -50,7 +50,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12
+	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	// Create the Direct3D 12 device.
 	result = D3D12CreateDevice(NULL, featureLevel, __uuidof(ID3D12Device), (void**)&m_device);
@@ -282,8 +282,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Create a render target view for the second back buffer.
 	m_device->CreateRenderTargetView(m_backBufferRenderTarget[1], NULL, renderTargetViewHandle);
 
-	// Finally get the initial index to which buffer is the current back buffer.
-	m_bufferIndex = m_swapChain->GetCurrentBackBufferIndex();
 
 	// Create a command allocator.
 	result = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_commandAllocator);
@@ -322,6 +320,8 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Initialize the starting fence value. 
 	m_fenceValue = 1;
+
+	// MessageBox(hwnd, L"Dx12 Initialization complete", L"Success!", MB_OK);
 
 	return true;
 }
@@ -414,73 +414,8 @@ void DeviceResources::Uninitialize()
 
 bool DeviceResources::Render()
 {
-	HRESULT								result;
-	D3D12_RESOURCE_BARRIER				barrier;
-	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
-	unsigned int						renderTargetViewDescriptorSize;
-	float								color[4];
-	ID3D12CommandList*					ppCommandLists[1];
+	HRESULT result;
 	unsigned long long					fenceToWaitFor;
-
-	// Reset (re-use) the memory associated command allocator.
-	result = m_commandAllocator->Reset();
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Reset the command list, use empty pipeline state for now since there are no shaders and we are just clearing the screen.
-	result = m_commandList->Reset(m_commandAllocator, m_pipelineState);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Record commands in the command list now.
-	// Start by setting the resource barrier.
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = m_backBufferRenderTarget[m_bufferIndex];
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	m_commandList->ResourceBarrier(1, &barrier);
-
-	// Get the render target view handle for the current back buffer.
-	renderTargetViewHandle = m_renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart();
-	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	if (m_bufferIndex == 1)
-	{
-		renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
-	}
-
-	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(1, &renderTargetViewHandle, FALSE, NULL);
-
-	// Then set the color to clear the window to.
-	color[0] = 0.5;
-	color[1] = 0.5;
-	color[2] = 0.5;
-	color[3] = 1.0;
-	m_commandList->ClearRenderTargetView(renderTargetViewHandle, color, 0, NULL);
-
-	// Indicate that the back buffer will now be used to present.
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	m_commandList->ResourceBarrier(1, &barrier);
-
-	// Close the list of commands.
-	result = m_commandList->Close();
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Load the command list array (only one command list for now).
-	ppCommandLists[0] = m_commandList;
-
-	// Execute the list of commands.
-	m_commandQueue->ExecuteCommandLists(1, ppCommandLists);
 
 	// Finally present the back buffer to the screen since rendering is complete.
 	if (m_vsync_enabled)
@@ -522,8 +457,7 @@ bool DeviceResources::Render()
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
-	// Alternate the back buffer index back and forth between 0 and 1 each frame.
-	m_bufferIndex == 0 ? m_bufferIndex = 1 : m_bufferIndex = 0;
+	
 
 	return true;
 }
