@@ -23,7 +23,7 @@ public:
 private:
 	bool Render();
 
-	DeviceResources*			m_deviceResources;
+	DeviceResources* m_deviceResources;
 };
 
 #endif // !_RENDERER_H_

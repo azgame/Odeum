@@ -28,21 +28,21 @@ DeviceResources::~DeviceResources()
 
 bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, bool vsync, bool fullscreen)
 {
-	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT result;
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc;
-	IDXGIFactory4* factory;
-	IDXGIAdapter* adapter;
-	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator, renderTargetViewDescriptorSize;
-	unsigned long long stringLength;
-	DXGI_MODE_DESC* displayModeList;
-	DXGI_ADAPTER_DESC adapterDesc;
-	int error;
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	IDXGISwapChain* swapChain;
-	D3D12_DESCRIPTOR_HEAP_DESC renderTargetViewHeapDesc;
-	D3D12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle;
+	D3D_FEATURE_LEVEL					featureLevel;
+	HRESULT								result;
+	D3D12_COMMAND_QUEUE_DESC			commandQueueDesc;
+	IDXGIFactory4*						factory;
+	IDXGIAdapter*						adapter;
+	IDXGIOutput*						adapterOutput;
+	unsigned int						numModes, i, numerator, denominator, renderTargetViewDescriptorSize;
+	unsigned long long					stringLength;
+	DXGI_MODE_DESC*						displayModeList;
+	DXGI_ADAPTER_DESC					adapterDesc;
+	int									error;
+	DXGI_SWAP_CHAIN_DESC				swapChainDesc;
+	IDXGISwapChain*						swapChain;
+	D3D12_DESCRIPTOR_HEAP_DESC			renderTargetViewHeapDesc;
+	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
 
 
 	// Store the vsync setting.
@@ -50,7 +50,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_12_1;
+	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12
 
 	// Create the Direct3D 12 device.
 	result = D3D12CreateDevice(NULL, featureLevel, __uuidof(ID3D12Device), (void**)&m_device);
@@ -140,7 +140,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	}
 
 	// Store the dedicated video card memory in megabytes.
-	m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	unsigned int m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// Convert the name of the video card to a character array and store it.
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
@@ -414,13 +414,13 @@ void DeviceResources::Uninitialize()
 
 bool DeviceResources::Render()
 {
-	HRESULT result;
-	D3D12_RESOURCE_BARRIER barrier;
-	D3D12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle;
-	unsigned int renderTargetViewDescriptorSize;
-	float color[4];
-	ID3D12CommandList* ppCommandLists[1];
-	unsigned long long fenceToWaitFor;
+	HRESULT								result;
+	D3D12_RESOURCE_BARRIER				barrier;
+	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
+	unsigned int						renderTargetViewDescriptorSize;
+	float								color[4];
+	ID3D12CommandList*					ppCommandLists[1];
+	unsigned long long					fenceToWaitFor;
 
 	// Reset (re-use) the memory associated command allocator.
 	result = m_commandAllocator->Reset();
