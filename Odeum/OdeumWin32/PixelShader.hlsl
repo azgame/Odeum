@@ -7,5 +7,5 @@ struct PS_INPUT
 // Pixel Shader
 float4 main(PS_INPUT In) : SV_TARGET
 {
-	return float4(In.color);
+	return float4(1.0, 0.0, 0.0, 1.0);
 }

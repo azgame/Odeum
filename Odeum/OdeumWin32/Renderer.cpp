@@ -98,7 +98,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 1;
+	psoDesc.NumRenderTargets = 2;
 	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.SampleDesc.Count = 1;
 	
@@ -123,8 +123,6 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	if (signature) signature->Release();
 	if (error) error->Release();
-	if (vertexShader) vertexShader->Release();
-	if (pixelShader) pixelShader->Release();
 
 	return true;
 }
@@ -202,7 +200,7 @@ bool Renderer::Render()
 	m_commandList->ClearRenderTargetView(renderTargetViewHandle, color, 0, NULL);
 
 	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(1, &renderTargetViewHandle, FALSE, NULL);
+	m_commandList->OMSetRenderTargets(m_bufferIndex, &renderTargetViewHandle, FALSE, NULL);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
