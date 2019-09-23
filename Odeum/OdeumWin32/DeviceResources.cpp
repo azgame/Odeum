@@ -15,6 +15,8 @@ DeviceResources::DeviceResources()
 	m_pipelineState = 0;
 	m_fence = 0;
 	m_fenceEvent = 0;
+	m_currentFrame = 0;
+	m_deviceRemoved = false;
 }
 
 DeviceResources::DeviceResources(const DeviceResources &)
@@ -31,8 +33,8 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	D3D_FEATURE_LEVEL					featureLevel;
 	HRESULT								result;
 	D3D12_COMMAND_QUEUE_DESC			commandQueueDesc;
-	IDXGIFactory4*						factory;
-	IDXGIAdapter*						adapter;
+	IDXGIFactory1*						factory;
+	IDXGIAdapter1*						adapter;
 	IDXGIOutput*						adapterOutput;
 	unsigned int						numModes, i, numerator, denominator, renderTargetViewDescriptorSize;
 	unsigned long long					stringLength;
@@ -44,6 +46,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	D3D12_DESCRIPTOR_HEAP_DESC			renderTargetViewHeapDesc;
 	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
 
+	
 
 	// Store the vsync setting.
 	m_vsync_enabled = vsync;
@@ -52,8 +55,24 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
 	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
 
+	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
+	for (UINT adapterIndex = 0; DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(adapterIndex, &adapter); adapterIndex++) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+
+		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
+		{
+			continue;
+		}
+
+		if (SUCCEEDED(D3D12CreateDevice(adapter, featureLevel, _uuidof(ID3D12Device), nullptr)))
+		{
+			break;
+		}
+	}
+
 	// Create the Direct3D 12 device.
-	result = D3D12CreateDevice(NULL, featureLevel, __uuidof(ID3D12Device), (void**)&m_device);
+	result = D3D12CreateDevice(adapter, featureLevel, IID_PPV_ARGS(&m_device));
 	if (FAILED(result))
 	{
 		MessageBox(hwnd, L"Could not create a DirectX 12.1 device.  The default video card does not support DirectX 12.1.", L"DirectX Device Failure", MB_OK);
@@ -78,13 +97,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Create a DirectX graphics interface factory.
 	result = CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)&factory);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Use the factory to create an adapter for the primary graphics interface (video card).
-	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))
 	{
 		return false;
@@ -242,7 +254,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	ZeroMemory(&renderTargetViewHeapDesc, sizeof(renderTargetViewHeapDesc));
 
 	// Set the number of descriptors to two for our two back buffers.  Also set the heap tyupe to render target views.
-	renderTargetViewHeapDesc.NumDescriptors = 2;
+	renderTargetViewHeapDesc.NumDescriptors = c_frameCount;
 	renderTargetViewHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	renderTargetViewHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
@@ -290,26 +302,13 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		return false;
 	}
 
-	// Create a basic command list.
-	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator, NULL, __uuidof(ID3D12GraphicsCommandList), (void**)&m_commandList);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Initially we need to close the command list during initialization as it is created in a recording state.
-	result = m_commandList->Close();
-	if (FAILED(result))
-	{
-		return false;
-	}
-
 	// Create a fence for GPU synchronization.
-	result = m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
+	result = m_device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
 	if (FAILED(result))
 	{
 		return false;
 	}
+	m_fenceValues[m_currentFrame]++;
 
 	// Create an event object for the fence.
 	m_fenceEvent = CreateEventEx(NULL, FALSE, FALSE, EVENT_ALL_ACCESS);
@@ -319,7 +318,11 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	}
 
 	// Initialize the starting fence value. 
-	m_fenceValue = 1;
+	m_fenceValues[m_currentFrame]++;
+
+	for (UINT n = 0; n < c_frameCount; n++) {
+		m_fenceValues[n] = m_fenceValues[m_currentFrame];
+	}
 
 	// MessageBox(hwnd, L"Dx12 Initialization complete", L"Success!", MB_OK);
 
@@ -355,13 +358,6 @@ void DeviceResources::Uninitialize()
 	{
 		m_pipelineState->Release();
 		m_pipelineState = 0;
-	}
-
-	// Release the command list.
-	if (m_commandList)
-	{
-		m_commandList->Release();
-		m_commandList = 0;
 	}
 
 	// Release the command allocator.
@@ -415,41 +411,43 @@ void DeviceResources::Uninitialize()
 bool DeviceResources::Render()
 {
 	HRESULT result;
-	unsigned long long					fenceToWaitFor;
+	const UINT64 currentFenceValue = m_fenceValues[m_currentFrame];
 
 	// Finally present the back buffer to the screen since rendering is complete.
 	if (m_vsync_enabled)
 	{
 		// Lock to screen refresh rate.
 		result = m_swapChain->Present(1, 0);
-		if (FAILED(result))
+		if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
 		{
-			return false;
+			m_deviceRemoved = true;
 		}
 	}
 	else
 	{
 		// Present as fast as possible.
 		result = m_swapChain->Present(0, 0);
-		if (FAILED(result))
+		if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
 		{
-			return false;
+			m_deviceRemoved = true;
+			
 		}
 	}
 
+	// Wait for Previous Frame() ----------------
 	// Signal and increment the fence value.
-	fenceToWaitFor = m_fenceValue;
-	result = m_commandQueue->Signal(m_fence, fenceToWaitFor);
+	result = m_commandQueue->Signal(m_fence, m_fenceValues[m_currentFrame]);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	m_fenceValue++;
+
+	m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
 
 	// Wait until the GPU is done rendering.
-	if (m_fence->GetCompletedValue() < fenceToWaitFor)
+	if (m_fence->GetCompletedValue() < m_fenceValues[m_currentFrame])
 	{
-		result = m_fence->SetEventOnCompletion(fenceToWaitFor, m_fenceEvent);
+		result = m_fence->SetEventOnCompletion(m_fenceValues[m_currentFrame], m_fenceEvent);
 		if (FAILED(result))
 		{
 			return false;
@@ -457,7 +455,7 @@ bool DeviceResources::Render()
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
-	
+	m_fenceValues[m_currentFrame] = currentFenceValue + 1;
 
 	return true;
 }

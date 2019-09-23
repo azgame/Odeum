@@ -70,10 +70,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Color.ps">
+    <None Include="PixelShader.hlsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Color.vs">
+    <None Include="VertexShader.hlsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

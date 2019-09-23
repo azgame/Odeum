@@ -7,6 +7,8 @@
 
 #include "pch.h"
 
+static const UINT c_frameCount = 2;		// Use triple buffering.
+
 class DeviceResources
 {
 public:
@@ -18,6 +20,7 @@ public:
 	void Uninitialize();
 
 	bool Render();
+	void MoveToNextFrame();
 
 	ID3D12Device* GetD3Device() const					{ return m_device; }
 	ID3D12GraphicsCommandList* GetCommandList() const	{ return m_commandList; }
@@ -27,6 +30,7 @@ public:
 	ID3D12CommandQueue* GetCommandQ() const				{ return m_commandQueue; }
 	IDXGISwapChain3* GetSwapChain() const				{ return m_swapChain; }
 
+
 private:
 	bool								m_vsync_enabled;
 	ID3D12Device*						m_device;
@@ -34,14 +38,16 @@ private:
 	char								m_videoCardDescription[128];
 	IDXGISwapChain3*					m_swapChain;
 	ID3D12DescriptorHeap*				m_renderTargetViewHeap;
-	ID3D12Resource*						m_backBufferRenderTarget[2];
+	ID3D12Resource*						m_backBufferRenderTarget[c_frameCount];
 	unsigned int						m_bufferIndex;
 	ID3D12CommandAllocator*				m_commandAllocator;
 	ID3D12GraphicsCommandList*			m_commandList;
 	ID3D12PipelineState*				m_pipelineState;
 	ID3D12Fence*						m_fence;
 	HANDLE								m_fenceEvent;
-	unsigned long long					m_fenceValue;
+	UINT64								m_fenceValues[c_frameCount];
+	bool								m_deviceRemoved;
+	UINT								m_currentFrame;
 };
 
 #endif // !_DEVICERESOURCES_H_

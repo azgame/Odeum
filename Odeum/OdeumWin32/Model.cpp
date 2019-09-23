@@ -4,8 +4,6 @@
 
 Model::Model()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
 }
 
 Model::Model(const Model &)
@@ -17,9 +15,9 @@ Model::~Model()
 {
 }
 
-bool Model::Initialize(ID3D12Device* device)
+bool Model::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
-	if (!InitializeBuffers(device)) return false;
+	if (!InitializeBuffers(device, commandList)) return false;
 	
 	return true;
 }
@@ -30,38 +28,77 @@ void Model::Render(ID3D12GraphicsCommandList* m_commandList) { RenderBuffers(m_c
 
 int Model::GetIndexCount() { return m_indexCount; }
 
-bool Model::InitializeBuffers(ID3D12Device* device)
+bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
-	VertexType* vertices;
-	unsigned long* indices;
-	D3D12_RESOURCE_DESC vertexBufferDesc, indexBufferDesc;
-	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+	D3D12_RESOURCE_DESC vertexBufferDesc;
 	HRESULT result;
 
 	m_vertexCount = 3;
-	m_indexCount = 3;
 
-	vertices = new VertexType[m_vertexCount];
-	if (!vertices) return false;
+	VertexType vertices[] =
+	{
+		{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ { 0.25f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { -0.25f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+	};
 
-	indices = new unsigned long[m_indexCount];
-	if (!indices) return false;
+	vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	vertexBufferDesc.Width = sizeof(vertices);
+	vertexBufferDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	vertexBufferDesc.Height = 1;
+	vertexBufferDesc.DepthOrArraySize = 1;
+	vertexBufferDesc.MipLevels = 1;
+	vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+	vertexBufferDesc.SampleDesc.Count = 1;
+	vertexBufferDesc.SampleDesc.Quality = 0;
+	vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
-	vertices[0].position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f); // Bottom left
-	vertices[0].color = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[1].position = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f); // Top middle
-	vertices[1].color = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[2].position = DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f); // Bottom right
-	vertices[2].color = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	/*D3D12_HEAP_PROPERTIES defaultHeapProperties;
+	defaultHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+	defaultHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	defaultHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	defaultHeapProperties.CreationNodeMask = 1;
+	defaultHeapProperties.VisibleNodeMask = 1;
+	result = device->CreateCommittedResource(
+		&defaultHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&vertexBufferDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		NULL,
+		IID_PPV_ARGS(&m_vertexBuffer)
+	);
+	if (FAILED(result)) return false;*/
 	
-	indices[0] = 0; // Bottom left
-	indices[1] = 1; // Top middle
-	indices[2] = 2; // Bottom right
 
+	D3D12_HEAP_PROPERTIES uploadHeapProperties;
+	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+	uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	uploadHeapProperties.CreationNodeMask = 1;
+	uploadHeapProperties.VisibleNodeMask = 1;
+	result = device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&vertexBufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		NULL,
+		IID_PPV_ARGS(&m_vertexBuffer)
+	);
+	if (FAILED(result)) return false;
+
+	UINT8* pVertexDataBegin;
+	D3D12_RANGE readRange;
+	readRange.Begin = 0;
+	readRange.End = 0;
+	result = m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
+	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
+	m_vertexBuffer->Unmap(0, nullptr);
+	//commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices) * m_vertexCount);
 	
-	
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.StrideInBytes = sizeof(VertexType);
+	m_vertexBufferView.SizeInBytes = sizeof(vertices);
 
 	return true;
 }
@@ -70,6 +107,9 @@ void Model::ShutdownBuffers()
 {
 }
 
-void Model::RenderBuffers(ID3D12GraphicsCommandList *)
+void Model::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)
 {
+	m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+	m_commandList->DrawInstanced(3, 1, 0, 0);
 }

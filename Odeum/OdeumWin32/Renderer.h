@@ -30,6 +30,7 @@ private:
 	ID3D12RootSignature*						m_rootSignature;
 	ID3D12PipelineState*						m_pipelineState;
 	Model*										m_triangle;
+	unsigned int								m_bufferIndex;
 };
 
 #endif // !_RENDERER_H_
