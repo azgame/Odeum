@@ -46,14 +46,18 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	D3D12_DESCRIPTOR_HEAP_DESC			renderTargetViewHeapDesc;
 	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
 
-	
+	ID3D12Debug* debugController;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+	}
 
 	// Store the vsync setting.
 	m_vsync_enabled = vsync;
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
+	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
 	for (UINT adapterIndex = 0; DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(adapterIndex, &adapter); adapterIndex++) {
@@ -302,12 +306,12 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		return false;
 	}
 
-	// Create a fence for GPU synchronization.
-	result = m_device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
-	if (FAILED(result))
-	{
-		return false;
-	}
+	//// Create a fence for GPU synchronization.
+	//result = m_device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
+	//if (FAILED(result))
+	//{
+	//	return false;
+	//}
 	m_fenceValues[m_currentFrame]++;
 
 	// Create an event object for the fence.
@@ -327,6 +331,20 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// MessageBox(hwnd, L"Dx12 Initialization complete", L"Success!", MB_OK);
 
 	return true;
+}
+
+void DeviceResources::InitializeFence()
+{
+	m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
+	m_fenceValue = 1;
+
+	// Create an event handle to use for frame synchronization.
+	m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+
+	// Wait for the command list to execute; we are reusing the same command 
+	// list in our main loop but for now, we just want to wait for setup to 
+	// complete before continuing.
+	WaitForPrevFrame();
 }
 
 void DeviceResources::Uninitialize()
@@ -410,52 +428,81 @@ void DeviceResources::Uninitialize()
 
 bool DeviceResources::Render()
 {
+	//HRESULT result;
+	//const UINT64 currentFenceValue = m_fenceValues[m_currentFrame];
+
+	//// Finally present the back buffer to the screen since rendering is complete.
+	//if (m_vsync_enabled)
+	//{
+	//	// Lock to screen refresh rate.
+	//	result = m_swapChain->Present(1, 0);
+	//	if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
+	//	{
+	//		m_deviceRemoved = true;
+	//	}
+	//}
+	//else
+	//{
+	//	// Present as fast as possible.
+	//	result = m_swapChain->Present(0, 0);
+	//	if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
+	//	{
+	//		m_deviceRemoved = true;
+	//		
+	//	}
+	//}
+
+	//// Wait for Previous Frame() ----------------
+	//// Signal and increment the fence value.
+	//result = m_commandQueue->Signal(m_fence, m_fenceValues[m_currentFrame]);
+	//if (FAILED(result))
+	//{
+	//	return false;
+	//}
+
+	//m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
+
+	//// Wait until the GPU is done rendering.
+	//if (m_fence->GetCompletedValue() < m_fenceValues[m_currentFrame])
+	//{
+	//	result = m_fence->SetEventOnCompletion(m_fenceValues[m_currentFrame], m_fenceEvent);
+	//	if (FAILED(result))
+	//	{
+	//		return false;
+	//	}
+	//	WaitForSingleObject(m_fenceEvent, INFINITE);
+	//}
+
+	//m_fenceValues[m_currentFrame] = currentFenceValue + 1;
+
+	//return true;
+
 	HRESULT result;
-	const UINT64 currentFenceValue = m_fenceValues[m_currentFrame];
+	result = m_swapChain->Present(1, 0);
+	if (FAILED(result)) return false;
+	if (!WaitForPrevFrame()) return false;
 
-	// Finally present the back buffer to the screen since rendering is complete.
-	if (m_vsync_enabled)
-	{
-		// Lock to screen refresh rate.
-		result = m_swapChain->Present(1, 0);
-		if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
-		{
-			m_deviceRemoved = true;
-		}
-	}
-	else
-	{
-		// Present as fast as possible.
-		result = m_swapChain->Present(0, 0);
-		if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
-		{
-			m_deviceRemoved = true;
-			
-		}
-	}
+	return true;
+}
 
-	// Wait for Previous Frame() ----------------
-	// Signal and increment the fence value.
-	result = m_commandQueue->Signal(m_fence, m_fenceValues[m_currentFrame]);
-	if (FAILED(result))
-	{
-		return false;
-	}
+bool DeviceResources::WaitForPrevFrame()
+{
 
-	m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
+	HRESULT result;
+	const UINT64 fence = m_fenceValue;
+	result = m_commandQueue->Signal(m_fence, m_fenceValue);
+	if (FAILED(result)) return false;
+	m_fenceValue++;
 
-	// Wait until the GPU is done rendering.
-	if (m_fence->GetCompletedValue() < m_fenceValues[m_currentFrame])
+	// Wait until the previous frame is finished.
+	if (m_fence->GetCompletedValue() < fence)
 	{
-		result = m_fence->SetEventOnCompletion(m_fenceValues[m_currentFrame], m_fenceEvent);
-		if (FAILED(result))
-		{
-			return false;
-		}
+		result = m_fence->SetEventOnCompletion(fence, m_fenceEvent);
+		if (FAILED(result)) return false;
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
-	m_fenceValues[m_currentFrame] = currentFenceValue + 1;
+	m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
 
 	return true;
 }

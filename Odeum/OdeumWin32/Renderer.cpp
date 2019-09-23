@@ -24,7 +24,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	m_deviceResources = new DeviceResources(); // need to get device and commandlist from device resources
 	if (!m_deviceResources) return false;
 	result = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN);
-	if (!result)
+	if (FAILED(result))
 	{
 		MessageBox(hwnd, L"Could not initialize DirectX", L"Error", MB_OK);
 		return false;
@@ -98,7 +98,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 2;
+	psoDesc.NumRenderTargets = 1;
 	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	psoDesc.SampleDesc.Count = 1;
 	
@@ -107,19 +107,15 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Get the command list.
 	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), m_pipelineState, IID_PPV_ARGS(&m_commandList));
-	if (FAILED(result))
-	{
-		return false;
-	}
+	if (FAILED(result)) return false;
 
 	// Initially we need to close the command list during initialization as it is created in a recording state.
 	result = m_commandList->Close();
-	if (FAILED(result))
-	{
-		return false;
-	}
+	if (FAILED(result)) return false;
 
 	m_triangle->Initialize(m_device, m_commandList);
+
+	m_deviceResources->InitializeFence();
 
 	if (signature) signature->Release();
 	if (error) error->Release();
@@ -192,15 +188,15 @@ bool Renderer::Render()
 		renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
 	}
 
+	// Set the back buffer as the render target.
+	m_commandList->OMSetRenderTargets(m_bufferIndex, &renderTargetViewHandle, FALSE, NULL);
+
 	// Then set the color to clear the window to.
 	color[0] = 0.5;
 	color[1] = 0.5;
 	color[2] = 0.5;
 	color[3] = 1.0;
 	m_commandList->ClearRenderTargetView(renderTargetViewHandle, color, 0, NULL);
-
-	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(m_bufferIndex, &renderTargetViewHandle, FALSE, NULL);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
@@ -209,6 +205,7 @@ bool Renderer::Render()
 	// Indicate that the back buffer will now be used to present.
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+
 	m_commandList->ResourceBarrier(1, &barrier);
 
 	// Close the list of commands.

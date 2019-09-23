@@ -17,10 +17,11 @@ public:
 	~DeviceResources();
 
 	bool Initialize(int, int, HWND, bool, bool);
+	void InitializeFence();
 	void Uninitialize();
 
 	bool Render();
-	void MoveToNextFrame();
+	bool WaitForPrevFrame();
 
 	ID3D12Device* GetD3Device() const					{ return m_device; }
 	ID3D12GraphicsCommandList* GetCommandList() const	{ return m_commandList; }
@@ -29,6 +30,8 @@ public:
 	ID3D12DescriptorHeap* GetRTVHeap() const			{ return m_renderTargetViewHeap; }
 	ID3D12CommandQueue* GetCommandQ() const				{ return m_commandQueue; }
 	IDXGISwapChain3* GetSwapChain() const				{ return m_swapChain; }
+	D3D12_VIEWPORT* GetViewPort() const					{ return m_viewPort; }
+	D3D12_RECT* GetSSRect() const						{ return m_ssRect; }
 
 
 private:
@@ -48,6 +51,9 @@ private:
 	UINT64								m_fenceValues[c_frameCount];
 	bool								m_deviceRemoved;
 	UINT								m_currentFrame;
+	D3D12_VIEWPORT*						m_viewPort;
+	D3D12_RECT*							m_ssRect;
+	UINT64								m_fenceValue;
 };
 
 #endif // !_DEVICERESOURCES_H_

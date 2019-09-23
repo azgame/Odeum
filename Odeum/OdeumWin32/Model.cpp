@@ -92,6 +92,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	readRange.Begin = 0;
 	readRange.End = 0;
 	result = m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
+	if (FAILED(result)) return false;
 	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
 	m_vertexBuffer->Unmap(0, nullptr);
 	//commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices) * m_vertexCount);
