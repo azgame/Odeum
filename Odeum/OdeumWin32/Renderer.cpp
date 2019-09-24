@@ -49,9 +49,9 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	ID3DBlob* vertexShader;
 	ID3DBlob* pixelShader;
 
-	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShader, NULL);
+	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL);
 	if (FAILED(result)) return false;
-	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShader, NULL);
+	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL);
 	if (FAILED(result)) return false;
 		
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -92,8 +92,8 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	psoDesc.pRootSignature = m_rootSignature;
 	psoDesc.VS = { reinterpret_cast<UINT8*>(vertexShader->GetBufferPointer()), vertexShader->GetBufferSize() };
 	psoDesc.PS = { reinterpret_cast<UINT8*>(pixelShader->GetBufferPointer()), pixelShader->GetBufferSize() };
-	psoDesc.RasterizerState = rDesc;
-	psoDesc.BlendState = bDesc;
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState.DepthEnable = FALSE;
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;
@@ -169,6 +169,10 @@ bool Renderer::Render()
 	}
 
 	m_commandList->SetGraphicsRootSignature(m_rootSignature);
+	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
+	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+	m_commandList->RSSetViewports(1, &viewport);
+	m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
 	// Record commands in the command list now.
 	// Start by setting the resource barrier.
@@ -178,6 +182,8 @@ bool Renderer::Render()
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+
+	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	m_commandList->ResourceBarrier(1, &barrier);
 
 	// Get the render target view handle for the current back buffer.
@@ -192,8 +198,8 @@ bool Renderer::Render()
 	m_commandList->OMSetRenderTargets(m_bufferIndex, &renderTargetViewHandle, FALSE, NULL);
 
 	// Then set the color to clear the window to.
-	color[0] = 0.5;
-	color[1] = 0.5;
+	color[0] = 0.2;
+	color[1] = 0.2;
 	color[2] = 0.5;
 	color[3] = 1.0;
 	m_commandList->ClearRenderTargetView(renderTargetViewHandle, color, 0, NULL);
@@ -205,6 +211,7 @@ bool Renderer::Render()
 	// Indicate that the back buffer will now be used to present.
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
 	m_commandList->ResourceBarrier(1, &barrier);
 

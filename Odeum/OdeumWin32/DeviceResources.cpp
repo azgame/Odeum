@@ -28,6 +28,7 @@ DeviceResources::~DeviceResources()
 {
 }
 
+// Went through initialize, all device resources are properly created and initialized
 bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, bool vsync, bool fullscreen)
 {
 	D3D_FEATURE_LEVEL					featureLevel;
@@ -57,10 +58,11 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
+	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
 	for (UINT adapterIndex = 0; DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(adapterIndex, &adapter); adapterIndex++) {
+		
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
 
@@ -75,36 +77,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		}
 	}
 
-	// Create the Direct3D 12 device.
-	result = D3D12CreateDevice(adapter, featureLevel, IID_PPV_ARGS(&m_device));
-	if (FAILED(result))
-	{
-		MessageBox(hwnd, L"Could not create a DirectX 12.1 device.  The default video card does not support DirectX 12.1.", L"DirectX Device Failure", MB_OK);
-		return false;
-	}
-
-	// Initialize the description of the command queue.
-	ZeroMemory(&commandQueueDesc, sizeof(commandQueueDesc));
-
-	// Set up the description of the command queue.
-	commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-	commandQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-	commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	commandQueueDesc.NodeMask = 0;
-
-	// Create the command queue.
-	result = m_device->CreateCommandQueue(&commandQueueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_commandQueue);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Create a DirectX graphics interface factory.
-	result = CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)&factory);
-	if (FAILED(result))
-	{
-		return false;
-	}
 
 	// Enumerate the primary adapter output (monitor).
 	result = adapter->EnumOutputs(0, &adapterOutput);
@@ -168,6 +140,30 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Release the display mode list.
 	delete[] displayModeList;
 	displayModeList = 0;
+
+	// Create the Direct3D 12 device.
+	result = D3D12CreateDevice(adapter, featureLevel, IID_PPV_ARGS(&m_device));
+	if (FAILED(result))
+	{
+		MessageBox(hwnd, L"Could not create a DirectX 12.1 device.  The default video card does not support DirectX 12.1.", L"DirectX Device Failure", MB_OK);
+		return false;
+	}
+
+	// Initialize the description of the command queue.
+	ZeroMemory(&commandQueueDesc, sizeof(commandQueueDesc));
+
+	// Set up the description of the command queue.
+	commandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+	commandQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+	commandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	commandQueueDesc.NodeMask = 0;
+
+	// Create the command queue.
+	result = m_device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&m_commandQueue));
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Release the adapter output.
 	adapterOutput->Release();
@@ -327,6 +323,9 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	for (UINT n = 0; n < c_frameCount; n++) {
 		m_fenceValues[n] = m_fenceValues[m_currentFrame];
 	}
+
+	// Set the 3D rendering viewport to target the entire window.
+	m_viewPort = { 0.0f, 0.0f, (float)screenWidth, (float)screenHeight, 0.0f, 1.0f };
 
 	// MessageBox(hwnd, L"Dx12 Initialization complete", L"Success!", MB_OK);
 

@@ -6,7 +6,7 @@
 #include "Model.h"
 
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
+const bool VSYNC_ENABLED = false;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -30,6 +30,7 @@ private:
 	ID3D12RootSignature*						m_rootSignature;
 	ID3D12PipelineState*						m_pipelineState;
 	Model*										m_triangle;
+	D3D12_RECT									m_scissorRect;
 	unsigned int								m_bufferIndex;
 };
 

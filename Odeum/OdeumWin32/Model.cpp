@@ -28,6 +28,7 @@ void Model::Render(ID3D12GraphicsCommandList* m_commandList) { RenderBuffers(m_c
 
 int Model::GetIndexCount() { return m_indexCount; }
 
+// Went over initializebuffers, everything is working as intended
 bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
 	D3D12_RESOURCE_DESC vertexBufferDesc;
@@ -44,7 +45,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 
 	vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	vertexBufferDesc.Width = sizeof(vertices);
-	vertexBufferDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	vertexBufferDesc.Alignment = 0;
 	vertexBufferDesc.Height = 1;
 	vertexBufferDesc.DepthOrArraySize = 1;
 	vertexBufferDesc.MipLevels = 1;
@@ -61,16 +62,15 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	defaultHeapProperties.CreationNodeMask = 1;
 	defaultHeapProperties.VisibleNodeMask = 1;
 	result = device->CreateCommittedResource(
-		&defaultHeapProperties,
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		&vertexBufferDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
+		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 		NULL,
 		IID_PPV_ARGS(&m_vertexBuffer)
 	);
 	if (FAILED(result)) return false;*/
 	
-
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;
 	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
 	uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -78,11 +78,11 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	uploadHeapProperties.CreationNodeMask = 1;
 	uploadHeapProperties.VisibleNodeMask = 1;
 	result = device->CreateCommittedResource(
-		&uploadHeapProperties,
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		&vertexBufferDesc,
+		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
-		NULL,
+		nullptr,
 		IID_PPV_ARGS(&m_vertexBuffer)
 	);
 	if (FAILED(result)) return false;
@@ -95,7 +95,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	if (FAILED(result)) return false;
 	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
 	m_vertexBuffer->Unmap(0, nullptr);
-	//commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices) * m_vertexCount);
+	//commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
 	
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(VertexType);

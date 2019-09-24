@@ -23,15 +23,15 @@ public:
 	bool Render();
 	bool WaitForPrevFrame();
 
-	ID3D12Device* GetD3Device() const					{ return m_device; }
-	ID3D12GraphicsCommandList* GetCommandList() const	{ return m_commandList; }
-	ID3D12CommandAllocator* GetCommandAllocator() const	{ return m_commandAllocator; }
-	ID3D12Resource* GetBackBuffer(int i) const			{ return m_backBufferRenderTarget[i]; }
-	ID3D12DescriptorHeap* GetRTVHeap() const			{ return m_renderTargetViewHeap; }
-	ID3D12CommandQueue* GetCommandQ() const				{ return m_commandQueue; }
-	IDXGISwapChain3* GetSwapChain() const				{ return m_swapChain; }
-	D3D12_VIEWPORT* GetViewPort() const					{ return m_viewPort; }
-	D3D12_RECT* GetSSRect() const						{ return m_ssRect; }
+	ID3D12Device* GetD3Device()							{ return m_device; }
+	ID3D12GraphicsCommandList* GetCommandList()			{ return m_commandList; }
+	ID3D12CommandAllocator* GetCommandAllocator()		{ return m_commandAllocator; }
+	ID3D12Resource* GetBackBuffer(int i)				{ return m_backBufferRenderTarget[i]; }
+	ID3D12DescriptorHeap* GetRTVHeap()					{ return m_renderTargetViewHeap; }
+	ID3D12CommandQueue* GetCommandQ() 					{ return m_commandQueue; }
+	IDXGISwapChain3* GetSwapChain() 					{ return m_swapChain; }
+	D3D12_VIEWPORT GetViewPort()						{ return m_viewPort; }
+	D3D12_RECT* GetSSRect()								{ return m_ssRect; }
 
 
 private:
@@ -51,7 +51,7 @@ private:
 	UINT64								m_fenceValues[c_frameCount];
 	bool								m_deviceRemoved;
 	UINT								m_currentFrame;
-	D3D12_VIEWPORT*						m_viewPort;
+	D3D12_VIEWPORT						m_viewPort;
 	D3D12_RECT*							m_ssRect;
 	UINT64								m_fenceValue;
 };
