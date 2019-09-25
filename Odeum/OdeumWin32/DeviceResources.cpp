@@ -489,7 +489,7 @@ bool DeviceResources::WaitForPrevFrame()
 
 	HRESULT result;
 	const UINT64 fence = m_fenceValue;
-	result = m_commandQueue->Signal(m_fence, m_fenceValue);
+	result = m_commandQueue->Signal(m_fence, fence);
 	if (FAILED(result)) return false;
 	m_fenceValue++;
 

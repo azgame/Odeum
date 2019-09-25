@@ -49,9 +49,9 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	ID3DBlob* vertexShader;
 	ID3DBlob* pixelShader;
 
-	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL);
+	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShader, NULL);
 	if (FAILED(result)) return false;
-	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL);
+	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShader, NULL);
 	if (FAILED(result)) return false;
 		
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -176,41 +176,43 @@ bool Renderer::Render()
 
 	// Record commands in the command list now.
 	// Start by setting the resource barrier.
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	/*barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = m_deviceResources->GetBackBuffer(m_bufferIndex);
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;*/
 
 	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	m_commandList->ResourceBarrier(1, &barrier);
 
 	// Get the render target view handle for the current back buffer.
-	renderTargetViewHandle = m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
+	
+	//renderTargetViewHandle = m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	if (m_bufferIndex == 1)
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
+	/*if (m_bufferIndex == 1)
 	{
 		renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
-	}
+	}*/
 
 	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(m_bufferIndex, &renderTargetViewHandle, FALSE, NULL);
+	m_commandList->OMSetRenderTargets(m_bufferIndex, &rtvHandle, FALSE, NULL);
 
 	// Then set the color to clear the window to.
 	color[0] = 0.2;
 	color[1] = 0.2;
 	color[2] = 0.5;
 	color[3] = 1.0;
-	m_commandList->ClearRenderTargetView(renderTargetViewHandle, color, 0, NULL);
+	m_commandList->ClearRenderTargetView(rtvHandle, color, 0, NULL);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
 	m_triangle->Render(m_commandList);
 
 	// Indicate that the back buffer will now be used to present.
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	/*barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;*/
 	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
 	m_commandList->ResourceBarrier(1, &barrier);
@@ -231,7 +233,7 @@ bool Renderer::Render()
 	if (!m_deviceResources->Render()) return false;
 
 	// Alternate the back buffer index back and forth between 0 and 1 each frame.
-	m_bufferIndex == 0 ? m_bufferIndex = 1 : m_bufferIndex = 0;
+	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 	
 	return true;
 }
