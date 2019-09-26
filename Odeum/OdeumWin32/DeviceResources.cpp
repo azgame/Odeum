@@ -294,6 +294,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Create a render target view for the second back buffer.
 	m_device->CreateRenderTargetView(m_backBufferRenderTarget[1], NULL, renderTargetViewHandle);
 
+	renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
 
 	// Create a command allocator.
 	result = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_commandAllocator);
@@ -302,12 +303,12 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		return false;
 	}
 
-	//// Create a fence for GPU synchronization.
-	//result = m_device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
-	//if (FAILED(result))
-	//{
-	//	return false;
-	//}
+	// Create a fence for GPU synchronization.
+	result = m_device->CreateFence(m_fenceValues[m_currentFrame], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_fence);
+	if (FAILED(result))
+	{
+		return false;
+	}
 	m_fenceValues[m_currentFrame]++;
 
 	// Create an event object for the fence.
@@ -501,7 +502,18 @@ bool DeviceResources::WaitForPrevFrame()
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
-	m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
+	//// Wait until the GPU is done rendering.
+	//if (m_fence->GetCompletedValue() < m_fenceValues[m_currentFrame])
+	//{
+	//	result = m_fence->SetEventOnCompletion(m_fenceValues[m_currentFrame], m_fenceEvent);
+	//	if (FAILED(result))
+	//	{
+	//		return false;
+	//	}
+	//	WaitForSingleObject(m_fenceEvent, INFINITE);
+	//}
+
+	//m_fenceValues[m_currentFrame] = currentFenceValue + 1;
 
 	return true;
 }

@@ -150,7 +150,6 @@ bool Renderer::Render()
 {
 	HRESULT								result;
 	D3D12_RESOURCE_BARRIER				barrier;
-	D3D12_CPU_DESCRIPTOR_HANDLE			renderTargetViewHandle;
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
 
@@ -176,25 +175,11 @@ bool Renderer::Render()
 
 	// Record commands in the command list now.
 	// Start by setting the resource barrier.
-	/*barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = m_deviceResources->GetBackBuffer(m_bufferIndex);
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;*/
-
-	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	m_commandList->ResourceBarrier(1, &barrier);
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 	// Get the render target view handle for the current back buffer.
-	
-	//renderTargetViewHandle = m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart();
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
-	/*if (m_bufferIndex == 1)
-	{
-		renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
-	}*/
 
 	// Set the back buffer as the render target.
 	m_commandList->OMSetRenderTargets(m_bufferIndex, &rtvHandle, FALSE, NULL);
@@ -211,11 +196,7 @@ bool Renderer::Render()
 	m_triangle->Render(m_commandList);
 
 	// Indicate that the back buffer will now be used to present.
-	/*barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;*/
-	barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-
-	m_commandList->ResourceBarrier(1, &barrier);
+	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	// Close the list of commands.
 	result = m_commandList->Close();
