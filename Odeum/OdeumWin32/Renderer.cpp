@@ -23,8 +23,8 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	
 	m_deviceResources = new DeviceResources(); // need to get device and commandlist from device resources
 	if (!m_deviceResources) return false;
-	result = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN);
-	if (FAILED(result))
+	bool dxsuccess = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN);
+	if (!dxsuccess)
 	{
 		MessageBox(hwnd, L"Could not initialize DirectX", L"Error", MB_OK);
 		return false;
@@ -49,9 +49,9 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	ID3DBlob* vertexShader;
 	ID3DBlob* pixelShader;
 
-	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShader, NULL);
+	result = D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL);
 	if (FAILED(result)) return false;
-	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShader, NULL);
+	result = D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL);
 	if (FAILED(result)) return false;
 		
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -60,7 +60,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	D3D12_RASTERIZER_DESC rDesc;
+	/*D3D12_RASTERIZER_DESC rDesc;
 	rDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	rDesc.CullMode = D3D12_CULL_MODE_BACK;
 	rDesc.FrontCounterClockwise = FALSE;
@@ -85,7 +85,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	bDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	bDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	bDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
-	bDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	bDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;*/
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
@@ -153,6 +153,8 @@ bool Renderer::Render()
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
 
+	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
+
 	// Reset (re-use) the memory associated command allocator.
 	result = m_deviceResources->GetCommandAllocator()->Reset();
 	if (FAILED(result))
@@ -182,7 +184,7 @@ bool Renderer::Render()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
 	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(m_bufferIndex, &rtvHandle, FALSE, NULL);
+	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, NULL);
 
 	// Then set the color to clear the window to.
 	color[0] = 0.2;

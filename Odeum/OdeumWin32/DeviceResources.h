@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-static const UINT c_frameCount = 2;		// Use triple buffering.
+static const UINT c_frameCount = 2;		// Use double buffering.
 
 class DeviceResources
 {

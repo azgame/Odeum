@@ -61,7 +61,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-	for (UINT adapterIndex = 0; DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(adapterIndex, &adapter); adapterIndex++) {
+	for (UINT adapterIndex = 0; factory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND; adapterIndex++) {
 		
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
@@ -76,7 +76,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 			break;
 		}
 	}
-
 
 	// Enumerate the primary adapter output (monitor).
 	result = adapter->EnumOutputs(0, &adapterOutput);
@@ -142,7 +141,9 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	displayModeList = 0;
 
 	// Create the Direct3D 12 device.
-	result = D3D12CreateDevice(adapter, featureLevel, IID_PPV_ARGS(&m_device));
+	result = D3D12CreateDevice(adapter, 
+		featureLevel, 
+		IID_PPV_ARGS(&m_device));
 	if (FAILED(result))
 	{
 		MessageBox(hwnd, L"Could not create a DirectX 12.1 device.  The default video card does not support DirectX 12.1.", L"DirectX Device Failure", MB_OK);
@@ -165,19 +166,19 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		return false;
 	}
 
-	// Release the adapter output.
-	adapterOutput->Release();
-	adapterOutput = 0;
+	//// Release the adapter output.
+	//adapterOutput->Release();
+	//adapterOutput = 0;
 
-	// Release the adapter.
-	adapter->Release();
-	adapter = 0;
+	//// Release the adapter.
+	//adapter->Release();
+	//adapter = 0;
 
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
 	// Set the swap chain to use double buffering.
-	swapChainDesc.BufferCount = 2;
+	swapChainDesc.BufferCount = c_frameCount;
 
 	// Set the height and width of the back buffers in the swap chain.
 	swapChainDesc.BufferDesc.Height = screenHeight;
@@ -190,7 +191,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	// Set the swap effect to discard the previous buffer contents after swapping.
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
 	// Set the handle for the window to render to.
 	swapChainDesc.OutputWindow = hwnd;
@@ -246,6 +247,8 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Clear pointer to original swap chain interface since we are using version 3 instead (m_swapChain).
 	swapChain = 0;
 
+	factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
+
 	// Release the factory now that the swap chain has been created.
 	factory->Release();
 	factory = 0;
@@ -272,7 +275,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	// Get a pointer to the first back buffer from the swap chain.
-	result = m_swapChain->GetBuffer(0, __uuidof(ID3D12Resource), (void**)&m_backBufferRenderTarget[0]);
+	result = m_swapChain->GetBuffer(0, IID_PPV_ARGS(&m_backBufferRenderTarget[0]));
 	if (FAILED(result))
 	{
 		return false;
@@ -285,7 +288,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
 
 	// Get a pointer to the second back buffer from the swap chain.
-	result = m_swapChain->GetBuffer(1, __uuidof(ID3D12Resource), (void**)&m_backBufferRenderTarget[1]);
+	result = m_swapChain->GetBuffer(1, IID_PPV_ARGS(&m_backBufferRenderTarget[1]));
 	if (FAILED(result))
 	{
 		return false;
@@ -293,8 +296,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Create a render target view for the second back buffer.
 	m_device->CreateRenderTargetView(m_backBufferRenderTarget[1], NULL, renderTargetViewHandle);
-
-	renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
 
 	// Create a command allocator.
 	result = m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_commandAllocator);
@@ -501,19 +502,6 @@ bool DeviceResources::WaitForPrevFrame()
 		if (FAILED(result)) return false;
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
-
-	//// Wait until the GPU is done rendering.
-	//if (m_fence->GetCompletedValue() < m_fenceValues[m_currentFrame])
-	//{
-	//	result = m_fence->SetEventOnCompletion(m_fenceValues[m_currentFrame], m_fenceEvent);
-	//	if (FAILED(result))
-	//	{
-	//		return false;
-	//	}
-	//	WaitForSingleObject(m_fenceEvent, INFINITE);
-	//}
-
-	//m_fenceValues[m_currentFrame] = currentFenceValue + 1;
 
 	return true;
 }

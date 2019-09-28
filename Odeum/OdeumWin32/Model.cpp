@@ -38,9 +38,9 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 
 	VertexType vertices[] =
 	{
-		{ { 0.0f, 0.25f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ { 0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ { 1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
 	vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
