@@ -1,75 +1,76 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8efb8033-b24b-4707-8048-16024ab7afcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{d35dba91-114d-4c72-a600-58e634542c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{5336d50c-48b9-4666-9508-8f0691a5e341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{01254d64-48e6-462f-b396-146b52b52267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{6c50ee18-7420-478c-b2e7-c05b67afd111}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DeviceResources.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
-      <Filter>Header Files</Filter>
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ColorShader.h">
+      <Filter>Content</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="DeviceResources.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>App</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Content</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="ColorShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Content</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
