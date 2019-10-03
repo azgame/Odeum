@@ -42,7 +42,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 			{ DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
 			{ DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
 			{ DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+			{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
 			{ DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
 			{ DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
 			{ DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
@@ -52,7 +52,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 		//{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
-	vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	/*vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	vertexBufferDesc.Width = sizeof(vertices);
 	vertexBufferDesc.Alignment = 0;
 	vertexBufferDesc.Height = 1;
@@ -62,7 +62,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	vertexBufferDesc.SampleDesc.Count = 1;
 	vertexBufferDesc.SampleDesc.Quality = 0;
 	vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+	vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;*/
 
 	/*D3D12_HEAP_PROPERTIES defaultHeapProperties;
 	defaultHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -93,6 +93,54 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&m_vertexBuffer)
+	);
+	if (FAILED(result)) return false;
+
+	unsigned short cubeIndices[] =
+		{
+			0, 2, 1, // -x
+			1, 2, 3,
+
+			4, 5, 6, // +x
+			5, 7, 6,
+
+			0, 1, 5, // -y
+			0, 5, 4,
+
+			2, 6, 7, // +y
+			2, 7, 3,
+
+			0, 4, 6, // -z
+			0, 6, 2,
+
+			1, 3, 7, // +z
+			1, 7, 5,
+		};
+
+	const UINT indexBufferSize = sizeof(cubeIndices);		
+
+	// Create the index buffer resource in the GPU's default heap and copy index data to it using the upload heap.
+	// The upload resource must not be released until after the GPU has finished using it.
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexBufferUpload;
+
+	CD3DX12_RESOURCE_DESC indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize);
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE,
+		&indexBufferDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_indexBuffer)
+	);
+	if (FAILED(result)) return false;
+
+	result = device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&indexBufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&indexBufferUpload)
 	);
 	if (FAILED(result)) return false;
 
