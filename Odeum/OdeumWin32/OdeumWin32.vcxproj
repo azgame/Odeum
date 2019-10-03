@@ -148,6 +148,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="OdeumSample.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Renderer.h" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="OdeumSample.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="WinMain.cpp" />

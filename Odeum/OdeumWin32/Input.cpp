@@ -1,6 +1,6 @@
 #include "Input.h"
 
-
+Input *Input::s_instance = nullptr;
 
 Input::Input()
 {
@@ -30,6 +30,12 @@ void Input::KeyDown(unsigned int input)
 void Input::KeyUp(unsigned int input)
 {
 	m_keys[input] = false;
+}
+
+Input* Input::getInstance()
+{
+	if (!s_instance) s_instance = new Input();
+	return s_instance;
 }
 
 bool Input::IsKeyDown(unsigned int key)

@@ -28,7 +28,7 @@ private:
 	LPCWSTR						m_applicationName;
 	HINSTANCE					m_hInstance;
 	HWND						m_hwnd;
-	Input*						m_Input;
+	Input*						m_Input = Input::getInstance();
 	Renderer*					m_Renderer;
 };
 

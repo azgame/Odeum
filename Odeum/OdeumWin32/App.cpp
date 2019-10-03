@@ -24,9 +24,6 @@ bool App::Initialize()
 	screenHeight = screenWidth = 0;
 
 	InitializeWindow(screenHeight, screenWidth);
-
-	m_Input = new Input();
-	if (!m_Input) return false;
 	
 	m_Input->Initialize();
 
