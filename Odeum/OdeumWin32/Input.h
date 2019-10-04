@@ -3,6 +3,7 @@
 
 #include "pch.h"
 
+
 class Input
 {
 public:
@@ -14,7 +15,6 @@ public:
 	void KeyDown(unsigned int);
 	void KeyUp(unsigned int);
 
-	// ensures singleton implementation
 	static Input* getInstance();
 
 	bool IsKeyDown(unsigned int);
@@ -22,6 +22,7 @@ public:
 private:
 	bool m_keys[256];
 	static Input* s_instance;
+	//DirectX::Keyboard* m_keyboard;
 };
 
 #endif // !_INPUT_H_

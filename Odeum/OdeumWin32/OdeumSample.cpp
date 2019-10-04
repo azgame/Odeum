@@ -6,7 +6,6 @@ OdeumSample::OdeumSample()
 {
 }
 
-
 OdeumSample::~OdeumSample()
 {
 }

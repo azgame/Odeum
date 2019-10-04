@@ -10,6 +10,9 @@
 #include <DirectXMath.h>
 #include <xaudio2.h>
 #include <Xinput.h>
+#include "Keyboard.h"
+#include "Model.h"
+#include "GamePad.h"
 
 #include <stdio.h>
 #include <vector>
