@@ -47,12 +47,7 @@
       <Filter>Content</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="ColorShader.h">
-      <Filter>Content</Filter>
-    </ClInclude>
-    <ClInclude Include="OdeumSample.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
+    <ClInclude Include="OdeumMain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -75,12 +70,7 @@
     </ClCompile>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="ColorShader.cpp">
-      <Filter>Content</Filter>
-    </ClCompile>
-    <ClCompile Include="OdeumSample.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
+    <ClCompile Include="OdeumMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShader.hlsl">

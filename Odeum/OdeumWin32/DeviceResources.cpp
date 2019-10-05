@@ -60,8 +60,10 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
 	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
 
+	UINT adapterIndex;
+
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-	for (UINT adapterIndex = 0; factory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND; adapterIndex++) {
+	for (adapterIndex = 0; factory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND; adapterIndex++) {
 		
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
@@ -76,11 +78,13 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 			break;
 		}
 	}
-
+	
+	// TODO Aidan: Rewrite the adapter/output code to check for multiple adapters (i.e. integrated chip vs dedicated card)
 	// Enumerate the primary adapter output (monitor).
 	result = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
 	{
+		MessageBox(hwnd, L"Could not Enumerate Outputs", L"Error", MB_OK);
 		return false;
 	}
 
@@ -88,6 +92,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if (FAILED(result))
 	{
+		MessageBox(hwnd, L"Could not get display mode list", L"Error", MB_OK);
 		return false;
 	}
 
@@ -123,6 +128,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	result = adapter->GetDesc(&adapterDesc);
 	if (FAILED(result))
 	{
+		MessageBox(hwnd, L"Could not get video card description", L"Error", MB_OK);
 		return false;
 	}
 
@@ -328,8 +334,6 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the 3D rendering viewport to target the entire window.
 	m_viewPort = { 0.0f, 0.0f, (float)screenWidth, (float)screenHeight, 0.0f, 1.0f };
-
-	// MessageBox(hwnd, L"Dx12 Initialization complete", L"Success!", MB_OK);
 
 	return true;
 }

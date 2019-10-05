@@ -6,6 +6,7 @@ Input *Input::s_instance = nullptr;
 
 Input::Input()
 {
+	
 }
 
 Input::Input(const Input& other)
@@ -16,22 +17,25 @@ Input::~Input()
 {
 }
 
-void Input::Initialize()
+void Input::Initialize(HWND hwnd)
 {
-	int i;
+	/*int i;
 	for (i = 0; i < 256; i++) 
-		m_keys[i] = false;
+		m_keys[i] = false;*/
+	m_keyboard = std::make_unique<DirectX::Keyboard>();
+	m_mouse = std::make_unique<DirectX::Mouse>();
+	m_mouse->SetWindow(hwnd);
 }
 
-void Input::KeyDown(unsigned int input)
-{
-	m_keys[input] = true;
-}
-
-void Input::KeyUp(unsigned int input)
-{
-	m_keys[input] = false;
-}
+//void Input::KeyDown(unsigned int input)
+//{
+//	m_keys[input] = true;
+//}
+//
+//void Input::KeyUp(unsigned int input)
+//{
+//	m_keys[input] = false;
+//}
 
 Input* Input::getInstance()
 {
@@ -39,7 +43,12 @@ Input* Input::getInstance()
 	return s_instance;
 }
 
-bool Input::IsKeyDown(unsigned int key)
-{
-	return m_keys[key];
+void Input::Update(HWND hwnd) {
+	kb = m_keyboard->GetState();
+	mouse = m_mouse->GetState();
 }
+
+//bool Input::IsKeyDown(unsigned int key)
+//{
+//	return m_keys[key];
+//}

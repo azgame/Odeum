@@ -11,18 +11,24 @@ public:
 	Input(const Input&);
 	~Input();
 
-	void Initialize();
-	void KeyDown(unsigned int);
-	void KeyUp(unsigned int);
+	void Initialize(HWND hwnd);
+	/*void KeyDown(unsigned int);
+	void KeyUp(unsigned int);*/
 
 	static Input* getInstance();
 
-	bool IsKeyDown(unsigned int);
+	void Update(HWND hwnd);
+
+	/*bool IsKeyDown(unsigned int);*/
+
+	DirectX::Keyboard::State kb;
+	DirectX::Mouse::State mouse;
 
 private:
-	bool m_keys[256];
+	/*bool m_keys[256];*/
 	static Input* s_instance;
-	//DirectX::Keyboard* m_keyboard;
+	std::unique_ptr<DirectX::Keyboard> m_keyboard;
+	std::unique_ptr<DirectX::Mouse> m_mouse;
 };
 
 #endif // !_INPUT_H_

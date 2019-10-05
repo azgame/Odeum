@@ -11,6 +11,7 @@
 #include <xaudio2.h>
 #include <Xinput.h>
 #include "Keyboard.h"
+#include "Mouse.h"
 #include "Model.h"
 #include "GamePad.h"
 

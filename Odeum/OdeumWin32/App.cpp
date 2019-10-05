@@ -5,7 +5,6 @@
 
 App::App()
 {
-	m_Input = nullptr;
 	m_Renderer = nullptr;
 }
 
@@ -24,8 +23,8 @@ bool App::Initialize()
 	screenHeight = screenWidth = 0;
 
 	InitializeWindow(screenHeight, screenWidth);
-	
-	m_Input->Initialize();
+
+	m_Input->Initialize(m_hwnd);
 
 	m_Renderer = new Renderer();
 	if (!m_Renderer) return false;
@@ -50,6 +49,7 @@ void App::Run()
 	isRunning = true;
 	while (isRunning)
 	{
+
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -88,12 +88,12 @@ LRESULT App::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	switch (umsg)
 	{
-		case WM_KEYDOWN:
+		/*case WM_KEYDOWN:
 			m_Input->KeyDown((unsigned int)wparam);
 			return 0;
 		case WM_KEYUP:
 			m_Input->KeyUp((unsigned int)wparam);
-			return 0;
+			return 0;*/
 		default:
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
@@ -101,7 +101,9 @@ LRESULT App::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 
 bool App::Frame()
 {
-	if (m_Input->IsKeyDown(VK_ESCAPE)) return false;
+	m_Input->Update(m_hwnd);
+	if (m_Input->kb.Escape) return false;
+	// Update call
 	if (!m_Renderer->Frame()) return false;
 
 	return true;
@@ -163,9 +165,9 @@ void App::InitializeWindow(int& screenHeight, int& screenWidth)
 	}
 	else
 	{
-		// If windowed then set it to 800x600 resolution.
-		screenWidth = 800;
-		screenHeight = 600;
+		// If windowed then set it to 1280x720 resolution.
+		screenWidth = 1280;
+		screenHeight = 720;
 
 		// Place the window in the middle of the screen.
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
@@ -213,13 +215,37 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-		case WM_CLOSE:
-			PostQuitMessage(0);
-			return 0;
-		default:
-			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	case WM_ACTIVATEAPP:
+		DirectX::Keyboard::ProcessMessage(umessage, wparam, lparam);
+		DirectX::Mouse::ProcessMessage(umessage, wparam, lparam);
+		break;
+	case WM_INPUT:
+	case WM_MOUSEMOVE:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MOUSEWHEEL:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_MOUSEHOVER:
+		DirectX::Mouse::ProcessMessage(umessage, wparam, lparam);
+		break;
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		DirectX::Keyboard::ProcessMessage(umessage, wparam, lparam);
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return 0;
+	default:
+		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
 }
