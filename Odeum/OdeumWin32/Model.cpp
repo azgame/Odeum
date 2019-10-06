@@ -1,6 +1,6 @@
 #include "Model.h"
 
-
+using namespace DirectX;
 
 Model::Model()
 {
@@ -28,73 +28,58 @@ void Model::Render(ID3D12GraphicsCommandList* m_commandList) { RenderBuffers(m_c
 
 int Model::GetIndexCount() { return m_indexCount; }
 
-// Went over initializebuffers, everything is working as intended
 bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
-	D3D12_RESOURCE_DESC vertexBufferDesc;
 	HRESULT result;
 
 	m_vertexCount = 8;
 
 	VertexType vertices[] =
 	{
-			{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-			{ DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-
-		//{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		//{ { 1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		//{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
 	};
 
-	/*vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexBufferDesc.Width = sizeof(vertices);
-	vertexBufferDesc.Alignment = 0;
-	vertexBufferDesc.Height = 1;
-	vertexBufferDesc.DepthOrArraySize = 1;
-	vertexBufferDesc.MipLevels = 1;
-	vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
-	vertexBufferDesc.SampleDesc.Count = 1;
-	vertexBufferDesc.SampleDesc.Quality = 0;
-	vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;*/
+	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices));
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE,
+		&vertexBufferDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_vertexBuffer));
+	if (FAILED(result)) return false;
 
-	/*D3D12_HEAP_PROPERTIES defaultHeapProperties;
-	defaultHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-	defaultHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	defaultHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	defaultHeapProperties.CreationNodeMask = 1;
-	defaultHeapProperties.VisibleNodeMask = 1;
+	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
-		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-		NULL,
-		IID_PPV_ARGS(&m_vertexBuffer)
-	);
-	if (FAILED(result)) return false;*/
-	
-	D3D12_HEAP_PROPERTIES uploadHeapProperties;
-	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-	uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	uploadHeapProperties.CreationNodeMask = 1;
-	uploadHeapProperties.VisibleNodeMask = 1;
-	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices)),
+		&vertexBufferDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&m_vertexBuffer)
-	);
+		IID_PPV_ARGS(&m_vertexBufferUpload));
 	if (FAILED(result)) return false;
+
+	// Upload the vertex buffer to the GPU.
+	/*{
+		D3D12_SUBRESOURCE_DATA vertexData = {};
+		vertexData.pData = reinterpret_cast<BYTE*>(vertices);
+		vertexData.RowPitch = sizeof(vertices);
+		vertexData.SlicePitch = vertexData.RowPitch;
+
+		UpdateSubresources(commandList, m_vertexBuffer, m_vertexBufferUpload, 0, 0, 1, &vertexData);
+
+		CD3DX12_RESOURCE_BARRIER vertexBufferResourceBarrier =
+			CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
+	}*/
 
 	unsigned short cubeIndices[] =
 		{
@@ -121,59 +106,65 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 
 	// Create the index buffer resource in the GPU's default heap and copy index data to it using the upload heap.
 	// The upload resource must not be released until after the GPU has finished using it.
-	Microsoft::WRL::ComPtr<ID3D12Resource> indexBufferUpload;
 
-	CD3DX12_RESOURCE_DESC indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize);
+	CD3DX12_RESOURCE_DESC m_indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(cubeIndices));
+
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
-		&indexBufferDesc,
+		&m_indexBufferDesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
-		IID_PPV_ARGS(&m_indexBuffer)
-	);
+		IID_PPV_ARGS(&m_indexBuffer));
 	if (FAILED(result)) return false;
 
 	result = device->CreateCommittedResource(
-		&uploadHeapProperties,
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		&indexBufferDesc,
+		&m_indexBufferDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&indexBufferUpload)
-	);
+		IID_PPV_ARGS(&m_indexBufferUpload));
 	if (FAILED(result)) return false;
 
 	// Upload the index buffer to the GPU.
-	{
+	/*{
 		D3D12_SUBRESOURCE_DATA indexData = {};
 		indexData.pData = reinterpret_cast<BYTE*>(cubeIndices);
 		indexData.RowPitch = indexBufferSize;
 		indexData.SlicePitch = indexData.RowPitch;
 
-		//UpdateSubresources(m_commandList.Get(), m_indexBuffer.Get(), indexBufferUpload.Get(), 0, 0, 1, &indexData);
+		UpdateSubresources(commandList, m_indexBuffer, m_indexBufferUpload, 0, 0, 1, &indexData);
 
 		CD3DX12_RESOURCE_BARRIER indexBufferResourceBarrier =
 			CD3DX12_RESOURCE_BARRIER::Transition(m_indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
 		commandList->ResourceBarrier(1, &indexBufferResourceBarrier);
-	}
-
-
-
+	}*/
 
 	UINT8* pVertexDataBegin;
 	D3D12_RANGE readRange;
 	readRange.Begin = 0;
 	readRange.End = 0;
-	result = m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
+	result = m_vertexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	if (FAILED(result)) return false;
 	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
-	m_vertexBuffer->Unmap(0, nullptr);
-	//commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
+	m_vertexBufferUpload->Unmap(0, nullptr);
+	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
 	
-	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(VertexType);
 	m_vertexBufferView.SizeInBytes = sizeof(vertices);
+
+	UINT8* pIndexDataBegin;
+	result = m_indexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin));
+	if (FAILED(result)) return false;
+	memcpy(pIndexDataBegin, cubeIndices, sizeof(cubeIndices));
+	m_indexBufferUpload->Unmap(0, nullptr);
+	commandList->CopyBufferRegion(m_indexBuffer, 0, m_indexBufferUpload, 0, sizeof(cubeIndices));
+
+	m_indexBufferView.BufferLocation = m_indexBufferUpload->GetGPUVirtualAddress();
+	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
+	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
 	return true;
 }
@@ -186,5 +177,6 @@ void Model::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)
 {
 	m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-	m_commandList->DrawInstanced(3, 1, 0, 0);
+	m_commandList->IASetIndexBuffer(&m_indexBufferView);
+	m_commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
