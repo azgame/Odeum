@@ -144,6 +144,23 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	);
 	if (FAILED(result)) return false;
 
+	// Upload the index buffer to the GPU.
+	{
+		D3D12_SUBRESOURCE_DATA indexData = {};
+		indexData.pData = reinterpret_cast<BYTE*>(cubeIndices);
+		indexData.RowPitch = indexBufferSize;
+		indexData.SlicePitch = indexData.RowPitch;
+
+		//UpdateSubresources(m_commandList.Get(), m_indexBuffer.Get(), indexBufferUpload.Get(), 0, 0, 1, &indexData);
+
+		CD3DX12_RESOURCE_BARRIER indexBufferResourceBarrier =
+			CD3DX12_RESOURCE_BARRIER::Transition(m_indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+		commandList->ResourceBarrier(1, &indexBufferResourceBarrier);
+	}
+
+
+
+
 	UINT8* pVertexDataBegin;
 	D3D12_RANGE readRange;
 	readRange.Begin = 0;
