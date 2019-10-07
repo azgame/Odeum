@@ -33,17 +33,26 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc;
-	rootSignatureDesc.NumParameters = 0; //(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-	rootSignatureDesc.pParameters = nullptr; 
-	rootSignatureDesc.NumStaticSamplers = 0; 
-	rootSignatureDesc.pStaticSamplers = nullptr;
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	CD3DX12_DESCRIPTOR_RANGE range;
+	CD3DX12_ROOT_PARAMETER parameter;
+
+	range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+	parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
+
+	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+
+	CD3DX12_ROOT_SIGNATURE_DESC descRootSignature;
+	descRootSignature.Init(1, &parameter, 0, nullptr, rootSignatureFlags);
 
 	ID3DBlob* signature;
 	ID3DBlob* error;
 
-	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+	D3D12SerializeRootSignature(&descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
 	result = m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
 
 	ID3DBlob* vertexShader;
@@ -60,33 +69,6 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
-	/*D3D12_RASTERIZER_DESC rDesc;
-	rDesc.FillMode = D3D12_FILL_MODE_SOLID;
-	rDesc.CullMode = D3D12_CULL_MODE_BACK;
-	rDesc.FrontCounterClockwise = FALSE;
-	rDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
-	rDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
-	rDesc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-	rDesc.DepthClipEnable = TRUE;
-	rDesc.MultisampleEnable = FALSE;
-	rDesc.AntialiasedLineEnable = FALSE;
-	rDesc.ForcedSampleCount = 0;
-	rDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
-
-	D3D12_BLEND_DESC bDesc;
-	bDesc.AlphaToCoverageEnable = FALSE;
-	bDesc.IndependentBlendEnable = FALSE;
-	bDesc.RenderTarget[0].BlendEnable = FALSE;
-	bDesc.RenderTarget[0].LogicOpEnable = FALSE;
-	bDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
-	bDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
-	bDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	bDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-	bDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	bDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-	bDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
-	bDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;*/
-
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	psoDesc.pRootSignature = m_rootSignature;
@@ -94,12 +76,12 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	psoDesc.PS = { reinterpret_cast<UINT8*>(pixelShader->GetBufferPointer()), pixelShader->GetBufferSize() };
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	psoDesc.DepthStencilState.DepthEnable = FALSE;
-	psoDesc.DepthStencilState.StencilEnable = FALSE;
+	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.NumRenderTargets = 1;
 	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	psoDesc.SampleDesc.Count = 1;
 	
 	result = m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
@@ -115,12 +97,92 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	m_triangle->Initialize(m_device, m_commandList);
 
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	heapDesc.NumDescriptors = c_frameCount;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table.
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_cbvHeap));
+	if (FAILED(result)) return false;
+
+	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
+	result = m_device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&constantBufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_constantBuffer));
+	if (FAILED(result)) return false;
+
+
+	D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
+	m_cbvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	for (int n = 0; n < c_frameCount; n++)
+	{
+		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
+		desc.BufferLocation = cbvGpuAddress;
+		desc.SizeInBytes = c_alignedConstantBufferSize;
+		m_device->CreateConstantBufferView(&desc, cbvCpuHandle);
+
+		cbvGpuAddress += desc.SizeInBytes;
+		cbvCpuHandle.Offset(m_cbvDescriptorSize);
+	}
+
+	// Map the constant buffers.
+	CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
+	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
+	if (FAILED(result)) return false;
+
+	CreateWindowSizeDependentResources(screenHeight, screenWidth);
+
 	m_deviceResources->InitializeFence();
 
 	if (signature) signature->Release();
 	if (error) error->Release();
 
 	return true;
+}
+
+void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth)
+{
+	float aspectRatio = screenWidth / screenHeight;
+	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
+
+	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
+	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+
+	// This is a simple example of change that can be made when the app is in
+	// portrait or snapped view.
+	if (aspectRatio < 1.0f)
+	{
+		fovAngleY *= 2.0f;
+	}
+
+	// This sample makes use of a right-handed coordinate system using row-major matrices.
+	DirectX::XMMATRIX perspectiveMatrix = DirectX::XMMatrixPerspectiveFovRH(
+		fovAngleY,
+		aspectRatio,
+		0.01f,
+		100.0f
+	);
+
+	XMStoreFloat4x4(
+		&m_constantBufferData.projection,
+		DirectX::XMMatrixTranspose(perspectiveMatrix)
+	);
+
+	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
+	static const DirectX::XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const DirectX::XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
+	static const DirectX::XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+
+	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
+	// Prepare to pass the updated model matrix to the shader.
+	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
 }
 
 void Renderer::Uninitialize()
@@ -155,6 +217,9 @@ bool Renderer::Render()
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
+	UINT8* destination = m_mappedConstantBuffer + (m_bufferIndex * c_alignedConstantBufferSize);
+	memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+
 	// Reset (re-use) the memory associated command allocator.
 	result = m_deviceResources->GetCommandAllocator()->Reset();
 	if (FAILED(result))
@@ -170,8 +235,12 @@ bool Renderer::Render()
 	}
 
 	m_commandList->SetGraphicsRootSignature(m_rootSignature);
+	ID3D12DescriptorHeap* ppHeaps[] = { m_cbvHeap };
+	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// Bind the current frame's constant buffer to the pipeline.
+
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
-	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
 	m_commandList->RSSetViewports(1, &viewport);
 	m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
@@ -183,8 +252,10 @@ bool Renderer::Render()
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
-	// Set the back buffer as the render target.
-	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, NULL);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_cbvDescriptorSize);
+	m_commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+
+	
 
 	// Then set the color to clear the window to.
 	color[0] = 0.2;
@@ -192,6 +263,11 @@ bool Renderer::Render()
 	color[2] = 0.5;
 	color[3] = 1.0;
 	m_commandList->ClearRenderTargetView(rtvHandle, color, 0, NULL);
+	D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = m_deviceResources->GetDepthStencilView();
+	m_commandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+	// Set the back buffer as the render target.
+	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
@@ -214,9 +290,6 @@ bool Renderer::Render()
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	
 	if (!m_deviceResources->Render()) return false;
-
-	// Alternate the back buffer index back and forth between 0 and 1 each frame.
-	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 	
 	return true;
 }

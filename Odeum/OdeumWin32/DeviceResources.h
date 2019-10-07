@@ -28,10 +28,16 @@ public:
 	ID3D12CommandAllocator* GetCommandAllocator()		{ return m_commandAllocator; }
 	ID3D12Resource* GetBackBuffer(int i)				{ return m_backBufferRenderTarget[i]; }
 	ID3D12DescriptorHeap* GetRTVHeap()					{ return m_renderTargetViewHeap; }
+	ID3D12Resource*	GetDepthStencil()					{ return m_depthStencil; }
 	ID3D12CommandQueue* GetCommandQ() 					{ return m_commandQueue; }
 	IDXGISwapChain3* GetSwapChain() 					{ return m_swapChain; }
 	D3D12_VIEWPORT GetViewPort()						{ return m_viewPort; }
 	D3D12_RECT* GetSSRect()								{ return m_ssRect; }
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const
+	{
+		return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_dsvHeap->GetCPUDescriptorHandleForHeapStart());
+	}
 
 
 private:
@@ -41,8 +47,12 @@ private:
 	char								m_videoCardDescription[128];
 	IDXGISwapChain3*					m_swapChain;
 	ID3D12DescriptorHeap*				m_renderTargetViewHeap;
+	ID3D12DescriptorHeap*				m_dsvHeap;
 	ID3D12Resource*						m_backBufferRenderTarget[c_frameCount];
+	ID3D12Resource*						m_depthStencil;
 	unsigned int						m_bufferIndex;
+	DXGI_FORMAT							m_backBufferFormat;
+	DXGI_FORMAT							m_depthBufferFormat;
 	ID3D12CommandAllocator*				m_commandAllocator;
 	ID3D12GraphicsCommandList*			m_commandList;
 	ID3D12PipelineState*				m_pipelineState;
