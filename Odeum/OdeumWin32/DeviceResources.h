@@ -24,7 +24,6 @@ public:
 	bool WaitForPrevFrame();
 
 	ID3D12Device* GetD3Device()							{ return m_device; }
-	ID3D12GraphicsCommandList* GetCommandList()			{ return m_commandList; }
 	ID3D12CommandAllocator* GetCommandAllocator()		{ return m_commandAllocator; }
 	ID3D12Resource* GetBackBuffer(int i)				{ return m_backBufferRenderTarget[i]; }
 	ID3D12DescriptorHeap* GetRTVHeap()					{ return m_renderTargetViewHeap; }
@@ -54,16 +53,15 @@ private:
 	DXGI_FORMAT							m_backBufferFormat;
 	DXGI_FORMAT							m_depthBufferFormat;
 	ID3D12CommandAllocator*				m_commandAllocator;
-	ID3D12GraphicsCommandList*			m_commandList;
 	ID3D12PipelineState*				m_pipelineState;
 	ID3D12Fence*						m_fence;
 	HANDLE								m_fenceEvent;
-	UINT64								m_fenceValues[c_frameCount];
 	bool								m_deviceRemoved;
 	UINT								m_currentFrame;
 	D3D12_VIEWPORT						m_viewPort;
 	D3D12_RECT*							m_ssRect;
 	UINT64								m_fenceValue;
+	UINT64								m_fenceValues[c_frameCount];
 };
 
 #endif // !_DEVICERESOURCES_H_

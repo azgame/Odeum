@@ -11,7 +11,6 @@ DeviceResources::DeviceResources()
 	m_backBufferRenderTarget[0] = 0;
 	m_backBufferRenderTarget[1] = 0;
 	m_commandAllocator = 0;
-	m_commandList = 0;
 	m_pipelineState = 0;
 	m_fence = 0;
 	m_fenceEvent = 0;
@@ -35,7 +34,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	D3D_FEATURE_LEVEL					featureLevel;
 	HRESULT								result;
 	D3D12_COMMAND_QUEUE_DESC			commandQueueDesc;
-	IDXGIFactory1*						factory;
+	IDXGIFactory4*						factory;
 	IDXGIAdapter1*						adapter;
 	IDXGIOutput*						adapterOutput;
 	unsigned int						numModes, i, numerator, denominator, renderTargetViewDescriptorSize;
@@ -59,12 +58,12 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
-
-	UINT adapterIndex;
+	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-	for (adapterIndex = 0; factory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND; adapterIndex++) {
+	for (UINT adapterIndex = 0; 
+		DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(adapterIndex, &adapter);
+		adapterIndex++) {
 		
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
@@ -173,13 +172,13 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		return false;
 	}
 
-	//// Release the adapter output.
-	//adapterOutput->Release();
-	//adapterOutput = 0;
+	// Release the adapter output.
+	adapterOutput->Release();
+	adapterOutput = 0;
 
-	//// Release the adapter.
-	//adapter->Release();
-	//adapter = 0;
+	// Release the adapter.
+	adapter->Release();
+	adapter = 0;
 
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -198,7 +197,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	// Set the swap effect to discard the previous buffer contents after swapping.
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 	// Set the handle for the window to render to.
 	swapChainDesc.OutputWindow = hwnd;
@@ -524,20 +523,22 @@ bool DeviceResources::Render()
 
 bool DeviceResources::WaitForPrevFrame()
 {
-
 	HRESULT result;
-	const UINT64 fence = m_fenceValue;
-	result = m_commandQueue->Signal(m_fence, fence);
+	const UINT64 currentFenceValue = m_fenceValues[m_currentFrame];
+	result = m_commandQueue->Signal(m_fence, currentFenceValue);
 	if (FAILED(result)) return false;
-	m_fenceValue++;
+	
+	m_currentFrame = m_swapChain->GetCurrentBackBufferIndex();
 
 	// Wait until the previous frame is finished.
-	if (m_fence->GetCompletedValue() < fence)
+	if (m_fence->GetCompletedValue() < currentFenceValue)
 	{
-		result = m_fence->SetEventOnCompletion(fence, m_fenceEvent);
+		result = m_fence->SetEventOnCompletion(currentFenceValue, m_fenceEvent);
 		if (FAILED(result)) return false;
-		WaitForSingleObject(m_fenceEvent, INFINITE);
+		WaitForSingleObjectEx(m_fenceEvent, INFINITE, FALSE);
 	}
+
+	m_fenceValues[m_currentFrame] = currentFenceValue + 1;
 
 	return true;
 }

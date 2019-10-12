@@ -180,6 +180,8 @@ void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWi
 	static const DirectX::XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const DirectX::XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
+	
+
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
 	// Prepare to pass the updated model matrix to the shader.
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
@@ -187,13 +189,13 @@ void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWi
 
 void Renderer::Uninitialize()
 {
-	if (m_commandList)
+	if (m_commandList != nullptr)
 	{
 		m_commandList->Release();
 		m_commandList = 0;
 	}
 	
-	if (m_deviceResources)
+	if (m_deviceResources != nullptr)
 	{
 		m_deviceResources->Uninitialize();
 		delete m_deviceResources;
@@ -203,9 +205,14 @@ void Renderer::Uninitialize()
 
 bool Renderer::Frame()
 {
+
 	if (!Render()) return false;
 	
 	return true;
+}
+
+void Renderer::Update()
+{
 }
 
 bool Renderer::Render()

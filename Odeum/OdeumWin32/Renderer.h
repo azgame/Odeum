@@ -30,6 +30,7 @@ public:
 	bool Frame();
 
 private:
+	void Update();
 	bool Render();
 
 	static const UINT c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;

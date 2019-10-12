@@ -132,6 +132,11 @@ void DX::DeviceResources::CreateDeviceResources()
 
 	DX::ThrowIfFailed(hr);
 
+	// Get the adapter (video card) description.
+	/*DXGI_ADAPTER_DESC adapterDesc;
+	hr = adapter->GetDesc(&adapterDesc);
+	printf("%c", adapterDesc.Description);*/
+
 	// Create the command queue.
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;

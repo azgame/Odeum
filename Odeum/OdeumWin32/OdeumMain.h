@@ -3,11 +3,24 @@
 
 #include "pch.h"
 
+#include "Input.h"
+#include "Renderer.h"
+#include "Camera.h"
+
 class OdeumMain
 {
 public:
 	OdeumMain();
 	~OdeumMain();
+
+	bool Initialize();
+	bool Run();
+	void Uninitialize();
+
+private:
+	Input* m_input = Input::getInstance();
+	Renderer* m_renderer;
+	Camera* m_mainCamera;
 };
 
 #endif // !_ODEUMMAIN_H

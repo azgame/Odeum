@@ -160,7 +160,6 @@
     <ClCompile Include="OdeumMain.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

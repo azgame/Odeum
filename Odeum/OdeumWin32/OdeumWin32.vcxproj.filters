@@ -69,7 +69,6 @@
       <Filter>Content</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="OdeumMain.cpp" />
   </ItemGroup>
   <ItemGroup>
