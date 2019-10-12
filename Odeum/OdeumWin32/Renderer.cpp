@@ -133,7 +133,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	}
 
 	// Map the constant buffers.
-	CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
+	CD3DX12_RANGE readRange(0, 0);
 	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
 	if (FAILED(result)) return false;
 
@@ -149,20 +149,13 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth)
 {
+	// TODO Aidan: This is hardcoded camera values, instantiate and update our camera object instead
 	float aspectRatio = screenWidth / screenHeight;
 	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
 
-	// This is a simple example of change that can be made when the app is in
-	// portrait or snapped view.
-	if (aspectRatio < 1.0f)
-	{
-		fovAngleY *= 2.0f;
-	}
-
-	// This sample makes use of a right-handed coordinate system using row-major matrices.
 	DirectX::XMMATRIX perspectiveMatrix = DirectX::XMMatrixPerspectiveFovRH(
 		fovAngleY,
 		aspectRatio,
@@ -183,7 +176,6 @@ void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWi
 	
 
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
-	// Prepare to pass the updated model matrix to the shader.
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
 }
 
@@ -261,8 +253,6 @@ bool Renderer::Render()
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_cbvDescriptorSize);
 	m_commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
-
-	
 
 	// Then set the color to clear the window to.
 	color[0] = 0.2;
