@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 App::App()
 {
-	m_Renderer = nullptr;
+	m_engine = nullptr;
 }
 
 App::App(const App& other)
@@ -42,15 +42,10 @@ bool App::Initialize()
 
 	m_Input->Initialize(m_hwnd);
 
-	m_Renderer = new Renderer();
-	if (!m_Renderer) return false;
+	m_engine = new OdeumMain();
+	if (!m_engine) return false;
 
-	if (!m_Renderer->Initialize(
-		screenHeight, 
-		screenWidth, 
-		m_hwnd
-		))
-		return false;
+	if (!m_engine->Initialize(screenHeight, screenWidth, m_hwnd)) return false;
 	
 	return true;
 }
@@ -76,19 +71,21 @@ void App::Run()
 			isRunning = false;
 		else
 		{
-			if (!Frame())
-				isRunning = false;
+			m_Input->Update(m_hwnd);
+			if (m_Input->kb.Escape) isRunning = false;
+			
+			if (!m_engine->Run()) isRunning = false;
 		}	
 	}
 }
 
 void App::Uninitialize()
 {
-	if (m_Renderer)
+	if (m_engine)
 	{
-		m_Renderer->Uninitialize();
-		delete m_Renderer;
-		m_Renderer = nullptr;
+		m_engine->Uninitialize();
+		delete m_engine;
+		m_engine = nullptr;
 	}
 
 	if (m_Input)
@@ -113,16 +110,6 @@ LRESULT App::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 		default:
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
-}
-
-bool App::Frame()
-{
-	m_Input->Update(m_hwnd);
-	if (m_Input->kb.Escape) return false;
-	// Update call
-	if (!m_Renderer->Frame()) return false;
-
-	return true;
 }
 
 void App::InitializeWindow(int& screenHeight, int& screenWidth)

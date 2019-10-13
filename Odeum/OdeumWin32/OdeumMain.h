@@ -13,7 +13,7 @@ public:
 	OdeumMain();
 	~OdeumMain();
 
-	bool Initialize();
+	bool Initialize(int, int, HWND);
 	bool Run();
 	void Uninitialize();
 

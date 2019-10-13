@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include "OdeumMain.h"
 
 #include "Input.h"
 #include "Renderer.h"
@@ -21,7 +22,6 @@ public:
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
 private:
-	bool Frame(); // --- Using guide for now, switch later
 	void InitializeWindow(int&, int&);
 	void UninitializeWindow();
 
@@ -29,7 +29,7 @@ private:
 	HINSTANCE					m_hInstance;
 	HWND						m_hwnd;
 	Input*						m_Input = Input::getInstance();
-	Renderer*					m_Renderer;
+	OdeumMain*					m_engine;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

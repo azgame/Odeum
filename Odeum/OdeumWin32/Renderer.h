@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "DeviceResources.h"
 #include "Model.h"
+#include "Camera.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -25,7 +26,7 @@ public:
 	~Renderer();
 
 	bool Initialize(int, int, HWND);
-	void CreateWindowSizeDependentResources(int screenHeight, int screenWidth);
+	void CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool Frame();
 
@@ -48,6 +49,7 @@ private:
 	Model*										m_triangle;
 	D3D12_RECT									m_scissorRect;
 	unsigned int								m_bufferIndex;
+	Camera*										m_camera;
 };
 
 #endif // !_RENDERER_H_

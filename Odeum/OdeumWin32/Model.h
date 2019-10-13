@@ -29,16 +29,14 @@ private:
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D12GraphicsCommandList*);
 	
-	ID3D12Resource* m_vertexBuffer;
-	ID3D12Resource* m_vertexBufferUpload;
-	
-	ID3D12Resource* m_indexBuffer;
-	ID3D12Resource* m_indexBufferUpload;
+	ID3D12Resource*							m_vertexBuffer;
+	ID3D12Resource*							m_vertexBufferUpload;
+	ID3D12Resource*							m_indexBuffer;
+	ID3D12Resource*							m_indexBufferUpload;
+	D3D12_VERTEX_BUFFER_VIEW				m_vertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW					m_indexBufferView;
 
-	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
-	D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
-
-	int m_vertexCount, m_indexCount;
+	int										m_vertexCount, m_indexCount;
 };
 
 #endif

@@ -24,7 +24,7 @@ void Camera::SetViewMatrix(DirectX::XMFLOAT3 eye, DirectX::XMFLOAT3 lookAt, Dire
 	m_up = up;
 
 	// Calculate the view matrix.
-	XMMATRIX view = XMMatrixLookAtLH(
+	XMMATRIX view = XMMatrixLookAtRH(
 		XMLoadFloat3(&m_eye),
 		XMLoadFloat3(&m_lookAt),
 		XMLoadFloat3(&m_up)
@@ -53,7 +53,7 @@ void Camera::SetProjMatrix(float fieldOfView, float aspectRatio, float nearPlane
 	m_farPlane = farPlane;
 	XMStoreFloat4x4(
 		&m_projectionMatrix,
-		XMMatrixPerspectiveFovLH(
+		XMMatrixPerspectiveFovRH(
 			m_fieldOfView,
 			m_aspectRatio,
 			m_nearPlane,

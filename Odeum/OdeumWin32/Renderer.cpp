@@ -39,6 +39,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 	parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
 
+	// Init Root Signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
@@ -55,6 +56,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	D3D12SerializeRootSignature(&descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
 	result = m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
 
+	// Init Shaders
 	ID3DBlob* vertexShader;
 	ID3DBlob* pixelShader;
 
@@ -69,6 +71,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
+	// Init Pipeline Descrtion
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 	psoDesc.pRootSignature = m_rootSignature;
@@ -97,6 +100,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	m_triangle->Initialize(m_device, m_commandList);
 
+	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = c_frameCount;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -105,6 +109,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_cbvHeap));
 	if (FAILED(result)) return false;
 
+	// Init constant buffer
 	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
 	result = m_device->CreateCommittedResource(
@@ -116,7 +121,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		IID_PPV_ARGS(&m_constantBuffer));
 	if (FAILED(result)) return false;
 
-
+	// Get memory location of constant buffers (one for each back buffer
 	D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
 	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
 	m_cbvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -137,8 +142,6 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
 	if (FAILED(result)) return false;
 
-	CreateWindowSizeDependentResources(screenHeight, screenWidth);
-
 	m_deviceResources->InitializeFence();
 
 	if (signature) signature->Release();
@@ -147,16 +150,18 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	return true;
 }
 
-void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth)
+void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera)
 {
-	// TODO Aidan: This is hardcoded camera values, instantiate and update our camera object instead
+	m_camera = camera;
+	
 	float aspectRatio = screenWidth / screenHeight;
 	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
 
-	DirectX::XMMATRIX perspectiveMatrix = DirectX::XMMatrixPerspectiveFovRH(
+	// Camera->SetProjMatrix
+	m_camera->SetProjMatrix(
 		fovAngleY,
 		aspectRatio,
 		0.01f,
@@ -165,17 +170,17 @@ void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWi
 
 	XMStoreFloat4x4(
 		&m_constantBufferData.projection,
-		DirectX::XMMatrixTranspose(perspectiveMatrix)
+		DirectX::XMMatrixTranspose(m_camera->Projection())
 	);
 
-	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-	static const DirectX::XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
-	static const DirectX::XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
-	static const DirectX::XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+	// Camera->SetViewMatrix
+	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis. ------ just starting location, can change
+	static const DirectX::XMFLOAT3 eye = { 0.0f, 0.7f, 1.5f };
+	static const DirectX::XMFLOAT3 at = { 0.0f, -0.1f, 0.0f };
+	static const DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
 
-	
-
-	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
+	m_camera->SetViewMatrix(eye, at, up);
+	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
 }
 
@@ -197,7 +202,7 @@ void Renderer::Uninitialize()
 
 bool Renderer::Frame()
 {
-
+	Update();
 	if (!Render()) return false;
 	
 	return true;
@@ -205,6 +210,8 @@ bool Renderer::Frame()
 
 void Renderer::Update()
 {
+	// Update constant buffer with new camera eye and lookat
+	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 }
 
 bool Renderer::Render()
@@ -221,17 +228,11 @@ bool Renderer::Render()
 
 	// Reset (re-use) the memory associated command allocator.
 	result = m_deviceResources->GetCommandAllocator()->Reset();
-	if (FAILED(result))
-	{
-		return false;
-	}
+	if (FAILED(result)) return false;
 
 	// Reset the command list, use empty pipeline state for now since there are no shaders and we are just clearing the screen.
 	result = m_commandList->Reset(m_deviceResources->GetCommandAllocator(), m_pipelineState);
-	if (FAILED(result))
-	{
-		return false;
-	}
+	if (FAILED(result)) return false;
 
 	m_commandList->SetGraphicsRootSignature(m_rootSignature);
 	ID3D12DescriptorHeap* ppHeaps[] = { m_cbvHeap };
@@ -275,10 +276,7 @@ bool Renderer::Render()
 
 	// Close the list of commands.
 	result = m_commandList->Close();
-	if (FAILED(result))
-	{
-		return false;
-	}
+	if (FAILED(result)) return false;
 
 	// Load the command list array (only one command list for now).
 	ID3D12CommandList* ppCommandLists[] = { m_commandList };

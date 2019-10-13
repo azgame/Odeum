@@ -3,7 +3,6 @@
 
 #include "pch.h"
 
-
 class Camera
 {
 public:
@@ -21,6 +20,8 @@ public:
 	float FarClipPlane()				{ return m_farPlane; }
 	float Pitch()						{ return m_pitch; }
 	float Yaw()							{ return m_yaw; }
+	DirectX::XMMATRIX View()			{ return XMLoadFloat4x4(&m_viewMatrix); }
+	DirectX::XMMATRIX Projection()		{ return XMLoadFloat4x4(&m_projectionMatrix); }
 	DirectX::XMMATRIX World()			{ return XMLoadFloat4x4(&m_inverseView); }
 
 private:
