@@ -71,7 +71,7 @@ void App::Run()
 			isRunning = false;
 		else
 		{
-			m_Input->Update(m_hwnd);
+			m_Input->Update();
 			if (m_Input->kb.Escape) isRunning = false;
 			
 			if (!m_engine->Run()) isRunning = false;
