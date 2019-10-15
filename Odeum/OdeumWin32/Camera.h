@@ -13,13 +13,14 @@ public:
 	void SetViewMatrix(DirectX::XMFLOAT3 eye, DirectX::XMFLOAT3 lookAt, DirectX::XMFLOAT3 up);
 	void SetProjMatrix(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
 
-	void LookDirection(DirectX::XMFLOAT3 lookDirection);
-	void Eye(DirectX::XMFLOAT3 position);
+	void SetLookDirection(DirectX::XMFLOAT3 lookDirection);
+	void SetEye(DirectX::XMFLOAT3 position);
 
 	float NearClipPlane()				{ return m_nearPlane; }
 	float FarClipPlane()				{ return m_farPlane; }
 	float Pitch()						{ return m_pitch; }
 	float Yaw()							{ return m_yaw; }
+	DirectX::XMFLOAT3 Eye()				{ return m_eye; }
 	DirectX::XMMATRIX View()			{ return XMLoadFloat4x4(&m_viewMatrix); }
 	DirectX::XMMATRIX Projection()		{ return XMLoadFloat4x4(&m_projectionMatrix); }
 	DirectX::XMMATRIX World()			{ return XMLoadFloat4x4(&m_inverseView); }

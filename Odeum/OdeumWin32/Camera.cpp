@@ -62,7 +62,7 @@ void Camera::SetProjMatrix(float fieldOfView, float aspectRatio, float nearPlane
 	);
 }
 
-void Camera::LookDirection(DirectX::XMFLOAT3 lookDirection)
+void Camera::SetLookDirection(DirectX::XMFLOAT3 lookDirection)
 {
 	XMFLOAT3 lookAt;
 	lookAt.x = m_eye.x + lookDirection.x;
@@ -72,7 +72,7 @@ void Camera::LookDirection(DirectX::XMFLOAT3 lookDirection)
 	SetViewMatrix(m_eye, lookAt, m_up);
 }
 
-void Camera::Eye(DirectX::XMFLOAT3 position)
+void Camera::SetEye(DirectX::XMFLOAT3 position)
 {
 	SetViewMatrix(position, m_lookAt, m_up);
 }
