@@ -21,6 +21,9 @@ private:
 	Input* m_input = Input::getInstance();
 	Renderer* m_renderer;
 	Camera* m_mainCamera;
+	std::vector<Model*> m_renderObjects;
+
+	void UpdateCamera();
 };
 
 #endif // !_ODEUMMAIN_H

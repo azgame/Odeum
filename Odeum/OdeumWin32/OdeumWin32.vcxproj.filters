@@ -23,6 +23,9 @@
     <Filter Include="Scenes">
       <UniqueIdentifier>{fafd653c-5132-4b22-8164-154220c4d254}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DXR">
+      <UniqueIdentifier>{e8fdc37f-1b76-4d8b-8388-99b33da109f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -48,6 +51,12 @@
     </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="OdeumMain.h" />
+    <ClInclude Include="DXRaytracingHelper.h">
+      <Filter>DXR</Filter>
+    </ClInclude>
+    <ClInclude Include="DXRHelper.h">
+      <Filter>DXR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">

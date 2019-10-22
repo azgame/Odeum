@@ -5,7 +5,6 @@
 Renderer::Renderer()
 {
 	m_deviceResources = nullptr;
-	m_triangle = new Model();
 }
 
 Renderer::Renderer(const Renderer& other)
@@ -17,10 +16,10 @@ Renderer::~Renderer()
 {
 }
 
-bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
+bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND hwnd, bool VSYNC_ENABLED, bool FULL_SCREEN)
 {
 	HRESULT result;
-	
+
 	m_deviceResources = new DeviceResources(); // need to get device and commandlist from device resources
 	if (!m_deviceResources) return false;
 	bool dxsuccess = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN);
@@ -29,6 +28,15 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize DirectX", L"Error", MB_OK);
 		return false;
 	}
+	
+	return true;
+}
+
+bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
+{
+	HRESULT result;
+	
+	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN)) return false;
 
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -98,8 +106,6 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	result = m_commandList->Close();
 	if (FAILED(result)) return false;
 
-	m_triangle->Initialize(m_device, m_commandList);
-
 	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = c_frameCount;
@@ -149,6 +155,39 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	return true;
 }
+
+bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd)
+{
+	HRESULT result;
+
+	// Create raytracing interfaces: raytracing device and commandlist.
+	if (!CreateRaytracingInterfaces(screenHeight, screenWidth, hwnd)) return false;
+
+	// Create root signatures for the shaders.
+	if (!CreateRootSignatures()) return false;
+
+	// Create a raytracing pipeline state object which defines the binding of shaders, state and resources to be used during raytracing.
+	if (!CreateRaytracingPipelineStateObject()) return false;
+
+	// Create a heap for descriptors.
+	if (!CreateDescriptorHeap()) return false;
+
+	// Build geometry to be used in the sample.
+	if (!BuildGeometry()) return false;
+
+	// Build raytracing acceleration structures from the generated geometry.
+	if (!BuildAccelerationStructures()) return false;
+
+	// Build shader tables, which define shaders and their local root arguments.
+	if (!BuildShaderTables()) return false;
+
+	// Create an output 2D texture to store the raytracing result to.
+	if (!CreateRaytracingOutputResource()) return false;
+	
+	return true;
+}
+
+
 
 void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera)
 {
@@ -200,26 +239,14 @@ void Renderer::Uninitialize()
 	}
 }
 
-bool Renderer::Frame()
-{
-	Update();
-	if (!Render()) return false;
-	
-	return true;
-}
-
-void Renderer::Update()
-{
-	// Update constant buffer with new camera eye and lookat
-	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
-}
-
-bool Renderer::Render()
+bool Renderer::Render(std::vector<Model*> renderObjects)
 {
 	HRESULT								result;
 	D3D12_RESOURCE_BARRIER				barrier;
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
+
+	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
@@ -269,7 +296,9 @@ bool Renderer::Render()
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
-	m_triangle->Render(m_commandList);
+	for (auto object : renderObjects) {
+		object->Render(m_commandList);
+	}
 
 	// Indicate that the back buffer will now be used to present.
 	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -287,4 +316,62 @@ bool Renderer::Render()
 	if (!m_deviceResources->Render()) return false;
 	
 	return true;
+}
+
+bool Renderer::DoRaytracing()
+{
+}
+
+bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd)
+{
+	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN)) return false;
+}
+
+bool Renderer::CreateRootSignatures()
+{
+
+	// Global Root Signature
+	CD3DX12_DESCRIPTOR_RANGE UAVDescriptor;
+}
+
+bool Renderer::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC & desc, ComPtr<ID3D12RootSignature>* rootSig)
+{
+
+}
+
+bool Renderer::CreateLocalRootSignatureSubobjects(CD3DX12_STATE_OBJECT_DESC * raytracingPipeline)
+{
+}
+
+bool Renderer::CreateRaytracingPipelineStateObject()
+{
+}
+
+bool Renderer::CreateDescriptorHeap()
+{
+}
+
+bool Renderer::CreateRaytracingOutputResource()
+{
+}
+
+bool Renderer::BuildGeometry()
+{
+}
+
+bool Renderer::BuildAccelerationStructures()
+{
+}
+
+bool Renderer::BuildShaderTables()
+{
+}
+
+bool Renderer::CopyRaytracingOutputToBackbuffer()
+{
+}
+
+UINT Renderer::AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE * cpuDescriptor, UINT descriptorIndexToUse)
+{
+	return 0;
 }

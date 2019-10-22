@@ -78,6 +78,14 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 			break;
 		}
 	}
+
+	// Check for DXR support
+	result = IsDirectXRaytracingSupported(adapter);
+	if (FAILED(result))
+	{
+		MessageBox(hwnd, L"DirectX Raytracing is not supported by your OS, GPU and/or driver", L"Error", MB_OK);
+		return false;
+	}
 	
 	// TODO Aidan: Rewrite the adapter/output code to check for multiple adapters (i.e. integrated chip vs dedicated card)
 	// Enumerate the primary adapter output (monitor).
@@ -280,28 +288,20 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	// Get the size of the memory location for the render target view descriptors.
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	// Get a pointer to the first back buffer from the swap chain.
-	result = m_swapChain->GetBuffer(0, IID_PPV_ARGS(&m_backBufferRenderTarget[0]));
-	if (FAILED(result))
-	{
-		return false;
+	for (int i = 0; i < c_frameCount; i++) {
+		// Get a pointer to this back buffer from the swap chain.
+		result = m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_backBufferRenderTarget[i]));
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Create a render target view for this back buffer.
+		m_device->CreateRenderTargetView(m_backBufferRenderTarget[i], NULL, renderTargetViewHandle);
+
+		// Increment the view handle to the next descriptor location in the render target view heap.
+		renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
 	}
-
-	// Create a render target view for the first back buffer.
-	m_device->CreateRenderTargetView(m_backBufferRenderTarget[0], NULL, renderTargetViewHandle);
-
-	// Increment the view handle to the next descriptor location in the render target view heap.
-	renderTargetViewHandle.ptr += renderTargetViewDescriptorSize;
-
-	// Get a pointer to the second back buffer from the swap chain.
-	result = m_swapChain->GetBuffer(1, IID_PPV_ARGS(&m_backBufferRenderTarget[1]));
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Create a render target view for the second back buffer.
-	m_device->CreateRenderTargetView(m_backBufferRenderTarget[1], NULL, renderTargetViewHandle);
 
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 	dsvHeapDesc.NumDescriptors = 1;

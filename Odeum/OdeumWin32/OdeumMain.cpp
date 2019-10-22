@@ -6,6 +6,9 @@ OdeumMain::OdeumMain()
 {
 	m_renderer = nullptr;
 	m_mainCamera = nullptr;
+
+	// For now hardcode number of objects
+	m_renderObjects.push_back(new Model());
 }
 
 
@@ -22,20 +25,37 @@ bool OdeumMain::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Initialize renderer
 	m_renderer = new Renderer();
-	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd)) return false;
+	if (!m_renderer->InitializeRaster(screenHeight, screenWidth, hwnd)) return false;
+	// if (!m_renderer->InitializeRaytrace(screenHeight, screenWidth, hwnd)) return false;
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
 	m_renderer->CreateWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
 
-	//m_input->Initialize(hwnd);
+	// Initialize objects
+	for (auto object : m_renderObjects) {
+		object->Initialize(m_renderer->GetD3DDevice(), m_renderer->GetCommandList());
+	}
 
 	return true;
 }
 
 bool OdeumMain::Run() 
 {
-	// TODO Ryan: Grab Input - m_input. It might need some more functions based on what the guide recommends. Update Input class as needed
+	UpdateCamera();
+	
+	if (!m_renderer->Render(m_renderObjects)) return false;
 
+	return true;
+}
+
+void OdeumMain::Uninitialize() 
+{
+	
+}
+
+// TODO Ryan: Add mouse controls to rotate the camera around
+void OdeumMain::UpdateCamera() 
+{
 	DirectX::XMFLOAT3 move;
 	move = m_mainCamera->Eye();
 
@@ -63,14 +83,4 @@ bool OdeumMain::Run()
 	look.x = move.x; look.y = move.y; look.z = move.z - 1.0f;
 
 	m_mainCamera->SetViewMatrix(move, look, up);
-	
-	// TODO Ryan: Update Camera. Just use m_mainCamera->SetViewMatrix(eye, look, up) to update the eye and look XMFLOAT3's in there
-	if (!m_renderer->Frame()) return false;
-	
-	return true;
-}
-
-void OdeumMain::Uninitialize() 
-{
-	
 }

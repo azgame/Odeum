@@ -1,6 +1,8 @@
 #ifndef _PCH_H_
 #define _PCH_H_
 
+#include <Windows.h>
+
 #include <d3d12.h>
 #include "d3dx12.h"
 #include <d3d11_4.h>
@@ -16,6 +18,14 @@
 
 #include <stdio.h>
 #include <vector>
+#include <unordered_map>
 #include <memory>
+#include <atlbase.h>
+#include <wrl.h>
+#include <stdlib.h>
+#include <sstream>
+#include <iomanip>
+#include <list>
+#include <string>
 
 #endif // !_PCH_H_

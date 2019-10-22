@@ -6,8 +6,10 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "pch.h"
+#include "DXRHelper.h"
+#include "DXRaytracingHelper.h"
 
-static const UINT c_frameCount = 2;		// Use double buffering.
+static const UINT c_frameCount = 3;		// Use double buffering.
 
 class DeviceResources
 {
@@ -23,7 +25,7 @@ public:
 	bool Render();
 	bool WaitForPrevFrame();
 
-	ID3D12Device* GetD3Device()							{ return m_device; }
+	ID3D12Device5* GetD3Device()						{ return m_device; }
 	ID3D12CommandAllocator* GetCommandAllocator()		{ return m_commandAllocator; }
 	ID3D12Resource* GetBackBuffer(int i)				{ return m_backBufferRenderTarget[i]; }
 	ID3D12DescriptorHeap* GetRTVHeap()					{ return m_renderTargetViewHeap; }
@@ -41,7 +43,7 @@ public:
 
 private:
 	bool								m_vsync_enabled;
-	ID3D12Device*						m_device;
+	ID3D12Device5*						m_device;
 	ID3D12CommandQueue*					m_commandQueue;
 	char								m_videoCardDescription[128];
 	IDXGISwapChain3*					m_swapChain;
