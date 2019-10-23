@@ -12,8 +12,6 @@
 #ifndef RAYTRACINGHLSLCOMPAT_H
 #define RAYTRACINGHLSLCOMPAT_H
 
-#include "pch.h"
-
 struct Viewport
 {
 	float left;
@@ -33,6 +31,12 @@ struct ModelViewProjectionConstantBuffer
 	DirectX::XMFLOAT4X4 model;
 	DirectX::XMFLOAT4X4 view;
 	DirectX::XMFLOAT4X4 projection;
+};
+
+struct VertexPositionColor
+{
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 color;
 };
 
 #endif // RAYTRACINGHLSLCOMPAT_H

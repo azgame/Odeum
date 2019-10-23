@@ -57,6 +57,7 @@
     <ClInclude Include="DXRHelper.h">
       <Filter>DXR</Filter>
     </ClInclude>
+    <ClInclude Include="RaytracingHLSLCompat.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -88,5 +89,8 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="Raytracing.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ DeviceResources::DeviceResources()
 	m_renderTargetViewHeap = 0;
 	m_backBufferRenderTarget[0] = 0;
 	m_backBufferRenderTarget[1] = 0;
+	m_backBufferRenderTarget[2] = 0;
 	m_commandAllocator = 0;
 	m_pipelineState = 0;
 	m_fence = 0;
@@ -199,7 +200,8 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 	swapChainDesc.BufferDesc.Width = screenWidth;
 
 	// Set a regular 32-bit surface for the back buffers.
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.BufferDesc.Format = m_backBufferFormat;
 
 	// Set the usage of the back buffers to be render target outputs.
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

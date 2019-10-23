@@ -34,6 +34,7 @@ public:
 	IDXGISwapChain3* GetSwapChain() 					{ return m_swapChain; }
 	D3D12_VIEWPORT GetViewPort()						{ return m_viewPort; }
 	D3D12_RECT* GetSSRect()								{ return m_ssRect; }
+	DXGI_FORMAT GetBackBufferFormat()					{ return m_backBufferFormat; }
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const
 	{

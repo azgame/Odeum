@@ -4,15 +4,14 @@
 #include "pch.h"
 
 
+struct VertexType
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT4 color;
+};
 
 class Model 
 {
-	struct VertexType
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT4 color;
-	};
-
 public:
 	Model();
 	Model(const Model&);
@@ -24,6 +23,9 @@ public:
 
 	int GetIndexCount();
 
+	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBuffer; }
+	ID3D12Resource* GetIndexBuffer()		{ return m_indexBuffer; }
+
 private:
 	bool InitializeBuffers(ID3D12Device*, ID3D12GraphicsCommandList*);
 	void ShutdownBuffers();
@@ -31,9 +33,9 @@ private:
 	
 	ID3D12Resource*							m_vertexBuffer;
 	ID3D12Resource*							m_vertexBufferUpload;
+	D3D12_VERTEX_BUFFER_VIEW				m_vertexBufferView;
 	ID3D12Resource*							m_indexBuffer;
 	ID3D12Resource*							m_indexBufferUpload;
-	D3D12_VERTEX_BUFFER_VIEW				m_vertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW					m_indexBufferView;
 
 	int										m_vertexCount, m_indexCount;
