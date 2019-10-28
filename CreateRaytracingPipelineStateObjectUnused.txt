@@ -1,0 +1,117 @@
+// Create 7 subobjects that combine into a RTPSO:
+	// Subobjects need to be associated with DXIL exports (i.e. shaders) either by way of default or explicit associations
+	// Default association applies to every exported shader entrypoint that doesn't have any of the same type of subobject associated with it
+	// Currently, we use default shader association except for local root signature subobject
+	// which has an explicit association specified
+	// 1 - DXIL library
+	// 1 - Triangle hit group
+	// 1 - Shader config
+	// 2 - Local root signature and association
+	// 1 - Global root signature
+	// 1 - Pipeline config
+	//CD3DX12_STATE_OBJECT_DESC raytracingPipeline{ D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE };
+
+	UINT32 code(0);
+	IDxcBlobEncoding* pShaderText(nullptr);
+	// TODO Aidan: This guide is promising. Just need to compile the shaders and it should be good
+	dxc::DxcDllSupport dxcSupport;
+	result = dxcSupport.Initialize();
+	if (FAILED(result)) return false;
+
+	LPCWSTR ppArgs[] = { L"/Zi" }; // debug info
+	IDxcCompiler *pCompiler = nullptr;
+	ThrowIfFailed(dxcSupport.CreateInstance(CLSID_DxcCompiler, &pCompiler), L"Error: Could not create compiler");
+
+	pCompiler->Compile(
+		m_rayGenLibrary,          // program text
+		L"Raygen.hlsl",   // file name, mostly for error messages
+		c_raygenShaderName,          // entry point function
+		L"lib_6_3",        // target profile
+		NULL,				// compilation arguments
+		0,					// number of compilation arguments
+		nullptr, 0,       // name/value defines and their count
+		nullptr,          // handler for #include directives
+		NULL);
+
+	pCompiler->Compile(
+		m_hitLibrary,          // program text
+		L"Hit.hlsl",   // file name, mostly for error messages
+		c_closestHitShaderName,          // entry point function
+		L"lib_6_3",        // target profile
+		NULL,				// compilation arguments
+		0,					// number of compilation arguments
+		nullptr, 0,       // name/value defines and their count
+		nullptr,          // handler for #include directives
+		NULL);
+
+	pCompiler->Compile(
+		m_missLibrary,          // program text
+		L"Miss.hlsl",   // file name, mostly for error messages
+		c_missShaderName,          // entry point function
+		L"lib_6_3",        // target profile
+		NULL,				// compilation arguments
+		0,					// number of compilation arguments
+		nullptr, 0,       // name/value defines and their count
+		nullptr,          // handler for #include directives
+		NULL);
+
+	nv_helpers_dx12::RayTracingPipelineGenerator pipeline(m_device, m_device);
+
+	pipeline.AddLibrary(m_rayGenLibrary, { L"raygeneration" });
+	pipeline.AddLibrary(m_hitLibrary, { L"closesthit" });
+	pipeline.AddLibrary(m_missLibrary, { L"miss" });
+
+	m_rayGenSignature = CreateRayGenSignature();
+	m_hitSignature = CreateHitSignature();
+	m_missSignature = CreateMissSignature();
+
+	pipeline.AddHitGroup(L"HitGroup", L"closesthit");
+
+	pipeline.AddRootSignatureAssociation(m_rayGenSignature, { L"raygeneration" });
+	pipeline.AddRootSignatureAssociation(m_missSignature, { L"miss" });
+	pipeline.AddRootSignatureAssociation(m_hitSignature, { L"HitGroup" });
+
+	pipeline.SetMaxPayloadSize(4 * sizeof(float)); // RGB + distance
+	pipeline.SetMaxAttributeSize(2 * sizeof(float)); // barycentric coordinates
+	pipeline.SetMaxRecursionDepth(1);
+
+	m_rtStateObject = pipeline.Generate();
+
+	ThrowIfFailed(m_rtStateObject->QueryInterface(IID_PPV_ARGS(&m_rtStateObjectProps)));
+
+	//// Triangle hit group
+	//// A hit group specifies closest hit, any hit and intersection shaders to be executed when a ray intersects the geometry's triangle/AABB
+	//// Here we only use triangle geometry with a closest hit shader, so others are not set
+	//auto hitGroup = raytracingPipeline.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
+	//hitGroup->SetClosestHitShaderImport(c_closestHitShaderName);
+	//hitGroup->SetHitGroupExport(c_hitGroupName);
+	//hitGroup->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
+
+	//// Shader config
+	//// Defines the maximum sizes in bytes for the ray payload and attribute structure.
+	//auto shaderConfig = raytracingPipeline.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
+	//UINT payloadSize = 4 * sizeof(float);   // float4 color
+	//UINT attributeSize = 2 * sizeof(float); // float2 barycentrics
+	//shaderConfig->Config(payloadSize, attributeSize);
+
+	//// Local root signature and shader association
+	//CreateLocalRootSignatureSubobjects(&raytracingPipeline);
+	//// This is a root signature that enables a shader to have unique arguments that come from shader tables
+
+	//// Global root signature
+	//// This is a root signature that is shared across all raytracing shaders invoked during a DispatchRays() call
+	//auto globalRootSignature = raytracingPipeline.CreateSubobject<CD3DX12_GLOBAL_ROOT_SIGNATURE_SUBOBJECT>();
+	//globalRootSignature->SetRootSignature(m_raytracingGlobalRootSignature);
+
+	//// Pipeline config
+	//// Defines the maximum TraceRay() recursion depth
+	//auto pipelineConfig = raytracingPipeline.CreateSubobject<CD3DX12_RAYTRACING_PIPELINE_CONFIG_SUBOBJECT>();
+	//// PERFOMANCE TIP: Set max recursion depth as low as needed 
+	//// as drivers may apply optimization strategies for low recursion depths.
+	//UINT maxRecursionDepth = 1; // ~ primary rays only
+	//pipelineConfig->Config(maxRecursionDepth);
+
+	//PrintStateObjectDesc(raytracingPipeline);
+
+	//result = m_device->CreateStateObject(raytracingPipeline, IID_PPV_ARGS(&m_dxrStateObject));
+	//if (FAILED(result)) return false;

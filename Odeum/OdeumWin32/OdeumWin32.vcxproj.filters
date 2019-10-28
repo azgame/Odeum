@@ -26,6 +26,9 @@
     <Filter Include="DXR">
       <UniqueIdentifier>{e8fdc37f-1b76-4d8b-8388-99b33da109f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DXR Includes">
+      <UniqueIdentifier>{67dfe2ae-51e8-4376-8878-ac724a389e6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -57,7 +60,15 @@
     <ClInclude Include="DXRHelper.h">
       <Filter>DXR</Filter>
     </ClInclude>
-    <ClInclude Include="RaytracingHLSLCompat.h" />
+    <ClInclude Include="RaytracingHLSLCompat.h">
+      <Filter>DXR</Filter>
+    </ClInclude>
+    <ClInclude Include="DXR Includes\dxcapi.h">
+      <Filter>DXR Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="DXR Includes\dxcapi.use.h">
+      <Filter>DXR Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -90,6 +101,18 @@
     </None>
     <None Include="packages.config" />
     <None Include="Raytracing.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Raygen.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Miss.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Hit.hlsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Common.hlsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

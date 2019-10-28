@@ -2,7 +2,6 @@
 #define _APP_H_
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 #include "OdeumMain.h"
 
 #include "Input.h"

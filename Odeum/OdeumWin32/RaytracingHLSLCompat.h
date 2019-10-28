@@ -12,6 +12,8 @@
 #ifndef RAYTRACINGHLSLCOMPAT_H
 #define RAYTRACINGHLSLCOMPAT_H
 
+#include "pch.h"
+
 struct Viewport
 {
 	float left;

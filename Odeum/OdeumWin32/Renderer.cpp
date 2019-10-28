@@ -1,6 +1,7 @@
 ﻿#include "Renderer.h"
 #include "DXRaytracingHelper.h"
 #include "DXRHelper.h"
+#include "DXR Includes/dxcapi.h"
 
 const wchar_t* Renderer::c_hitGroupName = L"MyHitGroup";
 const wchar_t* Renderer::c_raygenShaderName = L"MyRaygenShader";
@@ -15,7 +16,6 @@ Renderer::Renderer()
 Renderer::Renderer(const Renderer& other)
 {
 }
-
 
 Renderer::~Renderer()
 {
@@ -208,7 +208,6 @@ bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, 
 	return true;
 }
 
-
 void Renderer::CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera)
 {
 	m_camera = camera;
@@ -376,7 +375,6 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 	return true;
 }
 
-
 bool Renderer::DoRaytracing()
 {
 	auto DispatchRays = [&](auto* commandList, auto* stateObject, auto* dispatchDesc)
@@ -479,71 +477,12 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 {
 	HRESULT result;
 	
-	// Create 7 subobjects that combine into a RTPSO:
-	// Subobjects need to be associated with DXIL exports (i.e. shaders) either by way of default or explicit associations
-	// Default association applies to every exported shader entrypoint that doesn't have any of the same type of subobject associated with it
-	// Currently, we use default shader association except for local root signature subobject
-	// which has an explicit association specified
-	// 1 - DXIL library
-	// 1 - Triangle hit group
-	// 1 - Shader config
-	// 2 - Local root signature and association
-	// 1 - Global root signature
-	// 1 - Pipeline config
-	CD3DX12_STATE_OBJECT_DESC raytracingPipeline{ D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE };
-
-	// DXIL library
-	// This contains the shaders and their entrypoints for the state object
-	// Since shaders are not considered a subobject, they need to be passed in via DXIL library subobjects
-
-	// TODO Aidan: Compile shader to file
-	byte* rayShaderData(nullptr);
-	UINT rayShaderDataLength(0);
-	ThrowIfFailed(ReadDataFromFile(L"Raytracing.hlsl", &rayShaderData, &rayShaderDataLength), L"Error: Couldn't read from Raytracing.hlsl");
-
-	auto lib = raytracingPipeline.CreateSubobject<CD3DX12_DXIL_LIBRARY_SUBOBJECT>();
-	D3D12_SHADER_BYTECODE libdxil = CD3DX12_SHADER_BYTECODE((void *)*rayShaderData, rayShaderDataLength);
-	lib->SetDXILLibrary(&libdxil);
-	/*lib->DefineExport(c_raygenShaderName);
-	lib->DefineExport(c_closestHitShaderName);
-	lib->DefineExport(c_missShaderName);*/
-
-	// Triangle hit group
-	// A hit group specifies closest hit, any hit and intersection shaders to be executed when a ray intersects the geometry's triangle/AABB
-	// Here we only use triangle geometry with a closest hit shader, so others are not set
-	auto hitGroup = raytracingPipeline.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
-	hitGroup->SetClosestHitShaderImport(c_closestHitShaderName);
-	hitGroup->SetHitGroupExport(c_hitGroupName);
-	hitGroup->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
-
-	// Shader config
-	// Defines the maximum sizes in bytes for the ray payload and attribute structure.
-	auto shaderConfig = raytracingPipeline.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
-	UINT payloadSize = 4 * sizeof(float);   // float4 color
-	UINT attributeSize = 2 * sizeof(float); // float2 barycentrics
-	shaderConfig->Config(payloadSize, attributeSize);
-
-	// Local root signature and shader association
-	CreateLocalRootSignatureSubobjects(&raytracingPipeline);
-	// This is a root signature that enables a shader to have unique arguments that come from shader tables
-
-	// Global root signature
-	// This is a root signature that is shared across all raytracing shaders invoked during a DispatchRays() call
-	auto globalRootSignature = raytracingPipeline.CreateSubobject<CD3DX12_GLOBAL_ROOT_SIGNATURE_SUBOBJECT>();
-	globalRootSignature->SetRootSignature(m_raytracingGlobalRootSignature);
-
-	// Pipeline config
-	// Defines the maximum TraceRay() recursion depth
-	auto pipelineConfig = raytracingPipeline.CreateSubobject<CD3DX12_RAYTRACING_PIPELINE_CONFIG_SUBOBJECT>();
-	// PERFOMANCE TIP: Set max recursion depth as low as needed 
-	// as drivers may apply optimization strategies for low recursion depths.
-	UINT maxRecursionDepth = 1; // ~ primary rays only
-	pipelineConfig->Config(maxRecursionDepth);
-
-	PrintStateObjectDesc(raytracingPipeline);
-
-	result = m_device->CreateStateObject(raytracingPipeline, IID_PPV_ARGS(&m_dxrStateObject));
-	if (FAILED(result)) return false;
+	
+	
+	D3D12ShaderCompilerInfo shaderCompiler;
+	shaderCompiler.DxcDllHelper.Initialize();
+	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcCompiler, &shaderCompiler.compiler);
+	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcLibrary, &shaderCompiler.library);
 
 	return true;
 }

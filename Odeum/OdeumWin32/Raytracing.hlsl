@@ -13,7 +13,6 @@
 #define RAYTRACING_HLSL
 
 #include "RaytracingHLSLCompat.h"
-#include "pch.h"
 
 RaytracingAccelerationStructure Scene : register(t0, space0);
 RWTexture2D<float4> RenderTarget : register(u0);
