@@ -477,8 +477,6 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 {
 	HRESULT result;
 	
-	
-	
 	D3D12ShaderCompilerInfo shaderCompiler;
 	shaderCompiler.DxcDllHelper.Initialize();
 	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcCompiler, &shaderCompiler.compiler);
@@ -487,7 +485,26 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	UINT32 code(0);
 	IDxcBlobEncoding* pShaderText(nullptr);
 
-	
+	shaderCompiler.library->CreateBlobFromFile(L"Raygen.hlsl", &code, &pShaderText);
+	IDxcIncludeHandler* dxcIncludeHandler;
+	shaderCompiler.library->CreateIncludeHandler(&dxcIncludeHandler);
+
+	IDxcOperationResult* pResult;
+
+	result = shaderCompiler.compiler->Compile(
+		pShaderText,
+		L"Raygen.hlsl",
+		L"raygeneration",
+		L"lib_6_3",
+		NULL,
+		0,
+		NULL,
+		0,
+		dxcIncludeHandler,
+		&pResult
+	);
+
+	ThrowIfFailed(result, L"Error: shit does not work");
 
 	return true;
 }
