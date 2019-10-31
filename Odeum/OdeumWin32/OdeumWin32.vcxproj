@@ -152,12 +152,14 @@
     <ClInclude Include="DXR Includes\dxcapi.use.h" />
     <ClInclude Include="DXRaytracingHelper.h" />
     <ClInclude Include="DXRHelper.h" />
+    <ClInclude Include="DXStructures.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OdeumMain.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RaytracingHLSLCompat.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RTRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -171,6 +173,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RTRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

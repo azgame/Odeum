@@ -69,6 +69,12 @@
     <ClInclude Include="DXR Includes\dxcapi.use.h">
       <Filter>DXR Includes</Filter>
     </ClInclude>
+    <ClInclude Include="DXStructures.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RTRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -91,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="OdeumMain.cpp" />
+    <ClCompile Include="RTRenderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShader.hlsl">

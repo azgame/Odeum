@@ -6,40 +6,13 @@
 #include "Model.h"
 #include "Camera.h"
 #include "RaytracingHLSLCompat.h"
-#include "DXR Includes/dxcapi.use.h"
+#include "DXStructures.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const bool dxrEnabled = true;
-
-
-struct D3D12ShaderCompilerInfo
-{
-	dxc::DxcDllSupport		DxcDllHelper;
-	IDxcCompiler*			compiler = nullptr;
-	IDxcLibrary*			library = nullptr;
-};
-
-struct D3D12ShaderInfo
-{
-	LPCWSTR		filename = nullptr;
-	LPCWSTR		entryPoint = nullptr;
-	LPCWSTR		targetProfile = nullptr;
-	LPCWSTR*	arguments = nullptr;
-	DxcDefine*	defines = nullptr;
-	UINT32		argCount = 0;
-	UINT32		defineCount = 0;
-
-	D3D12ShaderInfo() {}
-	D3D12ShaderInfo(LPCWSTR inFilename, LPCWSTR inEntryPoint, LPCWSTR inProfile)
-	{
-		filename = inFilename;
-		entryPoint = inEntryPoint;
-		targetProfile = inProfile;
-	}
-};
 
 namespace GlobalRootSignatureParams {
 	enum Value {
@@ -152,11 +125,6 @@ private:
 	bool BuildShaderTables();
 	bool CopyRaytracingOutputToBackbuffer();
 	UINT AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE* cpuDescriptor, UINT descriptorIndexToUse = UINT_MAX);
-
-	IDxcBlob* m_rayGenLibrary;
-	IDxcBlob* m_hitLibrary;
-	IDxcBlob* m_missLibrary;
-	IDxcBlob* m_shadowLibrary;
 
 	ID3D12RootSignature* m_rayGenSignature;
 	ID3D12RootSignature* m_hitSignature;
