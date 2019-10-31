@@ -484,6 +484,11 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcCompiler, &shaderCompiler.compiler);
 	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcLibrary, &shaderCompiler.library);
 
+	UINT32 code(0);
+	IDxcBlobEncoding* pShaderText(nullptr);
+
+	
+
 	return true;
 }
 
