@@ -3,7 +3,7 @@
 #include "DXRHelper.h"
 #include "DXR Includes/dxcapi.h"
 
-const wchar_t* Renderer::c_hitGroupName = L"MyHitGroup";
+const wchar_t* Renderer::c_hitGroupName = L"HitGroup";
 const wchar_t* Renderer::c_raygenShaderName = L"MyRaygenShader";
 const wchar_t* Renderer::c_closestHitShaderName = L"MyClosestHitShader";
 const wchar_t* Renderer::c_missShaderName = L"MyMissShader";
@@ -182,13 +182,12 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 
 bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, std::vector<Model*> renderObjects)
 {
+	m_raytracingOutputResourceUAVDescriptorHeapIndex = UINT_MAX;
+	
 	HRESULT result;
 
 	// Create raytracing interfaces: raytracing device and commandlist.
 	if (!CreateRaytracingInterfaces(screenHeight, screenWidth, hwnd)) return false;
-
-	// Create root signatures for the shaders.
-	if (!CreateRootSignatures()) return false;
 
 	// Create a raytracing pipeline state object which defines the binding of shaders, state and resources to be used during raytracing.
 	if (!CreateRaytracingPipelineStateObject()) return false;
@@ -402,7 +401,7 @@ bool Renderer::DoRaytracing()
 	m_commandList->SetDescriptorHeaps(1, &m_cbvHeap);
 	m_commandList->SetComputeRootDescriptorTable(GlobalRootSignatureParams::OutputViewSlot, m_raytracingOutputResourceUAVGpuDescriptor);
 	m_commandList->SetComputeRootShaderResourceView(GlobalRootSignatureParams::AccelerationStructureSlot, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
-	DispatchRays(m_commandList, m_dxrStateObject, &dispatchDesc);
+	DispatchRays(m_commandList, m_rtStateObject, &dispatchDesc);
 
 	return true;
 }
@@ -412,35 +411,6 @@ bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWN
 	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN)) return false;
 
 	m_device = m_deviceResources->GetD3Device();
-
-	return true;
-}
-
-bool Renderer::CreateRootSignatures()
-{
-	// Global Root Signature
-	// This is a root signature that is shared across all raytracing shaders invoked during a DispatchRays() call
-	{
-		CD3DX12_DESCRIPTOR_RANGE UAVDescriptor;
-		UAVDescriptor.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
-		CD3DX12_ROOT_PARAMETER rootParameters[GlobalRootSignatureParams::Count];
-		rootParameters[GlobalRootSignatureParams::OutputViewSlot].InitAsDescriptorTable(1, &UAVDescriptor);
-		rootParameters[GlobalRootSignatureParams::AccelerationStructureSlot].InitAsShaderResourceView(0);
-		CD3DX12_ROOT_SIGNATURE_DESC globalRootSignatureDesc(ARRAYSIZE(rootParameters), rootParameters);
-		if (!SerializeAndCreateRaytracingRootSignature(globalRootSignatureDesc, &m_raytracingGlobalRootSignature)) return false;
-	}
-	
-	// Local Root Signature
-	// This is a root signature that enables a shader to have unique arguments that come from shader tables
-	/*{
-		CD3DX12_ROOT_PARAMETER rootParameters[LocalRootSignatureParams::Count];
-		rootParameters[LocalRootSignatureParams::ViewportConstantSlot].InitAsConstants(SizeOfInUint32(m_rayGenCB), 0, 0);
-		CD3DX12_ROOT_SIGNATURE_DESC localRootSignatureDesc(ARRAYSIZE(rootParameters), rootParameters);
-		localRootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
-		if (!SerializeAndCreateRaytracingRootSignature(localRootSignatureDesc, &m_raytracingLocalRootSignature)) return false;
-	}*/
-
-	// Root Sigs for individual shaders
 
 	return true;
 }
@@ -461,20 +431,6 @@ bool Renderer::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DE
 	return true;
 }
 
-bool Renderer::CreateLocalRootSignatureSubobjects(CD3DX12_STATE_OBJECT_DESC* raytracingPipeline)
-{
-	// Local root signature to be used in a ray gen shader
-	auto localRootSignature = raytracingPipeline->CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
-	localRootSignature->SetRootSignature(m_raytracingLocalRootSignature);
-
-	// Shader association
-	auto rootSignatureAssociation = raytracingPipeline->CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
-	rootSignatureAssociation->SetSubobjectToAssociate(*localRootSignature);
-	rootSignatureAssociation->AddExport(c_raygenShaderName);
-
-	return true;
-}
-
 bool Renderer::CreateRaytracingPipelineStateObject()
 {
 	HRESULT result;
@@ -489,7 +445,13 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	IDxcBlobEncoding* pHit(nullptr);
 	IDxcBlobEncoding* pMiss(nullptr);
 
-	shaderCompiler.library->CreateBlobFromFile(L"Raygen.hlsl", &code, &pRaygen);
+	DXRGlobal dxr;
+	dxr.rgs = RtProgram(D3D12ShaderInfo(L"Raygen.hlsl", L"", L"lib_6_3"));
+	dxr.miss = RtProgram(D3D12ShaderInfo(L"Miss.hlsl", L"", L"lib_6_3"));
+	dxr.hit = HitProgram(L"Hit");
+	dxr.hit.chs = RtProgram(D3D12ShaderInfo(L"Hit.hlsl", L"", L"lib_6_3"));
+
+	shaderCompiler.library->CreateBlobFromFile(dxr.rgs.info.filename, &code, &pRaygen);
 	IDxcIncludeHandler* dxcIncludeHandler;
 	shaderCompiler.library->CreateIncludeHandler(&dxcIncludeHandler);
 
@@ -497,18 +459,35 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 
 	result = shaderCompiler.compiler->Compile(
 		pRaygen,
-		L"Raygen.hlsl",
-		L"raygeneration",
-		L"lib_6_3",
-		NULL,
-		0,
-		NULL,
-		0,
+		dxr.rgs.info.filename,
+		dxr.rgs.info.entryPoint,
+		dxr.rgs.info.targetProfile,
+		dxr.rgs.info.arguments,
+		dxr.rgs.info.argCount,
+		dxr.rgs.info.defines,
+		dxr.rgs.info.defineCount,
 		dxcIncludeHandler,
 		&pResult
 	);
 
-	ThrowIfFailed(result, L"Error: shit does not work");
+	result = pResult->GetResult(&dxr.rgs.blob);
+
+	if (FAILED(result)) {
+		IDxcBlobEncoding* error;
+		result = pResult->GetErrorBuffer(&error);
+
+		// Convert error blob to a string
+		std::vector<char> infoLog(error->GetBufferSize() + 1);
+		memcpy(infoLog.data(), error->GetBufferPointer(), error->GetBufferSize());
+		infoLog[error->GetBufferSize()] = 0;
+
+		std::string errorMsg = "Shader Compiler Error:\n";
+		errorMsg.append(infoLog.data());
+
+		MessageBoxA(nullptr, errorMsg.c_str(), "Error!", MB_OK);
+	}
+
+	dxr.rgs.SetBytecode();
 
 	// Describe the ray generation root signature
 	D3D12_DESCRIPTOR_RANGE ranges[3];
@@ -545,41 +524,71 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
 
 	// Create the root signature
-	SerializeAndCreateRaytracingRootSignature(rootDesc, &m_rayGenSignature);
+	SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);
 
-	shaderCompiler.library->CreateBlobFromFile(L"Hit.hlsl", &code, &pHit);
-
-	result = shaderCompiler.compiler->Compile(
-		pHit,
-		L"Hit.hlsl",
-		L"closesthit",
-		L"lib_6_3",
-		NULL,
-		0,
-		NULL,
-		0,
-		dxcIncludeHandler,
-		&pResult
-	);
-
-	ThrowIfFailed(result, L"Error: shit does not work");
-
-	shaderCompiler.library->CreateBlobFromFile(L"Miss.hlsl", &code, &pMiss);
+	shaderCompiler.library->CreateBlobFromFile(dxr.miss.info.filename, &code, &pMiss);
 
 	result = shaderCompiler.compiler->Compile(
 		pMiss,
-		L"Miss.hlsl",
-		L"miss",
-		L"lib_6_3",
-		NULL,
-		0,
-		NULL,
-		0,
+		dxr.miss.info.filename,
+		dxr.miss.info.entryPoint,
+		dxr.miss.info.targetProfile,
+		dxr.miss.info.arguments,
+		dxr.miss.info.argCount,
+		dxr.miss.info.defines,
+		dxr.miss.info.defineCount,
 		dxcIncludeHandler,
 		&pResult
 	);
 
-	ThrowIfFailed(result, L"Error: shit does not work");
+	if (FAILED(result)) {
+		IDxcBlobEncoding* error;
+		result = pResult->GetErrorBuffer(&error);
+
+		// Convert error blob to a string
+		std::vector<char> infoLog(error->GetBufferSize() + 1);
+		memcpy(infoLog.data(), error->GetBufferPointer(), error->GetBufferSize());
+		infoLog[error->GetBufferSize()] = 0;
+
+		std::string errorMsg = "Shader Compiler Error:\n";
+		errorMsg.append(infoLog.data());
+
+		MessageBoxA(nullptr, errorMsg.c_str(), "Error!", MB_OK);
+	}
+
+	result = pResult->GetResult(&dxr.miss.blob);
+
+	shaderCompiler.library->CreateBlobFromFile(dxr.hit.chs.info.filename, &code, &pHit);
+
+	result = shaderCompiler.compiler->Compile(
+		pHit,
+		dxr.hit.chs.info.filename,
+		dxr.hit.chs.info.entryPoint,
+		dxr.hit.chs.info.targetProfile,
+		dxr.hit.chs.info.arguments,
+		dxr.hit.chs.info.argCount,
+		dxr.hit.chs.info.defines,
+		dxr.hit.chs.info.defineCount,
+		dxcIncludeHandler,
+		&pResult
+	);
+
+	if (FAILED(result)) {
+		IDxcBlobEncoding* error;
+		result = pResult->GetErrorBuffer(&error);
+
+		// Convert error blob to a string
+		std::vector<char> infoLog(error->GetBufferSize() + 1);
+		memcpy(infoLog.data(), error->GetBufferPointer(), error->GetBufferSize());
+		infoLog[error->GetBufferSize()] = 0;
+
+		std::string errorMsg = "Shader Compiler Error:\n";
+		errorMsg.append(infoLog.data());
+
+		MessageBoxA(nullptr, errorMsg.c_str(), "Error!", MB_OK);
+	}
+
+	result = pResult->GetResult(&dxr.hit.chs.blob);
 
 	// Need 10 subobjects:
 	// 1 for RGS program
@@ -597,30 +606,30 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Add state subobject for the RGS
 	D3D12_EXPORT_DESC rgsExportDesc = {};
 	rgsExportDesc.Name = L"RayGen_12";
-	rgsExportDesc.ExportToRename = L"RayGen";
+	rgsExportDesc.ExportToRename = L"MyRaygenShader";
 	rgsExportDesc.Flags = D3D12_EXPORT_FLAG_NONE;
 
 	D3D12_DXIL_LIBRARY_DESC	rgsLibDesc = {};
-	rgsLibDesc.DXILLibrary.BytecodeLength = pRaygen->GetBufferSize();
-	rgsLibDesc.DXILLibrary.pShaderBytecode = pRaygen->GetBufferPointer();
+	rgsLibDesc.DXILLibrary.BytecodeLength = dxr.rgs.blob->GetBufferSize();
+	rgsLibDesc.DXILLibrary.pShaderBytecode = dxr.rgs.blob->GetBufferPointer();
 	rgsLibDesc.NumExports = 1;
 	rgsLibDesc.pExports = &rgsExportDesc;
 
-	D3D12_STATE_SUBOBJECT rgs = {};
-	rgs.Type = D3D12_STATE_SUBOBJECT_TYPE_DXIL_LIBRARY;
-	rgs.pDesc = &rgsLibDesc;
+	D3D12_STATE_SUBOBJECT rgslib = {};
+	rgslib.Type = D3D12_STATE_SUBOBJECT_TYPE_DXIL_LIBRARY;
+	rgslib.pDesc = &rgsLibDesc;
 
-	subobjects[index++] = rgs;
+	subobjects[index++] = rgslib;
 
 	// Add state subobject for the Miss shader
 	D3D12_EXPORT_DESC msExportDesc = {};
 	msExportDesc.Name = L"Miss_5";
-	msExportDesc.ExportToRename = L"Miss";
+	msExportDesc.ExportToRename = L"MyMissShader";
 	msExportDesc.Flags = D3D12_EXPORT_FLAG_NONE;
 
 	D3D12_DXIL_LIBRARY_DESC	msLibDesc = {};
-	msLibDesc.DXILLibrary.BytecodeLength = pMiss->GetBufferSize();
-	msLibDesc.DXILLibrary.pShaderBytecode = pMiss->GetBufferPointer();
+	msLibDesc.DXILLibrary.BytecodeLength = dxr.miss.blob->GetBufferSize();
+	msLibDesc.DXILLibrary.pShaderBytecode = dxr.miss.blob->GetBufferPointer();
 	msLibDesc.NumExports = 1;
 	msLibDesc.pExports = &msExportDesc;
 
@@ -633,12 +642,12 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Add state subobject for the Closest Hit shader
 	D3D12_EXPORT_DESC chsExportDesc = {};
 	chsExportDesc.Name = L"ClosestHit_76";
-	chsExportDesc.ExportToRename = L"ClosestHit";
+	chsExportDesc.ExportToRename = L"MyClosestHitShader";
 	chsExportDesc.Flags = D3D12_EXPORT_FLAG_NONE;
 
 	D3D12_DXIL_LIBRARY_DESC	chsLibDesc = {};
-	chsLibDesc.DXILLibrary.BytecodeLength = pHit->GetBufferSize();
-	chsLibDesc.DXILLibrary.pShaderBytecode = pHit->GetBufferPointer();
+	chsLibDesc.DXILLibrary.BytecodeLength = dxr.hit.chs.blob->GetBufferSize();
+	chsLibDesc.DXILLibrary.pShaderBytecode = dxr.hit.chs.blob->GetBufferPointer();
 	chsLibDesc.NumExports = 1;
 	chsLibDesc.pExports = &chsExportDesc;
 
@@ -688,7 +697,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Add a state subobject for the shared root signature 
 	D3D12_STATE_SUBOBJECT rayGenRootSigObject = {};
 	rayGenRootSigObject.Type = D3D12_STATE_SUBOBJECT_TYPE_LOCAL_ROOT_SIGNATURE;
-	rayGenRootSigObject.pDesc = &m_rootSignature;
+	rayGenRootSigObject.pDesc = &dxr.rgs.pRootSignature;
 
 	subobjects[index++] = rayGenRootSigObject;
 
@@ -730,15 +739,8 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	pipelineDesc.pSubobjects = subobjects.data();
 
 	// Create the RT Pipeline State Object (RTPSO)
-	HRESULT hr = m_device->CreateStateObject(&pipelineDesc, IID_PPV_ARGS(&dxr.rtpso));
-	Utils::Validate(hr, L"Error: failed to create state object!");
-#if NAME_D3D_RESOURCES
-	dxr.rtpso->SetName(L"DXR Pipeline State Object");
-#endif
-
-	// Get the RTPSO properties
-	hr = dxr.rtpso->QueryInterface(IID_PPV_ARGS(&dxr.rtpsoInfo));
-	Utils::Validate(hr, L"Error: failed to get RTPSO info object!");
+	result = m_device->CreateStateObject(&pipelineDesc, 
+		IID_PPV_ARGS(&m_rtStateObject));
 
 	return true;
 }
@@ -908,16 +910,16 @@ bool Renderer::BuildShaderTables()
 
 	auto GetShaderIdentifiers = [&](auto* stateObjectProperties)
 	{
-		rayGenShaderIdentifier = stateObjectProperties->GetShaderIdentifier(c_raygenShaderName);
-		missShaderIdentifier = stateObjectProperties->GetShaderIdentifier(c_missShaderName);
-		hitGroupShaderIdentifier = stateObjectProperties->GetShaderIdentifier(c_hitGroupName);
+		rayGenShaderIdentifier = stateObjectProperties->GetShaderIdentifier(L"RayGen_12");
+		missShaderIdentifier = stateObjectProperties->GetShaderIdentifier(L"Miss_5");
+		hitGroupShaderIdentifier = stateObjectProperties->GetShaderIdentifier(L"HitGroup");
 	};
 
 	// Get shader identifiers.
 	UINT shaderIdentifierSize;
 	{
 		ID3D12StateObjectProperties* stateObjectProperties;
-		ThrowIfFailed(m_dxrStateObject->QueryInterface(&stateObjectProperties));
+		ThrowIfFailed(m_rtStateObject->QueryInterface(&stateObjectProperties));
 		GetShaderIdentifiers(stateObjectProperties);
 		shaderIdentifierSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
 	}

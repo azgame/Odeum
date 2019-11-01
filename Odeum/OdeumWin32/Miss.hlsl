@@ -1,12 +1,7 @@
-#ifndef MISS_HLSL
-#define MISS_HLSL
-
 #include "Common.hlsl"
 
 [shader("miss")]
-void MyMissShader(inout RayPayload payload)
+void MyMissShader(inout HitInfo payload)
 {
-	payload.color = float4(0, 0, 0, 1);
+	payload.ShadedColorAndHitT = float4(0.2f, 0.2f, 0.2f, -1.f);
 }
-
-#endif

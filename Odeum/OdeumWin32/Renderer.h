@@ -76,7 +76,6 @@ private:
 	// DXR related variables
 	// Attributes
 	//ID3D12GraphicsCommandList4*					m_dxrCommandList;
-	ID3D12StateObject*							m_dxrStateObject;
 
 	// Root Signatures
 	ID3D12RootSignature*						m_raytracingGlobalRootSignature;
@@ -116,8 +115,6 @@ private:
 	bool DoRaytracing();
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
-	bool CreateRootSignatures();
-	bool CreateLocalRootSignatureSubobjects(CD3DX12_STATE_OBJECT_DESC* raytracingPipeline);
 	bool CreateRaytracingPipelineStateObject();
 	bool CreateDescriptorHeap();
 	bool CreateRaytracingOutputResource();

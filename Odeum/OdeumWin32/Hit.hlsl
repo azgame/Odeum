@@ -1,13 +1,14 @@
-#ifndef HIT_HLSL
-#define HIT_HLSL
-
 #include "Common.hlsl"
 
 [shader("closesthit")]
-void MyClosestHitShader(inout RayPayload payload, in MyAttributes attr)
+void MyClosestHitShader(inout HitInfo payload, in Attributes attr)
 {
-	float3 barycentrics = float3(1 - attr.barycentrics.x - attr.barycentrics.y, attr.barycentrics.x, attr.barycentrics.y);
-	payload.color = float4(barycentrics, 1);
-}
+	uint triangleIndex = PrimitiveIndex();
+	float3 barycentrics = float3((1.0f - attr.uv.x - attr.uv.y), attr.uv.x, attr.uv.y);
+	VertexAttributes vertex = GetVertexAttributes(triangleIndex, barycentrics);
 
-#endif
+	int2 coord = floor(vertex.uv * textureResolution.x);
+	float3 color = albedo.Load(int3(coord, 0)).rgb;
+
+	payload.ShadedColorAndHitT = float4(color, RayTCurrent());
+}

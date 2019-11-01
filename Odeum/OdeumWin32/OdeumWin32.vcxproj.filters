@@ -109,20 +109,19 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="Raytracing.hlsl">
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Common.hlsl">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Raygen.hlsl">
+    </FxCompile>
+    <FxCompile Include="Hit.hlsl">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Miss.hlsl">
+    </FxCompile>
+    <FxCompile Include="Miss.hlsl">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Hit.hlsl">
+    </FxCompile>
+    <FxCompile Include="Raygen.hlsl">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Common.hlsl">
-      <Filter>Resource Files</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>
