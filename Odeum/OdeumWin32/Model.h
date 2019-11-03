@@ -21,8 +21,8 @@ public:
 	void Shutdown();
 	void Render(ID3D12GraphicsCommandList*);
 
-	int GetIndexCount();
-
+	int GetIndexCount()						{ return m_indexCount; }
+	int GetVertexCount()					{ return m_vertexCount; }
 	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBuffer; }
 	ID3D12Resource* GetIndexBuffer()		{ return m_indexBuffer; }
 

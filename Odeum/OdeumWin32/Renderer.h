@@ -37,7 +37,6 @@ public:
 	~Renderer();
 
 	bool Initialize(int, int, HWND, std::vector<Model*>);
-	
 	void CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool Render(std::vector<Model*> renderObjects);
@@ -61,9 +60,12 @@ private:
 
 	// Constant Buffer for Camera
 	static const UINT							c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;
+	ID3D12DescriptorHeap*						m_descHeap;
+	UINT										m_descHeapSize;
+	UINT										m_descHeapAllocated;
 	ID3D12DescriptorHeap*						m_cbvHeap;
-	UINT										m_cbvDescriptorSize;
-	UINT										m_cbvDescriptorsAllocated;
+	UINT										m_cbvHeapSize;
+	UINT										m_cbvHeapAllocated;
 	ID3D12Resource*								m_constantBuffer;
 	ModelViewProjectionConstantBuffer			m_constantBufferData;
 	UINT8*										m_mappedConstantBuffer;
@@ -110,13 +112,16 @@ private:
 	// Chaneable Render
 	bool RenderRaster(std::vector<Model*> renderObjects);
 	bool RenderRaytrace(std::vector<Model*> renderObjects);
+
+	// General
+	bool CreateCBResources();
 	
 	// Raytracing related functions
 	bool DoRaytracing();
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
-	bool CreateDescriptorHeap();
+	bool CreateDescriptorHeap(std::vector<Model*> renderObjects);
 	bool CreateRaytracingOutputResource();
 	bool BuildAccelerationStructures(std::vector<Model*> renderObjects);
 	bool BuildShaderTables();

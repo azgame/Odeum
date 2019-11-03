@@ -9,7 +9,7 @@
 #include "DXRHelper.h"
 #include "DXRaytracingHelper.h"
 
-static const UINT c_frameCount = 3;		// Use double buffering.
+static const UINT c_frameCount = 3;		// Use triple buffering.
 
 class DeviceResources
 {

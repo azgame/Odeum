@@ -26,8 +26,6 @@ void Model::Shutdown() { ShutdownBuffers(); }
 
 void Model::Render(ID3D12GraphicsCommandList* m_commandList) { RenderBuffers(m_commandList); }
 
-int Model::GetIndexCount() { return m_indexCount; }
-
 bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
 	HRESULT result;
@@ -102,7 +100,8 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 			1, 7, 5,
 		};
 
-	const UINT indexBufferSize = sizeof(cubeIndices);		
+	const UINT indexBufferSize = sizeof(cubeIndices);
+	m_indexCount = 12;
 
 	// Create the index buffer resource in the GPU's default heap and copy index data to it using the upload heap.
 	// The upload resource must not be released until after the GPU has finished using it.

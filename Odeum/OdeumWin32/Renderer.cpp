@@ -130,47 +130,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 		object->Initialize(m_device, m_commandList);
 	}
 
-	// Heap descriptors for constant buffer data
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = c_frameCount;
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_cbvHeap));
-	if (FAILED(result)) return false;
-
-	// Init constant buffer
-	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
-	result = m_device->CreateCommittedResource(
-		&uploadHeapProperties,
-		D3D12_HEAP_FLAG_NONE,
-		&constantBufferDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&m_constantBuffer));
-	if (FAILED(result)) return false;
-
-	// Get memory location of constant buffers (one for each back buffer
-	D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
-	m_cbvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	for (int n = 0; n < c_frameCount; n++)
-	{
-		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
-		desc.BufferLocation = cbvGpuAddress;
-		desc.SizeInBytes = c_alignedConstantBufferSize;
-		m_device->CreateConstantBufferView(&desc, cbvCpuHandle);
-
-		cbvGpuAddress += desc.SizeInBytes;
-		cbvCpuHandle.Offset(m_cbvDescriptorSize);
-	}
-
-	// Map the constant buffers.
-	CD3DX12_RANGE readRange(0, 0);
-	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
-	if (FAILED(result)) return false;
+	CreateCBResources();
 
 	m_deviceResources->InitializeFence();
 
@@ -189,20 +149,29 @@ bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, 
 	// Create raytracing interfaces: raytracing device and commandlist.
 	if (!CreateRaytracingInterfaces(screenHeight, screenWidth, hwnd)) return false;
 
+	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), nullptr, IID_PPV_ARGS(&m_commandList));
+	if (FAILED(result)) return false;
+
+	m_commandList->Close();
+
+	for (auto object : renderObjects) {
+		object->Initialize(m_device, m_commandList);
+	}
+
+	// Build raytracing acceleration structures from the generated geometry.
+	if (!BuildAccelerationStructures(renderObjects)) return false;
+
 	// Create a raytracing pipeline state object which defines the binding of shaders, state and resources to be used during raytracing.
 	if (!CreateRaytracingPipelineStateObject()) return false;
 
 	// Create a heap for descriptors.
-	if (!CreateDescriptorHeap()) return false;
-
-	// Build raytracing acceleration structures from the generated geometry.
-	if (!BuildAccelerationStructures(renderObjects)) return false;
+	if (!CreateDescriptorHeap(renderObjects)) return false;
 
 	// Build shader tables, which define shaders and their local root arguments.
 	if (!BuildShaderTables()) return false;
 
 	// Create an output 2D texture to store the raytracing result to.
-	if (!CreateRaytracingOutputResource()) return false;
+	//if (!CreateRaytracingOutputResource()) return false;
 	
 	return true;
 }
@@ -310,7 +279,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_cbvDescriptorSize);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_cbvHeapSize);
 	m_commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 
 	// Then set the color to clear the window to.
@@ -358,6 +327,13 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 	if (FAILED(result)) return false;
 	ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
 
+	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
+
+	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
+
+	UINT8* destination = m_mappedConstantBuffer + (m_bufferIndex * c_alignedConstantBufferSize);
+	memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+
 	// Transition the render target into the correct state to allow for drawing into it.
 	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 	
@@ -371,6 +347,55 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 	ID3D12CommandList* commandLists[] = { m_commandList };
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
+	return true;
+}
+
+bool Renderer::CreateCBResources()
+{
+	HRESULT result;
+	
+	// Heap descriptors for constant buffer data
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	heapDesc.NumDescriptors = c_frameCount;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_cbvHeap));
+	if (FAILED(result)) return false;
+
+	// Init constant buffer
+	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
+	result = m_device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&constantBufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_constantBuffer));
+	if (FAILED(result)) return false;
+
+	// Get memory location of constant buffers (one for each back buffer
+	D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
+	m_cbvHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	for (int n = 0; n < c_frameCount; n++)
+	{
+		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
+		desc.BufferLocation = cbvGpuAddress;
+		desc.SizeInBytes = c_alignedConstantBufferSize;
+		m_device->CreateConstantBufferView(&desc, cbvCpuHandle);
+
+		cbvGpuAddress += desc.SizeInBytes;
+		cbvCpuHandle.Offset(m_cbvHeapSize);
+	}
+
+	// Map the constant buffers.
+	CD3DX12_RANGE readRange(0, 0);
+	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
+	if (FAILED(result)) return false;
+	
 	return true;
 }
 
@@ -398,7 +423,7 @@ bool Renderer::DoRaytracing()
 
 	// Bind the heaps, acceleration structure and dispatch rays
 	D3D12_DISPATCH_RAYS_DESC dispatchDesc = {};
-	m_commandList->SetDescriptorHeaps(1, &m_cbvHeap);
+	m_commandList->SetDescriptorHeaps(1, &m_descHeap);
 	m_commandList->SetComputeRootDescriptorTable(GlobalRootSignatureParams::OutputViewSlot, m_raytracingOutputResourceUAVGpuDescriptor);
 	m_commandList->SetComputeRootShaderResourceView(GlobalRootSignatureParams::AccelerationStructureSlot, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
 	DispatchRays(m_commandList, m_rtStateObject, &dispatchDesc);
@@ -739,24 +764,104 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	pipelineDesc.pSubobjects = subobjects.data();
 
 	// Create the RT Pipeline State Object (RTPSO)
-	result = m_device->CreateStateObject(&pipelineDesc, 
-		IID_PPV_ARGS(&m_rtStateObject));
+	result = m_device->CreateStateObject(&pipelineDesc, IID_PPV_ARGS(&m_rtStateObject));
+	if (FAILED(result)) return false;
 
 	return true;
 }
 
-bool Renderer::CreateDescriptorHeap()
+bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 {
+	HRESULT result;
+	
+	CreateCBResources();
+	
+	// Describe the CBV/SRV/UAV heap
+	// Need 7 entries:
+	// 1 CBV for the ViewCB
+	// 1 UAV for the RT output
+	// 1 SRV for the Scene BVH
+	// 1 SRV for the index buffer
+	// 1 SRV for the vertex buffer
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
-	// Allocate a heap for 3 descriptors:
-	// 1 - raytracing output texture SRV
-	descriptorHeapDesc.NumDescriptors = 1;
+	descriptorHeapDesc.NumDescriptors = 5;
 	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descriptorHeapDesc.NodeMask = 0;
-	m_device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&m_cbvHeap));
 
-	m_cbvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	// Create descriptor heap
+	m_device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&m_descHeap));
+
+	// Create the handle and get the heap size for increment
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
+	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// Create the constant buffer view description
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(ViewCB));
+	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
+
+	m_device->CreateConstantBufferView(&cbvDesc, handle);
+
+	// Create the dxr output buffer unordered access view
+	DXGI_FORMAT backbufferFormat = m_deviceResources->GetBackBufferFormat();
+
+	// Create the output resource. Dimensions and format should match swapChain
+	CD3DX12_RESOURCE_DESC uavDesc = CD3DX12_RESOURCE_DESC::Tex2D(backbufferFormat, m_screenWidth, m_screenHeight, 1, 1, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+	CD3DX12_HEAP_PROPERTIES defaultHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+
+	result = m_device->CreateCommittedResource(
+		&defaultHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&uavDesc,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		nullptr,
+		IID_PPV_ARGS(&m_raytracingOutput)
+	);
+
+	if (FAILED(result)) return false;
+
+	D3D12_UNORDERED_ACCESS_VIEW_DESC UAVDesc = {};
+	UAVDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+
+	handle.ptr += m_descHeapSize;
+	m_device->CreateUnorderedAccessView(m_raytracingOutput, nullptr, &UAVDesc, handle);
+	m_raytracingOutputResourceUAVGpuDescriptor = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_descHeap->GetGPUDescriptorHandleForHeapStart(), handle.ptr, m_descHeapSize);
+
+	// Create the dxr tlas srv
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.RaytracingAccelerationStructure.Location = m_topLevelAccelerationStructure->GetGPUVirtualAddress();
+
+	handle.ptr += m_descHeapSize;
+	m_device->CreateShaderResourceView(nullptr, &srvDesc, handle);
+
+	// Create the index buffer srv
+	D3D12_SHADER_RESOURCE_VIEW_DESC indexSRVDesc;
+	indexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	indexSRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+	indexSRVDesc.Buffer.StructureByteStride = 0;
+	indexSRVDesc.Buffer.FirstElement = 0;
+	indexSRVDesc.Buffer.NumElements = renderObjects[0]->GetIndexCount();
+	indexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	handle.ptr += m_descHeapSize;
+	m_device->CreateShaderResourceView(renderObjects[0]->GetIndexBuffer(), &indexSRVDesc, handle);
+
+	// Create the vertex buffer SRV
+	D3D12_SHADER_RESOURCE_VIEW_DESC vertexSRVDesc;
+	vertexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	vertexSRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+	vertexSRVDesc.Buffer.StructureByteStride = 0;
+	vertexSRVDesc.Buffer.FirstElement = 0;
+	vertexSRVDesc.Buffer.NumElements = renderObjects[0]->GetVertexCount();
+	vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	handle.ptr += m_descHeapSize;
+	m_device->CreateShaderResourceView(renderObjects[0]->GetVertexBuffer(), &vertexSRVDesc, handle);
 
 	return true;
 }
@@ -787,21 +892,13 @@ bool Renderer::CreateRaytracingOutputResource()
 	D3D12_UNORDERED_ACCESS_VIEW_DESC UAVDesc = {};
 	UAVDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
 	m_device->CreateUnorderedAccessView(m_raytracingOutput, nullptr, &UAVDesc, uavDescriptorHandle);
-	m_raytracingOutputResourceUAVGpuDescriptor = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_raytracingOutputResourceUAVDescriptorHeapIndex, m_cbvDescriptorSize);
+	m_raytracingOutputResourceUAVGpuDescriptor = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_raytracingOutputResourceUAVDescriptorHeapIndex, m_descHeapSize);
 	return true;
 }
 
 bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 {
 	HRESULT result;
-	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), nullptr, IID_PPV_ARGS(&m_commandList));
-	if (FAILED(result)) return false;
-
-	m_commandList->Close();
-
-	for (auto object : renderObjects) {
-		object->Initialize(m_device, m_commandList);
-	}
 
 	m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr);
 
@@ -811,11 +908,11 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	// Going forward each geometry builds its own structure, or belongs to a structure outside of the renderer
 	// Hardcode object 0
 	geometryDesc.Triangles.IndexBuffer = renderObjects[0]->GetIndexBuffer()->GetGPUVirtualAddress();
-	geometryDesc.Triangles.IndexCount = static_cast<UINT>(renderObjects[0]->GetIndexBuffer()->GetDesc().Width) / sizeof(VertexType);
+	geometryDesc.Triangles.IndexCount = static_cast<UINT>(renderObjects[0]->GetIndexCount()) / sizeof(VertexType);
 	geometryDesc.Triangles.IndexFormat = DXGI_FORMAT_R16_UINT;
 	geometryDesc.Triangles.Transform3x4 = 0;
 	geometryDesc.Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-	geometryDesc.Triangles.VertexCount = static_cast<UINT>(renderObjects[0]->GetVertexBuffer()->GetDesc().Width) / sizeof(VertexType);
+	geometryDesc.Triangles.VertexCount = static_cast<UINT>(renderObjects[0]->GetVertexCount()) / sizeof(VertexType);
 	geometryDesc.Triangles.VertexBuffer.StartAddress = renderObjects[0]->GetVertexBuffer()->GetGPUVirtualAddress();
 	geometryDesc.Triangles.VertexBuffer.StrideInBytes = sizeof(VertexType);
 
@@ -882,7 +979,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	auto BuildAccelerationStructure = [&](auto* raytracingCommandList)
 	{
 		raytracingCommandList->BuildRaytracingAccelerationStructure(&bottomLevelBuildDesc, 0, nullptr);
-		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::UAV(m_bottomLevelAccelerationStructure));
+		raytracingCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::UAV(m_bottomLevelAccelerationStructure));
 		raytracingCommandList->BuildRaytracingAccelerationStructure(&topLevelBuildDesc, 0, nullptr);
 	};
 
@@ -981,11 +1078,11 @@ bool Renderer::CopyRaytracingOutputToBackbuffer()
 
 UINT Renderer::AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE * cpuDescriptor, UINT descriptorIndexToUse)
 {
-	auto descriptorHeapCpuBase = m_cbvHeap->GetCPUDescriptorHandleForHeapStart();
-	if (descriptorIndexToUse >= m_cbvHeap->GetDesc().NumDescriptors)
+	auto descriptorHeapCpuBase = m_descHeap->GetCPUDescriptorHandleForHeapStart();
+	if (descriptorIndexToUse >= m_descHeap->GetDesc().NumDescriptors)
 	{
-		descriptorIndexToUse = m_cbvDescriptorsAllocated++;
+		descriptorIndexToUse = m_descHeapAllocated++;
 	}
-	*cpuDescriptor = CD3DX12_CPU_DESCRIPTOR_HANDLE(descriptorHeapCpuBase, descriptorIndexToUse, m_cbvDescriptorSize);
+	*cpuDescriptor = CD3DX12_CPU_DESCRIPTOR_HANDLE(descriptorHeapCpuBase, descriptorIndexToUse, m_descHeapSize);
 	return descriptorIndexToUse;
 }

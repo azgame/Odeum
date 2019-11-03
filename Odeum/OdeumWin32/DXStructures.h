@@ -31,6 +31,12 @@
 #include "pch.h"
 #include "DXR Includes/dxcapi.use.h"
 
+struct ViewCB
+{
+	DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
+	DirectX::XMFLOAT4 viewOriginAndTanHalfFovY = DirectX::XMFLOAT4(0, 0.f, 0.f, 0.f);
+	DirectX::XMFLOAT2 resolution = DirectX::XMFLOAT2(1280, 720);
+};
 
 struct D3D12ShaderCompilerInfo
 {
