@@ -37,7 +37,7 @@ public:
 	~Renderer();
 
 	bool Initialize(int, int, HWND, std::vector<Model*>);
-	void CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
+	void CreateRasterWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool Render(std::vector<Model*> renderObjects);
 
@@ -104,6 +104,8 @@ private:
 	ID3D12Resource*								m_missShaderTable;
 	ID3D12Resource*								m_hitGroupShaderTable;
 	ID3D12Resource*								m_rayGenShaderTable;
+	ID3D12Resource*								m_shaderTable;
+	uint32_t									m_shaderTableRecordSize = 0;
 
 	// Changeable init
 	bool InitializeRaster(int, int, HWND, std::vector<Model*> renderObjects);

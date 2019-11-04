@@ -25,6 +25,8 @@ public:
 	int GetVertexCount()					{ return m_vertexCount; }
 	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBuffer; }
 	ID3D12Resource* GetIndexBuffer()		{ return m_indexBuffer; }
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBV()	{ return m_vertexBufferView; }
+	D3D12_INDEX_BUFFER_VIEW GetIndexBV()	{ return m_indexBufferView; }
 
 private:
 	bool InitializeBuffers(ID3D12Device*, ID3D12GraphicsCommandList*);
