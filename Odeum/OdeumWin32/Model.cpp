@@ -30,18 +30,37 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 {
 	HRESULT result;
 
-	m_vertexCount = 8;
-
 	VertexType vertices[] =
 	{
-		{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
+
+		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+
+		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
+
+		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
 	};
 
 	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
@@ -81,27 +100,26 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 
 	unsigned short cubeIndices[] =
 		{
-			0, 2, 1, // -x
-			1, 2, 3,
+			3,1,0,
+			2,1,3,
 
-			4, 5, 6, // +x
-			5, 7, 6,
+			6,4,5,
+			7,4,6,
 
-			0, 1, 5, // -y
-			0, 5, 4,
+			11,9,8,
+			10,9,11,
 
-			2, 6, 7, // +y
-			2, 7, 3,
+			14,12,13,
+			15,12,14,
 
-			0, 4, 6, // -z
-			0, 6, 2,
+			19,17,16,
+			18,17,19,
 
-			1, 3, 7, // +z
-			1, 7, 5,
+			22,20,21,
+			23,20,22
 		};
 
 	const UINT indexBufferSize = sizeof(cubeIndices);
-	m_indexCount = 12;
 
 	// Create the index buffer resource in the GPU's default heap and copy index data to it using the upload heap.
 	// The upload resource must not be released until after the GPU has finished using it.
@@ -164,6 +182,9 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	m_indexBufferView.BufferLocation = m_indexBufferUpload->GetGPUVirtualAddress();
 	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+
+	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
+	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(int);
 
 	return true;
 }

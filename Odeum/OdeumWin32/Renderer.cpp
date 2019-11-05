@@ -184,7 +184,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	if (FAILED(result)) return false;
 
 	m_commandList->SetGraphicsRootSignature(m_rootSignature);
-	ID3D12DescriptorHeap* ppHeaps[] = { m_cbvHeap };
+	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// Bind the current frame's constant buffer to the pipeline.
@@ -201,7 +201,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_cbvHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_cbvHeapSize);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_descHeapSize);
 	m_commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 
 	// Then set the color to clear the window to.
@@ -273,10 +273,10 @@ bool Renderer::CreateCBResources()
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_cbvHeap));
+	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descHeap));
 	if (FAILED(result)) return false;
 
-	// Init constant buffer
+	// Init raster constant buffer
 	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
 	result = m_device->CreateCommittedResource(
@@ -288,10 +288,22 @@ bool Renderer::CreateCBResources()
 		IID_PPV_ARGS(&m_constantBuffer));
 	if (FAILED(result)) return false;
 
+	// Init ray constant buffer
+	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
+	result = m_device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&constantBufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_dxrconstantBuffer));
+	if (FAILED(result)) return false;
+
 	// Get memory location of constant buffers (one for each back buffer
-	D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
-	m_cbvHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	/*D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = m_constantBuffer->GetGPUVirtualAddress();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle(m_descHeap->GetCPUDescriptorHandleForHeapStart());
+	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	for (int n = 0; n < c_frameCount; n++)
 	{
@@ -301,12 +313,17 @@ bool Renderer::CreateCBResources()
 		m_device->CreateConstantBufferView(&desc, cbvCpuHandle);
 
 		cbvGpuAddress += desc.SizeInBytes;
-		cbvCpuHandle.Offset(m_cbvHeapSize);
-	}
+		cbvCpuHandle.Offset(m_descHeapSize);
+	}*/
 
-	// Map the constant buffers.
+	// Map the raster constant buffers.
 	CD3DX12_RANGE readRange(0, 0);
 	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
+	if (FAILED(result)) return false;
+
+	// Map the ray constant buffers.
+	CD3DX12_RANGE readRange(0, 0);
+	result = m_dxrconstantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_dxrmappedConstantBuffer));
 	if (FAILED(result)) return false;
 
 	return true;
@@ -326,6 +343,11 @@ void Renderer::Uninitialize()
 		delete m_deviceResources;
 		m_deviceResources = nullptr;
 	}
+}
+
+bool Renderer::UpdateConstantResources()
+{
+
 }
 
 bool Renderer::Render(std::vector<Model*> renderObjects)
@@ -390,6 +412,54 @@ bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWN
 	return true;
 }
 
+bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera)
+{
+	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
+	
+	m_cubeCB.albedo = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	
+	m_camera = camera;
+
+	float aspectRatio = screenWidth / screenHeight;
+	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
+
+	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
+	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+
+	// Camera->SetProjMatrix
+	m_camera->SetProjMatrix(
+		fovAngleY,
+		aspectRatio,
+		0.01f,
+		100.0f
+	);
+
+	XMStoreFloat4x4(
+		&m_constantBufferData.projection,
+		DirectX::XMMatrixTranspose(m_camera->Projection())
+	);
+
+	// Camera->SetViewMatrix
+	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis. ------ just starting location, can change
+	static const DirectX::XMFLOAT3 eye = { 0.0f, 0.7f, 1.5f };
+	static const DirectX::XMFLOAT3 at = { 0.0f, -0.1f, 0.0f };
+	static const DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
+
+	m_camera->SetViewMatrix(eye, at, up);
+	DirectX::XMMATRIX viewProj = m_camera->View() * m_camera->Projection();
+	XMStoreFloat4x4(&m_sceneCB[m_bufferIndex].projection, DirectX::XMMatrixTranspose(viewProj));
+	m_sceneCB[m_bufferIndex].eye = eye;
+
+	m_sceneCB[m_bufferIndex].lightPos = DirectX::XMFLOAT3(0.0f, 1.8f, -3.0f);
+	m_sceneCB[m_bufferIndex].lightAmbient = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_sceneCB[m_bufferIndex].lightDiffuse = DirectX::XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f);
+
+	for (auto& sceneCB : m_sceneCB)
+	{
+		sceneCB = m_sceneCB[m_bufferIndex];
+	}
+}
+
 bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 {
 	HRESULT result;
@@ -398,9 +468,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 
 	D3D12_RAYTRACING_GEOMETRY_DESC geometryDesc = {};
 	geometryDesc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
-	// TODO Aidan: For now we build one acceleration structure here for our one cube. 
-	// Going forward each geometry builds its own structure, or belongs to a structure outside of the renderer
-	// Hardcode object 0
+	// Hardcoded for object 0, change later
 	geometryDesc.Triangles.IndexBuffer = renderObjects[0]->GetIndexBuffer()->GetGPUVirtualAddress();
 	geometryDesc.Triangles.IndexCount = static_cast<UINT>(renderObjects[0]->GetIndexCount());
 	geometryDesc.Triangles.IndexFormat = renderObjects[0]->GetIndexBV().Format;
@@ -453,7 +521,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	ID3D12Resource* instanceDescs;
 	D3D12_RAYTRACING_INSTANCE_DESC instanceDesc = {};
 	instanceDesc.Transform[0][0] = instanceDesc.Transform[1][1] = instanceDesc.Transform[2][2] = 1;
-	instanceDesc.InstanceMask = 0xFF;
+	instanceDesc.InstanceMask = 1;
 	instanceDesc.AccelerationStructure = m_bottomLevelAccelerationStructure->GetGPUVirtualAddress();
 	AllocateUploadBuffer(m_device, &instanceDesc, sizeof(instanceDesc), &instanceDescs, L"InstanceDescs");
 
@@ -482,8 +550,8 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 
 	// Kick off acceleration structure construction
 	m_commandList->Close();
-	/*ID3D12CommandList* commandLists[] = { m_commandList };
-	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(commandLists), commandLists);*/
+	ID3D12CommandList* commandLists[] = { m_commandList };
+	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
 	if (!m_deviceResources->WaitForPrevFrame()) return false;
 
@@ -509,6 +577,8 @@ bool Renderer::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DE
 bool Renderer::CreateRaytracingPipelineStateObject()
 {
 	HRESULT result;
+
+	// Todo Aidan: Might need to revisit this for new shaders
 
 	D3D12ShaderCompilerInfo shaderCompiler;
 	shaderCompiler.DxcDllHelper.Initialize();
@@ -564,42 +634,56 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 
 	dxr.rgs.SetBytecode();
 
-	// Describe the ray generation root signature
-	D3D12_DESCRIPTOR_RANGE ranges[3];
+	//// Describe the ray generation root signature
+	//D3D12_DESCRIPTOR_RANGE ranges[3];
 
-	ranges[0].BaseShaderRegister = 0;
-	ranges[0].NumDescriptors = 2;
-	ranges[0].RegisterSpace = 0;
-	ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-	ranges[0].OffsetInDescriptorsFromTableStart = 0;
+	//ranges[0].BaseShaderRegister = 0;
+	//ranges[0].NumDescriptors = 2;
+	//ranges[0].RegisterSpace = 0;
+	//ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	//ranges[0].OffsetInDescriptorsFromTableStart = 0;
 
-	ranges[1].BaseShaderRegister = 0;
-	ranges[1].NumDescriptors = 1;
-	ranges[1].RegisterSpace = 0;
-	ranges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-	ranges[1].OffsetInDescriptorsFromTableStart = 2;
+	//ranges[1].BaseShaderRegister = 0;
+	//ranges[1].NumDescriptors = 1;
+	//ranges[1].RegisterSpace = 0;
+	//ranges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	//ranges[1].OffsetInDescriptorsFromTableStart = 2;
 
-	ranges[2].BaseShaderRegister = 0;
-	ranges[2].NumDescriptors = 4;
-	ranges[2].RegisterSpace = 0;
-	ranges[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges[2].OffsetInDescriptorsFromTableStart = 3;
+	//ranges[2].BaseShaderRegister = 0;
+	//ranges[2].NumDescriptors = 4;
+	//ranges[2].RegisterSpace = 0;
+	//ranges[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//ranges[2].OffsetInDescriptorsFromTableStart = 3;
 
-	D3D12_ROOT_PARAMETER param0 = {};
-	param0.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	param0.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	param0.DescriptorTable.NumDescriptorRanges = _countof(ranges);
-	param0.DescriptorTable.pDescriptorRanges = ranges;
+	//D3D12_ROOT_PARAMETER param0 = {};
+	//param0.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//param0.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//param0.DescriptorTable.NumDescriptorRanges = _countof(ranges);
+	//param0.DescriptorTable.pDescriptorRanges = ranges;
 
-	D3D12_ROOT_PARAMETER rootParams[1] = { param0 };
+	//D3D12_ROOT_PARAMETER rootParams[1] = { param0 };
 
-	D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
-	rootDesc.NumParameters = _countof(rootParams);
-	rootDesc.pParameters = rootParams;
-	rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
+	//D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
+	//rootDesc.NumParameters = _countof(rootParams);
+	//rootDesc.pParameters = rootParams;
+	//rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
 
-	// Create the root signature
-	SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);
+	//// Create the root signature
+	//SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);
+
+	CD3DX12_DESCRIPTOR_RANGE ranges2[2]; // Perfomance TIP: Order from most frequent to least frequent.
+	ranges2[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);  // 1 output texture
+	ranges2[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 1);  // 2 static index and vertex buffers.
+
+	CD3DX12_ROOT_PARAMETER rootParameters[RootSignatureParams::Count];
+	rootParameters[RootSignatureParams::OutputViewSlot].InitAsDescriptorTable(1, &ranges2[0]);
+	rootParameters[RootSignatureParams::AccelerationStructureSlot].InitAsShaderResourceView(0);
+	rootParameters[RootSignatureParams::SceneConstantSlot].InitAsConstantBufferView(0);
+	rootParameters[RootSignatureParams::VertexBuffersSlot].InitAsDescriptorTable(1, &ranges2[1]);
+	rootParameters[RootSignatureParams::CubeConstantSlot].InitAsConstants(SizeOfInUint32(m_cubeCB), 1);
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(ARRAYSIZE(rootParameters), rootParameters);
+	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
+	SerializeAndCreateRaytracingRootSignature(rootSignatureDesc, &dxr.rgs.pRootSignature);
 
 	shaderCompiler.library->CreateBlobFromFile(dxr.miss.info.filename, &code, &pMiss);
 
@@ -824,6 +908,8 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 {
 	HRESULT result;
 
+	// Todo Aidan: Rewrite descriptor heaps for new shaders
+
 	CreateCBResources();
 
 	// Describe the CBV/SRV/UAV heap
@@ -847,7 +933,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(ViewCB));
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(SceneConstantBuffer));
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
@@ -906,7 +992,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 	vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 	vertexSRVDesc.Buffer.StructureByteStride = 0;
 	vertexSRVDesc.Buffer.FirstElement = 0;
-	vertexSRVDesc.Buffer.NumElements = (static_cast<UINT>(renderObjects[0]->GetVertexCount()) * sizeof(VertexType)) / sizeof(float);
+	vertexSRVDesc.Buffer.NumElements = renderObjects[0]->GetVertexCount();
 	vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	handle.ptr += m_descHeapSize;
@@ -1076,6 +1162,11 @@ bool Renderer::DoRaytracing()
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
+	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
+
+	memcpy(&m_dxrmappedConstantBuffer[m_bufferIndex].constants, &m_sceneCB[m_bufferIndex], sizeof(m_sceneCB[m_bufferIndex]));
+	auto cbGpuAddress = m_dxrconstantBuffer->GetGPUVirtualAddress() + m_bufferIndex * sizeof(m_dxrmappedConstantBuffer[0]);
+
 	D3D12_DISPATCH_RAYS_DESC dispatchDesc = {};
 
 	//m_commandList->SetComputeRootDescriptorTable(GlobalRootSignatureParams::OutputViewSlot, m_raytracingOutputResourceUAVGpuDescriptor);
@@ -1093,6 +1184,7 @@ bool Renderer::DoRaytracing()
 	dispatchDesc.Width = m_screenWidth;
 	dispatchDesc.Height = m_screenHeight;
 	dispatchDesc.Depth = 1;
+
 	m_commandList->SetPipelineState1(m_rtStateObject);
 	m_commandList->DispatchRays(&dispatchDesc);
 

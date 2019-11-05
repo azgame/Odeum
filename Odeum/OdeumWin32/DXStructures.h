@@ -31,6 +31,20 @@
 #include "pch.h"
 #include "DXR Includes/dxcapi.use.h"
 
+struct SceneConstantBuffer
+{
+	DirectX::XMFLOAT4X4 projection;
+	DirectX::XMFLOAT3 eye;
+	DirectX::XMFLOAT3 lightPos;
+	DirectX::XMFLOAT4 lightAmbient;
+	DirectX::XMFLOAT4 lightDiffuse;
+};
+
+struct CubeConstantBuffer
+{
+	DirectX::XMFLOAT4 albedo;
+};
+
 struct ViewCB
 {
 	DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();

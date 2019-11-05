@@ -1,94 +1,107 @@
-/* Copyright (c) 2018-2019, NVIDIA CORPORATION. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *  * Neither the name of NVIDIA CORPORATION nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
- // ---[ Structures ]---
-
-struct HitInfo
+struct SceneConstantBuffer
 {
-	float4 ShadedColorAndHitT;
+	matrix projection;
+	float3 eye;
+	float3 lightPos;
+	float3 lightAmbient;
+	float3 lightDiffuse;
 };
 
-struct Attributes
+struct CubeConstantBuffer
 {
-	float2 uv;
+	float4 albedo;
 };
 
-// ---[ Constant Buffers ]---
-
-cbuffer ViewCB : register(b0)
-{
-	matrix view;
-	float4 viewOriginAndTanHalfFovY;
-	float2 resolution;
-};
-
-cbuffer MaterialCB : register(b1)
-{
-	float4 textureResolution;
-};
-
-// ---[ Resources ]---
-
-RWTexture2D<float4> RTOutput				: register(u0);
-RaytracingAccelerationStructure SceneBVH : register(t0);
-
-ByteAddressBuffer indices					: register(t1);
-ByteAddressBuffer vertices					: register(t2);
-Texture2D<float4> albedo					: register(t3);
-
-// ---[ Helper Functions ]---
-
-struct VertexAttributes
+struct Vertex
 {
 	float3 position;
-	float2 uv;
+	float3 normal;
 };
 
-uint3 GetIndices(uint triangleIndex)
-{
-	uint baseIndex = (triangleIndex * 3);
-	int address = (baseIndex * 4);
-	return indices.Load3(address);
-}
+RaytracingAccelerationStructure Scene : register(t0, space0);
+RWTexture2D<float4> RenderTarget : register(u0);
+ByteAddressBuffer Indices : register(t1, space0);
+StructuredBuffer<Vertex> Vertices : register(t2, space0);
 
-VertexAttributes GetVertexAttributes(uint triangleIndex, float3 barycentrics)
-{
-	uint3 indices = GetIndices(triangleIndex);
-	VertexAttributes v;
-	v.position = float3(0, 0, 0);
-	v.uv = float2(0, 0);
+ConstantBuffer<SceneConstantBuffer> g_sceneCB : register(b0);
+ConstantBuffer<CubeConstantBuffer> g_cubeCB : register(b1);
 
-	for (uint i = 0; i < 3; i++)
+// Load three 16 bit indices from a byte addressed buffer.
+uint3 Load3x16BitIndices(uint offsetBytes)
+{
+	uint3 indices;
+
+	// ByteAdressBuffer loads must be aligned at a 4 byte boundary.
+	// Since we need to read three 16 bit indices: { 0, 1, 2 } 
+	// aligned at a 4 byte boundary as: { 0 1 } { 2 0 } { 1 2 } { 0 1 } ...
+	// we will load 8 bytes (~ 4 indices { a b | c d }) to handle two possible index triplet layouts,
+	// based on first index's offsetBytes being aligned at the 4 byte boundary or not:
+	//  Aligned:     { 0 1 | 2 - }
+	//  Not aligned: { - 0 | 1 2 }
+	const uint dwordAlignedOffset = offsetBytes & ~3;
+	const uint2 four16BitIndices = Indices.Load2(dwordAlignedOffset);
+
+	// Aligned: { 0 1 | 2 - } => retrieve first three 16bit indices
+	if (dwordAlignedOffset == offsetBytes)
 	{
-		int address = (indices[i] * 5) * 4;
-		v.position += asfloat(vertices.Load3(address)) * barycentrics[i];
-		address += (3 * 4);
-		v.uv += asfloat(vertices.Load2(address)) * barycentrics[i];
+		indices.x = four16BitIndices.x & 0xffff;
+		indices.y = (four16BitIndices.x >> 16) & 0xffff;
+		indices.z = four16BitIndices.y & 0xffff;
+	}
+	else // Not aligned: { - 0 | 1 2 } => retrieve last three 16bit indices
+	{
+		indices.x = (four16BitIndices.x >> 16) & 0xffff;
+		indices.y = four16BitIndices.y & 0xffff;
+		indices.z = (four16BitIndices.y >> 16) & 0xffff;
 	}
 
-	return v;
+	return indices;
+}
+
+typedef BuiltInTriangleIntersectionAttributes MyAttributes;
+struct RayPayload
+{
+	float4 color;
+};
+
+// Retrieve hit world position.
+float3 HitWorldPosition()
+{
+	return WorldRayOrigin() + RayTCurrent() * WorldRayDirection();
+}
+
+// Retrieve attribute at a hit position interpolated from vertex attributes using the hit's barycentrics.
+float3 HitAttribute(float3 vertexAttribute[3], BuiltInTriangleIntersectionAttributes attr)
+{
+	return vertexAttribute[0] +
+		attr.barycentrics.x * (vertexAttribute[1] - vertexAttribute[0]) +
+		attr.barycentrics.y * (vertexAttribute[2] - vertexAttribute[0]);
+}
+
+// Generate a ray in world space for a camera pixel corresponding to an index from the dispatched 2D grid.
+inline void GenerateCameraRay(uint2 index, out float3 origin, out float3 direction)
+{
+	float2 xy = index + 0.5f; // center in the middle of the pixel.
+	float2 screenPos = xy / DispatchRaysDimensions().xy * 2.0 - 1.0;
+
+	// Invert Y for DirectX-style coordinates.
+	screenPos.y = -screenPos.y;
+
+	// Unproject the pixel coordinate into a ray.
+	float4 world = mul(float4(screenPos, 0, 1), g_sceneCB.projection);
+
+	world.xyz /= world.w;
+	origin = g_sceneCB.eye.xyz;
+	direction = normalize(world.xyz - origin);
+}
+
+// Diffuse lighting calculation.
+float4 CalculateDiffuseLighting(float3 hitPosition, float3 normal)
+{
+	float3 pixelToLight = normalize(g_sceneCB.lightPos.xyz - hitPosition);
+
+	// Diffuse contribution.
+	float fNDotL = max(0.0f, dot(pixelToLight, normal));
+
+	return g_cubeCB.albedo * g_sceneCB.lightDiffuse * fNDotL;
 }

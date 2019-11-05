@@ -69,11 +69,11 @@
     <ClInclude Include="DXR Includes\dxcapi.use.h">
       <Filter>DXR Includes</Filter>
     </ClInclude>
-    <ClInclude Include="DXStructures.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="RTRenderer.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="DXStructures.h">
+      <Filter>DXR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,28 +111,28 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Commonold.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
     <FxCompile Include="Common.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Hitold.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
     <FxCompile Include="Hit.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
+    <FxCompile Include="Missold.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
     <FxCompile Include="Miss.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
+    <FxCompile Include="Raygenold.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
     <FxCompile Include="Raygen.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Raygennew.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Hitnew.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Missnew.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Commonnew.hlsl">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>
