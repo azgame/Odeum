@@ -34,7 +34,7 @@ bool OdeumMain::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	// if (!m_renderer->InitializeRaytrace(screenHeight, screenWidth, hwnd)) return false;
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
-	m_renderer->CreateWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
+	m_renderer->CreateRasterWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
 
 	return true;
 }

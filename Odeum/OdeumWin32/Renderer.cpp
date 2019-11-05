@@ -289,8 +289,6 @@ bool Renderer::CreateCBResources()
 	if (FAILED(result)) return false;
 
 	// Init ray constant buffer
-	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(c_frameCount * c_alignedConstantBufferSize);
 	result = m_device->CreateCommittedResource(
 		&uploadHeapProperties,
 		D3D12_HEAP_FLAG_NONE,
@@ -322,7 +320,6 @@ bool Renderer::CreateCBResources()
 	if (FAILED(result)) return false;
 
 	// Map the ray constant buffers.
-	CD3DX12_RANGE readRange(0, 0);
 	result = m_dxrconstantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_dxrmappedConstantBuffer));
 	if (FAILED(result)) return false;
 
@@ -347,7 +344,7 @@ void Renderer::Uninitialize()
 
 bool Renderer::UpdateConstantResources()
 {
-
+	return true;
 }
 
 bool Renderer::Render(std::vector<Model*> renderObjects)
@@ -458,6 +455,8 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	{
 		sceneCB = m_sceneCB[m_bufferIndex];
 	}
+	
+	return true;
 }
 
 bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
