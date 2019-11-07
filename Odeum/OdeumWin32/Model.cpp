@@ -84,20 +84,6 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 		IID_PPV_ARGS(&m_vertexBufferUpload));
 	if (FAILED(result)) return false;
 
-	// Upload the vertex buffer to the GPU.
-	/*{
-		D3D12_SUBRESOURCE_DATA vertexData = {};
-		vertexData.pData = reinterpret_cast<BYTE*>(vertices);
-		vertexData.RowPitch = sizeof(vertices);
-		vertexData.SlicePitch = vertexData.RowPitch;
-
-		UpdateSubresources(commandList, m_vertexBuffer, m_vertexBufferUpload, 0, 0, 1, &vertexData);
-
-		CD3DX12_RESOURCE_BARRIER vertexBufferResourceBarrier =
-			CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-		commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
-	}*/
-
 	unsigned short cubeIndices[] =
 		{
 			3,1,0,
@@ -143,20 +129,6 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 		nullptr,
 		IID_PPV_ARGS(&m_indexBufferUpload));
 	if (FAILED(result)) return false;
-
-	// Upload the index buffer to the GPU.
-	/*{
-		D3D12_SUBRESOURCE_DATA indexData = {};
-		indexData.pData = reinterpret_cast<BYTE*>(cubeIndices);
-		indexData.RowPitch = indexBufferSize;
-		indexData.SlicePitch = indexData.RowPitch;
-
-		UpdateSubresources(commandList, m_indexBuffer, m_indexBufferUpload, 0, 0, 1, &indexData);
-
-		CD3DX12_RESOURCE_BARRIER indexBufferResourceBarrier =
-			CD3DX12_RESOURCE_BARRIER::Transition(m_indexBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
-		commandList->ResourceBarrier(1, &indexBufferResourceBarrier);
-	}*/
 
 	UINT8* pVertexDataBegin;
 	D3D12_RANGE readRange;

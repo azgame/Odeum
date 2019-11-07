@@ -14,34 +14,6 @@ const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const bool dxrEnabled = true;
 
-namespace GlobalRootSignatureParams {
-	enum Value {
-		OutputViewSlot = 0,
-		AccelerationStructureSlot,
-		SceneConstantSlot,
-		VertexBuffersSlot,
-		Count
-	};
-}
-
-namespace LocalRootSignatureParams {
-	enum Value {
-		CubeConstantSlot = 0,
-		Count
-	};
-}
-
-namespace RootSignatureParams {
-	enum Value {
-		OutputViewSlot = 0,
-		AccelerationStructureSlot,
-		SceneConstantSlot,
-		VertexBuffersSlot,
-		CubeConstantSlot,
-		Count
-	};
-}
-
 class Renderer
 {
 public:
@@ -70,35 +42,46 @@ private:
 	Camera*										m_camera;
 	int											m_screenHeight, m_screenWidth;
 
-	// General functions
-	bool InitializeDeviceResources(int, int, HWND, bool, bool);
-
-	// Constant Buffer for Camera
-	static const UINT							c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;
 	ID3D12DescriptorHeap*						m_descHeap;
 	UINT										m_descHeapSize;
 	UINT										m_descHeapAllocated;
+
+	ID3D12GraphicsCommandList4*					m_commandList;
+
+	// General functions
+	bool InitializeDeviceResources(int, int, HWND, bool, bool);
+	bool CreateCBResources();
+
+	// Raster related variables
+	static const UINT							c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;
+
 	ID3D12DescriptorHeap*						m_cbvHeap;
 	UINT										m_cbvHeapSize;
 	UINT										m_cbvHeapAllocated;
+
 	ID3D12Resource*								m_constantBuffer;
 	ModelViewProjectionConstantBuffer			m_constantBufferData;
 	UINT8*										m_mappedConstantBuffer;
 
-	// Rasterization related functions and variables
-	ID3D12GraphicsCommandList4*					m_commandList;
 	ID3D12RootSignature*						m_rootSignature;
 	ID3D12PipelineState*						m_pipelineState;
 
+	// Rasterization related functions
+	bool InitializeRaster(int, int, HWND, std::vector<Model*> renderObjects);
+	bool RenderRaster(std::vector<Model*> renderObjects);
+
+
 	// DXR related variables
-	// Attributes
-	// Root Signatures
-	ID3D12RootSignature*						m_raytracingGlobalRootSignature;
-	ID3D12RootSignature*						m_raytracingLocalRootSignature;
 
 	union AlignedSceneConstantBuffer
 	{
 		SceneConstantBuffer constants;
+		uint8_t alignmentPadding[D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT];
+	};
+
+	union AlignedCubeConstantBuffer
+	{
+		CubeConstantBuffer constants;
 		uint8_t alignmentPadding[D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT];
 	};
 
@@ -107,58 +90,41 @@ private:
 	SceneConstantBuffer							m_sceneCB[c_frameCount]; /// Microsoft
 	AlignedSceneConstantBuffer*					m_dxrmappedConstantBuffer;
 	CubeConstantBuffer							m_cubeCB; /// Microsoft
+	AlignedCubeConstantBuffer*					m_cubemappedConstantBuffer;
 
 	// Raytracing constant resources
 	ID3D12Resource*								m_dxrconstantBuffer;
+	ID3D12Resource*								m_cubeConstantBuffer;
 
 	// Acceleration structures
-	ID3D12Resource*								m_accelerationStructure;
 	ID3D12Resource*								m_bottomLevelAccelerationStructure;
 	ID3D12Resource*								m_topLevelAccelerationStructure;
 
+	// Ray tracing pipeline state object and properties
+	DXRGlobal									dxr;
+	ID3D12StateObject*							m_rtStateObject;
+	ID3D12StateObjectProperties*				m_rtStateObjectProps;
+
 	// Raytracing output
 	ID3D12Resource*								m_raytracingOutput;
-	D3D12_GPU_DESCRIPTOR_HANDLE					m_raytracingOutputResourceUAVGpuDescriptor;
-	UINT										m_raytracingOutputResourceUAVDescriptorHeapIndex;
 
 	// Shader tables
-	static const wchar_t*						c_hitGroupName;
-	static const wchar_t*						c_raygenShaderName;
-	static const wchar_t*						c_closestHitShaderName;
-	static const wchar_t*						c_missShaderName;
 	ID3D12Resource*								m_missShaderTable;
 	ID3D12Resource*								m_hitGroupShaderTable;
 	ID3D12Resource*								m_rayGenShaderTable;
-	ID3D12Resource*								m_shaderTable;
+	ID3D12Resource*								m_shaderTable = nullptr;
 	uint32_t									m_shaderTableRecordSize = 0;
-
-	// Changeable init
-	bool InitializeRaster(int, int, HWND, std::vector<Model*> renderObjects);
-	bool InitializeRaytrace(int, int, HWND, std::vector<Model*>);
-
-	// Changeable Render
-	bool RenderRaster(std::vector<Model*> renderObjects);
-	bool RenderRaytrace(std::vector<Model*> renderObjects);
-
-	// General
-	bool CreateCBResources();
 	
 	// Raytracing related functions
-	
+	bool InitializeRaytrace(int, int, HWND, std::vector<Model*>);
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
 	bool BuildAccelerationStructures(std::vector<Model*> renderObjects);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
 	bool CreateDescriptorHeap(std::vector<Model*> renderObjects);
 	bool BuildShaderTables();
-	bool DoRaytracing();
-	bool CopyRaytracingOutputToBackbuffer();
-	UINT AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE* cpuDescriptor, UINT descriptorIndexToUse = UINT_MAX);
-	bool CreateRaytracingOutputResource();
-
-	// Ray tracing pipeline state object and properties
-	ID3D12StateObject*							m_rtStateObject;
-	ID3D12StateObjectProperties*				m_rtStateObjectProps;
+	bool RenderRaytrace(std::vector<Model*> renderObjects);
+	bool DoRaytracing(std::vector<Model*> renderObjects);
 };
 
 #endif // !_RENDERER_H_

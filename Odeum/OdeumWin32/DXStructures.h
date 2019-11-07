@@ -34,8 +34,8 @@
 struct SceneConstantBuffer
 {
 	DirectX::XMFLOAT4X4 projection;
-	DirectX::XMFLOAT3 eye;
-	DirectX::XMFLOAT3 lightPos;
+	DirectX::XMFLOAT4 eye;
+	DirectX::XMFLOAT4 lightPos;
 	DirectX::XMFLOAT4 lightAmbient;
 	DirectX::XMFLOAT4 lightDiffuse;
 };

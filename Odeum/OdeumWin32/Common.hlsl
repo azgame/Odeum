@@ -1,10 +1,10 @@
 struct SceneConstantBuffer
 {
 	matrix projection;
-	float3 eye;
-	float3 lightPos;
-	float3 lightAmbient;
-	float3 lightDiffuse;
+	float4 eye;
+	float4 lightPos;
+	float4 lightAmbient;
+	float4 lightDiffuse;
 };
 
 struct CubeConstantBuffer
@@ -18,13 +18,13 @@ struct Vertex
 	float3 normal;
 };
 
-RaytracingAccelerationStructure Scene : register(t0, space0);
-RWTexture2D<float4> RenderTarget : register(u0);
-ByteAddressBuffer Indices : register(t1, space0);
-StructuredBuffer<Vertex> Vertices : register(t2, space0);
+ConstantBuffer<SceneConstantBuffer> g_sceneCB	: register(b0);
+ConstantBuffer<CubeConstantBuffer> g_cubeCB		: register(b1);
 
-ConstantBuffer<SceneConstantBuffer> g_sceneCB : register(b0);
-ConstantBuffer<CubeConstantBuffer> g_cubeCB : register(b1);
+RWTexture2D<float4> RenderTarget				: register(u0);
+RaytracingAccelerationStructure Scene			: register(t0, space0);
+ByteAddressBuffer Indices						: register(t1, space0);
+StructuredBuffer<Vertex> Vertices				: register(t2, space0);
 
 // Load three 16 bit indices from a byte addressed buffer.
 uint3 Load3x16BitIndices(uint offsetBytes)

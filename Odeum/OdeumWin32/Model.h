@@ -23,8 +23,8 @@ public:
 
 	int GetIndexCount()						{ return m_indexCount; }
 	int GetVertexCount()					{ return m_vertexCount; }
-	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBuffer; }
-	ID3D12Resource* GetIndexBuffer()		{ return m_indexBuffer; }
+	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBufferUpload; }
+	ID3D12Resource* GetIndexBuffer()		{ return m_indexBufferUpload; }
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBV()	{ return m_vertexBufferView; }
 	D3D12_INDEX_BUFFER_VIEW GetIndexBV()	{ return m_indexBufferView; }
 

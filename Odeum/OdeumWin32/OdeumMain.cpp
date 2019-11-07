@@ -23,18 +23,13 @@ bool OdeumMain::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	m_mainCamera = new Camera();
 	if (!m_mainCamera) return false;
 
-	// Initialize objects -- comment out for now so that it works
-	/*for (auto object : m_renderObjects) {
-		object->Initialize(m_renderer->GetD3DDevice(), m_renderer->GetCommandList());
-	}*/
-
 	// Initialize renderer
 	m_renderer = new Renderer();
 	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, m_renderObjects)) return false;
-	// if (!m_renderer->InitializeRaytrace(screenHeight, screenWidth, hwnd)) return false;
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
 	m_renderer->CreateRasterWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
+	m_renderer->CreateRaytracingWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
 
 	return true;
 }
