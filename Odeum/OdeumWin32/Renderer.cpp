@@ -469,7 +469,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	geometryDesc.Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 	geometryDesc.Triangles.VertexCount = static_cast<UINT>(renderObjects[0]->GetVertexCount());
 	geometryDesc.Triangles.VertexBuffer.StartAddress = renderObjects[0]->GetVertexBuffer()->GetGPUVirtualAddress();
-	geometryDesc.Triangles.VertexBuffer.StrideInBytes = renderObjects[0]->GetVertexBV().StrideInBytes;
+	geometryDesc.Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
 	geometryDesc.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
 
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
@@ -514,10 +514,8 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	ID3D12Resource* instanceDescs;
 	D3D12_RAYTRACING_INSTANCE_DESC instanceDesc = {};
 	instanceDesc.Transform[0][0] = instanceDesc.Transform[1][1] = instanceDesc.Transform[2][2] = 1;
-	instanceDesc.InstanceMask = 0xFF;
-	instanceDesc.InstanceID = 0;
-	instanceDesc.InstanceContributionToHitGroupIndex = 0;
-	instanceDesc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_TRIANGLE_FRONT_COUNTERCLOCKWISE;
+	instanceDesc.InstanceMask = 1;
+	//instanceDesc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_TRIANGLE_FRONT_COUNTERCLOCKWISE;
 	instanceDesc.AccelerationStructure = m_bottomLevelAccelerationStructure->GetGPUVirtualAddress();
 
 	AllocateUploadBuffer(m_device, &instanceDesc, sizeof(instanceDesc), &instanceDescs, L"InstanceDescs");
@@ -820,7 +818,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Add a state subobject for the shader payload configuration
 	D3D12_RAYTRACING_SHADER_CONFIG shaderDesc = {};
 	shaderDesc.MaxPayloadSizeInBytes = sizeof(DirectX::XMFLOAT4);	// RGB and HitT
-	shaderDesc.MaxAttributeSizeInBytes = D3D12_RAYTRACING_MAX_ATTRIBUTE_SIZE_IN_BYTES;
+	shaderDesc.MaxAttributeSizeInBytes = sizeof(DirectX::XMFLOAT2);
 
 	D3D12_STATE_SUBOBJECT shaderConfigObject = {};
 	shaderConfigObject.Type = D3D12_STATE_SUBOBJECT_TYPE_RAYTRACING_SHADER_CONFIG;
@@ -851,7 +849,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	subobjects[index++] = rayGenRootSigObject;
 
 	// Create a list of the shader export names that use the root signature
-	const WCHAR* rootSigExports[] = { L"RayGen_12",  L"Miss_5", L"HitGroup" };
+	const WCHAR* rootSigExports[] = { L"RayGen_12", L"HitGroup", L"Miss_5" };
 
 	// Add a state subobject for the association between the RayGen shader and the local root signature
 	D3D12_SUBOBJECT_TO_EXPORTS_ASSOCIATION rayGenShaderRootSigAssociation = {};
@@ -892,6 +890,9 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Create the RT Pipeline State Object (RTPSO)
 	result = m_device->CreateStateObject(&pipelineDesc, IID_PPV_ARGS(&m_rtStateObject));
 	if (FAILED(result)) return false;
+	m_rtStateObject->SetName(L"DXR Pipeline State Object");
+
+	ThrowIfFailed(m_rtStateObject->QueryInterface(&m_rtStateObjectProps));
 
 	return true;
 }
@@ -944,7 +945,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
 		&uavDesc,
-		D3D12_RESOURCE_STATE_COPY_SOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 		nullptr,
 		IID_PPV_ARGS(&m_raytracingOutput)
 	);
@@ -1013,9 +1014,6 @@ bool Renderer::BuildShaderTables()
 
 	HRESULT result;
 
-	ID3D12StateObjectProperties* stateObjectProperties;
-	ThrowIfFailed(m_rtStateObject->QueryInterface(&stateObjectProperties));
-
 	uint32_t shaderIdSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
 	uint32_t shaderTableSize = 0;
 
@@ -1027,7 +1025,7 @@ bool Renderer::BuildShaderTables()
 	shaderTableSize = ALIGN(D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT, shaderTableSize);
 
 	// Create the shader table buffer
-	CD3DX12_RESOURCE_DESC m_shaderDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(shaderTableSize));
+	CD3DX12_RESOURCE_DESC m_shaderDesc = CD3DX12_RESOURCE_DESC::Buffer(shaderTableSize);
 
 	result = m_device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -1049,18 +1047,18 @@ bool Renderer::BuildShaderTables()
 	if (FAILED(result)) return false;
 
 	// Shader Record 0 - Ray Generation program and local root parameter data (descriptor table with constant buffer and IB/VB pointers)
-	memcpy(pData, stateObjectProperties->GetShaderIdentifier(L"RayGen_12"), shaderIdSize);
+	memcpy(pData, m_rtStateObjectProps->GetShaderIdentifier(L"RayGen_12"), shaderIdSize);
 
 	// Set the root parameter data. Point to start of descriptor heap.
 	*reinterpret_cast<D3D12_GPU_DESCRIPTOR_HANDLE*>(pData + shaderIdSize) = m_descHeap->GetGPUDescriptorHandleForHeapStart();
 
 	// Shader Record 1 - Miss program (no local root arguments to set)
 	pData += m_shaderTableRecordSize;
-	memcpy(pData, stateObjectProperties->GetShaderIdentifier(L"Miss_5"), shaderIdSize);
+	memcpy(pData, m_rtStateObjectProps->GetShaderIdentifier(L"Miss_5"), shaderIdSize);
 
 	// Shader Record 2 - Closest Hit program and local root parameter data (descriptor table with constant buffer and IB/VB pointers)
 	pData += m_shaderTableRecordSize;
-	memcpy(pData, stateObjectProperties->GetShaderIdentifier(L"HitGroup"), shaderIdSize);
+	memcpy(pData, m_rtStateObjectProps->GetShaderIdentifier(L"HitGroup"), shaderIdSize);
 
 	// Set the root parameter data. Point to start of descriptor heap.
 	*reinterpret_cast<D3D12_GPU_DESCRIPTOR_HANDLE*>(pData + shaderIdSize) = m_descHeap->GetGPUDescriptorHandleForHeapStart();
@@ -1082,7 +1080,8 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	XMStoreFloat4x4(&m_sceneCB[m_bufferIndex].projection, DirectX::XMMatrixTranspose(m_camera->View() * m_camera->Projection()));
+	m_sceneCB[m_bufferIndex].eye = DirectX::XMFLOAT4(m_camera->Eye().x, m_camera->Eye().y, m_camera->Eye().z, 1.0f);
+	XMStoreFloat4x4(&m_sceneCB[m_bufferIndex].projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, m_camera->View() * m_camera->Projection())));
 
 	memcpy(&m_dxrmappedConstantBuffer[m_bufferIndex].constants, &m_sceneCB[m_bufferIndex], sizeof(m_sceneCB[m_bufferIndex]));
 	memcpy(&m_cubemappedConstantBuffer->constants, &m_cubeCB, sizeof(m_cubeCB));
@@ -1133,7 +1132,7 @@ bool Renderer::DoRaytracing(std::vector<Model*> renderObjects)
 	dispatchDesc.MissShaderTable.SizeInBytes = m_shaderTableRecordSize;
 	dispatchDesc.MissShaderTable.StrideInBytes = m_shaderTableRecordSize;
 
-	dispatchDesc.HitGroupTable.StartAddress = m_shaderTable->GetGPUVirtualAddress() + (2 * m_shaderTableRecordSize);
+	dispatchDesc.HitGroupTable.StartAddress = m_shaderTable->GetGPUVirtualAddress() + (m_shaderTableRecordSize * 2);
 	dispatchDesc.HitGroupTable.SizeInBytes = m_shaderTableRecordSize;
 	dispatchDesc.HitGroupTable.StrideInBytes = m_shaderTableRecordSize;
 

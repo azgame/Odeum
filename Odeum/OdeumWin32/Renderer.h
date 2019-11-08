@@ -109,9 +109,6 @@ private:
 	ID3D12Resource*								m_raytracingOutput;
 
 	// Shader tables
-	ID3D12Resource*								m_missShaderTable;
-	ID3D12Resource*								m_hitGroupShaderTable;
-	ID3D12Resource*								m_rayGenShaderTable;
 	ID3D12Resource*								m_shaderTable = nullptr;
 	uint32_t									m_shaderTableRecordSize = 0;
 	

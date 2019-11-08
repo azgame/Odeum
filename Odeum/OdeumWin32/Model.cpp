@@ -84,7 +84,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 		IID_PPV_ARGS(&m_vertexBufferUpload));
 	if (FAILED(result)) return false;
 
-	unsigned short cubeIndices[] =
+	UINT16 cubeIndices[] =
 		{
 			3,1,0,
 			2,1,3,
@@ -156,7 +156,7 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
-	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(int);
+	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
 	return true;
 }

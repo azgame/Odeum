@@ -5,8 +5,8 @@ using namespace DirectX;
 Camera::Camera()
 {
 	SetViewMatrix(
-		XMFLOAT3(0.0f, 0.0f, 0.0f),   // Eye pos
-		XMFLOAT3(0.0f, 0.0f, 1.0f),   // Look at
+		XMFLOAT3(0.0f, 0.0f, -5.0f),   // Eye pos
+		XMFLOAT3(0.0f, 0.0f, 0.0f),   // Look at
 		XMFLOAT3(0.0f, 1.0f, 0.0f));  // Up
 
 	SetProjMatrix(XM_PI / 4, 1.0f, 1.0f, 1000.0f);
@@ -24,7 +24,7 @@ void Camera::SetViewMatrix(DirectX::XMFLOAT3 eye, DirectX::XMFLOAT3 lookAt, Dire
 	m_up = up;
 
 	// Calculate the view matrix.
-	XMMATRIX view = XMMatrixLookAtRH(
+	XMMATRIX view = XMMatrixLookAtLH(
 		XMLoadFloat3(&m_eye),
 		XMLoadFloat3(&m_lookAt),
 		XMLoadFloat3(&m_up)
@@ -53,7 +53,7 @@ void Camera::SetProjMatrix(float fieldOfView, float aspectRatio, float nearPlane
 	m_farPlane = farPlane;
 	XMStoreFloat4x4(
 		&m_projectionMatrix,
-		XMMatrixPerspectiveFovRH(
+		XMMatrixPerspectiveFovLH(
 			m_fieldOfView,
 			m_aspectRatio,
 			m_nearPlane,
