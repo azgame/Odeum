@@ -1,6 +1,6 @@
 ﻿#include "Renderer.h"
-#include "DXRaytracingHelper.h"
 #include "DXRHelper.h"
+#include "DXRaytracingHelper.h"
 #include "dxc/dxcapi.h"
 
 #pragma region Renderer
@@ -38,7 +38,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 {
 	HRESULT result;
 
-	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN)) return false;
+	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN, dxrEnabled)) return false;
 
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -248,7 +248,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 
 #pragma region Common
 
-bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND hwnd, bool VSYNC_ENABLED, bool FULL_SCREEN)
+bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND hwnd, bool VSYNC_ENABLED, bool FULL_SCREEN, bool DXR_ENABLED)
 {
 	HRESULT result;
 
@@ -257,7 +257,7 @@ bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND
 
 	m_deviceResources = new DeviceResources(); // need to get device and commandlist from device resources
 	if (!m_deviceResources) return false;
-	bool dxsuccess = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN);
+	bool dxsuccess = m_deviceResources->Initialize(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN, DXR_ENABLED);
 	if (!dxsuccess)
 	{
 		MessageBox(hwnd, L"Could not initialize DirectX", L"Error", MB_OK);
@@ -400,7 +400,7 @@ bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, 
 
 bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd)
 {
-	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN)) return false;
+	if (!InitializeDeviceResources(screenHeight, screenWidth, hwnd, VSYNC_ENABLED, FULL_SCREEN, dxrEnabled)) return false;
 
 	m_device = m_deviceResources->GetD3Device();
 

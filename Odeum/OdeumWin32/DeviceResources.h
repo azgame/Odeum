@@ -6,8 +6,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "pch.h"
-#include "DXRHelper.h"
-#include "DXRaytracingHelper.h"
 
 static const UINT c_frameCount = 3;		// Use triple buffering.
 
@@ -18,7 +16,7 @@ public:
 	DeviceResources(const DeviceResources&);
 	~DeviceResources();
 
-	bool Initialize(int, int, HWND, bool, bool);
+	bool Initialize(int, int, HWND, bool, bool, bool);
 	void InitializeFence();
 	void Uninitialize();
 

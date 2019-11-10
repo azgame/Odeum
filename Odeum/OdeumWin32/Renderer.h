@@ -49,7 +49,7 @@ private:
 	ID3D12GraphicsCommandList4*					m_commandList;
 
 	// General functions
-	bool InitializeDeviceResources(int, int, HWND, bool, bool);
+	bool InitializeDeviceResources(int, int, HWND, bool, bool, bool);
 	bool CreateCBResources();
 
 	// Raster related variables

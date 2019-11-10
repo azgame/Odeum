@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\dxc\include;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.17763.0\um\x64;C:\Users\Ryan\Desktop\DirectXShaderCompiler-master\include;D:\Download\Git\Odeum\Odeum\Odeum\x64\Debug;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

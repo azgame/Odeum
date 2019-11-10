@@ -29,7 +29,7 @@ DeviceResources::~DeviceResources()
 }
 
 // Went through initialize, all device resources are properly created and initialized
-bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, bool vsync, bool fullscreen)
+bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, bool vsync, bool fullscreen, bool dxr)
 {
 	D3D_FEATURE_LEVEL					featureLevel;
 	HRESULT								result;
@@ -73,18 +73,20 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 			continue;
 		}
 
-		if (SUCCEEDED(D3D12CreateDevice(adapter, featureLevel, _uuidof(ID3D12Device), nullptr)))
+		if (SUCCEEDED(D3D12CreateDevice(adapter, featureLevel, _uuidof(ID3D12Device), (void**)&m_device)))
 		{
+			D3D12_FEATURE_DATA_D3D12_OPTIONS5 features = {};
+			HRESULT hr = m_device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &features, sizeof(features));
+			if ((FAILED(hr) || features.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) && dxr)
+			{
+				MessageBox(hwnd, L"DirectX Raytracing is not supported by your OS, GPU and/or driver", L"Error", MB_OK);
+				m_device = nullptr;
+				return false;
+				continue;
+			}
+			
 			break;
 		}
-	}
-
-	// Check for DXR support
-	result = IsDirectXRaytracingSupported(adapter);
-	if (FAILED(result))
-	{
-		MessageBox(hwnd, L"DirectX Raytracing is not supported by your OS, GPU and/or driver", L"Error", MB_OK);
-		return false;
 	}
 	
 	// TODO Aidan: Rewrite the adapter/output code to check for multiple adapters (i.e. integrated chip vs dedicated card)
