@@ -22,6 +22,7 @@ private:
 	Renderer* m_renderer;
 	Camera* m_mainCamera;
 	std::vector<Model*> m_renderObjects;
+	float m_pitch, m_yaw;
 
 	void UpdateCamera();
 };

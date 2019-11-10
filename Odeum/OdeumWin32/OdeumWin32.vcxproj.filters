@@ -27,7 +27,11 @@
       <UniqueIdentifier>{e8fdc37f-1b76-4d8b-8388-99b33da109f5}</UniqueIdentifier>
     </Filter>
     <Filter Include="dxc">
+<<<<<<< HEAD
       <UniqueIdentifier>{67dfe2ae-51e8-4376-8878-ac724a389e6e}</UniqueIdentifier>
+=======
+      <UniqueIdentifier>{6a673ba7-8878-413d-af3e-42704e1bcf2b}</UniqueIdentifier>
+>>>>>>> 311a18491cc43f12c01243264e64be6cb6e95afc
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +67,7 @@
     <ClInclude Include="RaytracingHLSLCompat.h">
       <Filter>DXR</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="DXStructures.h">
       <Filter>DXR</Filter>
     </ClInclude>
@@ -70,6 +75,18 @@
       <Filter>dxc</Filter>
     </ClInclude>
     <ClInclude Include="dxc\dxcapi.use.h">
+=======
+    <ClInclude Include="RTRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="DXStructures.h">
+      <Filter>DXR</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.use.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.h">
+>>>>>>> 311a18491cc43f12c01243264e64be6cb6e95afc
       <Filter>dxc</Filter>
     </ClInclude>
   </ItemGroup>
