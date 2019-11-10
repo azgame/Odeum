@@ -1,7 +1,7 @@
 ﻿#include "Renderer.h"
 #include "DXRaytracingHelper.h"
 #include "DXRHelper.h"
-#include "DXR Includes/dxcapi.h"
+#include "dxc/dxcapi.h"
 
 #pragma region Renderer
 
@@ -580,7 +580,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// Todo Aidan: Might need to revisit this for new shaders
 
 	D3D12ShaderCompilerInfo shaderCompiler;
-	shaderCompiler.DxcDllHelper.Initialize();
+	result = shaderCompiler.DxcDllHelper.Initialize();
 	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcCompiler, &shaderCompiler.compiler);
 	shaderCompiler.DxcDllHelper.CreateInstance(CLSID_DxcLibrary, &shaderCompiler.library);
 

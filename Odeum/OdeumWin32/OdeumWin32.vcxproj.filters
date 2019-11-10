@@ -26,8 +26,8 @@
     <Filter Include="DXR">
       <UniqueIdentifier>{e8fdc37f-1b76-4d8b-8388-99b33da109f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DXR Includes">
-      <UniqueIdentifier>{67dfe2ae-51e8-4376-8878-ac724a389e6e}</UniqueIdentifier>
+    <Filter Include="dxc">
+      <UniqueIdentifier>{6a673ba7-8878-413d-af3e-42704e1bcf2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,17 +63,17 @@
     <ClInclude Include="RaytracingHLSLCompat.h">
       <Filter>DXR</Filter>
     </ClInclude>
-    <ClInclude Include="DXR Includes\dxcapi.h">
-      <Filter>DXR Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="DXR Includes\dxcapi.use.h">
-      <Filter>DXR Includes</Filter>
-    </ClInclude>
     <ClInclude Include="RTRenderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="DXStructures.h">
       <Filter>DXR</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.use.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.h">
+      <Filter>dxc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
