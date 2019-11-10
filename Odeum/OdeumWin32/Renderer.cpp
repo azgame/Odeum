@@ -1,7 +1,7 @@
 ﻿#include "Renderer.h"
 #include "DXRaytracingHelper.h"
 #include "DXRHelper.h"
-#include "DXR Includes/dxcapi.h"
+#include "dxc/dxcapi.h"
 
 #pragma region Renderer
 

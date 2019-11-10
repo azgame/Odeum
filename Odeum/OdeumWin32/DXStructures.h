@@ -29,7 +29,7 @@
 #define DXSTRUCTURES_H
 
 #include "pch.h"
-#include "DXR Includes/dxcapi.use.h"
+#include "dxc/dxcapi.use.h"
 
 struct SceneConstantBuffer
 {
