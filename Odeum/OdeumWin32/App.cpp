@@ -66,16 +66,13 @@ void App::Run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
-		if (msg.message == WM_QUIT)
-			isRunning = false;
 		else
 		{
 			m_Input->Update();
 			if (m_Input->kb.Escape) isRunning = false;
-			
+
 			if (!m_engine->Run()) isRunning = false;
-		}	
+		}
 	}
 }
 

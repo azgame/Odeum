@@ -23,10 +23,11 @@ public:
 	DirectX::Keyboard::State kb;
 	DirectX::Mouse::State mouse;
 
-private:
-	static Input* s_instance;
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
+
+private:
+	static Input* s_instance;
 };
 
 #endif // !_INPUT_H_

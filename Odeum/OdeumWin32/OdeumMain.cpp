@@ -58,22 +58,24 @@ void OdeumMain::UpdateCamera()
 	move = m_mainCamera->Eye();
 
 	if (m_input->kb.Up || m_input->kb.W)
-		move.z -= 0.2f;
+		move.z -= 0.05f;
 
 	if (m_input->kb.Down || m_input->kb.S)
-		move.z += 0.2f;
+		move.z += 0.05f;
 
 	if (m_input->kb.Left || m_input->kb.A)
-		move.x -= 0.2f;
+		move.x += 0.05f;
 
 	if (m_input->kb.Right || m_input->kb.D)
-		move.x += 0.2f;
+		move.x -= 0.05f;
 
 	if (m_input->kb.PageUp || m_input->kb.Space)
-		move.y += 0.2f;
+		move.y += 0.05f;
 
 	if (m_input->kb.PageDown || m_input->kb.X)
-		move.y -= 0.2f;
+		move.y -= 0.05f;
+
+	m_input->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
 
 	if (m_input->mouse.positionMode == DirectX::Mouse::MODE_RELATIVE)
 	{
@@ -84,20 +86,18 @@ void OdeumMain::UpdateCamera()
 
 		float limit = DirectX::XM_PI / 2.0f - 0.01f;
 
-		m_pitch = std::max(-limit, m_pitch);
-		m_pitch = std::min(+limit, m_pitch);
+		m_pitch = max(-limit, m_pitch);
+		m_pitch = min(limit, m_pitch);
 
 		if (m_yaw > DirectX::XM_PI)
 		{
-			m_yaw -= DirectX::XM_PI * 2.0f;
+			m_yaw -= DirectX::XM_PI;
 		}
 		else if (m_yaw < -DirectX::XM_PI)
 		{
-			m_yaw += DirectX::XM_PI * 2.0f;
+			m_yaw += DirectX::XM_PI;
 		}
 	}
-
-	m_input->mouse->SetMode(m_input->mouse.leftButton ? DirectX::Mouse::MODE_RELATIVE : DirectX::Mouse::MODE_ABSOLUTE);
 
 	float y = sinf(m_pitch);
 	float r = cosf(m_pitch);

@@ -1,150 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{8efb8033-b24b-4707-8048-16024ab7afcd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{d35dba91-114d-4c72-a600-58e634542c2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Content">
-      <UniqueIdentifier>{5336d50c-48b9-4666-9508-8f0691a5e341}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{01254d64-48e6-462f-b396-146b52b52267}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App">
-      <UniqueIdentifier>{6c50ee18-7420-478c-b2e7-c05b67afd111}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scenes">
-      <UniqueIdentifier>{fafd653c-5132-4b22-8164-154220c4d254}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DXR">
-      <UniqueIdentifier>{e8fdc37f-1b76-4d8b-8388-99b33da109f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="dxc">
-<<<<<<< HEAD
-      <UniqueIdentifier>{67dfe2ae-51e8-4376-8878-ac724a389e6e}</UniqueIdentifier>
-=======
-      <UniqueIdentifier>{6a673ba7-8878-413d-af3e-42704e1bcf2b}</UniqueIdentifier>
->>>>>>> 311a18491cc43f12c01243264e64be6cb6e95afc
-    </Filter>
+    <FxCompile Include="Raygenold.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Raygen.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Missold.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Miss.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Hitold.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Hit.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Commonold.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Common.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Renderer.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="DeviceResources.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="App.h">
+    <ClCompile Include="OdeumMain.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="App.cpp">
       <Filter>App</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Content</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Content</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="OdeumMain.h" />
-    <ClInclude Include="DXRaytracingHelper.h">
-      <Filter>DXR</Filter>
-    </ClInclude>
-    <ClInclude Include="DXRHelper.h">
-      <Filter>DXR</Filter>
-    </ClInclude>
-    <ClInclude Include="RaytracingHLSLCompat.h">
-      <Filter>DXR</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="DXStructures.h">
-      <Filter>DXR</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.h">
-      <Filter>dxc</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.use.h">
-=======
-    <ClInclude Include="RTRenderer.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="DXStructures.h">
-      <Filter>DXR</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.use.h">
-      <Filter>dxc</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.h">
->>>>>>> 311a18491cc43f12c01243264e64be6cb6e95afc
-      <Filter>dxc</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
+    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="App.cpp">
-      <Filter>App</Filter>
+    <ClCompile Include="Input.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Content</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Content</Filter>
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Content</Filter>
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="OdeumMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OdeumMain.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="dxc\dxcapi.use.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="DXRaytracingHelper.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="DXRHelper.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="DXStructures.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="RaytracingHLSLCompat.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
     <None Include="PixelShader.hlsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="VertexShader.hlsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Commonold.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Common.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Hitold.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Hit.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Missold.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Miss.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Raygenold.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Raygen.hlsl">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{1af63a36-2161-4ac3-a6e9-36f2cdd8c2d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{8c8f1afb-5c0f-4bc9-9cde-de8420045bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{65a32de9-ff7e-412a-acc5-5b64badffb3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{1e20822c-54fa-447e-a11a-79cd268ba756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{896df72a-aa7a-4031-aa7e-1b1db69026e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dxc">
+      <UniqueIdentifier>{5e4a4ff1-11f8-4adc-bf14-a35be71b3871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dxr">
+      <UniqueIdentifier>{de06acd0-cb43-42f5-ae74-60df6d85f035}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
