@@ -459,18 +459,22 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 
 bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 {
-	D3D12_RAYTRACING_GEOMETRY_DESC geometryDesc = {};
-	geometryDesc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
-	// Hardcoded for object 0, change later
-	geometryDesc.Triangles.IndexBuffer = renderObjects[0]->GetIndexBuffer()->GetGPUVirtualAddress();
-	geometryDesc.Triangles.IndexCount = static_cast<UINT>(renderObjects[0]->GetIndexCount());
-	geometryDesc.Triangles.IndexFormat = renderObjects[0]->GetIndexBV().Format;
-	geometryDesc.Triangles.Transform3x4 = 0;
-	geometryDesc.Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-	geometryDesc.Triangles.VertexCount = static_cast<UINT>(renderObjects[0]->GetVertexCount());
-	geometryDesc.Triangles.VertexBuffer.StartAddress = renderObjects[0]->GetVertexBuffer()->GetGPUVirtualAddress();
-	geometryDesc.Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
-	geometryDesc.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
+	std::vector<D3D12_RAYTRACING_GEOMETRY_DESC> geometryDesc(renderObjects.size());
+
+	for (int i = 0; i < renderObjects.size(); i++) {
+		geometryDesc[i].Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
+		// Hardcoded for object 0, change later
+		geometryDesc[i].Triangles.IndexBuffer = renderObjects[i]->GetIndexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.IndexCount = static_cast<UINT>(renderObjects[i]->GetIndexCount());
+		geometryDesc[i].Triangles.IndexFormat = renderObjects[i]->GetIndexBV().Format;
+		geometryDesc[i].Triangles.Transform3x4 = 0;
+		geometryDesc[i].Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		geometryDesc[i].Triangles.VertexCount = static_cast<UINT>(renderObjects[i]->GetVertexCount());
+		geometryDesc[i].Triangles.VertexBuffer.StartAddress = renderObjects[i]->GetVertexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
+		geometryDesc[i].Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
+	}
+	
 
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
@@ -478,8 +482,8 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS bottomLevelInputs = {};
 	bottomLevelInputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
 	bottomLevelInputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	bottomLevelInputs.pGeometryDescs = &geometryDesc;
-	bottomLevelInputs.NumDescs = 1;
+	bottomLevelInputs.pGeometryDescs = geometryDesc.data();
+	bottomLevelInputs.NumDescs = geometryDesc.size();
 	bottomLevelInputs.Flags = buildFlags;
 
 	m_device->GetRaytracingAccelerationStructurePrebuildInfo(&bottomLevelInputs, &bottomLevelPrebuildInfo);
@@ -576,8 +580,6 @@ bool Renderer::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DE
 bool Renderer::CreateRaytracingPipelineStateObject()
 {
 	HRESULT result;
-
-	// Todo Aidan: Might need to revisit this for new shaders
 
 	D3D12ShaderCompilerInfo shaderCompiler;
 	result = shaderCompiler.DxcDllHelper.Initialize();
