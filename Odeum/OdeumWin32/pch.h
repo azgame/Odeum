@@ -47,8 +47,6 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
-#include <atlbase.h>
-#include <wrl.h>
 #include <stdlib.h>
 #include <sstream>
 #include <iomanip>
