@@ -17,11 +17,9 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
 x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
@@ -347,3 +345,7 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+Odeum/Odeum/x64/Debug/OdeumWin32.exe
+Odeum/Odeum/x64/Debug/OdeumWin32.ilk
+Odeum/Odeum/x64/Debug/OdeumWin32.pdb
