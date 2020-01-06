@@ -58,7 +58,7 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 
 	// Set the feature level to DirectX 12.1 to enable using all the DirectX 12 features.
 	// Note: Not all cards support full DirectX 12, this feature level may need to be reduced on some cards to 12.0.
-	featureLevel = D3D_FEATURE_LEVEL_12_1; // --- Only supporting dx12, can change to include dx 11.1
+	featureLevel = D3D_FEATURE_LEVEL_11_1; // --- Only supporting dx12, can change to include dx 11.1
 
 	CreateDXGIFactory1(IID_PPV_ARGS(&factory));
 	for (UINT adapterIndex = 0; 
@@ -89,14 +89,28 @@ bool DeviceResources::Initialize(int screenHeight, int screenWidth, HWND hwnd, b
 		}
 	}
 	
-	// TODO Aidan: Rewrite the adapter/output code to check for multiple adapters (i.e. integrated chip vs dedicated card)
-	// Enumerate the primary adapter output (monitor).
-	result = adapter->EnumOutputs(0, &adapterOutput);
+	/*UINT ii = 0;
+	std::vector<IDXGIOutput*> vOutputs;
+	while (adapter->EnumOutputs(ii, &adapterOutput) != DXGI_ERROR_NOT_FOUND)
+	{
+		vOutputs.push_back(adapterOutput);
+		++ii;
+	}*/
+
+	// Default adapter setup
+	IDXGIAdapter1* defaultAdapter;
+	result = factory->EnumAdapters1(0, &defaultAdapter);
+
+	// Enumerate the primary adapter output (monitor) using the default adapter rather than the NVIDIA chip
+	result = defaultAdapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
 	{
 		MessageBox(hwnd, L"Could not Enumerate Outputs", L"Error", MB_OK);
 		return false;
 	}
+
+	defaultAdapter->Release();
+	defaultAdapter = 0;
 
 	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);

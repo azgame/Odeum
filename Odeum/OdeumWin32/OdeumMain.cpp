@@ -52,7 +52,7 @@ void OdeumMain::Uninitialize()
 	
 }
 
-// TODO Ryan: Add mouse controls to rotate the camera around
+
 void OdeumMain::UpdateCamera() 
 {
 	DirectX::XMFLOAT3 move;
@@ -80,7 +80,6 @@ void OdeumMain::UpdateCamera()
 
 	if (m_input->mouse.positionMode == DirectX::Mouse::MODE_RELATIVE)
 	{
-
 		DirectX::XMFLOAT3 delta = DirectX::XMFLOAT3(float(m_input->mouse.x) * ROTATION_GAIN, float(m_input->mouse.y) * ROTATION_GAIN, 0.f * ROTATION_GAIN);
 		m_pitch -= delta.y;
 		m_yaw -= delta.x;

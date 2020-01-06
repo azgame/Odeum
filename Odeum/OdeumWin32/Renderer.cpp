@@ -114,12 +114,14 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 
 	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = c_frameCount;
+	heapDesc.NumDescriptors = 1;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descHeap));
 	if (FAILED(result)) return false;
+
+	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	CreateCBResources();
 
@@ -179,7 +181,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	UINT8* destination = m_mappedConstantBuffer + (m_bufferIndex * c_alignedConstantBufferSize);
 	memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
 
-	// Reset (re-use) the memory associated command allocator.
+	// Reset the memory associated command allocator
 	result = m_deviceResources->GetCommandAllocator()->Reset();
 	if (FAILED(result)) return false;
 
@@ -191,24 +193,25 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	// Bind the current frame's constant buffer to the pipeline.
+	// Bind the current frame's constant buffer to the pipeline
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_commandList->RSSetViewports(1, &viewport);
 	m_commandList->RSSetScissorRects(1, &m_scissorRect);
 
-	// Record commands in the command list now.
-	// Start by setting the resource barrier.
+	// Record commands in the command list now
+	// Start by setting the resource barrier
 	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-	// Get the render target view handle for the current back buffer.
+	// Get the render target view handle for the current back buffer
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_bufferIndex, m_descHeapSize);
+	// TODO Aidan: rewrite microsoft shit to make it work; ***desc heap and root descriptor tables
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0, m_descHeapSize);
 	m_commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 
-	// Then set the color to clear the window to.
+	// Then set the color to clear the window to
 	color[0] = 0.2;
 	color[1] = 0.2;
 	color[2] = 0.5;
@@ -217,7 +220,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = m_deviceResources->GetDepthStencilView();
 	m_commandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-	// Set the back buffer as the render target.
+	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
@@ -226,17 +229,17 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 		object->Render(m_commandList);
 	}
 
-	// Indicate that the back buffer will now be used to present.
+	// Indicate that the back buffer will now be used to present
 	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	// Close the list of commands.
+	// Close the list of commands
 	result = m_commandList->Close();
 	if (FAILED(result)) return false;
 
-	// Load the command list array (only one command list for now).
+	// Load the command list array (only one command list for now)
 	ID3D12CommandList* ppCommandLists[] = { m_commandList };
 
-	// Execute the list of commands.
+	// Execute the list of commands
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 	if (!m_deviceResources->Render()) return false;

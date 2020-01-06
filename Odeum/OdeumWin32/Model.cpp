@@ -170,5 +170,5 @@ void Model::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)
 	m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	m_commandList->IASetIndexBuffer(&m_indexBufferView);
-	m_commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+	m_commandList->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
 }
