@@ -21,7 +21,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 App::App()
 {
-	m_engine = nullptr;
 }
 
 App::App(const App& other)
@@ -42,10 +41,7 @@ bool App::Initialize()
 
 	m_Input->Initialize(m_hwnd);
 
-	m_engine = new OdeumMain();
-	if (!m_engine) return false;
-
-	if (!m_engine->Initialize(screenHeight, screenWidth, m_hwnd)) return false;
+	if (!OdeumEngine::GetInstance()->Initialize(screenHeight, screenWidth, m_hwnd)) return false;
 	
 	return true;
 }
@@ -71,20 +67,13 @@ void App::Run()
 			m_Input->Update();
 			if (m_Input->kb.Escape) isRunning = false;
 
-			if (!m_engine->Run()) isRunning = false;
+			if (!OdeumEngine::GetInstance()->Run()) isRunning = false;
 		}
 	}
 }
 
 void App::Uninitialize()
 {
-	if (m_engine)
-	{
-		m_engine->Uninitialize();
-		delete m_engine;
-		m_engine = nullptr;
-	}
-
 	if (m_Input)
 	{
 		delete m_Input;
@@ -116,16 +105,16 @@ void App::InitializeWindow(int& screenHeight, int& screenWidth)
 	int posX, posY;
 
 
-	// Get an external pointer to this object.	
+	// Get an external pointer to this object	
 	ApplicationHandle = this;
 
-	// Get the instance of this application.
+	// Get the instance of this application
 	m_hInstance = GetModuleHandle(NULL);
 
-	// Give the application a name.
+	// Give the application a name
 	m_applicationName = L"Engine";
 
-	// Setup the windows class with default settings.
+	// Setup the windows class with default settings
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
@@ -139,17 +128,17 @@ void App::InitializeWindow(int& screenHeight, int& screenWidth)
 	wc.lpszClassName = m_applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
 
-	// Register the window class.
+	// Register the window class
 	RegisterClassEx(&wc);
 
-	// Determine the resolution of the clients desktop screen.
+	// Determine the resolution of the clients desktop screen
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
+	// Setup the screen settings depending on whether it is running in full screen or in windowed mode
 	if (FULL_SCREEN)
 	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
+		// If full screen set the screen to maximum size of the users desktop and 32bit
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
 		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
@@ -157,57 +146,57 @@ void App::InitializeWindow(int& screenHeight, int& screenWidth)
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-		// Change the display settings to full screen.
+		// Change the display settings to full screen
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
-		// Set the position of the window to the top left corner.
+		// Set the position of the window to the top left corner
 		posX = posY = 0;
 	}
 	else
 	{
-		// If windowed then set it to 1280x720 resolution.
+		// If windowed then set it to 1280x720 resolution
 		screenWidth = 1280;
 		screenHeight = 720;
 
-		// Place the window in the middle of the screen.
+		// Place the window in the middle of the screen
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
 		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
 	}
 
-	// Create the window with the screen settings and get the handle to it.
+	// Create the window with the screen settings and get the handle to it
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hInstance, NULL);
 
-	// Bring the window up on the screen and set it as main focus.
+	// Bring the window up on the screen and set it as main focus
 	ShowWindow(m_hwnd, SW_SHOW);
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
 
-	// Hide the mouse cursor.
+	// Hide the mouse cursor
 	ShowCursor(false);
 }
 
 void App::UninitializeWindow()
 {
-	// Show the mouse cursor.
+	// Show the mouse cursor
 	ShowCursor(true);
 
-	// Fix the display settings if leaving full screen mode.
+	// Fix the display settings if leaving full screen mode
 	if (FULL_SCREEN)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
 
-	// Remove the window.
+	// Remove the window
 	DestroyWindow(m_hwnd);
 	m_hwnd = NULL;
 
-	// Remove the application instance.
+	// Remove the application instance
 	UnregisterClass(m_applicationName, m_hInstance);
 	m_hInstance = NULL;
 
-	// Release the pointer to this class.
+	// Release the pointer to this class
 	ApplicationHandle = NULL;
 }
 

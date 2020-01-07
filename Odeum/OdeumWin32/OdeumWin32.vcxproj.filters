@@ -1,90 +1,90 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Raygen.hlsl">
+    <FxCompile Include="Engine\Shaders\Common.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Miss.hlsl">
+    <FxCompile Include="Engine\Shaders\Hit.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Hit.hlsl">
+    <FxCompile Include="Engine\Shaders\Miss.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Common.hlsl">
+    <FxCompile Include="Engine\Shaders\Raygen.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OdeumMain.cpp" />
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="App.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
+    <ClCompile Include="Engine\Core\Camera.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="DeviceResources.cpp">
+    <ClCompile Include="Engine\Utilities\DeviceResources.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="Engine\Core\Input.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Engine\Rendering\Renderer.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="Engine\Rendering\Model.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OdeumMain.h" />
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="Engine\dxc\dxcapi.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\dxc\dxcapi.use.h">
+      <Filter>dxc</Filter>
+    </ClInclude>
     <ClInclude Include="App.h">
       <Filter>App</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="DeviceResources.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.h">
-      <Filter>dxc</Filter>
-    </ClInclude>
-    <ClInclude Include="dxc\dxcapi.use.h">
-      <Filter>dxc</Filter>
-    </ClInclude>
-    <ClInclude Include="DXStructures.h">
-      <Filter>dxr</Filter>
-    </ClInclude>
-    <ClInclude Include="RaytracingHLSLCompat.h">
-      <Filter>dxr</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="Engine\Core\OdeumEngine.h" />
+    <ClInclude Include="Engine\Core\Camera.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Engine\Utilities\DeviceResources.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\DXRaytracingHelper.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\DXRHelper.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\DXStructures.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utilities\d3dx12.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Input.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Engine\Utilities\RaytracingHLSLCompat.h">
+      <Filter>dxr</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Renderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="DXRaytracingHelper.h">
-      <Filter>dxr</Filter>
-    </ClInclude>
-    <ClInclude Include="DXRHelper.h">
-      <Filter>dxr</Filter>
+    <ClInclude Include="Engine\Rendering\Model.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="PixelShader.hlsl">
+    <None Include="Engine\Shaders\PixelShader.hlsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="VertexShader.hlsl">
+    <None Include="Engine\Shaders\VertexShader.hlsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

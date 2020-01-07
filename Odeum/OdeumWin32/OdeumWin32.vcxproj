@@ -148,45 +148,45 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="DeviceResources.h" />
-    <ClInclude Include="dxc\dxcapi.h" />
-    <ClInclude Include="dxc\dxcapi.use.h" />
-    <ClInclude Include="DXRaytracingHelper.h" />
-    <ClInclude Include="DXRHelper.h" />
-    <ClInclude Include="DXStructures.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="OdeumMain.h" />
+    <ClInclude Include="Engine\Core\Camera.h" />
+    <ClInclude Include="Engine\Utilities\d3dx12.h" />
+    <ClInclude Include="Engine\Utilities\DeviceResources.h" />
+    <ClInclude Include="Engine\dxc\dxcapi.h" />
+    <ClInclude Include="Engine\dxc\dxcapi.use.h" />
+    <ClInclude Include="Engine\Utilities\DXRaytracingHelper.h" />
+    <ClInclude Include="Engine\Utilities\DXRHelper.h" />
+    <ClInclude Include="Engine\Utilities\DXStructures.h" />
+    <ClInclude Include="Engine\Core\Input.h" />
+    <ClInclude Include="Engine\Rendering\Model.h" />
+    <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RaytracingHLSLCompat.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Engine\Utilities\RaytracingHLSLCompat.h" />
+    <ClInclude Include="Engine\Rendering\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DeviceResources.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="OdeumMain.cpp" />
+    <ClCompile Include="Engine\Core\Camera.cpp" />
+    <ClCompile Include="Engine\Utilities\DeviceResources.cpp" />
+    <ClCompile Include="Engine\Core\Input.cpp" />
+    <ClCompile Include="Engine\Rendering\Model.cpp" />
+    <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Engine\Rendering\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="PixelShader.hlsl">
+    <None Include="Engine\Shaders\PixelShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
-    <None Include="VertexShader.hlsl">
+    <None Include="Engine\Shaders\VertexShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Common.hlsl">
+    <FxCompile Include="Engine\Shaders\Common.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
@@ -198,7 +198,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Hit.hlsl">
+    <FxCompile Include="Engine\Shaders\Hit.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
@@ -210,7 +210,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Miss.hlsl">
+    <FxCompile Include="Engine\Shaders\Miss.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
@@ -222,7 +222,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Raygen.hlsl">
+    <FxCompile Include="Engine\Shaders\Raygen.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>

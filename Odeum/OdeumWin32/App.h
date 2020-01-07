@@ -2,10 +2,8 @@
 #define _APP_H_
 
 #define WIN32_LEAN_AND_MEAN
-#include "OdeumMain.h"
-
-#include "Input.h"
-#include "Renderer.h"
+#include "Engine/Core/OdeumEngine.h"
+#include "Engine/Core/Input.h"
 
 class App
 {
@@ -28,7 +26,6 @@ private:
 	HINSTANCE					m_hInstance;
 	HWND						m_hwnd;
 	Input*						m_Input = Input::getInstance();
-	OdeumMain*					m_engine;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

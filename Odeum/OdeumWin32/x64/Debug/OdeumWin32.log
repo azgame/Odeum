@@ -1,22 +1,4 @@
 ﻿  App.cpp
-c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(109): warning C4065: switch statement contains 'default' but no 'case' labels
-  Camera.cpp
-  DeviceResources.cpp
-  Input.cpp
-  Model.cpp
-c:\users\aidan\documents\odeum\odeum\odeumwin32\model.cpp(158): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\model.cpp(159): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
-  OdeumMain.cpp
-  Renderer.cpp
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(140): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(215): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(216): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(173): warning C4101: 'barrier': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(256): warning C4101: 'result': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(421): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(489): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\renderer.cpp(994): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
-  pch.cpp
-  Generating Code...
-c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(251): warning C4715: 'WndProc': not all control paths return a value
+c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(98): warning C4065: switch statement contains 'default' but no 'case' labels
+c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(240): warning C4715: 'WndProc': not all control paths return a value
   OdeumWin32.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\OdeumWin32.exe
