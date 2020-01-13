@@ -1,4 +1,5 @@
 #include "OdeumEngine.h"
+#include "Debug.h"
 
 const float ROTATION_GAIN = 0.004f;
 const float MOVEMENT_GAIN = 0.07f;
@@ -7,11 +8,17 @@ std::unique_ptr<OdeumEngine> OdeumEngine::engineInstance = nullptr;
 
 OdeumEngine::OdeumEngine()
 {
-	m_renderer = nullptr;
 	m_mainCamera = nullptr;
-
+	m_renderer = nullptr;
+	
 	// For now hardcode number of objects, this will be passed from the game later
 	m_renderObjects.push_back(new Model());
+
+	m_gameInterface = nullptr;
+
+	m_pitch = m_yaw = 0;
+
+	m_currentSceneNum = 0;
 }
 
 
@@ -27,14 +34,31 @@ OdeumEngine* OdeumEngine::GetInstance() {
 	return engineInstance.get();
 }
 
+void OdeumEngine::SetGameInterface(GameInterface * gameInterface_)
+{
+	m_gameInterface = gameInterface_;
+}
+
+int OdeumEngine::GetCurrentScene()
+{
+	return m_currentSceneNum;
+}
+
+void OdeumEngine::SetCurrentScene(int sceneNum_)
+{
+	m_currentSceneNum = sceneNum_;
+}
+
+void OdeumEngine::Shutdown()
+{
+	// change is running to false
+}
+
 bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 {
-
 	// Initialize camera
 	m_mainCamera = new Camera();
 	if (!m_mainCamera) return false;
-
-	m_pitch = m_yaw = 0;
 
 	// Initialize renderer
 	m_renderer = new Renderer();
@@ -44,21 +68,30 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	m_renderer->CreateRasterWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
 	m_renderer->CreateRaytracingWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
 
+	if (!m_gameInterface->Initialize()) return false;
+
+	timer.Initialize();
+
 	return true;
 }
 
 bool OdeumEngine::Run() 
 {
+	timer.UpdateFrameTicks();
 	UpdateCamera();
 	
 	if (!m_renderer->Render(m_renderObjects)) return false;
+	// DirectX delay
 
 	return true;
 }
 
 void OdeumEngine::Uninitialize() 
 {
-	
+	delete m_gameInterface; m_gameInterface = nullptr;
+	m_renderObjects.clear();
+	delete m_renderer; m_renderer = nullptr;
+	delete m_mainCamera; m_mainCamera = nullptr;
 }
 
 
@@ -67,29 +100,29 @@ void OdeumEngine::UpdateCamera()
 	DirectX::XMFLOAT3 move;
 	move = m_mainCamera->Eye();
 
-	if (m_input->kb.Up || m_input->kb.W)
+	if (Input::GetInstance()->kb.Up || Input::GetInstance()->kb.W)
 		move.z -= 0.05f;
 
-	if (m_input->kb.Down || m_input->kb.S)
+	if (Input::GetInstance()->kb.Down || Input::GetInstance()->kb.S)
 		move.z += 0.05f;
 
-	if (m_input->kb.Left || m_input->kb.A)
+	if (Input::GetInstance()->kb.Left || Input::GetInstance()->kb.A)
 		move.x += 0.05f;
 
-	if (m_input->kb.Right || m_input->kb.D)
+	if (Input::GetInstance()->kb.Right || Input::GetInstance()->kb.D)
 		move.x -= 0.05f;
 
-	if (m_input->kb.PageUp || m_input->kb.Space)
+	if (Input::GetInstance()->kb.PageUp || Input::GetInstance()->kb.Space)
 		move.y += 0.05f;
 
-	if (m_input->kb.PageDown || m_input->kb.X)
+	if (Input::GetInstance()->kb.PageDown || Input::GetInstance()->kb.X)
 		move.y -= 0.05f;
 
-	m_input->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
+	Input::GetInstance()->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
 
-	if (m_input->mouse.positionMode == DirectX::Mouse::MODE_RELATIVE)
+	if (Input::GetInstance()->mouse.positionMode == DirectX::Mouse::MODE_RELATIVE)
 	{
-		DirectX::XMFLOAT3 delta = DirectX::XMFLOAT3(float(m_input->mouse.x) * ROTATION_GAIN, float(m_input->mouse.y) * ROTATION_GAIN, 0.f * ROTATION_GAIN);
+		DirectX::XMFLOAT3 delta = DirectX::XMFLOAT3(float(Input::GetInstance()->mouse.x) * ROTATION_GAIN, float(Input::GetInstance()->mouse.y) * ROTATION_GAIN, 0.f * ROTATION_GAIN);
 		m_pitch -= delta.y;
 		m_yaw -= delta.x;
 

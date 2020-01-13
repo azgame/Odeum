@@ -10,7 +10,6 @@ Model::Model(const Model &)
 {
 }
 
-
 Model::~Model()
 {
 }
@@ -18,6 +17,8 @@ Model::~Model()
 bool Model::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
 	if (!InitializeBuffers(device, commandList)) return false;
+
+	m_modelMatrix = DirectX::XMMatrixIdentity();
 	
 	return true;
 }
@@ -157,6 +158,8 @@ bool Model::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* c
 
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
+
+	m_modelMatrix = DirectX::XMMatrixTranslation(-5.0f, 0.0f, 0.0f);
 
 	return true;
 }

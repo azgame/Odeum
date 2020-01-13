@@ -1,4 +1,5 @@
 #include "App.h"
+#include "Game/Game1.h"
 
 // WINAPI entry point
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
@@ -34,12 +35,18 @@ App::~App()
 
 bool App::Initialize()
 {
+	//Init debug
+	Debug::DebugInit();
+	Debug::SetSeverity(MessageType::TYPE_INFO);
+
 	int screenHeight, screenWidth;
 	screenHeight = screenWidth = 0;
 
 	InitializeWindow(screenHeight, screenWidth);
 
-	m_Input->Initialize(m_hwnd);
+	Input::GetInstance()->Initialize(m_hwnd);
+
+	OdeumEngine::GetInstance()->SetGameInterface(new Game1);
 
 	if (!OdeumEngine::GetInstance()->Initialize(screenHeight, screenWidth, m_hwnd)) return false;
 	
@@ -64,8 +71,8 @@ void App::Run()
 		}
 		else
 		{
-			m_Input->Update();
-			if (m_Input->kb.Escape) isRunning = false;
+			Input::GetInstance()->Update();
+			if (Input::GetInstance()->kb.Escape) isRunning = false;
 
 			if (!OdeumEngine::GetInstance()->Run()) isRunning = false;
 		}
@@ -74,12 +81,6 @@ void App::Run()
 
 void App::Uninitialize()
 {
-	if (m_Input)
-	{
-		delete m_Input;
-		m_Input = nullptr;
-	}
-
 	UninitializeWindow();
 }
 

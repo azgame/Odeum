@@ -6,6 +6,9 @@
 #include "Input.h"
 #include "../Rendering/Renderer.h"
 #include "Camera.h"
+#include "Timer.h"
+#include "GameInterface.h"
+#include "Scene.h"
 
 #include <memory>
 
@@ -23,6 +26,11 @@ public:
 
 	static OdeumEngine* GetInstance();
 
+	void SetGameInterface(GameInterface* gameInterface_);
+	int GetCurrentScene();
+	void SetCurrentScene(int sceneNum_);
+
+	void Shutdown();
 private:
 	OdeumEngine();
 	~OdeumEngine();
@@ -30,11 +38,17 @@ private:
 	static std::unique_ptr<OdeumEngine> engineInstance;
 	friend std::default_delete<OdeumEngine>;
 
-	Input* m_input = Input::getInstance();
 	Renderer* m_renderer;
 	Camera* m_mainCamera;
 	std::vector<Model*> m_renderObjects;
 	float m_pitch, m_yaw;
+
+	Timer timer;
+	unsigned int fps;
+
+	int m_currentSceneNum;
+
+	GameInterface* m_gameInterface;
 
 	void UpdateCamera();
 };

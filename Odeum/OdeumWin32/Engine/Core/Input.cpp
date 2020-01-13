@@ -1,16 +1,12 @@
 #include "Input.h"
 
 
-Input *Input::s_instance = nullptr;
+std::unique_ptr<Input> Input::s_Instance = nullptr;
 
 
 Input::Input()
 {
 	
-}
-
-Input::Input(const Input& other)
-{
 }
 
 Input::~Input()
@@ -25,10 +21,12 @@ void Input::Initialize(HWND hwnd)
 }
 
 
-Input* Input::getInstance()
+Input* Input::GetInstance()
 {
-	if (!s_instance) s_instance = new Input();
-	return s_instance;
+	if (s_Instance.get() == nullptr) {
+		s_Instance.reset(new Input);
+	}
+	return s_Instance.get();
 }
 
 void Input::Update() {

@@ -1,0 +1,17 @@
+#ifndef STARTSCENE_H
+#define STARTSCENE_H
+
+#include "../../Engine/Core/OdeumEngine.h"
+
+class StartScene : public Scene
+{
+public:
+	StartScene();
+	virtual ~StartScene();
+
+	virtual bool Initialize();
+	virtual void Update(const float deltaTime_);
+	virtual void Render();
+};
+
+#endif

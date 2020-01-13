@@ -7,14 +7,18 @@
 class Input
 {
 public:
+	Input(const Input&) = delete;
+	Input(Input&&) = delete;
+	Input& operator=(const Input&) = delete;
+	Input& operator=(Input&&) = delete;
+
 	Input();
-	Input(const Input&);
 	~Input();
 
 	void Initialize(HWND hwnd);
 	
 
-	static Input* getInstance();
+	static Input* GetInstance();
 
 	void Update();
 
@@ -27,7 +31,9 @@ public:
 	std::unique_ptr<DirectX::Mouse> m_mouse;
 
 private:
-	static Input* s_instance;
+
+	static std::unique_ptr<Input> s_Instance;
+	friend std::default_delete<Input>;
 };
 
 #endif // !_INPUT_H_

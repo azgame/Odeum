@@ -40,6 +40,8 @@ private:
 	ID3D12Resource*							m_indexBufferUpload;
 	D3D12_INDEX_BUFFER_VIEW					m_indexBufferView;
 
+	DirectX::XMMATRIX						m_modelMatrix;
+
 	int										m_vertexCount, m_indexCount;
 };
 

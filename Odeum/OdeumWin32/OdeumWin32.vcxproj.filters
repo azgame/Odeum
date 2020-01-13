@@ -35,6 +35,11 @@
     <ClCompile Include="Engine\Rendering\Model.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\Timer.cpp" />
+    <ClCompile Include="Engine\Core\Debug.cpp" />
+    <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\GameScene.cpp" />
+    <ClCompile Include="Game\Scenes\StartScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\dxc\dxcapi.h">
@@ -78,6 +83,13 @@
     <ClInclude Include="Engine\Rendering\Model.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Timer.h" />
+    <ClInclude Include="Engine\Core\Debug.h" />
+    <ClInclude Include="Engine\Core\GameInterface.h" />
+    <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Engine\Core\Scene.h" />
+    <ClInclude Include="Game\Scenes\GameScene.h" />
+    <ClInclude Include="Game\Scenes\StartScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
