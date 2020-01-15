@@ -185,6 +185,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
 
+	
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -235,6 +236,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (auto object : renderObjects) {
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(object->m_modelMatrix));
 		object->Render(m_commandList);
 	}
 
