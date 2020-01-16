@@ -16,4 +16,3 @@ c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(10
   StartScene.cpp
   Generating Code...
 c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(241): warning C4715: 'WndProc': not all control paths return a value
-  OdeumWin32.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

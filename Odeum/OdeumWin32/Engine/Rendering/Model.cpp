@@ -19,6 +19,7 @@ bool Model::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandL
 	if (!InitializeBuffers(device, commandList)) return false;
 
 	m_modelMatrix = DirectX::XMMatrixIdentity();
+	m_posVec = XMFLOAT4(0.0, 0.0, 0.0, 0.0);
 	
 	return true;
 }
