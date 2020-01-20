@@ -233,7 +233,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer) 
+	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (auto object : renderObjects) {
 		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(object->m_modelMatrix));
@@ -424,9 +424,9 @@ bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWN
 bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera)
 {
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
-	
+
 	m_cubeCB.albedo = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	
+
 	m_camera = camera;
 
 	float aspectRatio = screenWidth / screenHeight;
@@ -467,7 +467,7 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	{
 		sceneCB = m_sceneCB[m_bufferIndex];
 	}
-	
+
 	return true;
 }
 
@@ -488,7 +488,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 		geometryDesc[i].Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
 		geometryDesc[i].Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
 	}
-	
+
 
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
@@ -564,7 +564,7 @@ bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
 	topLevelBuildDesc.Inputs = topLevelInputs;
 	topLevelBuildDesc.ScratchAccelerationStructureData = tscratchResource->GetGPUVirtualAddress();
 	topLevelBuildDesc.DestAccelerationStructureData = m_topLevelAccelerationStructure->GetGPUVirtualAddress();
-	
+
 	m_commandList->BuildRaytracingAccelerationStructure(&topLevelBuildDesc, 0, nullptr);
 
 	uavBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
@@ -604,7 +604,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	IDxcBlobEncoding* pRaygen(nullptr);
 	IDxcBlobEncoding* pHit(nullptr);
 	IDxcBlobEncoding* pMiss(nullptr);
-	
+
 	dxr.rgs = RtProgram(D3D12ShaderInfo(L"Engine/Shaders/Raygen.hlsl", L"", L"lib_6_3"));
 	dxr.miss = RtProgram(D3D12ShaderInfo(L"Engine/Shaders/Miss.hlsl", L"", L"lib_6_3"));
 	dxr.hit = HitProgram(L"Hit");
@@ -761,7 +761,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	// 2 for RayGen Root Signature (root-signature and association)
 	// 2 for Shader Config (config and association)
 	// 1 for Global Root Signature
-	// 1 for Pipeline Config	
+	// 1 for Pipeline Config
 	UINT index = 0;
 	std::vector<D3D12_STATE_SUBOBJECT> subobjects;
 	subobjects.resize(10);
@@ -857,7 +857,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 
 	subobjects[index++] = shaderPayloadAssociationObject;
 
-	// Add a state subobject for the shared root signature 
+	// Add a state subobject for the shared root signature
 	D3D12_STATE_SUBOBJECT rayGenRootSigObject = {};
 	rayGenRootSigObject.Type = D3D12_STATE_SUBOBJECT_TYPE_LOCAL_ROOT_SIGNATURE;
 	rayGenRootSigObject.pDesc = &dxr.rgs.pRootSignature;
@@ -1111,7 +1111,7 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 	DoRaytracing(renderObjects);
 
 	D3D12_RESOURCE_BARRIER postCopyBarriers[2];
-	
+
 	postCopyBarriers[1] = CD3DX12_RESOURCE_BARRIER::Transition(m_raytracingOutput, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
 	m_commandList->ResourceBarrier(1, &postCopyBarriers[1]);
@@ -1134,7 +1134,7 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 bool Renderer::DoRaytracing(std::vector<Model*> renderObjects)
 {
 	// Bind the heaps, acceleration structure and dispatch rays
-	
+
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
