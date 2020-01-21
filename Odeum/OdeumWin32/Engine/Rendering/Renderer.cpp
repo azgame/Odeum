@@ -131,7 +131,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, c_alignedConstantBufferSize * 2);
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, c_alignedConstantBufferSize * renderObjects.size());
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
@@ -190,7 +190,6 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	
 
 	// Reset the memory associated command allocator
 	result = m_deviceResources->GetCommandAllocator()->Reset();
