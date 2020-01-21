@@ -124,14 +124,14 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descHeap));
 	if (FAILED(result)) return false;
 
-	CreateCBResources();
+	CreateCBResources(renderObjects.size());
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, c_alignedConstantBufferSize);
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, c_alignedConstantBufferSize * 2);
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
@@ -190,8 +190,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	UINT8* destination = m_mappedConstantBuffer + (m_bufferIndex * c_alignedConstantBufferSize);
-	memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+	
 
 	// Reset the memory associated command allocator
 	result = m_deviceResources->GetCommandAllocator()->Reset();
@@ -219,8 +218,6 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_deviceResources->GetRTVHeap()->GetCPUDescriptorHandleForHeapStart(), m_bufferIndex, renderTargetViewDescriptorSize);
 
-	m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress());
-
 	// Then set the color to clear the window to
 	color[0] = 0.2;
 	color[1] = 0.2;
@@ -235,9 +232,12 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
-	for (auto object : renderObjects) {
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(object->m_modelMatrix));
-		object->Render(m_commandList);
+	for (int i = 0; i < renderObjects.size(); i++) {
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(renderObjects[i]->m_modelMatrix));
+		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
+		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
+		renderObjects[i]->Render(m_commandList);
 	}
 
 	// Indicate that the back buffer will now be used to present
@@ -281,13 +281,13 @@ bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND
 	return true;
 }
 
-bool Renderer::CreateCBResources()
+bool Renderer::CreateCBResources(int numRenderObjects_)
 {
 	HRESULT result;
 
 	// Init raster constant buffer
 	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-	size_t cbSize = c_frameCount * c_alignedConstantBufferSize;
+	size_t cbSize = numRenderObjects_ * c_alignedConstantBufferSize;
 	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(cbSize);
 	result = m_device->CreateCommittedResource(
 		&uploadHeapProperties,
@@ -328,6 +328,7 @@ bool Renderer::CreateCBResources()
 	CD3DX12_RANGE readRange(0, 0);
 	result = m_constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_mappedConstantBuffer));
 	if (FAILED(result)) return false;
+	
 
 	// Map the ray constant buffers.
 	result = m_dxrconstantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&m_dxrmappedConstantBuffer));
@@ -933,7 +934,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 	// Create descriptor heap
 	m_device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&m_descHeap));
 
-	CreateCBResources();
+	CreateCBResources(renderObjects.size());
 
 	// Create the handle and get the heap size for increment
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();

@@ -49,8 +49,6 @@ private:
 	int m_currentSceneNum;
 
 	GameInterface* m_gameInterface;
-
-	void UpdateCamera();
 };
 
 #endif // !_ODEUMMAIN_H

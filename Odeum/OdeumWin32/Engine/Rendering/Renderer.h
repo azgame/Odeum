@@ -12,7 +12,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-const bool dxrEnabled = true;
+const bool dxrEnabled = false;
 
 class Renderer
 {
@@ -50,7 +50,7 @@ private:
 
 	// General functions
 	bool InitializeDeviceResources(int, int, HWND, bool, bool, bool);
-	bool CreateCBResources();
+	bool CreateCBResources(int numRenderObjects_);
 
 	// Raster related variables
 	static const UINT							c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;
