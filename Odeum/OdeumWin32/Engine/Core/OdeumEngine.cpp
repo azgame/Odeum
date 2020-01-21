@@ -13,7 +13,7 @@ OdeumEngine::OdeumEngine()
 	
 	// For now hardcode number of objects, this will be passed from the game later
 	m_renderObjects.push_back(new Model());
-	m_renderObjects.push_back(new Model());
+	//m_renderObjects.push_back(new Model());
 
 	m_gameInterface = nullptr;
 
@@ -88,8 +88,8 @@ bool OdeumEngine::Run()
 	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->GetPosition());
 	m_renderObjects[0]->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
-	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->GetPosition());
-	m_renderObjects[1]->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+	//posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->GetPosition());
+	//m_renderObjects[1]->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 	
 	if (!m_renderer->Render(m_renderObjects)) return false;
 	// DirectX delay
