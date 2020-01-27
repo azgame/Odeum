@@ -3,7 +3,7 @@
 
 #include "../../pch.h"
 #include "../Utilities/DeviceResources.h"
-#include "Model.h"
+#include "GameObject.h"
 #include "../Core/Camera.h"
 #include "../Utilities/RaytracingHLSLCompat.h"
 #include "../Utilities/DXStructures.h"
@@ -21,12 +21,12 @@ public:
 	Renderer(const Renderer&);
 	~Renderer();
 
-	bool Initialize(int, int, HWND, std::vector<Model*>);
+	bool Initialize(int, int, HWND, std::vector<GameObject*>);
 	void CreateRasterWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	bool CreateRaytracingWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool UpdateConstantResources();
-	bool Render(std::vector<Model*> renderObjects);
+	bool Render(std::vector<GameObject*> renderObjects);
 
 	ID3D12Device*								GetD3DDevice() { return m_device; }
 	ID3D12GraphicsCommandList*					GetCommandList() { return m_commandList; }
@@ -67,8 +67,8 @@ private:
 	ID3D12PipelineState*						m_pipelineState;
 
 	// Rasterization related functions
-	bool InitializeRaster(int, int, HWND, std::vector<Model*> renderObjects);
-	bool RenderRaster(std::vector<Model*> renderObjects);
+	bool InitializeRaster(int, int, HWND, std::vector<GameObject*> renderObjects);
+	bool RenderRaster(std::vector<GameObject*> renderObjects);
 
 
 	// DXR related variables
@@ -113,15 +113,15 @@ private:
 	uint32_t									m_shaderTableRecordSize = 0;
 	
 	// Raytracing related functions
-	bool InitializeRaytrace(int, int, HWND, std::vector<Model*>);
+	bool InitializeRaytrace(int, int, HWND, std::vector<GameObject*>);
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
-	bool BuildAccelerationStructures(std::vector<Model*> renderObjects);
+	bool BuildAccelerationStructures(std::vector<GameObject*> renderObjects);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
-	bool CreateDescriptorHeap(std::vector<Model*> renderObjects);
+	bool CreateDescriptorHeap(std::vector<GameObject*> renderObjects);
 	bool BuildShaderTables();
-	bool RenderRaytrace(std::vector<Model*> renderObjects);
-	bool DoRaytracing(std::vector<Model*> renderObjects);
+	bool RenderRaytrace(std::vector<GameObject*> renderObjects);
+	bool DoRaytracing(std::vector<GameObject*> renderObjects);
 };
 
 #endif // !_RENDERER_H_

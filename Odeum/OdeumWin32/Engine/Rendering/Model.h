@@ -1,52 +1,19 @@
-#ifndef _MODEL_H_
-#define _MODEL_H_
+#ifndef MODEL_H
+#define MODEL_H
 
-#include "../../pch.h"
+#include "Mesh.h"
 
-
-struct VertexType
-{
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 normal;
-};
-
-class Model 
+class Model
 {
 public:
 	Model();
-	Model(const Model&);
 	~Model();
-
 	bool Initialize(ID3D12Device*, ID3D12GraphicsCommandList*);
-	void Shutdown();
-	void Render(ID3D12GraphicsCommandList*);
-
-	int GetIndexCount()						{ return m_indexCount; }
-	int GetVertexCount()					{ return m_vertexCount; }
-	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBufferUpload; }
-	ID3D12Resource* GetIndexBuffer()		{ return m_indexBufferUpload; }
-	D3D12_VERTEX_BUFFER_VIEW GetVertexBV()	{ return m_vertexBufferView; }
-	D3D12_INDEX_BUFFER_VIEW GetIndexBV()	{ return m_indexBufferView; }
-	void SetPosition(DirectX::XMFLOAT4 pos_)	{ m_posVec = pos_; }
-	DirectX::XMFLOAT4 GetPosition()			{ return m_posVec; }
-
-	DirectX::XMMATRIX						m_modelMatrix;
-
+	void Render(ID3D12GraphicsCommandList* commandList_);
+	void AddMesh(Mesh* mesh_);
+	Mesh* GetMesh() { return m_subMeshes[0]; }
 private:
-	bool InitializeBuffers(ID3D12Device*, ID3D12GraphicsCommandList*);
-	void ShutdownBuffers();
-	void RenderBuffers(ID3D12GraphicsCommandList*);
-	
-	// Todo Aidan: Move rendering out of mesh -> to mesh renderer
-	ID3D12Resource*							m_vertexBuffer;
-	ID3D12Resource*							m_vertexBufferUpload;
-	D3D12_VERTEX_BUFFER_VIEW				m_vertexBufferView;
-	ID3D12Resource*							m_indexBuffer;
-	ID3D12Resource*							m_indexBufferUpload;
-	D3D12_INDEX_BUFFER_VIEW					m_indexBufferView;
-	int										m_vertexCount, m_indexCount;
-
-	DirectX::XMFLOAT4						m_posVec;
+	std::vector<Mesh*> m_subMeshes;
 };
 
 #endif

@@ -22,7 +22,7 @@ Renderer::~Renderer()
 
 #pragma region Raster
 
-bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<Model*> renderObjects)
+bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
 {
 	if (dxrEnabled) {
 		if (!InitializeRaytrace(screenHeight, screenWidth, hwnd, renderObjects)) return false;
@@ -34,7 +34,7 @@ bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vec
 	return true;
 }
 
-bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, std::vector<Model*> renderObjects)
+bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
 {
 	HRESULT result;
 
@@ -178,7 +178,7 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
 }
 
-bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
+bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 {
 	HRESULT								result;
 	D3D12_RESOURCE_BARRIER				barrier;
@@ -232,7 +232,7 @@ bool Renderer::RenderRaster(std::vector<Model*> renderObjects)
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (int i = 0; i < renderObjects.size(); i++) {
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(renderObjects[i]->m_modelMatrix));
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(renderObjects[i]->GetMesh()->m_modelMatrix));
 		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
 		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
 		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
@@ -360,7 +360,7 @@ bool Renderer::UpdateConstantResources()
 	return true;
 }
 
-bool Renderer::Render(std::vector<Model*> renderObjects)
+bool Renderer::Render(std::vector<GameObject*> renderObjects)
 {
 	if (dxrEnabled) {
 		if (!RenderRaytrace(renderObjects)) return false;
@@ -377,7 +377,7 @@ bool Renderer::Render(std::vector<Model*> renderObjects)
 
 #pragma region DXR
 
-bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, std::vector<Model*> renderObjects)
+bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
 {
 	HRESULT result;
 
@@ -471,20 +471,20 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	return true;
 }
 
-bool Renderer::BuildAccelerationStructures(std::vector<Model*> renderObjects)
+bool Renderer::BuildAccelerationStructures(std::vector<GameObject*> renderObjects)
 {
 	std::vector<D3D12_RAYTRACING_GEOMETRY_DESC> geometryDesc(renderObjects.size());
 
 	for (int i = 0; i < renderObjects.size(); i++) {
 		geometryDesc[i].Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 		// Hardcoded for object 0, change later
-		geometryDesc[i].Triangles.IndexBuffer = renderObjects[i]->GetIndexBuffer()->GetGPUVirtualAddress();
-		geometryDesc[i].Triangles.IndexCount = static_cast<UINT>(renderObjects[i]->GetIndexCount());
-		geometryDesc[i].Triangles.IndexFormat = renderObjects[i]->GetIndexBV().Format;
+		geometryDesc[i].Triangles.IndexBuffer = renderObjects[i]->GetMesh()->GetIndexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.IndexCount = static_cast<UINT>(renderObjects[i]->GetMesh()->GetIndexCount());
+		geometryDesc[i].Triangles.IndexFormat = renderObjects[i]->GetMesh()->GetIndexBV().Format;
 		geometryDesc[i].Triangles.Transform3x4 = 0;
 		geometryDesc[i].Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-		geometryDesc[i].Triangles.VertexCount = static_cast<UINT>(renderObjects[i]->GetVertexCount());
-		geometryDesc[i].Triangles.VertexBuffer.StartAddress = renderObjects[i]->GetVertexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.VertexCount = static_cast<UINT>(renderObjects[i]->GetMesh()->GetVertexCount());
+		geometryDesc[i].Triangles.VertexBuffer.StartAddress = renderObjects[i]->GetMesh()->GetVertexBuffer()->GetGPUVirtualAddress();
 		geometryDesc[i].Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
 		geometryDesc[i].Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
 	}
@@ -913,7 +913,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	return true;
 }
 
-bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
+bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 {
 	HRESULT result;
 
@@ -991,24 +991,24 @@ bool Renderer::CreateDescriptorHeap(std::vector<Model*> renderObjects)
 	indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 	indexSRVDesc.Buffer.StructureByteStride = 0;
 	indexSRVDesc.Buffer.FirstElement = 0;
-	indexSRVDesc.Buffer.NumElements = renderObjects[0]->GetIndexCount() / 4;
+	indexSRVDesc.Buffer.NumElements = renderObjects[0]->GetMesh()->GetIndexCount() / 4;
 	indexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	handle.ptr += m_descHeapSize;
-	m_device->CreateShaderResourceView(renderObjects[0]->GetIndexBuffer(), &indexSRVDesc, handle);
+	m_device->CreateShaderResourceView(renderObjects[0]->GetMesh()->GetIndexBuffer(), &indexSRVDesc, handle);
 
 	// Create the vertex buffer SRV
 	D3D12_SHADER_RESOURCE_VIEW_DESC vertexSRVDesc;
 	vertexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 	vertexSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
 	vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	vertexSRVDesc.Buffer.StructureByteStride = renderObjects[0]->GetVertexBuffer()->GetDesc().Width / sizeof(VertexNormal);
+	vertexSRVDesc.Buffer.StructureByteStride = renderObjects[0]->GetMesh()->GetVertexBuffer()->GetDesc().Width / sizeof(VertexNormal);
 	vertexSRVDesc.Buffer.FirstElement = 0;
-	vertexSRVDesc.Buffer.NumElements = renderObjects[0]->GetVertexCount();
+	vertexSRVDesc.Buffer.NumElements = renderObjects[0]->GetMesh()->GetVertexCount();
 	vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 	handle.ptr += m_descHeapSize;
-	m_device->CreateShaderResourceView(renderObjects[0]->GetVertexBuffer(), &vertexSRVDesc, handle);
+	m_device->CreateShaderResourceView(renderObjects[0]->GetMesh()->GetVertexBuffer(), &vertexSRVDesc, handle);
 
 	return true;
 }
@@ -1085,7 +1085,7 @@ bool Renderer::BuildShaderTables()
 	return true;
 }
 
-bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
+bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 {
 	HRESULT result;
 
@@ -1131,7 +1131,7 @@ bool Renderer::RenderRaytrace(std::vector<Model*> renderObjects)
 	return true;
 }
 
-bool Renderer::DoRaytracing(std::vector<Model*> renderObjects)
+bool Renderer::DoRaytracing(std::vector<GameObject*> renderObjects)
 {
 	// Bind the heaps, acceleration structure and dispatch rays
 

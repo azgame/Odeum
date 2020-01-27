@@ -11,8 +11,12 @@ OdeumEngine::OdeumEngine()
 	m_renderer = nullptr;
 	
 	// For now hardcode number of objects, this will be passed from the game later
-	m_renderObjects.push_back(new Model());
-	m_renderObjects.push_back(new Model());
+	Model* model = new Model();
+	model->AddMesh(new Mesh());
+	Model* model2 = new Model();
+	model2->AddMesh(new Mesh());
+	m_renderObjects.push_back(new GameObject(model));
+	m_renderObjects.push_back(new GameObject(model2));
 
 	m_gameInterface = nullptr;
 
@@ -81,19 +85,20 @@ bool OdeumEngine::Run()
 	timer.UpdateFrameTicks();
 	m_mainCamera->UpdateCamera();
 
-	DirectX::XMFLOAT4 pos = m_renderObjects[0]->GetPosition();
+	DirectX::XMFLOAT4 pos = m_renderObjects[0]->GetMesh()->GetPosition();
 	pos.x = 5.0f;
 
-	m_renderObjects[0]->SetPosition(pos);
-	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->GetPosition());
-	m_renderObjects[0]->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+	m_renderObjects[0]->GetMesh()->SetPosition(pos);
+	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->GetMesh()->GetPosition());
+	m_renderObjects[0]->GetMesh()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
-	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->GetPosition());
-	m_renderObjects[1]->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->GetMesh()->GetPosition());
+	m_renderObjects[1]->GetMesh()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 	
 	m_gameInterface->Update(timer.GetDeltaTime());
 
 	if (!m_renderer->Render(m_renderObjects)) return false;
+	m_gameInterface->Render();
 
 	return true;
 }
