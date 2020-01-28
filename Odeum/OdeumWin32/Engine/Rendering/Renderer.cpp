@@ -190,7 +190,6 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-
 	// Reset the memory associated command allocator
 	result = m_deviceResources->GetCommandAllocator()->Reset();
 	if (FAILED(result)) return false;
@@ -941,7 +940,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(SceneConstantBuffer));
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(SceneConstantBuffer)) * renderObjects.size();
 	cbvDesc.BufferLocation = m_dxrconstantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
@@ -984,31 +983,34 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 	handle.ptr += m_descHeapSize;
 	m_device->CreateShaderResourceView(nullptr, &srvDesc, handle);
 
-	// Create the index buffer srv
-	D3D12_SHADER_RESOURCE_VIEW_DESC indexSRVDesc;
-	indexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	indexSRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-	indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
-	indexSRVDesc.Buffer.StructureByteStride = 0;
-	indexSRVDesc.Buffer.FirstElement = 0;
-	indexSRVDesc.Buffer.NumElements = renderObjects[0]->GetMesh()->GetIndexCount() / 4;
-	indexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	for (auto object : renderObjects) {
+		// Create the index buffer srv
+		D3D12_SHADER_RESOURCE_VIEW_DESC indexSRVDesc;
+		indexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		indexSRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+		indexSRVDesc.Buffer.StructureByteStride = 0;
+		indexSRVDesc.Buffer.FirstElement = 0;
+		indexSRVDesc.Buffer.NumElements = object->GetMesh()->GetIndexCount() / 4;
+		indexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	handle.ptr += m_descHeapSize;
-	m_device->CreateShaderResourceView(renderObjects[0]->GetMesh()->GetIndexBuffer(), &indexSRVDesc, handle);
+		handle.ptr += m_descHeapSize;
+		m_device->CreateShaderResourceView(object->GetMesh()->GetIndexBuffer(), &indexSRVDesc, handle);
 
-	// Create the vertex buffer SRV
-	D3D12_SHADER_RESOURCE_VIEW_DESC vertexSRVDesc;
-	vertexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-	vertexSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
-	vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-	vertexSRVDesc.Buffer.StructureByteStride = renderObjects[0]->GetMesh()->GetVertexBuffer()->GetDesc().Width / sizeof(VertexNormal);
-	vertexSRVDesc.Buffer.FirstElement = 0;
-	vertexSRVDesc.Buffer.NumElements = renderObjects[0]->GetMesh()->GetVertexCount();
-	vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		// Create the vertex buffer SRV
+		D3D12_SHADER_RESOURCE_VIEW_DESC vertexSRVDesc;
+		vertexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		vertexSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+		vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+		vertexSRVDesc.Buffer.StructureByteStride = object->GetMesh()->GetVertexBuffer()->GetDesc().Width / sizeof(VertexNormal);
+		vertexSRVDesc.Buffer.FirstElement = 0;
+		vertexSRVDesc.Buffer.NumElements = object->GetMesh()->GetVertexCount();
+		vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	handle.ptr += m_descHeapSize;
-	m_device->CreateShaderResourceView(renderObjects[0]->GetMesh()->GetVertexBuffer(), &vertexSRVDesc, handle);
+		handle.ptr += m_descHeapSize;
+		m_device->CreateShaderResourceView(object->GetMesh()->GetVertexBuffer(), &vertexSRVDesc, handle);
+	}
+	
 
 	return true;
 }

@@ -43,6 +43,7 @@ struct SceneConstantBuffer
 struct CubeConstantBuffer
 {
 	DirectX::XMFLOAT4 albedo;
+	//DirectX::XMFLOAT4 model;
 };
 
 struct ViewCB
