@@ -21,6 +21,7 @@ PS_INPUT main(VS_INPUT input)
 {
 	PS_INPUT Output;
 	float4 pos = float4(input.position, 1.0f);
+	
 	pos = mul(pos, model);
 	pos = mul(pos, view);
 	pos = mul(pos, projection);

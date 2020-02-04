@@ -5,6 +5,8 @@
 Model::Model() : m_subMeshes(std::vector<Mesh*>())
 {
 	m_subMeshes.reserve(10);
+
+	m_modelMatrix = DirectX::XMMatrixIdentity();
 }
 
 

@@ -6,5 +6,5 @@ struct PS_INPUT
 // Pixel Shader
 float4 main(PS_INPUT In) : SV_TARGET
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	return normalize(In.position);
 }

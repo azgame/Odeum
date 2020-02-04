@@ -18,8 +18,7 @@ bool Mesh::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandLi
 {
 	if (!InitializeBuffers(device, commandList)) return false;
 
-	m_modelMatrix = DirectX::XMMatrixIdentity();
-	m_posVec = XMFLOAT4(0.0, 0.0, 0.0, 0.0);
+	
 	
 	return true;
 }
@@ -159,8 +158,6 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
-
-	m_modelMatrix = DirectX::XMMatrixTranslation(-5.0f, 0.0f, 0.0f);
 
 	return true;
 }

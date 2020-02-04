@@ -2,6 +2,11 @@
   App.cpp
 c:\users\aidan\documents\odeum\odeum\odeumwin32\app.cpp(99): warning C4065: switch statement contains 'default' but no 'case' labels
   OdeumEngine.cpp
+  GameObject.cpp
+  Mesh.cpp
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\mesh.cpp(159): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\mesh.cpp(160): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
+  Model.cpp
   Renderer.cpp
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(127): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(134): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
@@ -10,10 +15,11 @@ c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(22
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(221): warning C4305: '=': truncation from 'double' to 'float'
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(184): warning C4101: 'barrier': unreferenced local variable
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(265): warning C4101: 'result': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(431): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(499): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(935): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(1004): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(434): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(500): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(950): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(958): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(1020): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
   Game1.cpp
   GameScene.cpp
   StartScene.cpp

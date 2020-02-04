@@ -5,6 +5,7 @@
 GameObject::GameObject(Model* model_) : m_model(nullptr)
 {
 	m_model = model_;
+	position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 

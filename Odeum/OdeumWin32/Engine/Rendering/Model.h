@@ -12,8 +12,10 @@ public:
 	void Render(ID3D12GraphicsCommandList* commandList_);
 	void AddMesh(Mesh* mesh_);
 	Mesh* GetMesh() { return m_subMeshes[0]; }
+
+	DirectX::XMMATRIX						m_modelMatrix;
 private:
-	std::vector<Mesh*> m_subMeshes;
+	std::vector<Mesh*>						m_subMeshes;
 };
 
 #endif

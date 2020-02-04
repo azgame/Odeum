@@ -97,7 +97,7 @@ private:
 	ID3D12Resource*								m_cubeConstantBuffer;
 
 	// Acceleration structures
-	ID3D12Resource*								m_bottomLevelAccelerationStructure;
+	std::vector<ID3D12Resource*>				m_bottomLevelAccelerationStructure;
 	ID3D12Resource*								m_topLevelAccelerationStructure;
 
 	// Ray tracing pipeline state object and properties
@@ -115,7 +115,8 @@ private:
 	// Raytracing related functions
 	bool InitializeRaytrace(int, int, HWND, std::vector<GameObject*>);
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
-	bool BuildAccelerationStructures(std::vector<GameObject*> renderObjects);
+	bool BuildBottomLevelAccelerationStructures(std::vector<GameObject*> renderObjects);
+	bool BuildTopLevelAccelerationStructures(std::vector<GameObject*> renderObjects);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
 	bool CreateDescriptorHeap(std::vector<GameObject*> renderObjects);
