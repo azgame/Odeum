@@ -64,6 +64,10 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 	m_mainCamera = new Camera();
 	if (!m_mainCamera) return false;
 
+	m_renderObjects[0]->position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
+	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+
 	// Initialize renderer
 	m_renderer = new Renderer();
 	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, m_renderObjects)) return false;
@@ -86,12 +90,13 @@ bool OdeumEngine::Run()
 	m_mainCamera->UpdateCamera();
 
 	DirectX::XMFLOAT4 pos = m_renderObjects[0]->position;
-	pos.x = 5.0f;
+	pos.x--;
 
 	m_renderObjects[0]->position = pos;
 	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
 	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
+	m_renderObjects[1]->position = pos;
 	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->position);
 	m_renderObjects[1]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 	

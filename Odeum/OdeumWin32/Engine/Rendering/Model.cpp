@@ -5,8 +5,10 @@
 Model::Model() : m_subMeshes(std::vector<Mesh*>())
 {
 	m_subMeshes.reserve(10);
+	DirectX::XMFLOAT4 pos = DirectX::XMFLOAT4(5.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&pos);
+	m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
-	m_modelMatrix = DirectX::XMMatrixIdentity();
 }
 
 

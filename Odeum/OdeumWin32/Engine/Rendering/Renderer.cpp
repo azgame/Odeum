@@ -380,6 +380,8 @@ bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, 
 {
 	HRESULT result;
 
+
+
 	// Create raytracing interfaces: raytracing device and commandlist.
 	if (!CreateRaytracingInterfaces(screenHeight, screenWidth, hwnd)) return false;
 
@@ -476,6 +478,7 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 bool Renderer::BuildBottomLevelAccelerationStructures(std::vector<GameObject*> renderObjects)
 {
 	std::vector<D3D12_RAYTRACING_GEOMETRY_DESC> geometryDesc(renderObjects.size());
+	m_bottomLevelAccelerationStructure.resize(renderObjects.size());
 
 	for (int i = 0; i < renderObjects.size(); i++) {
 		geometryDesc[i].Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
@@ -496,8 +499,8 @@ bool Renderer::BuildBottomLevelAccelerationStructures(std::vector<GameObject*> r
 		D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS bottomLevelInputs = {};
 		bottomLevelInputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
 		bottomLevelInputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-		bottomLevelInputs.pGeometryDescs = geometryDesc.data();
-		bottomLevelInputs.NumDescs = geometryDesc.size();
+		bottomLevelInputs.pGeometryDescs = &geometryDesc[i];
+		bottomLevelInputs.NumDescs = 1;
 		bottomLevelInputs.Flags = buildFlags;
 
 		m_device->GetRaytracingAccelerationStructurePrebuildInfo(&bottomLevelInputs, &bottomLevelPrebuildInfo);
@@ -534,27 +537,26 @@ bool Renderer::BuildBottomLevelAccelerationStructures(std::vector<GameObject*> r
 
 bool Renderer::BuildTopLevelAccelerationStructures(std::vector<GameObject*> renderObjects)
 {
-	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
+	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_BUILD;
 
-	ID3D12Resource* instanceDescs;
-	std::vector<D3D12_RAYTRACING_INSTANCE_DESC> instanceDesc;
+	std::vector<D3D12_RAYTRACING_INSTANCE_DESC> instanceDesc(renderObjects.size());
+	UINT64 bufferSize = static_cast<UINT64>(instanceDesc.size() * sizeof(instanceDesc[0]));
 
 	for (int i = 0; i < renderObjects.size(); i++) {
 		// Create an instance desc for the bottom-level acceleration structure
-		
 		DirectX::XMStoreFloat3x4(reinterpret_cast<DirectX::XMFLOAT3X4*>(instanceDesc[i].Transform), renderObjects[i]->GetModel()->m_modelMatrix);
 		instanceDesc[i].InstanceMask = 1;
 		//instanceDesc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_TRIANGLE_FRONT_COUNTERCLOCKWISE;
 		instanceDesc[i].AccelerationStructure = m_bottomLevelAccelerationStructure[i]->GetGPUVirtualAddress();
 	}
 	
-	AllocateUploadBuffer(m_device, &instanceDesc, sizeof(instanceDesc), &instanceDescs, L"InstanceDescs");
+	AllocateUploadBuffer(m_device, instanceDesc.data(), bufferSize, &instanceDescs, L"InstanceDescs");
 	instanceDescs->SetName(L"DXR TLAS Instance Descriptors");
 
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS topLevelInputs = {};
 	topLevelInputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
 	topLevelInputs.Flags = buildFlags;
-	topLevelInputs.NumDescs = 1;
+	topLevelInputs.NumDescs = instanceDesc.size();	
 	topLevelInputs.InstanceDescs = instanceDescs->GetGPUVirtualAddress();
 	topLevelInputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 
@@ -585,7 +587,7 @@ bool Renderer::BuildTopLevelAccelerationStructures(std::vector<GameObject*> rend
 	uavBarrier.UAV.pResource = m_topLevelAccelerationStructure;
 	uavBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	m_commandList->ResourceBarrier(1, &uavBarrier);
-	
+
 	return true;
 }
 
@@ -940,7 +942,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 	// 1 SRV for the index buffer
 	// 1 SRV for the vertex buffer
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
-	descriptorHeapDesc.NumDescriptors = 6;
+	descriptorHeapDesc.NumDescriptors = 4 + (2 * renderObjects.size());
 	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
@@ -955,14 +957,14 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(SceneConstantBuffer)) * renderObjects.size();
+	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(SceneConstantBuffer)) * c_frameCount;
 	cbvDesc.BufferLocation = m_dxrconstantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
 
 	// Create the cube constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cubeDesc = {};
-	cubeDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(CubeConstantBuffer));
+	cubeDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, sizeof(CubeConstantBuffer)) * c_frameCount;
 	cubeDesc.BufferLocation = m_cubeConstantBuffer->GetGPUVirtualAddress();
 
 	handle.ptr += m_descHeapSize;
@@ -1025,7 +1027,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 		handle.ptr += m_descHeapSize;
 		m_device->CreateShaderResourceView(object->GetModel()->GetMesh()->GetVertexBuffer(), &vertexSRVDesc, handle);
 	}
-	
+		
 
 	return true;
 }
@@ -1111,6 +1113,10 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 	if (FAILED(result)) return false;
 	ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
 
+	BuildTopLevelAccelerationStructures(renderObjects);
+
+	ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
+
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
 	m_sceneCB[m_bufferIndex].eye = DirectX::XMFLOAT4(m_camera->Eye().x, m_camera->Eye().y, m_camera->Eye().z, 1.0f);
@@ -1118,8 +1124,6 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 
 	memcpy(&m_dxrmappedConstantBuffer[m_bufferIndex].constants, &m_sceneCB[m_bufferIndex], sizeof(m_sceneCB[m_bufferIndex]));
 	memcpy(&m_cubemappedConstantBuffer->constants, &m_cubeCB, sizeof(m_cubeCB));
-
-	BuildTopLevelAccelerationStructures(renderObjects);
 
 	D3D12_RESOURCE_BARRIER preCopyBarriers[2];
 	preCopyBarriers[0] = CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
