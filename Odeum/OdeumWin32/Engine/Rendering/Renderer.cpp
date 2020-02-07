@@ -463,9 +463,9 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	XMStoreFloat4x4(&m_sceneCB[m_bufferIndex].projection, DirectX::XMMatrixTranspose(viewProj));
 	m_sceneCB[m_bufferIndex].eye = eye;
 
-	m_sceneCB[m_bufferIndex].lightPos = DirectX::XMFLOAT4(0.0f, 1.8f, -3.0f, 0.0f);
+	m_sceneCB[m_bufferIndex].lightPos = DirectX::XMFLOAT4(7.0f, 5.0f, 0.0f, 0.0f);
 	m_sceneCB[m_bufferIndex].lightAmbient = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_sceneCB[m_bufferIndex].lightDiffuse = DirectX::XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f);
+	m_sceneCB[m_bufferIndex].lightDiffuse = DirectX::XMFLOAT4(0.6f, 0.0f, 0.0f, 1.0f);
 
 	for (auto& sceneCB : m_sceneCB)
 	{
@@ -1115,7 +1115,7 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 
 	BuildTopLevelAccelerationStructures(renderObjects);
 
-	ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
+	// ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
