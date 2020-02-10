@@ -953,6 +953,13 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 
 	CreateCBResources(renderObjects.size());
 
+	CreateDescHeapViews(renderObjects);
+
+	return true;
+}
+
+bool Renderer::CreateDescHeapViews(std::vector<GameObject*> renderObjects)
+{
 	// Create the handle and get the heap size for increment
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -975,7 +982,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 	// Create the output resource. Dimensions and format should match swapChain
 	CD3DX12_RESOURCE_DESC uavDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, m_screenWidth, m_screenHeight, 1, 1, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
-	result = m_device->CreateCommittedResource(
+	HRESULT result = m_device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
 		&uavDesc,
@@ -1029,8 +1036,7 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 		handle.ptr += m_descHeapSize;
 		m_device->CreateShaderResourceView(object->GetModel()->GetMesh()->GetVertexBuffer(), &vertexSRVDesc, handle);
 	}
-		
-
+	
 	return true;
 }
 
@@ -1133,7 +1139,7 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 
 	m_commandList->ResourceBarrier(_countof(preCopyBarriers), preCopyBarriers);
 
-	m_commandList->SetGraphicsRootShaderResourceView(0, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
+	// m_commandList->SetGraphicsRootShaderResourceView(0, m_topLevelAccelerationStructure->GetGPUVirtualAddress()); // Todo: Maybe in DoRaytracing()
 
 	DoRaytracing(renderObjects);
 
@@ -1161,6 +1167,8 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 bool Renderer::DoRaytracing(std::vector<GameObject*> renderObjects)
 {
 	// Bind the heaps, acceleration structure and dispatch rays
+
+	CreateDescHeapViews(renderObjects);
 
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);

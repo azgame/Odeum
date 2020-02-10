@@ -121,6 +121,7 @@ private:
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
 	bool CreateDescriptorHeap(std::vector<GameObject*> renderObjects);
+	bool CreateDescHeapViews(std::vector<GameObject*> renderObjects);
 	bool BuildShaderTables();
 	bool RenderRaytrace(std::vector<GameObject*> renderObjects);
 	bool DoRaytracing(std::vector<GameObject*> renderObjects);
