@@ -1,4 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  OdeumEngine.cpp
   Renderer.cpp
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(127): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(134): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
@@ -12,4 +13,5 @@ c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(55
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(945): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(952): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(1022): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
+  Generating Code...
   OdeumWin32.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

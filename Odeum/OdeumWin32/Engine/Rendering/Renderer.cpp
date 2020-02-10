@@ -664,6 +664,8 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 
 	dxr.rgs.SetBytecode();
 
+	// Todo: Rewrite this segment with better root signatures (ala microsoft style) to update them 
+
 	// Describe the ray generation root signature
 	D3D12_DESCRIPTOR_RANGE ranges[3];
 
@@ -691,7 +693,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	param0.DescriptorTable.NumDescriptorRanges = _countof(ranges);
 	param0.DescriptorTable.pDescriptorRanges = ranges;
 
-	D3D12_ROOT_PARAMETER rootParams[1] = { param0 };
+	D3D12_ROOT_PARAMETER rootParams[] = { param0 };
 
 	D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
 	rootDesc.NumParameters = _countof(rootParams);
@@ -1130,6 +1132,8 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 	preCopyBarriers[1] = CD3DX12_RESOURCE_BARRIER::Transition(m_raytracingOutput, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
 
 	m_commandList->ResourceBarrier(_countof(preCopyBarriers), preCopyBarriers);
+
+	m_commandList->SetGraphicsRootShaderResourceView(0, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
 
 	DoRaytracing(renderObjects);
 

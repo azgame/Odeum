@@ -90,12 +90,12 @@ bool OdeumEngine::Run()
 	m_mainCamera->UpdateCamera();
 
 	DirectX::XMFLOAT4 pos = m_renderObjects[0]->position;
-	pos.x--;
 
 	m_renderObjects[0]->position = pos;
 	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
 	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
+	pos = DirectX::XMFLOAT4(5.0f, 0.0f, 0.0f, 0.0f);
 	m_renderObjects[1]->position = pos;
 	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->position);
 	m_renderObjects[1]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
