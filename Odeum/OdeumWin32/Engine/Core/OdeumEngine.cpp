@@ -95,7 +95,8 @@ bool OdeumEngine::Run()
 	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
 	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
 
-	pos = DirectX::XMFLOAT4(5.0f, 0.0f, 0.0f, 0.0f);
+	pos = m_renderObjects[1]->position;
+	pos.x -= 0.01f;
 	m_renderObjects[1]->position = pos;
 	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->position);
 	m_renderObjects[1]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
