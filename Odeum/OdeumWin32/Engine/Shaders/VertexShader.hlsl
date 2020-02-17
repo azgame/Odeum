@@ -9,11 +9,13 @@ cbuffer MVPConstantBuffer : register(b0)
 struct VS_INPUT
 {
 	float3 position : POSITION;
+	float2 uv : UV;
 };
 
 struct PS_INPUT
 {
 	float4 position : SV_POSITION;
+	float2 uv : UV;
 };
 
 // Vertex Shader
@@ -26,6 +28,7 @@ PS_INPUT main(VS_INPUT input)
 	pos = mul(pos, view);
 	pos = mul(pos, projection);
 	Output.position = pos;
+	output.uv = input.uv;
 
 	return Output;
 }

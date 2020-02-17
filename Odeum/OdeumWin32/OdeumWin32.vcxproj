@@ -156,6 +156,9 @@
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\GameInterface.h" />
     <ClInclude Include="Engine\Core\Scene.h" />
+    <ClInclude Include="Engine\Rendering\stb_image.h" />
+    <ClInclude Include="Engine\Rendering\TextureHandler.h" />
+    <ClInclude Include="Engine\Rendering\tiny_obj_loader.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Utilities\DeviceResources.h" />
     <ClInclude Include="Engine\dxc\dxcapi.h" />
@@ -182,6 +185,7 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
+    <ClCompile Include="Engine\Rendering\TextureHandler.cpp" />
     <ClCompile Include="Engine\Utilities\DeviceResources.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
     <ClCompile Include="Engine\Rendering\Mesh.cpp" />
