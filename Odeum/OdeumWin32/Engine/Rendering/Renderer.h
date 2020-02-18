@@ -12,7 +12,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-const bool dxrEnabled = false;
+const bool dxrEnabled = true;
 
 class Renderer
 {
@@ -100,6 +100,7 @@ private:
 	std::vector<ID3D12Resource*>				m_bottomLevelAccelerationStructure;
 	ID3D12Resource* instanceDescs;
 	ID3D12Resource*								m_topLevelAccelerationStructure;
+	ID3D12Resource*								tscratchResource;
 
 	// Ray tracing pipeline state object and properties
 	DXRGlobal									dxr;

@@ -614,7 +614,6 @@ bool Renderer::BuildTopLevelAccelerationStructures(std::vector<GameObject*> rend
 	topLevelPrebuildInfo.ScratchDataSizeInBytes = ALIGN(D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BYTE_ALIGNMENT, topLevelPrebuildInfo.ScratchDataSizeInBytes);
 	topLevelPrebuildInfo.ResultDataMaxSizeInBytes = ALIGN(D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BYTE_ALIGNMENT, topLevelPrebuildInfo.ResultDataMaxSizeInBytes);
 
-	ID3D12Resource* tscratchResource;
 	AllocateUAVBuffer(m_device, topLevelPrebuildInfo.ScratchDataSizeInBytes, &tscratchResource, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, L"Scratch Resource");
 	tscratchResource->SetName(L"DXR TLAS Scratch");
 
@@ -1006,6 +1005,8 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 
 bool Renderer::CreateDescHeapViews(std::vector<GameObject*> renderObjects)
 {
+
+
 	// Create the handle and get the heap size for increment
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -1210,10 +1211,25 @@ bool Renderer::DoRaytracing(std::vector<GameObject*> renderObjects)
 {
 	// Bind the heaps, acceleration structure and dispatch rays
 
-	CreateDescHeapViews(renderObjects);
-
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	m_commandList->SetGraphicsRootSignature(dxr.rgs.pRootSignature);
+
+	m_commandList->SetGraphicsRootConstantBufferView(0, m_dxrconstantBuffer->GetGPUVirtualAddress());
+	m_commandList->SetGraphicsRootConstantBufferView(1, m_cubeConstantBuffer->GetGPUVirtualAddress());
+	m_commandList->SetGraphicsRootUnorderedAccessView(2, m_raytracingOutput->GetGPUVirtualAddress());
+	m_commandList->SetGraphicsRootShaderResourceView(3, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
+
+	int i = 4;
+
+	for (auto objects : renderObjects)
+	{
+		m_commandList->SetGraphicsRootShaderResourceView(i, objects->GetModel()->GetMesh()->GetVertexBuffer()->GetGPUVirtualAddress());
+		i++;
+		m_commandList->SetGraphicsRootShaderResourceView(i, objects->GetModel()->GetMesh()->GetIndexBuffer()->GetGPUVirtualAddress());
+		i++;
+	}
 
 	D3D12_DISPATCH_RAYS_DESC dispatchDesc = {};
 

@@ -105,7 +105,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 
 
 	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(verticesUV));
+	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices));
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
@@ -172,13 +172,13 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	readRange.End = 0;
 	result = m_vertexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pVertexDataBegin, verticesUV, sizeof(verticesUV));
+	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
 	m_vertexBufferUpload->Unmap(0, nullptr);
-	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(verticesUV));
+	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
 	
 	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
-	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
-	m_vertexBufferView.SizeInBytes = sizeof(verticesUV);
+	m_vertexBufferView.StrideInBytes = sizeof(VertexType);
+	m_vertexBufferView.SizeInBytes = sizeof(vertices);
 
 	UINT8* pIndexDataBegin;
 	result = m_indexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin));
@@ -191,7 +191,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
-	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(Vertex);
+	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
 	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Rendering/statue.jpg");

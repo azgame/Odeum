@@ -1,20 +1,16 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Mesh.cpp
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\mesh.cpp(194): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\mesh.cpp(195): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Renderer.cpp
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(169): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(176): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(197): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(265): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(266): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(230): warning C4101: 'barrier': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(313): warning C4101: 'result': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(484): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(607): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(993): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(1000): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(982): warning C4101: 'result': unreferenced local variable
-c:\users\aidan\documents\odeum\odeum\odeumwin32\engine\rendering\renderer.cpp(1077): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
-  Generating Code...
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(169,40): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(176,74): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(197,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(265,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(266,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(230,28): warning C4101: 'barrier': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(313,10): warning C4101: 'result': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(484,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(607,47): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(992,68): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(999,40): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(981,10): warning C4101: 'result': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(1078,112): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
   OdeumWin32.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe
