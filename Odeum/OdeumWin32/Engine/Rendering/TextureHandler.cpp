@@ -3,11 +3,11 @@
 #include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 std::unique_ptr<TextureHandler> TextureHandler::m_instance = nullptr;
 
 TextureHandler::TextureHandler() {}
-
 
 TextureHandler::~TextureHandler()
 {

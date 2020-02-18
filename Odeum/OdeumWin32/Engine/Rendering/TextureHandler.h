@@ -7,9 +7,6 @@
 #include <string>
 #include <vector>
 
-
-#include "stb_image.h"
-
 struct Texture
 {
 	std::vector<UINT8> pixels;

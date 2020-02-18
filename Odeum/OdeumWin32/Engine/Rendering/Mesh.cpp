@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "../Utilities/d3dx12.h"
 
 using namespace DirectX;
 
@@ -159,6 +160,91 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
+	//std::string file = "CheckerboardTexture.png";
+	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Rendering/statue.jpg");
+
+	D3D12_RESOURCE_DESC textureDesc;
+	textureDesc = {};
+	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureDesc.Width = m_texture.width;
+	textureDesc.Height = m_texture.height;
+	textureDesc.DepthOrArraySize = 1;
+	textureDesc.MipLevels = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.SampleDesc.Count = 1;
+
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		D3D12_HEAP_FLAG_NONE,
+		&textureDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_textureBuffer));
+	if (FAILED(result)) return false;
+
+	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	textureDesc.Format = DXGI_FORMAT_UNKNOWN;
+	textureDesc.Width = m_texture.height * m_texture.width * m_texture.stride;
+	textureDesc.Height = 1;
+	textureDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	result = device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&textureDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_textureBufferUpload));
+	if (FAILED(result)) return false;
+
+	UINT8* pTextureDataBegin;
+	result = m_textureBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pTextureDataBegin));
+	if (FAILED(result)) return false;
+	memcpy(pTextureDataBegin, m_texture.pixels.data(), m_texture.height * m_texture.width * m_texture.stride);
+	m_textureBufferUpload->Unmap(0, nullptr);
+	
+	// Describe the upload heap resource location for the copy
+	D3D12_SUBRESOURCE_FOOTPRINT subresource = {};
+	subresource.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	subresource.Width = m_texture.width;
+	subresource.Height = m_texture.height;
+	subresource.RowPitch = m_texture.width * m_texture.stride;
+	subresource.Depth = 1;
+
+	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
+	footprint.Offset = m_texture.offset;
+	footprint.Footprint = subresource;
+
+	D3D12_TEXTURE_COPY_LOCATION source = {};
+	source.pResource = m_textureBufferUpload;
+	source.PlacedFootprint = footprint;
+	source.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+
+	// Describe the default heap resource location for the copy
+	D3D12_TEXTURE_COPY_LOCATION destination = {};
+	destination.pResource = m_textureBuffer;
+	destination.SubresourceIndex = 0;
+	destination.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+
+	// Copy the buffer resource from the upload heap to the texture resource on the default heap
+	commandList->CopyTextureRegion(&destination, 0, 0, 0, &source, nullptr);
+
+	// Transition the texture to a shader resource
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource = m_textureBuffer;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	commandList->ResourceBarrier(1, &barrier);
+
+	m_textureView.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	m_textureView.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_textureView.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	m_textureView.Texture2D.MipLevels = 1;
+	m_textureView.Texture2D.MostDetailedMip = 0;
+
 	return true;
 }
 
@@ -172,4 +258,5 @@ void Mesh::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)
 	m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	m_commandList->IASetIndexBuffer(&m_indexBufferView);
 	m_commandList->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
+	m_commandList->SetGraphicsRootShaderResourceView(1, m_textureBuffer->GetGPUVirtualAddress());
 }

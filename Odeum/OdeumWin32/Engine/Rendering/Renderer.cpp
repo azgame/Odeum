@@ -43,30 +43,60 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
-	rootCBVDescriptor.RegisterSpace = 0;
-	rootCBVDescriptor.ShaderRegister = 0;
+	D3D12_DESCRIPTOR_RANGE ranges[2];
+	ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	ranges[0].NumDescriptors = 1; // 1 texture
+	ranges[0].BaseShaderRegister = 0;
+	ranges[0].RegisterSpace = 0;
+	ranges[0].OffsetInDescriptorsFromTableStart = 0;
 
-	D3D12_ROOT_PARAMETER parameter;
-	parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	parameter.Descriptor = rootCBVDescriptor;
-	parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	ranges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	ranges[1].NumDescriptors = 1; // 1 texture
+	ranges[1].BaseShaderRegister = 0;
+	ranges[1].RegisterSpace = 0;
+	ranges[1].OffsetInDescriptorsFromTableStart = 1;
+
+	D3D12_ROOT_PARAMETER param0 = {};
+	param0.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	param0.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	param0.DescriptorTable.NumDescriptorRanges = _countof(ranges);
+	param0.DescriptorTable.pDescriptorRanges = ranges;
+
+	D3D12_ROOT_PARAMETER rootParameters[1] = { param0 };
 
 	// Init Root Signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS;
 
-	CD3DX12_ROOT_SIGNATURE_DESC descRootSignature;
-	descRootSignature.Init(1, &parameter, 0, nullptr, rootSignatureFlags);
+	D3D12_STATIC_SAMPLER_DESC sampler = {};
+	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.MipLODBias = 0;
+	sampler.MaxAnisotropy = 0;
+	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler.MinLOD = 0.0f;
+	sampler.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler.ShaderRegister = 0;
+	sampler.RegisterSpace = 0;
+	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
+	rootDesc.NumParameters = _countof(rootParameters);
+	rootDesc.pParameters = rootParameters;
+	rootDesc.Flags = rootSignatureFlags;
+	rootDesc.NumStaticSamplers = 1;
+	rootDesc.pStaticSamplers = &sampler;
 
 	ID3DBlob* signature;
 	ID3DBlob* error;
 
-	D3D12SerializeRootSignature(&descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+	D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
 	result = m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
 
 	// Init Shaders
@@ -118,7 +148,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 
 	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 1;
+	heapDesc.NumDescriptors = 2;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -136,6 +166,10 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
+
+	handle.ptr += m_descHeapSize;
+	
+	m_device->CreateShaderResourceView(renderObjects[0]->GetModel()->GetMesh()->GetTextureBuffer(), &renderObjects[0]->GetModel()->GetMesh()->GetTextureBV(), handle);
 
 	m_deviceResources->InitializeFence();
 
@@ -203,6 +237,8 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
+	//m_commandList->SetGraphicsRootDescriptorTable(1, );
+
 	// Bind the current frame's constant buffer to the pipeline
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
@@ -228,6 +264,10 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE textureHandle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
+	UINT8 descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureHandle.ptr += descHeapSize;
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
@@ -664,8 +704,6 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	}
 
 	dxr.rgs.SetBytecode();
-
-	// Todo: Rewrite this segment with better root signatures (ala microsoft style) to update them 
 
 	// Describe the ray generation root signature
 	D3D12_DESCRIPTOR_RANGE ranges[3];

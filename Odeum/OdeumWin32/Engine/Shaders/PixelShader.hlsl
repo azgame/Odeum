@@ -10,5 +10,5 @@ struct PS_INPUT
 // Pixel Shader
 float4 main(PS_INPUT In) : SV_TARGET
 {
-	return t1.Sample(s1, input.texCoord);
+	return t1.Sample(s1, In.uv);
 }
