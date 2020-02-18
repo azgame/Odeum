@@ -65,8 +65,47 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
 	};
 
+	Vertex verticesUV[] = {
+		// top
+		{ -1.0f, 1.0f, -1.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 1.0f, 1.0f },
+		{  1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+
+		// bottom
+		{ -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+		{  1.0f, -1.0f, 1.0f, 0.0f, 0.0f },
+		{ -1.0f, -1.0f, 1.0f, 1.0f, 0.0f },
+
+		// left
+		{ -1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
+		{ -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+		{ -1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+
+		// right
+		{  1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+		{  1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+
+		// front
+		{ -1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+
+		// back
+		{ -1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+	};
+
+
 	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices));
+	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(verticesUV));
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
@@ -87,30 +126,25 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	if (FAILED(result)) return false;
 
 	UINT16 cubeIndices[] =
-		{
-			3,1,0,
-			2,1,3,
+	{
+		3,1,0,
+		2,1,3,
 
-			6,4,5,
-			7,4,6,
+		6,4,5,
+		7,4,6,
 
-			11,9,8,
-			10,9,11,
+		11,9,8,
+		10,9,11,
 
-			14,12,13,
-			15,12,14,
+		14,12,13,
+		15,12,14,
 
-			19,17,16,
-			18,17,19,
+		19,17,16,
+		18,17,19,
 
-			22,20,21,
-			23,20,22
-		};
-
-	const UINT indexBufferSize = sizeof(cubeIndices);
-
-	// Create the index buffer resource in the GPU's default heap and copy index data to it using the upload heap.
-	// The upload resource must not be released until after the GPU has finished using it.
+		22,20,21,
+		23,20,22
+	};
 
 	CD3DX12_RESOURCE_DESC m_indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(cubeIndices));
 
@@ -138,13 +172,13 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	readRange.End = 0;
 	result = m_vertexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
+	memcpy(pVertexDataBegin, verticesUV, sizeof(verticesUV));
 	m_vertexBufferUpload->Unmap(0, nullptr);
-	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
+	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(verticesUV));
 	
 	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
-	m_vertexBufferView.StrideInBytes = sizeof(VertexType);
-	m_vertexBufferView.SizeInBytes = sizeof(vertices);
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+	m_vertexBufferView.SizeInBytes = sizeof(verticesUV);
 
 	UINT8* pIndexDataBegin;
 	result = m_indexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin));
@@ -157,10 +191,9 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
-	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
+	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(Vertex);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
-	//std::string file = "CheckerboardTexture.png";
 	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Rendering/statue.jpg");
 
 	D3D12_RESOURCE_DESC textureDesc;
@@ -172,6 +205,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	textureDesc.MipLevels = 1;
 	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Alignment = 0;
 
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -182,10 +216,10 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 		IID_PPV_ARGS(&m_textureBuffer));
 	if (FAILED(result)) return false;
 
-	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	textureDesc.Format = DXGI_FORMAT_UNKNOWN;
 	textureDesc.Width = m_texture.height * m_texture.width * m_texture.stride;
 	textureDesc.Height = 1;
+	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	textureDesc.Format = DXGI_FORMAT_UNKNOWN;
 	textureDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	result = device->CreateCommittedResource(
@@ -244,6 +278,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_textureView.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	m_textureView.Texture2D.MipLevels = 1;
 	m_textureView.Texture2D.MostDetailedMip = 0;
+	m_textureView.Texture2D.PlaneSlice = 0;
 
 	return true;
 }
@@ -258,5 +293,4 @@ void Mesh::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)
 	m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	m_commandList->IASetIndexBuffer(&m_indexBufferView);
 	m_commandList->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
-	m_commandList->SetGraphicsRootShaderResourceView(1, m_textureBuffer->GetGPUVirtualAddress());
 }

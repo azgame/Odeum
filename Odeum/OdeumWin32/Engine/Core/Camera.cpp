@@ -90,15 +90,21 @@ void Camera::UpdateCamera()
 
 	float horizontal = 0;
 	if (Input::GetInstance()->kb.D)
-		horizontal = -0.01f;
+		horizontal = -0.05f;
 	else if (Input::GetInstance()->kb.A)
-		horizontal = 0.01f;
+		horizontal = 0.05f;
 
 	float vertical = 0;
 	if (Input::GetInstance()->kb.W)
-		vertical = -0.01f;
+		vertical = -0.05f;
 	else if (Input::GetInstance()->kb.S)
-		vertical = 0.01f;
+		vertical = 0.05f;
+
+	float upDown = 0;
+	if (Input::GetInstance()->kb.Space)
+		upDown = -0.05f;
+	else if (Input::GetInstance()->kb.LeftControl)
+		upDown = 0.05f;
 
 	Input::GetInstance()->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
 
@@ -133,7 +139,7 @@ void Camera::UpdateCamera()
 	DirectX::XMFLOAT3 look;
 
 	move.x -= vertical * x + horizontal * -z;
-	move.y -= vertical * y;
+	move.y -= vertical * y + upDown;
 	move.z += vertical * z + horizontal * x;
 
 	look.x = move.x + x; look.y = move.y + y; look.z = move.z - z;

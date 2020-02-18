@@ -19,7 +19,6 @@ bool GameScene::Initialize()
 
 void GameScene::Update(const float deltaTime_)
 {
-	Debug::Info(std::to_string(deltaTime_), __FILENAME__, __LINE__);
 }
 
 void GameScene::Render()

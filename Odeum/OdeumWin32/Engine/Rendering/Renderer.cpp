@@ -43,26 +43,29 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	D3D12_DESCRIPTOR_RANGE ranges[2];
-	ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-	ranges[0].NumDescriptors = 1; // 1 texture
-	ranges[0].BaseShaderRegister = 0;
-	ranges[0].RegisterSpace = 0;
-	ranges[0].OffsetInDescriptorsFromTableStart = 0;
+	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
+	rootCBVDescriptor.RegisterSpace = 0;
+	rootCBVDescriptor.ShaderRegister = 0;
 
-	ranges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges[1].NumDescriptors = 1; // 1 texture
-	ranges[1].BaseShaderRegister = 0;
-	ranges[1].RegisterSpace = 0;
-	ranges[1].OffsetInDescriptorsFromTableStart = 1;
+	D3D12_DESCRIPTOR_RANGE descriptorTableRanges[1];
+	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; 
+	descriptorTableRanges[0].NumDescriptors = 1; 
+	descriptorTableRanges[0].BaseShaderRegister = 0; 
+	descriptorTableRanges[0].RegisterSpace = 0; 
+	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = 1; 
 
-	D3D12_ROOT_PARAMETER param0 = {};
-	param0.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	param0.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	param0.DescriptorTable.NumDescriptorRanges = _countof(ranges);
-	param0.DescriptorTable.pDescriptorRanges = ranges;
+	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
+	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
+	descriptorTable.pDescriptorRanges = descriptorTableRanges;
 
-	D3D12_ROOT_PARAMETER rootParameters[1] = { param0 };
+	D3D12_ROOT_PARAMETER rootParameters[2];
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[0].Descriptor = rootCBVDescriptor; 
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; 
+	rootParameters[1].DescriptorTable = descriptorTable;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; 
 
 	// Init Root Signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
@@ -146,6 +149,14 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	result = m_commandList->Close();
 	if (FAILED(result)) return false;
 
+	// Load the command list array (only one command list for now)
+	ID3D12CommandList* ppCommandLists[] = { m_commandList };
+
+	// Execute the list of commands
+	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+	m_deviceResources->WaitForPrevFrame();
+
 	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = 2;
@@ -162,7 +173,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = ALIGN(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT, c_alignedConstantBufferSize * renderObjects.size());
+	cbvDesc.SizeInBytes = c_alignedConstantBufferSize * renderObjects.size();
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
@@ -220,7 +231,6 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
 
-	
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -236,8 +246,6 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 	m_commandList->SetGraphicsRootSignature(m_rootSignature);
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	//m_commandList->SetGraphicsRootDescriptorTable(1, );
 
 	// Bind the current frame's constant buffer to the pipeline
 
@@ -265,9 +273,8 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE textureHandle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
-	UINT8 descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureHandle.ptr += descHeapSize;
+	// set the descriptor table to the descriptor heap (parameter 1, as constant buffer root descriptor is parameter index 0)
+	m_commandList->SetGraphicsRootDescriptorTable(1, m_descHeap->GetGPUDescriptorHandleForHeapStart());
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
@@ -1162,8 +1169,6 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 
 	BuildTopLevelAccelerationStructures(renderObjects);
 
-	// ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
-
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
 	m_sceneCB[m_bufferIndex].eye = DirectX::XMFLOAT4(m_camera->Eye().x, m_camera->Eye().y, m_camera->Eye().z, 1.0f);
@@ -1177,8 +1182,6 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 	preCopyBarriers[1] = CD3DX12_RESOURCE_BARRIER::Transition(m_raytracingOutput, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
 
 	m_commandList->ResourceBarrier(_countof(preCopyBarriers), preCopyBarriers);
-
-	// m_commandList->SetGraphicsRootShaderResourceView(0, m_topLevelAccelerationStructure->GetGPUVirtualAddress()); // Todo: Maybe in DoRaytracing()
 
 	DoRaytracing(renderObjects);
 
