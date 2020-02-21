@@ -230,7 +230,7 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 	D3D12_RESOURCE_BARRIER				barrier;
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
-
+	
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
@@ -1005,8 +1005,6 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 
 bool Renderer::CreateDescHeapViews(std::vector<GameObject*> renderObjects)
 {
-
-
 	// Create the handle and get the heap size for increment
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -1210,26 +1208,10 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 bool Renderer::DoRaytracing(std::vector<GameObject*> renderObjects)
 {
 	// Bind the heaps, acceleration structure and dispatch rays
-
+	//CreateDescHeapViews(renderObjects);
+	// todo: rewrite desc heaps for memory management
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	m_commandList->SetGraphicsRootSignature(dxr.rgs.pRootSignature);
-
-	m_commandList->SetGraphicsRootConstantBufferView(0, m_dxrconstantBuffer->GetGPUVirtualAddress());
-	m_commandList->SetGraphicsRootConstantBufferView(1, m_cubeConstantBuffer->GetGPUVirtualAddress());
-	m_commandList->SetGraphicsRootUnorderedAccessView(2, m_raytracingOutput->GetGPUVirtualAddress());
-	m_commandList->SetGraphicsRootShaderResourceView(3, m_topLevelAccelerationStructure->GetGPUVirtualAddress());
-
-	int i = 4;
-
-	for (auto objects : renderObjects)
-	{
-		m_commandList->SetGraphicsRootShaderResourceView(i, objects->GetModel()->GetMesh()->GetVertexBuffer()->GetGPUVirtualAddress());
-		i++;
-		m_commandList->SetGraphicsRootShaderResourceView(i, objects->GetModel()->GetMesh()->GetIndexBuffer()->GetGPUVirtualAddress());
-		i++;
-	}
 
 	D3D12_DISPATCH_RAYS_DESC dispatchDesc = {};
 
