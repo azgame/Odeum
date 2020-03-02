@@ -2,7 +2,6 @@
 #include "Debug.h"
 
 
-
 std::unique_ptr<OdeumEngine> OdeumEngine::engineInstance = nullptr;
 
 OdeumEngine::OdeumEngine()
@@ -71,7 +70,7 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Initialize renderer
 	m_renderer = new Renderer();
-	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, m_renderObjects)) return false;
+	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, &m_renderObjects)) return false;
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
 	m_renderer->CreateRasterWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
@@ -104,7 +103,7 @@ bool OdeumEngine::Run()
 	
 	m_gameInterface->Update(timer.GetDeltaTime());
 
-	if (!m_renderer->Render(m_renderObjects)) return false;
+	if (!m_renderer->Render()) return false;
 	m_gameInterface->Render();
 
 	return true;

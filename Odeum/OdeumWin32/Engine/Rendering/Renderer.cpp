@@ -22,19 +22,20 @@ Renderer::~Renderer()
 
 #pragma region Raster
 
-bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
+bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*>* renderObjects_)
 {
+	renderObjects = renderObjects_;
 	if (dxrEnabled) {
-		if (!InitializeRaytrace(screenHeight, screenWidth, hwnd, renderObjects)) return false;
+		if (!InitializeRaytrace(screenHeight, screenWidth, hwnd)) return false;
 	}
 	else {
-		if (!InitializeRaster(screenHeight, screenWidth, hwnd, renderObjects)) return false;
+		if (!InitializeRaster(screenHeight, screenWidth, hwnd)) return false;
 	}
 
 	return true;
 }
 
-bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
+bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 {
 	HRESULT result;
 
@@ -141,7 +142,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	if (FAILED(result)) return false;
 
 
-	for (auto object : renderObjects) {
+	for (auto object : *renderObjects) {
 		object->Initialize(m_device, m_commandList);
 	}
 
@@ -166,21 +167,21 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd, st
 	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descHeap));
 	if (FAILED(result)) return false;
 
-	CreateCBResources(renderObjects.size());
+	CreateCBResources();
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
 	m_descHeapSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	// Create the constant buffer view description
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.SizeInBytes = c_alignedConstantBufferSize * renderObjects.size();
+	cbvDesc.SizeInBytes = c_alignedConstantBufferSize * renderObjects->size();
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
 	m_device->CreateConstantBufferView(&cbvDesc, handle);
 
 	handle.ptr += m_descHeapSize;
 	
-	m_device->CreateShaderResourceView(renderObjects[0]->GetModel()->GetMesh()->GetTextureBuffer(), &renderObjects[0]->GetModel()->GetMesh()->GetTextureBV(), handle);
+	m_device->CreateShaderResourceView(renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBuffer(), &renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBV(), handle);
 
 	m_deviceResources->InitializeFence();
 
@@ -224,7 +225,7 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
 }
 
-bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
+bool Renderer::RenderRaster()
 {
 	HRESULT								result;
 	D3D12_RESOURCE_BARRIER				barrier;
@@ -278,12 +279,12 @@ bool Renderer::RenderRaster(std::vector<GameObject*> renderObjects)
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
-	for (int i = 0; i < renderObjects.size(); i++) {
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(renderObjects[i]->GetModel()->m_modelMatrix));
+	for (int i = 0; i < renderObjects->size(); i++) {
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(renderObjects->at(i)->GetModel()->m_modelMatrix));
 		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
 		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
 		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
-		renderObjects[i]->Render(m_commandList);
+		renderObjects->at(i)->Render(m_commandList);
 	}
 
 	// Indicate that the back buffer will now be used to present
@@ -327,13 +328,13 @@ bool Renderer::InitializeDeviceResources(int screenHeight, int screenWidth, HWND
 	return true;
 }
 
-bool Renderer::CreateCBResources(int numRenderObjects_)
+bool Renderer::CreateCBResources()
 {
 	HRESULT result;
 
 	// Init raster constant buffer
 	CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-	size_t cbSize = numRenderObjects_ * c_alignedConstantBufferSize;
+	size_t cbSize = renderObjects->size() * c_alignedConstantBufferSize;
 	CD3DX12_RESOURCE_DESC constantBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(cbSize);
 	result = m_device->CreateCommittedResource(
 		&uploadHeapProperties,
@@ -407,14 +408,14 @@ bool Renderer::UpdateConstantResources()
 	return true;
 }
 
-bool Renderer::Render(std::vector<GameObject*> renderObjects)
+bool Renderer::Render()
 {
 	if (dxrEnabled) {
-		if (!RenderRaytrace(renderObjects)) return false;
+		if (!RenderRaytrace()) return false;
 	}
 	else
 	{
-		if (!RenderRaster(renderObjects)) return false;
+		if (!RenderRaster()) return false;
 	}
 
 	return true;
@@ -424,7 +425,7 @@ bool Renderer::Render(std::vector<GameObject*> renderObjects)
 
 #pragma region DXR
 
-bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
+bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd)
 {
 	HRESULT result;
 
@@ -436,18 +437,18 @@ bool Renderer::InitializeRaytrace(int screenHeight, int screenWidth, HWND hwnd, 
 	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), nullptr, IID_PPV_ARGS(&m_commandList));
 	if (FAILED(result)) return false;
 
-	for (auto object : renderObjects) {
+	for (auto object : *renderObjects) {
 		object->Initialize(m_device, m_commandList);
 	}
 
 	// Build raytracing bottom level acceleration structures from the generated geometry.
-	if (!BuildBottomLevelAccelerationStructures(renderObjects)) return false;
+	if (!BuildBottomLevelAccelerationStructures()) return false;
 
 	// Build raytracing top level acceleration structure for first frame
-	if (!BuildTopLevelAccelerationStructures(renderObjects)) return false;
+	if (!BuildTopLevelAccelerationStructures()) return false;
 
 	// Create a heap for descriptors.
-	if (!CreateDescriptorHeap(renderObjects)) return false;
+	if (!CreateDescriptorHeap()) return false;
 
 	// Create a raytracing pipeline state object which defines the binding of shaders, state and resources to be used during raytracing.
 	if (!CreateRaytracingPipelineStateObject()) return false;
@@ -470,6 +471,41 @@ bool Renderer::CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWN
 
 	m_device = m_deviceResources->GetD3Device();
 
+	return true;
+}
+
+bool Renderer::CreateRootSignatures()
+{
+	D3D12_DESCRIPTOR_RANGE ranges[2];
+
+	ranges[0].BaseShaderRegister = 0;
+	ranges[0].NumDescriptors = 1;
+	ranges[0].RegisterSpace = 0;
+	ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	ranges[0].OffsetInDescriptorsFromTableStart = 0;
+
+	ranges[1].BaseShaderRegister = 0;
+	ranges[1].NumDescriptors = 2;
+	ranges[1].RegisterSpace = 0;
+	ranges[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	ranges[1].OffsetInDescriptorsFromTableStart = 1;
+
+	std::vector<CD3DX12_ROOT_PARAMETER> rootParams;
+	rootParams.resize(4 + (2 * renderObjects->size()));
+	rootParams[0].InitAsConstantBufferView(0);
+	rootParams[1].InitAsConstantBufferView(1);
+	rootParams[2].InitAsDescriptorTable(1, &ranges[0]);
+	rootParams[3].InitAsShaderResourceView(3);
+	for (int i = 0; i < renderObjects->size(); i++)
+		rootParams[5 + (i *2 )].InitAsDescriptorTable(1, &ranges[1]);
+
+	D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
+	rootDesc.NumParameters = rootParams.size();
+	rootDesc.pParameters = rootParams.data();
+	rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
+
+	SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);
+	
 	return true;
 }
 
@@ -523,21 +559,21 @@ bool Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	return true;
 }
 
-bool Renderer::BuildBottomLevelAccelerationStructures(std::vector<GameObject*> renderObjects)
+bool Renderer::BuildBottomLevelAccelerationStructures()
 {
-	std::vector<D3D12_RAYTRACING_GEOMETRY_DESC> geometryDesc(renderObjects.size());
-	m_bottomLevelAccelerationStructure.resize(renderObjects.size());
+	std::vector<D3D12_RAYTRACING_GEOMETRY_DESC> geometryDesc(renderObjects->size());
+	m_bottomLevelAccelerationStructure.resize(renderObjects->size());
 
-	for (int i = 0; i < renderObjects.size(); i++) {
+	for (int i = 0; i < renderObjects->size(); i++) {
 		geometryDesc[i].Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 		// Hardcoded for object 0, change later
-		geometryDesc[i].Triangles.IndexBuffer = renderObjects[i]->GetModel()->GetMesh()->GetIndexBuffer()->GetGPUVirtualAddress();
-		geometryDesc[i].Triangles.IndexCount = static_cast<UINT>(renderObjects[i]->GetModel()->GetMesh()->GetIndexCount());
-		geometryDesc[i].Triangles.IndexFormat = renderObjects[i]->GetModel()->GetMesh()->GetIndexBV().Format;
+		geometryDesc[i].Triangles.IndexBuffer = renderObjects->at(i)->GetModel()->GetMesh()->GetIndexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.IndexCount = static_cast<UINT>(renderObjects->at(i)->GetModel()->GetMesh()->GetIndexCount());
+		geometryDesc[i].Triangles.IndexFormat = renderObjects->at(i)->GetModel()->GetMesh()->GetIndexBV().Format;
 		geometryDesc[i].Triangles.Transform3x4 = 0;
 		geometryDesc[i].Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-		geometryDesc[i].Triangles.VertexCount = static_cast<UINT>(renderObjects[i]->GetModel()->GetMesh()->GetVertexCount());
-		geometryDesc[i].Triangles.VertexBuffer.StartAddress = renderObjects[i]->GetModel()->GetMesh()->GetVertexBuffer()->GetGPUVirtualAddress();
+		geometryDesc[i].Triangles.VertexCount = static_cast<UINT>(renderObjects->at(i)->GetModel()->GetMesh()->GetVertexCount());
+		geometryDesc[i].Triangles.VertexBuffer.StartAddress = renderObjects->at(i)->GetModel()->GetMesh()->GetVertexBuffer()->GetGPUVirtualAddress();
 		geometryDesc[i].Triangles.VertexBuffer.StrideInBytes = sizeof(VertexNormal);
 		geometryDesc[i].Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
 	
@@ -583,16 +619,16 @@ bool Renderer::BuildBottomLevelAccelerationStructures(std::vector<GameObject*> r
 	return true;
 }
 
-bool Renderer::BuildTopLevelAccelerationStructures(std::vector<GameObject*> renderObjects)
+bool Renderer::BuildTopLevelAccelerationStructures()
 {
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS buildFlags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_BUILD;
 
-	std::vector<D3D12_RAYTRACING_INSTANCE_DESC> instanceDesc(renderObjects.size());
+	std::vector<D3D12_RAYTRACING_INSTANCE_DESC> instanceDesc(renderObjects->size());
 	UINT64 bufferSize = static_cast<UINT64>(instanceDesc.size() * sizeof(instanceDesc[0]));
 
-	for (int i = 0; i < renderObjects.size(); i++) {
+	for (int i = 0; i < renderObjects->size(); i++) {
 		// Create an instance desc for the bottom-level acceleration structure
-		DirectX::XMStoreFloat3x4(reinterpret_cast<DirectX::XMFLOAT3X4*>(instanceDesc[i].Transform), renderObjects[i]->GetModel()->m_modelMatrix);
+		DirectX::XMStoreFloat3x4(reinterpret_cast<DirectX::XMFLOAT3X4*>(instanceDesc[i].Transform), renderObjects->at(i)->GetModel()->m_modelMatrix);
 		instanceDesc[i].InstanceMask = 1;
 		//instanceDesc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_TRIANGLE_FRONT_COUNTERCLOCKWISE;
 		instanceDesc[i].AccelerationStructure = m_bottomLevelAccelerationStructure[i]->GetGPUVirtualAddress();
@@ -712,7 +748,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	dxr.rgs.SetBytecode();
 
 	// Describe the ray generation root signature
-	D3D12_DESCRIPTOR_RANGE ranges[3];
+	/*D3D12_DESCRIPTOR_RANGE ranges[3];
 
 	ranges[0].BaseShaderRegister = 0;
 	ranges[0].NumDescriptors = 2;
@@ -746,7 +782,9 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_LOCAL_ROOT_SIGNATURE;
 
 	// Create the root signature
-	SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);
+	SerializeAndCreateRaytracingRootSignature(rootDesc, &dxr.rgs.pRootSignature);*/
+
+	CreateRootSignatures();
 
 	shaderCompiler.library->CreateBlobFromFile(dxr.miss.info.filename, &code, &pMiss);
 
@@ -976,7 +1014,7 @@ bool Renderer::CreateRaytracingPipelineStateObject()
 	return true;
 }
 
-bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
+bool Renderer::CreateDescriptorHeap()
 {
 	HRESULT result;
 
@@ -989,21 +1027,21 @@ bool Renderer::CreateDescriptorHeap(std::vector<GameObject*> renderObjects)
 	// 1 SRV for the index buffer
 	// 1 SRV for the vertex buffer
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
-	descriptorHeapDesc.NumDescriptors = 4 + (2 * renderObjects.size());
+	descriptorHeapDesc.NumDescriptors = 4 + (2 * renderObjects->size());
 	descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
 	// Create descriptor heap
 	m_device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&m_descHeap));
 
-	CreateCBResources(renderObjects.size());
+	CreateCBResources();
 
-	CreateDescHeapViews(renderObjects);
+	CreateDescHeapViews();
 
 	return true;
 }
 
-bool Renderer::CreateDescHeapViews(std::vector<GameObject*> renderObjects)
+bool Renderer::CreateDescHeapViews()
 {
 	// Create the handle and get the heap size for increment
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descHeap->GetCPUDescriptorHandleForHeapStart();
@@ -1054,7 +1092,7 @@ bool Renderer::CreateDescHeapViews(std::vector<GameObject*> renderObjects)
 	handle.ptr += m_descHeapSize;
 	m_device->CreateShaderResourceView(nullptr, &srvDesc, handle);
 
-	for (auto object : renderObjects) {
+	for (auto object : *renderObjects) {
 		// Create the index buffer srv
 		D3D12_SHADER_RESOURCE_VIEW_DESC indexSRVDesc;
 		indexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
@@ -1157,7 +1195,7 @@ bool Renderer::BuildShaderTables()
 	return true;
 }
 
-bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
+bool Renderer::RenderRaytrace()
 {
 	HRESULT result;
 
@@ -1166,7 +1204,7 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 	if (FAILED(result)) return false;
 	ThrowIfFailed(m_commandList->Reset(m_deviceResources->GetCommandAllocator(), nullptr));
 
-	BuildTopLevelAccelerationStructures(renderObjects);
+	BuildTopLevelAccelerationStructures();
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
@@ -1182,7 +1220,7 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 
 	m_commandList->ResourceBarrier(_countof(preCopyBarriers), preCopyBarriers);
 
-	DoRaytracing(renderObjects);
+	DoRaytracing();
 
 	D3D12_RESOURCE_BARRIER postCopyBarriers[2];
 
@@ -1205,7 +1243,7 @@ bool Renderer::RenderRaytrace(std::vector<GameObject*> renderObjects)
 	return true;
 }
 
-bool Renderer::DoRaytracing(std::vector<GameObject*> renderObjects)
+bool Renderer::DoRaytracing()
 {
 	// Bind the heaps, acceleration structure and dispatch rays
 	//CreateDescHeapViews(renderObjects);
