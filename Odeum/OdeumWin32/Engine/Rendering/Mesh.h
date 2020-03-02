@@ -5,16 +5,11 @@
 
 #include "TextureHandler.h"
 
-struct VertexType
-{
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 normal;
-};
-
 struct Vertex
 {
-	Vertex(float x, float y, float z, float u, float v) : position(x, y, z), uv(u, v) {}
+	Vertex(float x, float y, float z, float xn, float yn, float zn, float u, float v) : position(x, y, z), normal(xn, yn, zn), uv(u, v) {}
 	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 uv;
 };
 

@@ -18,9 +18,6 @@ Mesh::~Mesh()
 bool Mesh::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
 	if (!InitializeBuffers(device, commandList)) return false;
-
-	
-	
 	return true;
 }
 
@@ -32,75 +29,42 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 {
 	HRESULT result;
 
-	VertexType vertices[] =
-	{
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
-
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(-1.0f, 0.0f, 0.0f) },
-
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, -1.0f) },
-
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-	};
-
-	Vertex verticesUV[] = {
+	Vertex vertices[] = {
 		// top
-		{ -1.0f, 1.0f, -1.0f, 0.0f, 1.0f },
-		{  1.0f, 1.0f, -1.0f, 1.0f, 1.0f },
-		{  1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
-		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+		{ -1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f },
+		{  1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 
 		// bottom
-		{ -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
-		{  1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
-		{  1.0f, -1.0f, 1.0f, 0.0f, 0.0f },
-		{ -1.0f, -1.0f, 1.0f, 1.0f, 0.0f },
+		{ -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f },
+		{  1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f },
+		{ -1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f },
 
 		// left
-		{ -1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
-		{ -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
-		{ -1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
-		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+		{ -1.0f, -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f },
+		{ -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{ -1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
 
 		// right
-		{  1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
-		{  1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
-		{  1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
-		{  1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+		{  1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+		{  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
 
 		// front
-		{ -1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
-		{  1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
-		{  1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
-		{ -1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+		{ -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f },
+		{  1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f },
+		{  1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f },
+		{ -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f },
 
 		// back
-		{ -1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
-		{  1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
-		{  1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
-		{ -1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+		{ -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f },
+		{  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+		{  1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
 	};
 
 
@@ -177,7 +141,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
 	
 	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
-	m_vertexBufferView.StrideInBytes = sizeof(VertexType);
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 	m_vertexBufferView.SizeInBytes = sizeof(vertices);
 
 	UINT8* pIndexDataBegin;
@@ -191,7 +155,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
-	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(VertexType);
+	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(Vertex);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
 	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Rendering/statue.jpg");

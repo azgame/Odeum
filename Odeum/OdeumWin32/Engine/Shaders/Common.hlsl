@@ -16,6 +16,7 @@ struct Vertex
 {
 	float3 position;
 	float3 normal;
+	float2 uv;
 };
 
 ConstantBuffer<SceneConstantBuffer> g_sceneCB	: register(b0);
@@ -25,6 +26,7 @@ RWTexture2D<float4> RenderTarget				: register(u0);
 RaytracingAccelerationStructure Scene			: register(t0, space0);
 ByteAddressBuffer Indices						: register(t1, space0);
 StructuredBuffer<Vertex> Vertices				: register(t2, space0);
+Texture2D<float4> tex2D							: register(t3, space0);
 
 // Load three 16 bit indices from a byte addressed buffer.
 uint3 Load3x16BitIndices(uint offsetBytes)
