@@ -12,7 +12,7 @@ const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
-const bool dxrEnabled = false;
+const bool dxrEnabled = true;
 
 class Renderer
 {
@@ -21,12 +21,12 @@ public:
 	Renderer(const Renderer&);
 	~Renderer();
 
-	bool Initialize(int, int, HWND, std::vector<GameObject*>*);
+	bool Initialize(int, int, HWND, std::vector<GameObject*>);
 	void CreateRasterWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	bool CreateRaytracingWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool UpdateConstantResources();
-	bool Render();
+	bool Render(std::vector<GameObject*> renderObjects);
 
 	ID3D12Device*								GetD3DDevice() { return m_device; }
 	ID3D12GraphicsCommandList*					GetCommandList() { return m_commandList; }
@@ -48,11 +48,9 @@ private:
 
 	ID3D12GraphicsCommandList4*					m_commandList;
 
-	std::vector<GameObject*>* renderObjects;
-
 	// General functions
 	bool InitializeDeviceResources(int, int, HWND, bool, bool, bool);
-	bool CreateCBResources();
+	bool CreateCBResources(int numRenderObjects_);
 
 	// Raster related variables
 	static const UINT							c_alignedConstantBufferSize = (sizeof(ModelViewProjectionConstantBuffer) + 255) & ~255;
@@ -69,8 +67,8 @@ private:
 	ID3D12PipelineState*						m_pipelineState;
 
 	// Rasterization related functions
-	bool InitializeRaster(int, int, HWND);
-	bool RenderRaster();
+	bool InitializeRaster(int, int, HWND, std::vector<GameObject*> renderObjects);
+	bool RenderRaster(std::vector<GameObject*> renderObjects);
 
 
 	// DXR related variables
@@ -117,18 +115,17 @@ private:
 	uint32_t									m_shaderTableRecordSize = 0;
 	
 	// Raytracing related functions
-	bool InitializeRaytrace(int, int, HWND);
+	bool InitializeRaytrace(int, int, HWND, std::vector<GameObject*>);
 	bool CreateRaytracingInterfaces(int screenHeight, int screenWidth, HWND hwnd);
-	bool CreateRootSignatures();
-	bool BuildBottomLevelAccelerationStructures();
-	bool BuildTopLevelAccelerationStructures();
+	bool BuildBottomLevelAccelerationStructures(std::vector<GameObject*> renderObjects);
+	bool BuildTopLevelAccelerationStructures(std::vector<GameObject*> renderObjects);
 	bool SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ID3D12RootSignature** rootSig);
 	bool CreateRaytracingPipelineStateObject();
-	bool CreateDescriptorHeap();
-	bool CreateDescHeapViews();
+	bool CreateDescriptorHeap(std::vector<GameObject*> renderObjects);
+	bool CreateDescHeapViews(std::vector<GameObject*> renderObjects);
 	bool BuildShaderTables();
-	bool RenderRaytrace();
-	bool DoRaytracing();
+	bool RenderRaytrace(std::vector<GameObject*> renderObjects);
+	bool DoRaytracing(std::vector<GameObject*> renderObjects);
 };
 
 #endif // !_RENDERER_H_
