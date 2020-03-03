@@ -112,8 +112,8 @@ bool OdeumEngine::Run()
 
 void OdeumEngine::Uninitialize() 
 {
-	delete m_gameInterface; m_gameInterface = nullptr;
-	m_renderObjects.clear();
-	delete m_renderer; m_renderer = nullptr;
-	delete m_mainCamera; m_mainCamera = nullptr;
+	SAFE_DELETE(m_gameInterface);
+	for (auto m : m_renderObjects) SAFE_DELETE(m);
+	SAFE_DELETE(m_renderer);
+	SAFE_DELETE(m_mainCamera);
 }

@@ -249,6 +249,12 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 
 void Mesh::ShutdownBuffers()
 {
+	SAFE_RELEASE(m_vertexBuffer);
+	SAFE_RELEASE(m_vertexBufferUpload);
+	SAFE_RELEASE(m_indexBuffer);
+	SAFE_RELEASE(m_indexBufferUpload);
+	SAFE_RELEASE(m_textureBuffer);
+	SAFE_RELEASE(m_textureBufferUpload);
 }
 
 void Mesh::RenderBuffers(ID3D12GraphicsCommandList* m_commandList)

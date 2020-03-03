@@ -32,7 +32,6 @@ public:
 	ID3D12GraphicsCommandList*					GetCommandList() { return m_commandList; }
 
 private:
-
 	// General resources
 	DeviceResources*							m_deviceResources;
 	ID3D12Device5*								m_device;
@@ -100,7 +99,7 @@ private:
 
 	// Acceleration structures
 	std::vector<ID3D12Resource*>				m_bottomLevelAccelerationStructure;
-	ID3D12Resource* instanceDescs;
+	ID3D12Resource*								instanceDescs;
 	ID3D12Resource*								m_topLevelAccelerationStructure;
 	ID3D12Resource*								tscratchResource;
 

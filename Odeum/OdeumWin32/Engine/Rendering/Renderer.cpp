@@ -115,7 +115,8 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	// Init Pipeline Description
@@ -389,11 +390,26 @@ bool Renderer::CreateCBResources()
 
 void Renderer::Uninitialize()
 {
-	if (m_commandList != nullptr)
-	{
-		m_commandList->Release();
-		m_commandList = 0;
-	}
+	SAFE_DELETE(m_renderObjects);
+	SAFE_DELETE(m_camera);
+	SAFE_RELEASE(m_cbvHeap);
+	SAFE_RELEASE(m_constantBuffer);
+	SAFE_DELETE(m_mappedConstantBuffer);
+	SAFE_RELEASE(m_rootSignature);
+	SAFE_RELEASE(m_pipelineState);
+	SAFE_DELETE(m_dxrmappedConstantBuffer);
+	SAFE_DELETE(m_cubemappedConstantBuffer);
+	SAFE_RELEASE(m_dxrconstantBuffer);
+	SAFE_RELEASE(m_cubeConstantBuffer);
+	for (auto o : m_bottomLevelAccelerationStructure) SAFE_RELEASE(o);
+	SAFE_RELEASE(instanceDescs);
+	SAFE_RELEASE(m_topLevelAccelerationStructure);
+	SAFE_RELEASE(tscratchResource);
+	SAFE_RELEASE(m_rtStateObject);
+	SAFE_RELEASE(m_rtStateObjectProps);
+	SAFE_RELEASE(m_raytracingOutput);
+	SAFE_RELEASE(m_shaderTable);
+	SAFE_RELEASE(m_commandList);
 
 	if (m_deviceResources != nullptr)
 	{
@@ -401,6 +417,8 @@ void Renderer::Uninitialize()
 		delete m_deviceResources;
 		m_deviceResources = nullptr;
 	}
+
+	SAFE_RELEASE(m_device);
 }
 
 bool Renderer::UpdateConstantResources()

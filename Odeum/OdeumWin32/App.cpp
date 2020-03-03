@@ -13,8 +13,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		app->Run();
 
 	app->Uninitialize();
-	delete app;
-	app = 0;
+	SAFE_DELETE(app);
 
 	return 0;
 }

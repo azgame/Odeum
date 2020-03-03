@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 
+#include "../Utilities/DXRHelper.h"
 #include "TextureHandler.h"
 
 struct Vertex
