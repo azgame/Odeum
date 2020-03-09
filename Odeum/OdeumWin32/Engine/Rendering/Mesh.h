@@ -8,16 +8,24 @@
 
 struct Vertex
 {
+	Vertex() {}
+	Vertex(DirectX::XMFLOAT3 pos_, DirectX::XMFLOAT3 norm_, DirectX::XMFLOAT2 uv_) : position(pos_), normal(norm_), uv(uv_) {}
 	Vertex(float x, float y, float z, float xn, float yn, float zn, float u, float v) : position(x, y, z), normal(xn, yn, zn), uv(u, v) {}
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 uv;
 };
 
+struct SubMesh
+{
+	std::vector<Vertex> vertexList;
+	std::vector<UINT16> meshIndices;
+};
+
 class Mesh 
 {
 public:
-	Mesh();
+	Mesh(SubMesh subMesh_);
 	Mesh(const Mesh&);
 	~Mesh();
 
@@ -37,6 +45,9 @@ public:
 	
 
 private:
+
+	SubMesh subMesh;
+
 	bool InitializeBuffers(ID3D12Device*, ID3D12GraphicsCommandList*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D12GraphicsCommandList*);

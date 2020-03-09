@@ -3,8 +3,9 @@
 
 using namespace DirectX;
 
-Mesh::Mesh()
+Mesh::Mesh(SubMesh subMesh_)
 {
+	subMesh = subMesh_;
 }
 
 Mesh::Mesh(const Mesh &)
@@ -67,9 +68,8 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 		{ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f },
 	};
 
-
 	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(vertices));
+	CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(subMesh.vertexList.size() * sizeof(Vertex));
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
@@ -110,7 +110,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 		23,20,22
 	};
 
-	CD3DX12_RESOURCE_DESC m_indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(cubeIndices));
+	CD3DX12_RESOURCE_DESC m_indexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(subMesh.meshIndices.size() * sizeof(UINT16));
 
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -136,29 +136,29 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	readRange.End = 0;
 	result = m_vertexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pVertexDataBegin, vertices, sizeof(vertices));
+	memcpy(pVertexDataBegin, subMesh.vertexList.data(), subMesh.vertexList.size() * sizeof(Vertex));
 	m_vertexBufferUpload->Unmap(0, nullptr);
-	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, sizeof(vertices));
+	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, subMesh.vertexList.size() * sizeof(Vertex));
 	
 	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
-	m_vertexBufferView.SizeInBytes = sizeof(vertices);
+	m_vertexBufferView.SizeInBytes = subMesh.vertexList.size() * sizeof(Vertex);
 
 	UINT8* pIndexDataBegin;
 	result = m_indexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pIndexDataBegin, cubeIndices, sizeof(cubeIndices));
+	memcpy(pIndexDataBegin, subMesh.meshIndices.data(), subMesh.meshIndices.size() * sizeof(UINT16));
 	m_indexBufferUpload->Unmap(0, nullptr);
-	commandList->CopyBufferRegion(m_indexBuffer, 0, m_indexBufferUpload, 0, sizeof(cubeIndices));
+	commandList->CopyBufferRegion(m_indexBuffer, 0, m_indexBufferUpload, 0, subMesh.meshIndices.size() * sizeof(UINT16));
 
 	m_indexBufferView.BufferLocation = m_indexBufferUpload->GetGPUVirtualAddress();
-	m_indexBufferView.SizeInBytes = sizeof(cubeIndices);
+	m_indexBufferView.SizeInBytes = subMesh.meshIndices.size() * sizeof(UINT16);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(Vertex);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
-	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Rendering/statue.jpg");
+	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Resources/Textures/Apple_Body.jpg");
 
 	D3D12_RESOURCE_DESC textureDesc;
 	textureDesc = {};

@@ -173,6 +173,7 @@
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Engine\Rendering\Model.h" />
+    <ClInclude Include="Engine\Rendering\LoadOBJModel.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Utilities\RaytracingHLSLCompat.h" />
     <ClInclude Include="Engine\Rendering\Renderer.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Engine\Rendering\Model.cpp" />
+    <ClCompile Include="Engine\Rendering\LoadOBJModel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

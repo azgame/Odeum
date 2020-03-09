@@ -142,7 +142,6 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), m_pipelineState, IID_PPV_ARGS(&m_commandList));
 	if (FAILED(result)) return false;
 
-
 	for (auto object : *m_renderObjects) {
 		object->Initialize(m_device, m_commandList);
 	}
@@ -220,10 +219,11 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	static const DirectX::XMFLOAT3 eye = { 0.0f, 0.7f, 1.5f };
 	static const DirectX::XMFLOAT3 at = { 0.0f, -0.1f, 0.0f };
 	static const DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
-
+	
 	m_camera->SetViewMatrix(eye, at, up);
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
+	
 }
 
 bool Renderer::RenderRaster()
@@ -281,7 +281,7 @@ bool Renderer::RenderRaster()
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (int i = 0; i < m_renderObjects->size(); i++) {
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->m_modelMatrix));
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
 		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
 		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
 		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
@@ -652,7 +652,7 @@ bool Renderer::BuildTopLevelAccelerationStructures(bool update)
 
 	for (int i = 0; i < m_renderObjects->size(); i++) {
 		// Create an instance desc for the bottom-level acceleration structure
-		DirectX::XMStoreFloat3x4(reinterpret_cast<DirectX::XMFLOAT3X4*>(instanceDesc[i].Transform), m_renderObjects->at(i)->GetModel()->m_modelMatrix);
+		DirectX::XMStoreFloat3x4(reinterpret_cast<DirectX::XMFLOAT3X4*>(instanceDesc[i].Transform), m_renderObjects->at(i)->GetModel()->GetTransform(0));
 		instanceDesc[i].InstanceMask = 1;
 		//instanceDesc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_TRIANGLE_FRONT_COUNTERCLOCKWISE;
 		instanceDesc[i].AccelerationStructure = m_bottomLevelAccelerationStructure[i]->GetGPUVirtualAddress();

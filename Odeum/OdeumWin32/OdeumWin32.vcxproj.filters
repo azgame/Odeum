@@ -43,6 +43,7 @@
     <ClCompile Include="Engine\Rendering\Model.cpp" />
     <ClCompile Include="Engine\Rendering\GameObject.cpp" />
     <ClCompile Include="Engine\Rendering\TextureHandler.cpp" />
+    <ClCompile Include="Engine\Rendering\LoadOBJModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\dxc\dxcapi.h">
@@ -98,6 +99,7 @@
     <ClInclude Include="Engine\Rendering\TextureHandler.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Rendering\tiny_obj_loader.h" />
+    <ClInclude Include="Engine\Rendering\LoadOBJModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

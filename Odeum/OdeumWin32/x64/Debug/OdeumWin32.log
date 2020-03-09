@@ -1,27 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  App.cpp
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\App.cpp(98,2): warning C4065: switch statement contains 'default' but no 'case' labels
-  OdeumEngine.cpp
-  GameObject.cpp
-  Mesh.cpp
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Mesh.cpp(158,50): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Mesh.cpp(159,48): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
   Model.cpp
-  Renderer.cpp
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(178,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(199,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(267,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(268,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(232,28): warning C4101: 'barrier': unreferenced local variable
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(315,10): warning C4101: 'result': unreferenced local variable
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(503,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(613,51): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(1038,71): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(1027,10): warning C4101: 'result': unreferenced local variable
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Renderer.cpp(1122,112): warning C4244: '=': conversion from 'UINT64' to 'UINT', possible loss of data
-  Game1.cpp
-  GameScene.cpp
-  StartScene.cpp
-  Generating Code...
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\App.cpp(240): warning C4715: 'WndProc': not all control paths return a value
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumWin32\Engine\Rendering\Model.cpp(55,36): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   OdeumWin32.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

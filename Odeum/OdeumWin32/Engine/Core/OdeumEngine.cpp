@@ -11,10 +11,8 @@ OdeumEngine::OdeumEngine()
 	m_renderer = nullptr;
 	
 	// For now hardcode number of objects, this will be passed from the game later
-	Model* model = new Model();
-	model->AddMesh(new Mesh());
-	Model* model2 = new Model();
-	model2->AddMesh(new Mesh());
+	Model* model = new Model("Engine/Resources/Models/Apple.obj", "Engine/Resources/Materials/Apple.mtl");
+	Model* model2 = new Model("Engine/Resources/Models/Apple.obj", "Engine/Resources/Materials/Apple.mtl");
 	m_renderObjects.push_back(new GameObject(model));
 	m_renderObjects.push_back(new GameObject(model2));
 
@@ -66,8 +64,9 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	m_renderObjects[0]->position = DirectX::XMFLOAT4(0.0f, 0.0f, -10.0f, 0.0f);
 	m_renderObjects[1]->position = DirectX::XMFLOAT4(0.0f, 0.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
-	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+
+	m_renderObjects[0]->GetModel()->UpdateInstance(0, m_renderObjects[0]->position, 0, DirectX::XMFLOAT3(0, 1, 0), DirectX::XMFLOAT3(0.5, 0.5, 0.5));
+	m_renderObjects[1]->GetModel()->UpdateInstance(0, m_renderObjects[0]->position, 0, DirectX::XMFLOAT3(0, 1, 0), DirectX::XMFLOAT3(0.5, 0.5, 0.5));
 
 	// Initialize renderer
 	m_renderer = new Renderer();
@@ -90,17 +89,12 @@ bool OdeumEngine::Run()
 	timer.UpdateFrameTicks();
 	m_mainCamera->UpdateCamera();
 
-	DirectX::XMFLOAT4 pos = m_renderObjects[0]->position;
-
-	m_renderObjects[0]->position = pos;
-	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat4(&m_renderObjects[0]->position);
-	m_renderObjects[0]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
-
+	DirectX::XMFLOAT4 pos = m_renderObjects[1]->position;
+	m_renderObjects[1]->position = pos;
 	pos = m_renderObjects[1]->position;
 	pos.x -= 0.01f;
 	m_renderObjects[1]->position = pos;
-	posVec = DirectX::XMLoadFloat4(&m_renderObjects[1]->position);
-	m_renderObjects[1]->GetModel()->m_modelMatrix = DirectX::XMMatrixTranslationFromVector(posVec);
+	m_renderObjects[1]->GetModel()->UpdateInstance(0, pos, 0, DirectX::XMFLOAT3(0, 1, 0), DirectX::XMFLOAT3(0.5, 0.5, 0.5));
 	
 	m_gameInterface->Update(timer.GetDeltaTime());
 
