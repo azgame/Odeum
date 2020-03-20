@@ -158,13 +158,11 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	m_vertexCount = m_vertexBuffer->GetDesc().Width / sizeof(Vertex);
 	m_indexCount = m_indexBuffer->GetDesc().Width / sizeof(UINT16);
 
-	m_texture = TextureHandler::GetInstance()->LoadTexture("Engine/Resources/Textures/Apple_Body.jpg");
-
 	D3D12_RESOURCE_DESC textureDesc;
 	textureDesc = {};
 	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	textureDesc.Width = m_texture.width;
-	textureDesc.Height = m_texture.height;
+	textureDesc.Width = subMesh.m_texture.width;
+	textureDesc.Height = subMesh.m_texture.height;
 	textureDesc.DepthOrArraySize = 1;
 	textureDesc.MipLevels = 1;
 	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -180,7 +178,7 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 		IID_PPV_ARGS(&m_textureBuffer));
 	if (FAILED(result)) return false;
 
-	textureDesc.Width = m_texture.height * m_texture.width * m_texture.stride;
+	textureDesc.Width = subMesh.m_texture.height * subMesh.m_texture.width * subMesh.m_texture.stride;
 	textureDesc.Height = 1;
 	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	textureDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -198,19 +196,19 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	UINT8* pTextureDataBegin;
 	result = m_textureBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pTextureDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pTextureDataBegin, m_texture.pixels.data(), m_texture.height * m_texture.width * m_texture.stride);
+	memcpy(pTextureDataBegin, subMesh.m_texture.pixels.data(), subMesh.m_texture.height * subMesh.m_texture.width * subMesh.m_texture.stride);
 	m_textureBufferUpload->Unmap(0, nullptr);
 	
 	// Describe the upload heap resource location for the copy
 	D3D12_SUBRESOURCE_FOOTPRINT subresource = {};
 	subresource.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	subresource.Width = m_texture.width;
-	subresource.Height = m_texture.height;
-	subresource.RowPitch = m_texture.width * m_texture.stride;
+	subresource.Width = subMesh.m_texture.width;
+	subresource.Height = subMesh.m_texture.height;
+	subresource.RowPitch = subMesh.m_texture.width * subMesh.m_texture.stride;
 	subresource.Depth = 1;
 
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
-	footprint.Offset = m_texture.offset;
+	footprint.Offset = subMesh.m_texture.offset;
 	footprint.Footprint = subresource;
 
 	D3D12_TEXTURE_COPY_LOCATION source = {};

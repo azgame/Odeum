@@ -36,7 +36,7 @@ void TextureHandler::FormatTexture(Texture& info, UINT8* pixels)
 	info.stride = newStride;
 }
 
-Texture TextureHandler::LoadTexture(std::string filePath)
+void TextureHandler::CreateTexture(std::string textureName, std::string filePath)
 {
 	Texture result = {};
 
@@ -49,7 +49,12 @@ Texture TextureHandler::LoadTexture(std::string filePath)
 
 	FormatTexture(result, pixels);
 	stbi_image_free(pixels);
-	return result;
+	m_textureMap[textureName] = result;
+}
+
+Texture TextureHandler::GetTexture(std::string textureName)
+{
+	return m_textureMap[textureName];
 }
 
 TextureHandler* TextureHandler::GetInstance()

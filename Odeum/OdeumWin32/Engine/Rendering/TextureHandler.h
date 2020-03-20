@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 
 struct Texture
 {
@@ -26,13 +27,16 @@ public:
 	TextureHandler& operator=(TextureHandler&&) = delete;
 
 	void FormatTexture(Texture& info, UINT8* pixels);
-	Texture LoadTexture(std::string filePath);
+	void CreateTexture(std::string textureName, std::string filePath);
+	Texture GetTexture(std::string textureName);
 private:
 	TextureHandler();
 	~TextureHandler();
 	void Uninitialize();
 	static std::unique_ptr<TextureHandler> m_instance;
 	friend std::default_delete<TextureHandler>;
+
+	std::map<std::string, Texture> m_textureMap;
 };
 
 #endif

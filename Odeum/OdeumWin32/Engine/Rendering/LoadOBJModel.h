@@ -29,6 +29,7 @@ private:
 	std::vector<Vertex>					meshVertices;
 	std::vector<SubMesh>				subMeshes;
 	int									totalVerts;
+	Texture								currentTexture;
 
 	void PostProcessing();
 	void LoadMaterial(const std::string& matName_);

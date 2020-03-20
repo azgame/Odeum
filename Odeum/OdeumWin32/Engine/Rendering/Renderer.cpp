@@ -160,7 +160,7 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Heap descriptors for constant buffer data
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 2;
+	heapDesc.NumDescriptors = 3;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -182,6 +182,10 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	handle.ptr += m_descHeapSize;
 	
 	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBV(), handle);
+
+	handle.ptr += m_descHeapSize;
+
+	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBV(), handle);
 
 	m_deviceResources->InitializeFence();
 
@@ -254,7 +258,7 @@ bool Renderer::RenderRaster()
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_commandList->RSSetViewports(1, &viewport);
 	m_commandList->RSSetScissorRects(1, &m_scissorRect);
-
+	
 	// Record commands in the command list now
 	// Start by setting the resource barrier
 	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -275,8 +279,10 @@ bool Renderer::RenderRaster()
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
+	CD3DX12_GPU_DESCRIPTOR_HANDLE descHeapHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0);
+
 	// set the descriptor table to the descriptor heap (parameter 1, as constant buffer root descriptor is parameter index 0)
-	m_commandList->SetGraphicsRootDescriptorTable(1, m_descHeap->GetGPUDescriptorHandleForHeapStart());
+	m_commandList->SetGraphicsRootDescriptorTable(1, descHeapHandle);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)

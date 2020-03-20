@@ -276,6 +276,7 @@ void LoadOBJModel::PostProcessing() {
 	SubMesh subMesh;
 	subMesh.vertexList = meshVertices;
 	subMesh.meshIndices = indices;
+	subMesh.m_texture = currentTexture;
 
 	subMeshes.push_back(subMesh);
 
@@ -287,7 +288,12 @@ void LoadOBJModel::PostProcessing() {
 }
 
 void LoadOBJModel::LoadMaterial(const std::string& matName_) {
-	
+	currentTexture = TextureHandler::GetInstance()->GetTexture(matName_);
+	if (currentTexture.width == 0)
+	{
+		TextureHandler::GetInstance()->CreateTexture(matName_, "Engine/Resources/Textures/" + matName_ + ".JPG");
+		currentTexture = TextureHandler::GetInstance()->GetTexture(matName_);
+	}
 }
 
 void LoadOBJModel::LoadMaterialLibrary(const std::string& matFilePath_) {
@@ -302,5 +308,4 @@ void LoadOBJModel::LoadMaterialLibrary(const std::string& matFilePath_) {
 			LoadMaterial(line.substr(7));
 		}
 	}
-
 }

@@ -39,6 +39,7 @@ struct SubMesh
 {
 	std::vector<Vertex> vertexList;
 	std::vector<UINT16> meshIndices;
+	Texture m_texture;
 };
 
 class Mesh 
@@ -77,7 +78,6 @@ private:
 	ID3D12Resource*							m_indexBufferUpload;
 	D3D12_INDEX_BUFFER_VIEW					m_indexBufferView;
 	int										m_vertexCount, m_indexCount;
-	Texture									m_texture;
 	ID3D12Resource*							m_textureBuffer;
 	ID3D12Resource*							m_textureBufferUpload;
 	D3D12_SHADER_RESOURCE_VIEW_DESC			m_textureView;
