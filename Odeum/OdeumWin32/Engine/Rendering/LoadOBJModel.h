@@ -22,13 +22,13 @@ public:
 	void Shutdown();
 
 private:
-
 	std::vector<DirectX::XMFLOAT3>		vertices;
 	std::vector<DirectX::XMFLOAT3>		normals;
 	std::vector<DirectX::XMFLOAT2>		textureCoords;
-	std::vector<UINT16>					indices, normalIndices, textureIndices;
+	std::vector<UINT16>					indices, posIndices, normalIndices, textureIndices;
 	std::vector<Vertex>					meshVertices;
 	std::vector<SubMesh>				subMeshes;
+	int									totalVerts;
 
 	void PostProcessing();
 	void LoadMaterial(const std::string& matName_);

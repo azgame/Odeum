@@ -77,9 +77,9 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 
 	D3D12_STATIC_SAMPLER_DESC sampler = {};
 	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	sampler.MipLODBias = 0;
 	sampler.MaxAnisotropy = 0;
 	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
@@ -1108,7 +1108,7 @@ bool Renderer::CreateDescHeapViews()
 		indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 		indexSRVDesc.Buffer.StructureByteStride = 0;
 		indexSRVDesc.Buffer.FirstElement = 0;
-		indexSRVDesc.Buffer.NumElements = object->GetModel()->GetMesh()->GetIndexCount() / 4;
+		indexSRVDesc.Buffer.NumElements = object->GetModel()->GetMesh()->GetIndexCount();
 		indexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 		handle.ptr += m_descHeapSize;
@@ -1119,7 +1119,7 @@ bool Renderer::CreateDescHeapViews()
 		vertexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
 		vertexSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
 		vertexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-		vertexSRVDesc.Buffer.StructureByteStride = object->GetModel()->GetMesh()->GetVertexBuffer()->GetDesc().Width / sizeof(Vertex);
+		vertexSRVDesc.Buffer.StructureByteStride = sizeof(Vertex);
 		vertexSRVDesc.Buffer.FirstElement = 0;
 		vertexSRVDesc.Buffer.NumElements = object->GetModel()->GetMesh()->GetVertexCount();
 		vertexSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;

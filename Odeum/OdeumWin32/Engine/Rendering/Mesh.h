@@ -11,6 +11,25 @@ struct Vertex
 	Vertex() {}
 	Vertex(DirectX::XMFLOAT3 pos_, DirectX::XMFLOAT3 norm_, DirectX::XMFLOAT2 uv_) : position(pos_), normal(norm_), uv(uv_) {}
 	Vertex(float x, float y, float z, float xn, float yn, float zn, float u, float v) : position(x, y, z), normal(xn, yn, zn), uv(u, v) {}
+
+	bool operator==(Vertex v_)
+	{
+		bool posEquals = position.x == v_.position.x && position.y == v_.position.y && position.z == v_.position.z;
+		bool normalEquals = normal.x == v_.normal.x && normal.y == v_.normal.y && normal.z == v_.normal.z;
+		bool uvEquals = uv.x == v_.uv.x && uv.y == v_.uv.y;
+		if (posEquals && normalEquals && uvEquals) return true;
+		else return false;
+	}
+
+	bool operator!=(Vertex v_)
+	{
+		bool posEquals = position.x == v_.position.x && position.y == v_.position.y && position.z == v_.position.z;
+		bool normalEquals = normal.x == v_.normal.x && normal.y == v_.normal.y && normal.z == v_.normal.z;
+		bool uvEquals = uv.x == v_.uv.x && uv.y == v_.uv.y;
+		if (posEquals && normalEquals && uvEquals) return false;
+		else return true;
+	}
+
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 uv;
@@ -35,14 +54,12 @@ public:
 
 	int GetIndexCount()						{ return m_indexCount; }
 	int GetVertexCount()					{ return m_vertexCount; }
-	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBufferUpload; }
-	ID3D12Resource* GetIndexBuffer()		{ return m_indexBufferUpload; }
+	ID3D12Resource* GetVertexBuffer()		{ return m_vertexBuffer; }
+	ID3D12Resource* GetIndexBuffer()		{ return m_indexBuffer; }
 	ID3D12Resource* GetTextureBuffer()		{ return m_textureBuffer; }
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBV()	{ return m_vertexBufferView; }
 	D3D12_INDEX_BUFFER_VIEW GetIndexBV()	{ return m_indexBufferView; }
 	D3D12_SHADER_RESOURCE_VIEW_DESC GetTextureBV()	{ return m_textureView; }
-
-	
 
 private:
 

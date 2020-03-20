@@ -2,7 +2,6 @@
 #include "Debug.h"
 
 
-
 std::unique_ptr<OdeumEngine> OdeumEngine::engineInstance = nullptr;
 
 OdeumEngine::OdeumEngine()
@@ -21,6 +20,8 @@ OdeumEngine::OdeumEngine()
 	m_pitch = m_yaw = 0;
 
 	m_currentSceneNum = 0;
+
+	model = nullptr; model2 = nullptr;
 }
 
 

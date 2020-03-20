@@ -136,22 +136,22 @@ bool Mesh::InitializeBuffers(ID3D12Device* device, ID3D12GraphicsCommandList* co
 	readRange.End = 0;
 	result = m_vertexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pVertexDataBegin, subMesh.vertexList.data(), subMesh.vertexList.size() * sizeof(Vertex));
+	memcpy(pVertexDataBegin, &subMesh.vertexList[0], subMesh.vertexList.size() * sizeof(Vertex));
 	m_vertexBufferUpload->Unmap(0, nullptr);
 	commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, subMesh.vertexList.size() * sizeof(Vertex));
 	
-	m_vertexBufferView.BufferLocation = m_vertexBufferUpload->GetGPUVirtualAddress();
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 	m_vertexBufferView.SizeInBytes = subMesh.vertexList.size() * sizeof(Vertex);
 
 	UINT8* pIndexDataBegin;
 	result = m_indexBufferUpload->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin));
 	if (FAILED(result)) return false;
-	memcpy(pIndexDataBegin, subMesh.meshIndices.data(), subMesh.meshIndices.size() * sizeof(UINT16));
+	memcpy(pIndexDataBegin, &subMesh.meshIndices[0], subMesh.meshIndices.size() * sizeof(UINT16));
 	m_indexBufferUpload->Unmap(0, nullptr);
 	commandList->CopyBufferRegion(m_indexBuffer, 0, m_indexBufferUpload, 0, subMesh.meshIndices.size() * sizeof(UINT16));
 
-	m_indexBufferView.BufferLocation = m_indexBufferUpload->GetGPUVirtualAddress();
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
 	m_indexBufferView.SizeInBytes = subMesh.meshIndices.size() * sizeof(UINT16);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 

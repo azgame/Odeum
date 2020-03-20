@@ -16,6 +16,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
 	float4 position : SV_POSITION;
+	float4 colour : COLOUR;
 	float2 uv : UV;
 };
 
@@ -25,6 +26,8 @@ PS_INPUT main(VS_INPUT input)
 	PS_INPUT Output;
 	float4 pos = float4(input.position, 1.0f);
 	
+	Output.colour = pos;
+
 	pos = mul(pos, model);
 	pos = mul(pos, view);
 	pos = mul(pos, projection);
