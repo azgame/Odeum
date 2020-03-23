@@ -1,0 +1,13 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Renderer.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(185,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(210,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(279,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(280,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(244,28): warning C4101: 'barrier': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(329,10): warning C4101: 'result': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(515,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(623,51): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(1048,71): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(1037,10): warning C4101: 'result': unreferenced local variable
+  OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

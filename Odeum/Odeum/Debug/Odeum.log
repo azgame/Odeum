@@ -1,8 +1,0 @@
-﻿  pch.cpp
-  App.cpp
-  DeviceResources.cpp
-  Sample3DSceneRenderer.cpp
-  OdeumMain.cpp
-  Odeum.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\Debug\Odeum\Odeum.exe
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage\Microsoft.AppXPackage.Targets(2519,5): warning APPX0104: Certificate file 'Odeum_TemporaryKey.pfx' not found.
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage\Microsoft.AppXPackage.Targets(2519,5): warning APPX0107: The certificate specified is not valid for signing. For more information about valid certificates, see http://go.microsoft.com/fwlink/?LinkID=241478.
