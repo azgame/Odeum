@@ -3,6 +3,7 @@
 #include "../Utilities/DXRaytracingHelper.h"
 #include "../dxc/dxcapi.h"
 #include "ShaderHandler.h"
+#include "SceneGraph.h"
 
 #pragma region Renderer
 
@@ -83,8 +84,8 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.NumDescriptors = 3;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	// This flag indicates that this descriptor heap can be bound to the pipeline and that descriptors contained in it can be referenced by a root table
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
 	result = m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descHeap));
 	if (FAILED(result)) return false;
 
@@ -103,12 +104,10 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	handle.ptr += m_descHeapSize;
 	
 	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBV(), handle);
-
+	
 	handle.ptr += m_descHeapSize;
 
 	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBV(), handle);
-
-	m_deviceResources->InitializeFence();
 
 	return true;
 }
@@ -194,20 +193,21 @@ bool Renderer::RenderRaster()
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE descHeapHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize);
-
-	// set the descriptor table to the descriptor heap (parameter 1, as constant buffer root descriptor is parameter index 0)
-	m_commandList->SetGraphicsRootDescriptorTable(1, descHeapHandle);
-
+	CD3DX12_GPU_DESCRIPTOR_HANDLE handle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize);
+	
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
-	for (int i = 0; i < m_renderObjects->size(); i++) 
+	int counter = 0;
+	for (auto model : *m_renderObjects)
 	{
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
-		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
+		handle.InitOffsetted(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize, counter);
+		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(model->GetModel()->GetTransform(0)));
+		UINT8* destination = m_mappedConstantBuffer + (counter * c_alignedConstantBufferSize);
 		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
-		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
-		m_renderObjects->at(i)->Render(m_commandList);
+		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (counter * c_alignedConstantBufferSize));
+		m_commandList->SetGraphicsRootDescriptorTable(1, handle);
+		model->Render(m_commandList);
+		counter++;
 	}
 
 	// Indicate that the back buffer will now be used to present

@@ -1,6 +1,7 @@
 #include "OdeumEngine.h"
 #include "Debug.h"
-
+#include "../Rendering/ShaderHandler.h"
+#include "../Rendering/SceneGraph.h"
 
 std::unique_ptr<OdeumEngine> OdeumEngine::engineInstance = nullptr;
 
@@ -69,8 +70,6 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
 	m_renderer->CreateWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
-
-	
 
 	return true;
 }

@@ -49,6 +49,10 @@ void ShaderHandler::CreateRootSignature(ID3D12Device* device_, ID3D12RootSignatu
 	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
 	descriptorTable.pDescriptorRanges = descriptorTableRanges;
 
+	D3D12_ROOT_DESCRIPTOR rootSRVDescriptor;
+	rootSRVDescriptor.RegisterSpace = 0;
+	rootSRVDescriptor.ShaderRegister = 0;
+
 	D3D12_ROOT_PARAMETER rootParameters[2];
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[0].Descriptor = rootCBVDescriptor;

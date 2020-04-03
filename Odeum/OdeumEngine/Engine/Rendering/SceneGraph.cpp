@@ -1,7 +1,7 @@
 #include "SceneGraph.h"
 
 std::unique_ptr<SceneGraph> SceneGraph::sceneGraphInstance = nullptr;
-std::map<UINT16, std::vector<Model*>> SceneGraph::sceneModels = std::map<UINT16, std::vector<Model*>>();
+std::map<DxShaderProgram*, std::vector<Model*>> SceneGraph::sceneModels = std::map<DxShaderProgram*, std::vector<Model*>>();
 std::map<std::string, GameObject*> SceneGraph::sceneGameObjects = std::map<std::string, GameObject*>();
 
 
@@ -48,16 +48,16 @@ void SceneGraph::Uninitialize()
 
 void SceneGraph::AddModel(Model* model_)
 {
-	/*if (sceneModels.find(model_->GetShaderProgram()) == sceneModels.end()) 
+	if (sceneModels.find(model_->GetShaderProgram()) == sceneModels.end()) 
 	{
 		std::vector<Model*> tmp = std::vector<Model*>();
 		tmp.reserve(10);
-		sceneModels.insert(std::pair<GLuint, std::vector<Model*>>(
+		sceneModels.insert(std::pair<DxShaderProgram*, std::vector<Model*>>(
 			model_->GetShaderProgram(), tmp));
 	}
 	else {
 		sceneModels[model_->GetShaderProgram()].push_back(model_);
-	}*/
+	}
 }
 
 void SceneGraph::AddGameObject(GameObject* go_, std::string tag_)
@@ -97,6 +97,7 @@ void SceneGraph::Update(const float deltaTime_)
 		go.second->Update(deltaTime_);
 }
 
+// Can't fully implement this yet, needs more work moving rendering into models/meshes
 void SceneGraph::Render(Camera* camera_)
 {
 	/*for (auto entry : sceneModels) 

@@ -41,19 +41,25 @@ struct DxShaderInfo
 
 struct DxShaderProgram
 {
-	ID3D12PipelineState* pipelineState;
-	ID3D12RootSignature* rootSignature;
+	ID3D12PipelineState*	pipelineState;
+	ID3D12RootSignature*	rootSignature;
+	ID3D12DescriptorHeap*	descHeap;
+	ID3D12CommandList*		commandList;
 
 	void operator=(DxShaderProgram program_)
 	{
 		pipelineState = program_.pipelineState;
 		rootSignature = program_.rootSignature;
+		descHeap = program_.descHeap;
+		commandList = program_.commandList;
 	}
 
 	~DxShaderProgram ()
 	{
 		SAFE_RELEASE(pipelineState);
 		SAFE_RELEASE(rootSignature);
+		SAFE_RELEASE(descHeap);
+		SAFE_RELEASE(commandList);
 	}
 };
 
@@ -78,6 +84,7 @@ private:
 
 	void CreateRootSignature(ID3D12Device* device_, ID3D12RootSignature*& dstRootSig_, std::string shaderArgs_);
 	void CreatePipelineStateObject(ID3D12Device* device_, ID3D12PipelineState*& dstPipeline_, ID3DBlob* vsFile_, ID3DBlob* psFile_, ID3D12RootSignature* rootSig_);
+	void CreateDescriptorHeap(ID3D12Device* device_, ID3D12DescriptorHeap* dstDescHeap_);
 
 	static std::unique_ptr<ShaderHandler> shaderInstance;
 	friend std::default_delete<ShaderHandler>;

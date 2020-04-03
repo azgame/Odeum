@@ -3,6 +3,7 @@
 
 #include "Mesh.h"
 #include "LoadOBJModel.h"
+#include "ShaderHandler.h"
 
 class Model
 {
@@ -19,11 +20,14 @@ public:
 	void UpdateInstance(int index_, DirectX::XMFLOAT3 pos_, float angle_, DirectX::XMFLOAT3 rot_, DirectX::XMFLOAT3 scale_);
 	void UpdateInstance(int index_, DirectX::XMFLOAT4 pos_, float angle_, DirectX::XMFLOAT3 rot_, DirectX::XMFLOAT3 scale_);
 
+	DxShaderProgram* GetShaderProgram() { return m_shaderProgram; }
+
 private:
 	std::vector<Mesh*>						m_subMeshes;
 	std::vector<DirectX::XMMATRIX>			m_modelInstances;
 	BoundingBox								m_box;
 	LoadOBJModel*							obj;
+	DxShaderProgram*						m_shaderProgram;
 
 	DirectX::XMMATRIX GetTransform(DirectX::XMFLOAT3 pos_, float angle_, DirectX::XMFLOAT3 rot_, DirectX::XMFLOAT3 scale_);
 	DirectX::XMMATRIX GetTransform(DirectX::XMFLOAT4 pos_, float angle_, DirectX::XMFLOAT3 rot_, DirectX::XMFLOAT3 scale_);
