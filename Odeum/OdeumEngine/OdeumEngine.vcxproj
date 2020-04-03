@@ -175,11 +175,14 @@
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Engine\Rendering\Model.h" />
     <ClInclude Include="Engine\Rendering\LoadOBJModel.h" />
+    <ClInclude Include="Engine\Utilities\OdeumStructurues.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Utilities\RaytracingHLSLCompat.h" />
     <ClInclude Include="Engine\Rendering\Renderer.h" />
     <ClInclude Include="Engine\Core\Timer.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
+    <ClInclude Include="Engine\Rendering\SceneGraph.h" />
+    <ClInclude Include="Engine\Rendering\ShaderHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -207,6 +210,8 @@
     <ClCompile Include="Engine\Rendering\Renderer.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
+    <ClCompile Include="Engine\Rendering\SceneGraph.cpp" />
+    <ClCompile Include="Engine\Rendering\ShaderHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

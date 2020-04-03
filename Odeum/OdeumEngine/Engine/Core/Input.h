@@ -17,12 +17,9 @@ public:
 
 	void Initialize(HWND hwnd);
 	
-
 	static Input* GetInstance();
 
-	void Update();
-
-	
+	void Update();	
 
 	DirectX::Keyboard::State kb;
 	DirectX::Mouse::State mouse;

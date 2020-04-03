@@ -2,6 +2,7 @@
 #include "../Utilities/DXRHelper.h"
 #include "../Utilities/DXRaytracingHelper.h"
 #include "../dxc/dxcapi.h"
+#include "ShaderHandler.h"
 
 #pragma region Renderer
 
@@ -52,102 +53,14 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	m_device = m_deviceResources->GetD3Device();
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
 
-	D3D12_ROOT_DESCRIPTOR rootCBVDescriptor;
-	rootCBVDescriptor.RegisterSpace = 0;
-	rootCBVDescriptor.ShaderRegister = 0;
+	DxShaderInfo vertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
+	DxShaderInfo pixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 
-	D3D12_DESCRIPTOR_RANGE descriptorTableRanges[1];
-	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; 
-	descriptorTableRanges[0].NumDescriptors = 1; 
-	descriptorTableRanges[0].BaseShaderRegister = 0; 
-	descriptorTableRanges[0].RegisterSpace = 0; 
-	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = 1; 
-
-	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
-	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
-	descriptorTable.pDescriptorRanges = descriptorTableRanges;
-
-	D3D12_ROOT_PARAMETER rootParameters[2];
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].Descriptor = rootCBVDescriptor; 
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; 
-	rootParameters[1].DescriptorTable = descriptorTable;
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; 
-
-	// Init Root Signature
-	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS;
-
-	D3D12_STATIC_SAMPLER_DESC sampler = {};
-	sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-	sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	sampler.MipLODBias = 0;
-	sampler.MaxAnisotropy = 0;
-	sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-	sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-	sampler.MinLOD = 0.0f;
-	sampler.MaxLOD = D3D12_FLOAT32_MAX;
-	sampler.ShaderRegister = 0;
-	sampler.RegisterSpace = 0;
-	sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-	D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
-	rootDesc.NumParameters = _countof(rootParameters);
-	rootDesc.pParameters = rootParameters;
-	rootDesc.Flags = rootSignatureFlags;
-	rootDesc.NumStaticSamplers = 1;
-	rootDesc.pStaticSamplers = &sampler;
-
-	ID3DBlob* signature;
-	ID3DBlob* error;
-
-	D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
-	result = m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
-
-	// Init Shaders
-	ID3DBlob* vertexShader;
-	ID3DBlob* pixelShader;
-
-	result = D3DCompileFromFile(L"Engine/Shaders/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL);
-	if (FAILED(result)) return false;
-	result = D3DCompileFromFile(L"Engine/Shaders/PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL);
-	if (FAILED(result)) return false;
-
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
-
-	// Init Pipeline Description
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-	psoDesc.pRootSignature = m_rootSignature;
-	psoDesc.VS = { reinterpret_cast<UINT8*>(vertexShader->GetBufferPointer()), vertexShader->GetBufferSize() };
-	psoDesc.PS = { reinterpret_cast<UINT8*>(pixelShader->GetBufferPointer()), pixelShader->GetBufferSize() };
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	psoDesc.SampleMask = UINT_MAX;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = m_deviceResources->GetBackBufferFormat();
-	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	psoDesc.SampleDesc.Count = 1;
-
-	result = m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
-	if (FAILED(result)) return false;
+	ShaderHandler::GetInstance()->CreateShaderProgram(m_device, "BasicShader", vertexShader, pixelShader);
+	m_shaderProgram = ShaderHandler::GetInstance()->GetShader("BasicShader");
 
 	// Get the command list.
-	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), m_pipelineState, IID_PPV_ARGS(&m_commandList));
+	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState, IID_PPV_ARGS(&m_commandList));
 	if (FAILED(result)) return false;
 
 	for (auto object : *m_renderObjects) {
@@ -197,9 +110,6 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 
 	m_deviceResources->InitializeFence();
 
-	if (signature) signature->Release();
-	if (error) error->Release();
-
 	return true;
 }
 
@@ -208,7 +118,7 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	m_camera = camera;
 
 	float aspectRatio = screenWidth / screenHeight;
-	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
+	float fovAngleY = 59.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
@@ -235,7 +145,6 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	m_camera->SetViewMatrix(eye, at, up);
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 	XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(0)));
-	
 }
 
 bool Renderer::RenderRaster()
@@ -254,14 +163,12 @@ bool Renderer::RenderRaster()
 	if (FAILED(result)) return false;
 
 	// Reset the command list
-	result = m_commandList->Reset(m_deviceResources->GetCommandAllocator(), m_pipelineState);
+	result = m_commandList->Reset(m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState);
 	if (FAILED(result)) return false;
 
-	m_commandList->SetGraphicsRootSignature(m_rootSignature);
+	m_commandList->SetGraphicsRootSignature(m_shaderProgram->rootSignature);
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-	// Bind the current frame's constant buffer to the pipeline
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	m_commandList->RSSetViewports(1, &viewport);
@@ -287,14 +194,15 @@ bool Renderer::RenderRaster()
 	// Set the back buffer as the render target
 	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE descHeapHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE descHeapHandle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize);
 
 	// set the descriptor table to the descriptor heap (parameter 1, as constant buffer root descriptor is parameter index 0)
 	m_commandList->SetGraphicsRootDescriptorTable(1, descHeapHandle);
 
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
-	for (int i = 0; i < m_renderObjects->size(); i++) {
+	for (int i = 0; i < m_renderObjects->size(); i++) 
+	{
 		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
 		UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
 		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
@@ -310,10 +218,10 @@ bool Renderer::RenderRaster()
 	if (FAILED(result)) return false;
 
 	// Load the command list array (only one command list for now)
-	ID3D12CommandList* ppCommandLists[] = { m_commandList };
+	std::vector<ID3D12CommandList*> ppCommandLists = { m_commandList };
 
 	// Execute the list of commands
-	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	m_deviceResources->GetCommandQ()->ExecuteCommandLists(ppCommandLists.size(), ppCommandLists.data());
 
 	if (!m_deviceResources->Render()) return false;
 
@@ -409,8 +317,6 @@ void Renderer::Uninitialize()
 	SAFE_RELEASE(m_cbvHeap);
 	SAFE_RELEASE(m_constantBuffer);
 	SAFE_DELETE(m_mappedConstantBuffer);
-	SAFE_RELEASE(m_rootSignature);
-	SAFE_RELEASE(m_pipelineState);
 	SAFE_DELETE(m_dxrmappedConstantBuffer);
 	SAFE_DELETE(m_cubemappedConstantBuffer);
 	SAFE_RELEASE(m_dxrconstantBuffer);
@@ -424,6 +330,7 @@ void Renderer::Uninitialize()
 	SAFE_RELEASE(m_raytracingOutput);
 	SAFE_RELEASE(m_shaderTable);
 	SAFE_RELEASE(m_commandList);
+	m_shaderProgram = nullptr;
 
 	if (m_deviceResources != nullptr)
 	{
@@ -542,7 +449,7 @@ void Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	XMStoreFloat4x4(&m_sceneCB[m_bufferIndex].projection, DirectX::XMMatrixTranspose(viewProj));
 	m_sceneCB[m_bufferIndex].eye = eye;
 
-	m_sceneCB[m_bufferIndex].lightPos = DirectX::XMFLOAT4(7.0f, 5.0f, 0.0f, 0.0f);
+	m_sceneCB[m_bufferIndex].lightPos = DirectX::XMFLOAT4(0.0f, 5.0f, 0.0f, 0.0f);
 	m_sceneCB[m_bufferIndex].lightAmbient = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_sceneCB[m_bufferIndex].lightDiffuse = DirectX::XMFLOAT4(0.6f, 0.0f, 0.0f, 1.0f);
 
@@ -1114,8 +1021,8 @@ bool Renderer::CreateDescHeapViews()
 		// Create the index buffer srv
 		D3D12_SHADER_RESOURCE_VIEW_DESC indexSRVDesc;
 		indexSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-		indexSRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-		indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+		indexSRVDesc.Format = DXGI_FORMAT_R16_UINT;
+		indexSRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 		indexSRVDesc.Buffer.StructureByteStride = 0;
 		indexSRVDesc.Buffer.FirstElement = 0;
 		indexSRVDesc.Buffer.NumElements = object->GetModel()->GetMesh()->GetIndexCount();

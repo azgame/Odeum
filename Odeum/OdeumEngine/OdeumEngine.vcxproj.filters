@@ -44,6 +44,8 @@
     <ClCompile Include="Engine\Rendering\GameObject.cpp" />
     <ClCompile Include="Engine\Rendering\TextureHandler.cpp" />
     <ClCompile Include="Engine\Rendering\LoadOBJModel.cpp" />
+    <ClCompile Include="Engine\Rendering\SceneGraph.cpp" />
+    <ClCompile Include="Engine\Rendering\ShaderHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\dxc\dxcapi.h">
@@ -101,6 +103,9 @@
     <ClInclude Include="Engine\Rendering\tiny_obj_loader.h" />
     <ClInclude Include="Engine\Rendering\LoadOBJModel.h" />
     <ClInclude Include="Engine\Math\BoundingBox.h" />
+    <ClInclude Include="Engine\Rendering\SceneGraph.h" />
+    <ClInclude Include="Engine\Rendering\ShaderHandler.h" />
+    <ClInclude Include="Engine\Utilities\OdeumStructurues.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

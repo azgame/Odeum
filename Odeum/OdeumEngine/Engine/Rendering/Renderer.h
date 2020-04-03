@@ -7,6 +7,7 @@
 #include "../Core/Camera.h"
 #include "../Utilities/RaytracingHLSLCompat.h"
 #include "../Utilities/DXStructures.h"
+#include "ShaderHandler.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -46,7 +47,7 @@ private:
 
 	ID3D12GraphicsCommandList4*					m_commandList;
 
-	std::vector<GameObject*>* m_renderObjects;
+	std::vector<GameObject*>*					m_renderObjects;
 
 	// General functions
 	bool InitializeDeviceResources(int, int, HWND, bool, bool, bool);
@@ -63,8 +64,7 @@ private:
 	ModelViewProjectionConstantBuffer			m_constantBufferData;
 	UINT8*										m_mappedConstantBuffer;
 
-	ID3D12RootSignature*						m_rootSignature;
-	ID3D12PipelineState*						m_pipelineState;
+	DxShaderProgram*							m_shaderProgram;
 
 	// Rasterization related functions
 	bool InitializeRaster(int, int, HWND);

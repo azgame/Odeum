@@ -102,7 +102,7 @@ float4 CalculateDiffuseLighting(float3 hitPosition, float3 normal)
 {
 	float3 pixelToLight = normalize(g_sceneCB.lightPos.xyz - hitPosition);
 
-	// Diffuse contribution.
+	// Diffuse contribution
 	float fNDotL = max(0.0f, dot(pixelToLight, normal));
 
 	return g_cubeCB.albedo * g_sceneCB.lightDiffuse * fNDotL;

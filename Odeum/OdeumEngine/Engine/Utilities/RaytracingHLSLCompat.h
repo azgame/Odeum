@@ -35,16 +35,4 @@ struct ModelViewProjectionConstantBuffer
 	DirectX::XMFLOAT4X4 projection;
 };
 
-struct VertexPositionColor
-{
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 color;
-};
-
-struct VertexNormal
-{
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 normal;
-};
-
 #endif // RAYTRACINGHLSLCOMPAT_H

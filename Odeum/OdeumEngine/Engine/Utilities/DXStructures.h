@@ -45,13 +45,6 @@ struct CubeConstantBuffer
 	DirectX::XMFLOAT4 albedo;
 };
 
-struct ViewCB
-{
-	DirectX::XMMATRIX view = DirectX::XMMatrixIdentity();
-	DirectX::XMFLOAT4 viewOriginAndTanHalfFovY = DirectX::XMFLOAT4(0, 0.f, 0.f, 0.f);
-	DirectX::XMFLOAT2 resolution = DirectX::XMFLOAT2(1280, 720);
-};
-
 struct D3D12ShaderCompilerInfo
 {
 	dxc::DxcDllSupport		DxcDllHelper;
@@ -125,7 +118,6 @@ struct RtProgram
 };
 
 
-
 struct HitProgram
 {
 	RtProgram ahs;
@@ -155,10 +147,6 @@ struct HitProgram
 
 struct DXRGlobal
 {
-	AccelerationStructureBuffer						TLAS;
-	AccelerationStructureBuffer						BLAS;
-	uint64_t										tlasSize;
-
 	ID3D12Resource*									shaderTable = nullptr;
 	uint32_t										shaderTableRecordSize = 0;
 

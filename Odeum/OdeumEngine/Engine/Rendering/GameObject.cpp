@@ -21,6 +21,10 @@ bool GameObject::Initialize(ID3D12Device *device_, ID3D12GraphicsCommandList *co
 	return true;
 }
 
+void GameObject::Update(float deltaTime)
+{
+}
+
 void GameObject::Render(ID3D12GraphicsCommandList * commandList_)
 {
 	if (m_model) {
