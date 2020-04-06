@@ -2,6 +2,7 @@
 #include "Debug.h"
 #include "../Rendering/ShaderHandler.h"
 #include "../Rendering/SceneGraph.h"
+#include "../Math/CollisionHandler.h"
 
 std::unique_ptr<OdeumEngine> OdeumEngine::engineInstance = nullptr;
 
@@ -66,7 +67,7 @@ bool OdeumEngine::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 
 	// Initialize renderer
 	m_renderer = new Renderer();
-	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, m_gameInterface->GetRenderObjects())) return false;
+	if (!m_renderer->Initialize(screenHeight, screenWidth, hwnd, SceneGraph::GetInstance()->GetRenderModels())) return false;
 
 	// Initialize window size dependent resources CreateWindowSizeDependentResources(screenHeight, screenWidth, camera);
 	m_renderer->CreateWindowSizeDependentResources(screenHeight, screenWidth, m_mainCamera);
@@ -78,6 +79,13 @@ bool OdeumEngine::Run()
 {
 	timer.UpdateFrameTicks();
 	m_mainCamera->UpdateCamera();
+
+	Input::GetInstance()->m_mouse->SetMode(DirectX::Mouse::MODE_ABSOLUTE);
+
+	if (Input::GetInstance()->mouse.leftButton)
+		CollisionHandler::GetInstance()->MouseUpdate(Input::GetInstance()->mouse);
+
+	Input::GetInstance()->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
 	
 	m_gameInterface->Update(timer.GetDeltaTime());
 

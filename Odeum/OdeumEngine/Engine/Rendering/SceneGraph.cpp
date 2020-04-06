@@ -1,13 +1,13 @@
 #include "SceneGraph.h"
+#include "../Math/CollisionHandler.h"
 
 std::unique_ptr<SceneGraph> SceneGraph::sceneGraphInstance = nullptr;
 std::map<DxShaderProgram*, std::vector<Model*>> SceneGraph::sceneModels = std::map<DxShaderProgram*, std::vector<Model*>>();
 std::map<std::string, GameObject*> SceneGraph::sceneGameObjects = std::map<std::string, GameObject*>();
 
-
 SceneGraph::~SceneGraph()
 {
-	Uninitialize();
+	//Uninitialize();
 }
 
 SceneGraph::SceneGraph() 
@@ -81,6 +81,7 @@ void SceneGraph::AddGameObject(GameObject* go_, std::string tag_)
 		go_->tag = newTag;
 		sceneGameObjects[newTag] = go_;
 	}
+	CollisionHandler::GetInstance()->AddObject(go_);
 }
 
 GameObject* SceneGraph::GetGameObject(std::string tag_)
@@ -102,7 +103,7 @@ void SceneGraph::Render(Camera* camera_)
 {
 	/*for (auto entry : sceneModels) 
 	{
-		glUseProgram(entry.first);
+		
 		for (auto m : entry.second)
 			m->Render(camera_);
 	}*/

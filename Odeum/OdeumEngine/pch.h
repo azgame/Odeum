@@ -15,6 +15,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "GamePad.h"
+#include "SimpleMath.h"
 
 #include <stdio.h>
 #include <vector>

@@ -10,7 +10,7 @@
 #include "ShaderHandler.h"
 
 const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
+const bool VSYNC_ENABLED = false;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const bool dxrEnabled = false;
@@ -22,21 +22,20 @@ public:
 	Renderer(const Renderer&);
 	~Renderer();
 
-	bool Initialize(int, int, HWND, std::vector<GameObject*>*);
+	bool Initialize(int, int, HWND, std::vector<GameObject*>);
 	void CreateWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	void Uninitialize();
 	bool UpdateConstantResources();
 	bool Render();
 
-	ID3D12Device*								GetD3DDevice() { return m_device; }
-	ID3D12GraphicsCommandList*					GetCommandList() { return m_commandList; }
+	ID3D12Device* GetD3DDevice()				{ return m_device; }
+	DeviceResources* GetDeviceResources()		{ return m_deviceResources; }
 
 private:
 	// General resources
 	DeviceResources*							m_deviceResources;
 	ID3D12Device5*								m_device;
 
-	D3D12_RECT									m_scissorRect;
 	unsigned int								m_bufferIndex;
 	Camera*										m_camera;
 	int											m_screenHeight, m_screenWidth;
@@ -71,6 +70,9 @@ private:
 	void CreateRasterWindowSizeDependentResources(int screenHeight, int screenWidth, Camera* camera);
 	bool RenderRaster();
 
+	// Culling
+	bool aabbOutsideFrustum(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 maxVert, std::vector<DirectX::XMFLOAT4> planes);
+	bool aabbBehindPlane(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 maxVert, DirectX::XMFLOAT4 plane);
 
 	// DXR related variables
 

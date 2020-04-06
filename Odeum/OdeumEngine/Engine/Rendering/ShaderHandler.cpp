@@ -28,7 +28,7 @@ void ShaderHandler::Uninitialize()
 	}*/ // Need to fix this before using it
 }
 
-void ShaderHandler::CreateRootSignature(ID3D12Device* device_, ID3D12RootSignature*& dstRootSig_, std::string shaderArgs_)
+void ShaderHandler::CreateRootSignature(DeviceResources* device_, ID3D12RootSignature*& dstRootSig_, std::string shaderArgs_)
 {
 	// This is hardcoded for now, as building these resources dynamically is too difficult in such a short time span
 
@@ -48,10 +48,6 @@ void ShaderHandler::CreateRootSignature(ID3D12Device* device_, ID3D12RootSignatu
 	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
 	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
 	descriptorTable.pDescriptorRanges = descriptorTableRanges;
-
-	D3D12_ROOT_DESCRIPTOR rootSRVDescriptor;
-	rootSRVDescriptor.RegisterSpace = 0;
-	rootSRVDescriptor.ShaderRegister = 0;
 
 	D3D12_ROOT_PARAMETER rootParameters[2];
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -96,14 +92,14 @@ void ShaderHandler::CreateRootSignature(ID3D12Device* device_, ID3D12RootSignatu
 
 	D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
 
-	if (FAILED(device_->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&dstRootSig_))))
+	if (FAILED(device_->GetD3Device()->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&dstRootSig_))))
 		Debug::Error("Could not create root signature", __FILENAME__, __LINE__);
 
 	if (signature) signature->Release();
 	if (error) error->Release();
 }
 
-void ShaderHandler::CreatePipelineStateObject(ID3D12Device* device_, ID3D12PipelineState*& dstPipeline_, ID3DBlob* vertexShader_, ID3DBlob* pixelShader_, ID3D12RootSignature* rootSig_)
+void ShaderHandler::CreatePipelineStateObject(DeviceResources* device_, ID3D12PipelineState*& dstPipeline_, ID3DBlob* vertexShader_, ID3DBlob* pixelShader_, ID3D12RootSignature* rootSig_)
 {
 	// This is hardcoded for now, as building these resources dynamically is too difficult in such a short time span
 
@@ -130,11 +126,23 @@ void ShaderHandler::CreatePipelineStateObject(ID3D12Device* device_, ID3D12Pipel
 	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	psoDesc.SampleDesc.Count = 1;
 
-	if (FAILED(device_->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&dstPipeline_))))
+	if (FAILED(device_->GetD3Device()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&dstPipeline_))))
 		Debug::Error("Could not create pipeline state", __FILENAME__, __LINE__);
 }
 
-void ShaderHandler::CreateShaderProgram(ID3D12Device* device_, std::string name_, DxShaderInfo vsFile_, DxShaderInfo psFile_)
+void ShaderHandler::CreateCommandList(DeviceResources* device_, ID3D12GraphicsCommandList4*& commandList_, ID3D12PipelineState* pipelineState)
+{
+	ID3D12Device* device = device_->GetD3Device();
+
+	// Get the command list.
+	if (FAILED(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, device_->GetCommandAllocator(), pipelineState, IID_PPV_ARGS(&commandList_))))
+		Debug::Error("Could not create command list", __FILENAME__, __LINE__);
+
+	// Close command list after render objects are recorded
+	if (FAILED(commandList_->Close())) Debug::Warning("Command list not closed properly", __FILENAME__, __LINE__);
+}
+
+void ShaderHandler::CreateShaderProgram(DeviceResources* device_, std::string name_, DxShaderInfo vsFile_, DxShaderInfo psFile_)
 {
 	ID3D12RootSignature* rootSig;
 
@@ -152,9 +160,14 @@ void ShaderHandler::CreateShaderProgram(ID3D12Device* device_, std::string name_
 
 	CreatePipelineStateObject(device_, pipelineState, vertexShader, pixelShader, rootSig);
 
+	ID3D12GraphicsCommandList4* commandList;
+
+	CreateCommandList(device_, commandList, pipelineState);
+
 	m_shaderPipelines[name_] = new DxShaderProgram();
 	m_shaderPipelines[name_]->pipelineState = pipelineState;
 	m_shaderPipelines[name_]->rootSignature = rootSig;
+	m_shaderPipelines[name_]->commandList = commandList;
 
 	pipelineState = nullptr;
 	rootSig = nullptr;

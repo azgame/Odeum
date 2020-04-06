@@ -17,7 +17,6 @@ Camera::Camera()
 	SetProjMatrix(XM_PI / 4, 1.0f, 1.0f, 1000.0f);
 }
 
-
 Camera::~Camera()
 {
 }
@@ -119,14 +118,14 @@ void Camera::UpdateCamera()
 		m_pitch = max(-limit, m_pitch);
 		m_pitch = min(limit, m_pitch);
 
-		if (m_yaw > DirectX::XM_PI)
+		/*if (m_yaw > DirectX::XM_PI)
 		{
 			m_yaw -= DirectX::XM_PI;
 		}
 		else if (m_yaw < -DirectX::XM_PI)
 		{
 			m_yaw += DirectX::XM_PI;
-		}
+		}*/
 	}
 
 	float y = sinf(m_pitch);
@@ -145,4 +144,72 @@ void Camera::UpdateCamera()
 	look.x = move.x + x; look.y = move.y + y; look.z = move.z - z;
 	SetLookDirection(DirectX::XMFLOAT3(x, y, -z));
 	SetViewMatrix(move, look, up);
+}
+
+void Camera::GetViewFrustum(std::vector<DirectX::XMFLOAT4>& planes)
+{
+	DirectX::XMVECTOR look = DirectX::XMLoadFloat3(&m_lookAt);
+	DirectX::XMVECTOR up = DirectX::XMLoadFloat3(&m_up);
+	DirectX::XMVECTOR vright = DirectX::XMLoadFloat3(&right);
+	if (m_pitch != 0 || m_yaw != 0 || m_roll != 0) {
+		float pitch_rad = DirectX::XMConvertToRadians(m_pitch);
+		float yaw_rad = DirectX::XMConvertToRadians(m_yaw);
+		float roll_rad = DirectX::XMConvertToRadians(m_roll);
+
+		DirectX::XMMATRIX rot, rotp, roty, rotr;
+		rotp = DirectX::XMMatrixRotationAxis(vright, pitch_rad);
+		roty = DirectX::XMMatrixRotationAxis(up, yaw_rad);
+		rotr = DirectX::XMMatrixRotationAxis(look, roll_rad);
+		rot = rotp * roty * rotr;
+		look = DirectX::XMVector3Normalize(XMVector3Transform(look, rot));
+		vright = DirectX::XMVector3Normalize(XMVector3Transform(vright, rot));
+		up = DirectX::XMVector3Cross(vright, look);
+	}
+
+	DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&m_viewMatrix);
+	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&m_projectionMatrix);
+	DirectX::XMFLOAT4X4 M;
+	DirectX::XMStoreFloat4x4(&M, view * proj);
+
+	// left
+	planes[0].x = M(0, 3) + M(0, 0);
+	planes[0].y = M(1, 3) + M(1, 0);
+	planes[0].z = M(2, 3) + M(2, 0);
+	planes[0].w = M(3, 3) + M(3, 0);
+
+	// right
+	planes[1].x = M(0, 3) - M(0, 0);
+	planes[1].y = M(1, 3) - M(1, 0);
+	planes[1].z = M(2, 3) - M(2, 0);
+	planes[1].w = M(3, 3) - M(3, 0);
+
+	// bottom
+	planes[2].x = M(0, 3) + M(0, 1);
+	planes[2].y = M(1, 3) + M(1, 1);
+	planes[2].z = M(2, 3) + M(2, 1);
+	planes[2].w = M(3, 3) + M(3, 1);
+
+	// top
+	planes[3].x = M(0, 3) - M(0, 1);
+	planes[3].y = M(1, 3) - M(1, 1);
+	planes[3].z = M(2, 3) - M(2, 1);
+	planes[3].w = M(3, 3) - M(3, 1);
+
+	// near
+	planes[4].x = M(0, 2);
+	planes[4].y = M(1, 2);
+	planes[4].z = M(2, 2);
+	planes[4].w = M(3, 2);
+
+	// far
+	planes[5].x = M(0, 3) - M(0, 2);
+	planes[5].y = M(1, 3) - M(1, 2);
+	planes[5].z = M(2, 3) - M(2, 2);
+	planes[5].w = M(3, 3) - M(3, 2);
+
+	// normalize all planes
+	for (auto i = 0; i < 6; ++i) {
+		DirectX::XMVECTOR v = DirectX::XMPlaneNormalize(DirectX::XMLoadFloat4(&planes[i]));
+		DirectX::XMStoreFloat4(&planes[i], v);
+	}
 }

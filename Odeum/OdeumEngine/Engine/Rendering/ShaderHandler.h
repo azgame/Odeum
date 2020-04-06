@@ -3,9 +3,8 @@
 
 #include <sstream>
 #include <map>
-#include <vector>
-#include <memory>
 #include "../../pch.h"
+#include "../Utilities/DeviceResources.h"
 #include "../dxc/dxcapi.h"
 #include "../Utilities/DXRHelper.h"
 
@@ -41,10 +40,10 @@ struct DxShaderInfo
 
 struct DxShaderProgram
 {
-	ID3D12PipelineState*	pipelineState;
-	ID3D12RootSignature*	rootSignature;
-	ID3D12DescriptorHeap*	descHeap;
-	ID3D12CommandList*		commandList;
+	ID3D12PipelineState*			pipelineState;
+	ID3D12RootSignature*			rootSignature;
+	ID3D12DescriptorHeap*			descHeap;
+	ID3D12GraphicsCommandList4*		commandList;
 
 	void operator=(DxShaderProgram program_)
 	{
@@ -73,7 +72,7 @@ public:
 
 	static ShaderHandler* GetInstance();
 
-	void CreateShaderProgram(ID3D12Device* device_, std::string name_, DxShaderInfo vsFile_, DxShaderInfo psFile_);
+	void CreateShaderProgram(DeviceResources* device_, std::string name_, DxShaderInfo vsFile_, DxShaderInfo psFile_);
 	DxShaderProgram* GetShader(std::string shaderName_);
 
 private:
@@ -82,9 +81,9 @@ private:
 
 	void Uninitialize();
 
-	void CreateRootSignature(ID3D12Device* device_, ID3D12RootSignature*& dstRootSig_, std::string shaderArgs_);
-	void CreatePipelineStateObject(ID3D12Device* device_, ID3D12PipelineState*& dstPipeline_, ID3DBlob* vsFile_, ID3DBlob* psFile_, ID3D12RootSignature* rootSig_);
-	void CreateDescriptorHeap(ID3D12Device* device_, ID3D12DescriptorHeap* dstDescHeap_);
+	void CreateRootSignature(DeviceResources* device_, ID3D12RootSignature*& dstRootSig_, std::string shaderArgs_);
+	void CreatePipelineStateObject(DeviceResources* device_, ID3D12PipelineState*& dstPipeline_, ID3DBlob* vsFile_, ID3DBlob* psFile_, ID3D12RootSignature* rootSig_);
+	void CreateCommandList(DeviceResources* device_, ID3D12GraphicsCommandList4*& commandList_, ID3D12PipelineState* pipelineState);
 
 	static std::unique_ptr<ShaderHandler> shaderInstance;
 	friend std::default_delete<ShaderHandler>;

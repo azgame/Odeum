@@ -2,13 +2,24 @@
 
 
 
-GameObject::GameObject(Model* model_) : m_model(nullptr)
+GameObject::GameObject(Model* model_, DirectX::XMFLOAT3 pos_) : m_model(nullptr)
 {
 	m_model = model_;
-	m_model->CreateInstance(DirectX::XMFLOAT3(), 0.0f, DirectX::XMFLOAT3(0, 1, 0), DirectX::XMFLOAT3(1, 1, 1));
-	position = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-}
+	m_modelInstance = -1;
+	position = pos_;
+	angle = 0.0f;
+	rotation = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	if (m_model)
+	{
+		m_modelInstance = m_model->CreateInstance(position, angle, rotation, scale);
+		m_box = m_model->GetBoundingBox();
+		m_box.transform = m_model->GetTransform(m_modelInstance);
+	}
 
+	movX = 0.01f;
+	hit = false;
+}
 
 GameObject::~GameObject()
 {
@@ -23,6 +34,8 @@ bool GameObject::Initialize(ID3D12Device *device_, ID3D12GraphicsCommandList *co
 
 void GameObject::Update(float deltaTime)
 {
+	m_model->UpdateInstance(m_modelInstance, position, angle, rotation, scale);
+	m_box.transform = m_model->GetTransform(m_modelInstance);
 }
 
 void GameObject::Render(ID3D12GraphicsCommandList * commandList_)
@@ -30,4 +43,11 @@ void GameObject::Render(ID3D12GraphicsCommandList * commandList_)
 	if (m_model) {
 		m_model->Render(commandList_);
 	}
+}
+
+void GameObject::SetHit(bool hit_, DirectX::Mouse::State mouse_)
+{
+	hit = hit_;
+	if (hit)
+		movX = -movX;
 }

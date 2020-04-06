@@ -25,6 +25,7 @@ public:
 	void Uninitialize();
 
 	static OdeumEngine* GetInstance();
+	Camera* GetCamera() { return m_mainCamera; }
 
 	void SetGameInterface(GameInterface* gameInterface_);
 	int GetCurrentScene();

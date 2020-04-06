@@ -28,6 +28,16 @@ public:
 	DirectX::XMMATRIX View()			{ return XMLoadFloat4x4(&m_viewMatrix); }
 	DirectX::XMMATRIX Projection()		{ return XMLoadFloat4x4(&m_projectionMatrix); }
 	DirectX::XMMATRIX World()			{ return XMLoadFloat4x4(&m_inverseView); }
+	D3D12_VIEWPORT GetViewPort()		{ return m_viewPort; }
+	D3D12_RECT GetScissorRect()			{ return m_scissorRect; }
+	
+	void GetViewFrustum(std::vector<DirectX::XMFLOAT4>& planes);
+
+	void SetViewProperties(D3D12_VIEWPORT vP_, D3D12_RECT vR_)
+	{
+		m_viewPort = vP_;
+		m_scissorRect = vR_;
+	}
 
 	DirectX::XMFLOAT3					forward;
 	DirectX::XMFLOAT3					right;
@@ -42,12 +52,14 @@ private:
 	DirectX::XMFLOAT3					m_lookAt;
 	DirectX::XMFLOAT3					m_up;
 	
-
 	float								m_pitch, m_yaw, m_roll;
 	float								m_fieldOfView;
 	float								m_aspectRatio;
 	float								m_nearPlane;
 	float								m_farPlane;
+
+	D3D12_VIEWPORT						m_viewPort;
+	D3D12_RECT							m_scissorRect;
 };
 
 #endif // !_CAMERA_H_

@@ -1,13 +1,14 @@
 #include "Model.h"
 
 
-Model::Model(const std::string& objFilePath_, const std::string& mtlFilePath_) : m_subMeshes(std::vector<Mesh*>())
+Model::Model(const std::string& objFilePath_, const std::string& mtlFilePath_, DxShaderProgram* shaderProgram_) : m_subMeshes(std::vector<Mesh*>())
 {
 	m_subMeshes.reserve(10);
 	m_modelInstances.reserve(5);
 	obj = new LoadOBJModel();
 	obj->LoadModel(objFilePath_, mtlFilePath_);
 	this->LoadModel();
+	m_shaderProgram = shaderProgram_;
 }
 
 Model::~Model()
@@ -28,9 +29,6 @@ bool Model::Initialize(ID3D12Device *device_, ID3D12GraphicsCommandList *command
 
 void Model::Render(ID3D12GraphicsCommandList* commandList_)
 {
-
-
-
 	for (auto m : m_subMeshes)
 		m->Render(commandList_);
 }
@@ -78,6 +76,8 @@ void Model::LoadModel()
 {
 	for (int i = 0; i < obj->GetSubMeshes().size(); i++)
 		m_subMeshes.push_back(new Mesh(obj->GetSubMeshes()[i]));
+
+	m_box = obj->GetBoundingBox();
 
 	SAFE_DELETE(obj);
 }

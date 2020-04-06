@@ -24,9 +24,13 @@ Renderer::~Renderer()
 
 #pragma region Raster
 
-bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*>* renderObjects)
+bool Renderer::Initialize(int screenHeight, int screenWidth, HWND hwnd, std::vector<GameObject*> renderObjects)
 {
-	m_renderObjects = renderObjects;
+	m_renderObjects = new std::vector<GameObject*>();
+
+	for (auto o : renderObjects)
+		m_renderObjects->push_back(o);
+
 	if (dxrEnabled) {
 		if (!InitializeRaytrace(screenHeight, screenWidth, hwnd)) return false;
 	}
@@ -57,23 +61,23 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	DxShaderInfo vertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
 	DxShaderInfo pixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 
-	ShaderHandler::GetInstance()->CreateShaderProgram(m_device, "BasicShader", vertexShader, pixelShader);
+	ShaderHandler::GetInstance()->CreateShaderProgram(m_deviceResources, "BasicShader", vertexShader, pixelShader);
+
 	m_shaderProgram = ShaderHandler::GetInstance()->GetShader("BasicShader");
 
-	// Get the command list.
-	result = m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState, IID_PPV_ARGS(&m_commandList));
-	if (FAILED(result)) return false;
+	if (FAILED(m_shaderProgram->commandList->Reset(m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState)))
+		Debug::Warning("Failed to reset command list", __FILENAME__, __LINE__);
 
 	for (auto object : *m_renderObjects) {
-		object->Initialize(m_device, m_commandList);
+		object->Initialize(m_device, m_shaderProgram->commandList);
 	}
 
 	// Close command list after render objects are recorded
-	result = m_commandList->Close();
+	result = m_shaderProgram->commandList->Close();
 	if (FAILED(result)) return false;
 
 	// Load the command list array (only one command list for now)
-	ID3D12CommandList* ppCommandLists[] = { m_commandList };
+	ID3D12CommandList* ppCommandLists[] = { m_shaderProgram->commandList };
 
 	// Execute the list of commands
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
@@ -116,18 +120,19 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 {
 	m_camera = camera;
 
-	float aspectRatio = screenWidth / screenHeight;
-	float fovAngleY = 59.0f * DirectX::XM_PI / 180.0f;
+	float aspectRatio = (float)screenWidth / (float)screenHeight;
+	float fovAngleY = 45.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
-	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+	D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
 
-	// Camera->SetProjMatrix
+	camera->SetViewProperties(viewport, scissorRect);
+
 	m_camera->SetProjMatrix(
 		fovAngleY,
 		aspectRatio,
-		0.01f,
-		100.0f
+		SCREEN_NEAR,
+		SCREEN_DEPTH
 	);
 
 	XMStoreFloat4x4(
@@ -135,10 +140,8 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 		DirectX::XMMatrixTranspose(m_camera->Projection())
 	);
 
-	// Camera->SetViewMatrix
-	// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis. ------ just starting location, can change
-	static const DirectX::XMFLOAT3 eye = { 0.0f, 0.7f, 1.5f };
-	static const DirectX::XMFLOAT3 at = { 0.0f, -0.1f, 0.0f };
+	static const DirectX::XMFLOAT3 eye = { 0.0f, 0.7f, 5.0f };
+	static const DirectX::XMFLOAT3 at = { 0.0f, 0.0f, 0.0f };
 	static const DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
 	
 	m_camera->SetViewMatrix(eye, at, up);
@@ -152,30 +155,29 @@ bool Renderer::RenderRaster()
 	D3D12_RESOURCE_BARRIER				barrier;
 	unsigned int						renderTargetViewDescriptorSize;
 	float								color[4];
-	
+
 	XMStoreFloat4x4(&m_constantBufferData.view, DirectX::XMMatrixTranspose(m_camera->View()));
 
 	m_bufferIndex = m_deviceResources->GetSwapChain()->GetCurrentBackBufferIndex();
-
+	
 	// Reset the memory associated command allocator
 	result = m_deviceResources->GetCommandAllocator()->Reset();
 	if (FAILED(result)) return false;
 
 	// Reset the command list
-	result = m_commandList->Reset(m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState);
+	result = m_shaderProgram->commandList->Reset(m_deviceResources->GetCommandAllocator(), m_shaderProgram->pipelineState);
 	if (FAILED(result)) return false;
 
-	m_commandList->SetGraphicsRootSignature(m_shaderProgram->rootSignature);
+	m_shaderProgram->commandList->SetGraphicsRootSignature(m_shaderProgram->rootSignature);
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
-	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	m_shaderProgram->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
-	m_commandList->RSSetViewports(1, &viewport);
-	m_commandList->RSSetScissorRects(1, &m_scissorRect);
+	m_shaderProgram->commandList->RSSetViewports(1, &m_camera->GetViewPort());
+	m_shaderProgram->commandList->RSSetScissorRects(1, &m_camera->GetScissorRect());
 	
 	// Record commands in the command list now
 	// Start by setting the resource barrier
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	m_shaderProgram->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 	// Get the render target view handle for the current back buffer
 	renderTargetViewDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -186,39 +188,54 @@ bool Renderer::RenderRaster()
 	color[1] = 0.2;
 	color[2] = 0.5;
 	color[3] = 1.0;
-	m_commandList->ClearRenderTargetView(rtvHandle, color, 0, NULL);
+	m_shaderProgram->commandList->ClearRenderTargetView(rtvHandle, color, 0, NULL);
 	D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = m_deviceResources->GetDepthStencilView();
-	m_commandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	m_shaderProgram->commandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	// Set the back buffer as the render target
-	m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
+	m_shaderProgram->commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE handle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize);
+	CD3DX12_GPU_DESCRIPTOR_HANDLE handle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0);
+
+	std::vector<DirectX::XMFLOAT4> planes(6);
+	m_camera->GetViewFrustum(planes);
 	
+	int outsideFrustum = 0;
+
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
-	int counter = 0;
-	for (auto model : *m_renderObjects)
+	for (int i = 0; i < m_renderObjects->size(); i++)
 	{
-		handle.InitOffsetted(m_descHeap->GetGPUDescriptorHandleForHeapStart(), m_descHeapSize, counter);
-		XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(model->GetModel()->GetTransform(0)));
-		UINT8* destination = m_mappedConstantBuffer + (counter * c_alignedConstantBufferSize);
-		memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
-		m_commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (counter * c_alignedConstantBufferSize));
-		m_commandList->SetGraphicsRootDescriptorTable(1, handle);
-		model->Render(m_commandList);
-		counter++;
+		if (!aabbOutsideFrustum(m_renderObjects->at(i)->position, m_renderObjects->at(i)->GetBoundingBox().maxVert, planes))
+		{
+			XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
+			UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
+			memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+			m_shaderProgram->commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
+			m_shaderProgram->commandList->SetGraphicsRootDescriptorTable(1, handle);
+			m_renderObjects->at(i)->Render(m_shaderProgram->commandList);
+			handle.Offset(m_descHeapSize); // if one object is frustum culled then the apple at the center will become red
+		}	
+		else
+			outsideFrustum++;
+
+		// handle.Offset(m_descHeapSize); // this is what we'd normally do
 	}
 
+	if (outsideFrustum == 1)
+		Debug::Info("One object outside frustum", __FILENAME__, __LINE__);
+	else if (outsideFrustum == 2)
+		Debug::Info("Two objects outside frustum", __FILENAME__, __LINE__);
+
 	// Indicate that the back buffer will now be used to present
-	m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	m_shaderProgram->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	// Close the list of commands
-	result = m_commandList->Close();
+	result = m_shaderProgram->commandList->Close();
 	if (FAILED(result)) return false;
 
 	// Load the command list array (only one command list for now)
-	std::vector<ID3D12CommandList*> ppCommandLists = { m_commandList };
+	std::vector<ID3D12CommandList*> ppCommandLists = { m_shaderProgram->commandList };
 
 	// Execute the list of commands
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(ppCommandLists.size(), ppCommandLists.data());
@@ -226,6 +243,29 @@ bool Renderer::RenderRaster()
 	if (!m_deviceResources->Render()) return false;
 
 	return true;
+}
+
+bool Renderer::aabbOutsideFrustum(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 maxVert, std::vector<DirectX::XMFLOAT4> planes)
+{
+	for (int i = 0; i < 6; ++i)
+		// if the box is completely behind any of the frustum planes, then it is outside the frustum
+		if (aabbBehindPlane(position, maxVert, planes[i]))
+			return true;
+
+	return false;
+}
+
+bool Renderer::aabbBehindPlane(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 maxVert, DirectX::XMFLOAT4 plane)
+{
+	DirectX::SimpleMath::Vector3 n(abs(plane.x), abs(plane.y), abs(plane.z));
+
+	float e = n.Dot(maxVert);
+
+	DirectX::SimpleMath::Vector4 pos4(position.x, position.y, position.z, 1.0f);
+
+	float s = pos4.Dot(plane);
+
+	return (s + e) < 0.0f;
 }
 
 #pragma endregion
@@ -312,7 +352,6 @@ bool Renderer::CreateCBResources()
 
 void Renderer::Uninitialize()
 {
-	SAFE_DELETE(m_renderObjects);
 	SAFE_DELETE(m_camera);
 	SAFE_RELEASE(m_cbvHeap);
 	SAFE_RELEASE(m_constantBuffer);
@@ -423,7 +462,9 @@ void Renderer::CreateRaytracingWindowSizeDependentResources(int screenHeight, in
 	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
-	m_scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+	D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
+
+	m_camera->SetViewProperties(viewport, scissorRect);
 
 	// Camera->SetProjMatrix
 	m_camera->SetProjMatrix(

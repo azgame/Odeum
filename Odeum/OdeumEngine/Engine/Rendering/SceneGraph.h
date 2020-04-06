@@ -28,13 +28,12 @@ public:
 	void Update(const float deltaTime_);
 	void Render(Camera* camera_);
 
-	inline std::vector<Model*> GetRenderModels() {
-		std::vector<Model*> models;
-		for (auto object : sceneModels)
-			for (auto model : object.second)
-				models.push_back(model);
+	inline std::vector<GameObject*> GetRenderModels() {
+		std::vector<GameObject*> objects;
+		for (auto object : sceneGameObjects)
+			objects.push_back(object.second);
 
-		return models; 
+		return objects;
 	}
 
 private:
@@ -49,4 +48,4 @@ private:
 };
 
 
-#endif // !SCENEGRAPH_H
+#endif

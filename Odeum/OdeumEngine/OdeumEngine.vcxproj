@@ -152,11 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Engine\Math\CollisionHandler.h" />
+    <ClInclude Include="Engine\Math\CollisionDetection.h" />
     <ClInclude Include="Engine\Core\Debug.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\GameInterface.h" />
     <ClInclude Include="Engine\Core\Scene.h" />
     <ClInclude Include="Engine\Math\BoundingBox.h" />
+    <ClInclude Include="Engine\Math\MathHelper.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Rendering\TextureHandler.h" />
     <ClInclude Include="Engine\Rendering\tiny_obj_loader.h" />
@@ -183,13 +186,16 @@
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\SceneGraph.h" />
     <ClInclude Include="Engine\Rendering\ShaderHandler.h" />
+    <ClInclude Include="Engine\Math\Ray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
+    <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Rendering\TextureHandler.cpp" />
     <ClCompile Include="Engine\Utilities\DeviceResources.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />

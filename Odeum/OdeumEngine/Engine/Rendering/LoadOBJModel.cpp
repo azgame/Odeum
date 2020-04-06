@@ -28,6 +28,7 @@ void LoadOBJModel::LoadModel(const std::string& objFilePath_, const std::string&
 void LoadOBJModel::LoadModel(const std::string& filePath_)
 {
 	totalVerts = 0;
+	maxX = 0.0f, maxY = 0.0f, maxZ = 0.0f, minX = 0.0f, minY = 0.0f, minZ = 0.0f;
 
 	std::ifstream in(filePath_.c_str(), std::ios::in);
 	if (!in) {
@@ -54,10 +55,10 @@ void LoadOBJModel::LoadModel(const std::string& filePath_)
 			if (x < minX) {
 				minX = x;
 			}
-			if (y < maxY) {
+			if (y < minY) {
 				minY = y;
 			}
-			if (z < maxZ) {
+			if (z < minZ) {
 				minZ = z;
 			}
 

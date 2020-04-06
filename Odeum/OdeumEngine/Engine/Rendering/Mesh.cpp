@@ -16,8 +16,7 @@ Mesh::~Mesh()
 
 bool Mesh::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
-	if (!InitializeBuffers(device, commandList)) return false;
-	return true;
+	return InitializeBuffers(device, commandList);
 }
 
 void Mesh::Shutdown() { ShutdownBuffers(); }

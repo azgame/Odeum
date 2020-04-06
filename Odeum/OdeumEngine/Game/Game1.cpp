@@ -37,11 +37,6 @@ void Game1::Render()
 {
 }
 
-std::vector<GameObject*>* Game1::GetRenderObjects()
-{
-	return m_currentScene->GetRenderObjects();
-}
-
 void Game1::BuildScene()
 {
 	// cleanup previous scene
