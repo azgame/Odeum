@@ -41,7 +41,6 @@ private:
 
 	Renderer*									m_renderer;
 	Camera*										m_mainCamera;
-	float										m_pitch, m_yaw;
 
 	Timer										timer;
 	unsigned int								fps;

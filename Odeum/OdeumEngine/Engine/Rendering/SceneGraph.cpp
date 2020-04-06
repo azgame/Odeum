@@ -98,12 +98,11 @@ void SceneGraph::Update(const float deltaTime_)
 		go.second->Update(deltaTime_);
 }
 
-// Can't fully implement this yet, needs more work moving rendering into models/meshes
+// TODO - Aidan: Can't fully implement this yet, needs more work moving rendering into models/meshes
 void SceneGraph::Render(Camera* camera_)
 {
 	/*for (auto entry : sceneModels) 
 	{
-		
 		for (auto m : entry.second)
 			m->Render(camera_);
 	}*/

@@ -10,14 +10,9 @@ OdeumEngine::OdeumEngine()
 {
 	m_mainCamera = nullptr;
 	m_renderer = nullptr;
-
 	m_gameInterface = nullptr;
 
-	m_pitch = m_yaw = 0;
-
 	m_currentSceneNum = 0;
-
-
 }
 
 

@@ -121,7 +121,7 @@ void Renderer::CreateRasterWindowSizeDependentResources(int screenHeight, int sc
 	m_camera = camera;
 
 	float aspectRatio = (float)screenWidth / (float)screenHeight;
-	float fovAngleY = 45.0f * DirectX::XM_PI / 180.0f;
+	float fovAngleY = 59.0f * DirectX::XM_PI / 180.0f;
 
 	D3D12_VIEWPORT viewport = m_deviceResources->GetViewPort();
 	D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(viewport.Width), static_cast<LONG>(viewport.Height) };
@@ -245,6 +245,7 @@ bool Renderer::RenderRaster()
 	return true;
 }
 
+// TODO - Aidan: Need to find a better home for this
 bool Renderer::aabbOutsideFrustum(DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 maxVert, std::vector<DirectX::XMFLOAT4> planes)
 {
 	for (int i = 0; i < 6; ++i)
@@ -352,6 +353,8 @@ bool Renderer::CreateCBResources()
 
 void Renderer::Uninitialize()
 {
+	m_renderObjects->clear();
+	if (m_renderObjects) delete m_renderObjects;
 	SAFE_DELETE(m_camera);
 	SAFE_RELEASE(m_cbvHeap);
 	SAFE_RELEASE(m_constantBuffer);
