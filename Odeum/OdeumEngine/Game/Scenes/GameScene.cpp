@@ -33,7 +33,7 @@ bool GameScene::Initialize()
 
 void GameScene::Update(const float deltaTime_)
 {
-	SceneGraph::GetInstance()->GetGameObject("GameObject1")->position.x += SceneGraph::GetInstance()->GetGameObject("GameObject1")->movX;
+	SceneGraph::GetInstance()->GetGameObject("GameObject1")->position.x += SceneGraph::GetInstance()->GetGameObject("GameObject1")->movX; // Testing mouse picking
 
 	SceneGraph::GetInstance()->Update(deltaTime_);
 }
