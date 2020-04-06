@@ -48,6 +48,7 @@
     <ClCompile Include="Engine\Rendering\ShaderHandler.cpp" />
     <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
+    <ClCompile Include="Engine\Core\OctSpatialPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\dxc\dxcapi.h">
@@ -112,6 +113,7 @@
     <ClInclude Include="Engine\Math\CollisionDetection.h" />
     <ClInclude Include="Engine\Math\MathHelper.h" />
     <ClInclude Include="Engine\Math\CollisionHandler.h" />
+    <ClInclude Include="Engine\Core\OctSpatialPartition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

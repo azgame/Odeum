@@ -70,7 +70,6 @@ private:
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D12GraphicsCommandList*);
 	
-	// Todo Aidan: Move rendering out of mesh -> to mesh renderer
 	ID3D12Resource*							m_vertexBuffer;
 	ID3D12Resource*							m_vertexBufferUpload;
 	D3D12_VERTEX_BUFFER_VIEW				m_vertexBufferView;

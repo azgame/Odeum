@@ -169,8 +169,8 @@ bool Renderer::RenderRaster()
 	if (FAILED(result)) return false;
 
 	m_shaderProgram->commandList->SetGraphicsRootSignature(m_shaderProgram->rootSignature);
-	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
-	m_shaderProgram->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	std::vector<ID3D12DescriptorHeap*> ppHeaps = { m_descHeap };
+	m_shaderProgram->commandList->SetDescriptorHeaps(ppHeaps.size(), ppHeaps.data());
 
 	m_shaderProgram->commandList->RSSetViewports(1, &m_camera->GetViewPort());
 	m_shaderProgram->commandList->RSSetScissorRects(1, &m_camera->GetScissorRect());
@@ -223,9 +223,9 @@ bool Renderer::RenderRaster()
 	}
 
 	if (outsideFrustum == 1)
-		Debug::Info("One object outside frustum", __FILENAME__, __LINE__);
+		Debug::Info("One object outside frustum", __FILENAME__, __LINE__); // break here to see moment of cull
 	else if (outsideFrustum == 2)
-		Debug::Info("Two objects outside frustum", __FILENAME__, __LINE__);
+		Debug::Info("Two objects outside frustum", __FILENAME__, __LINE__); // break here to see moment of cull
 
 	// Indicate that the back buffer will now be used to present
 	m_shaderProgram->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_deviceResources->GetBackBuffer(m_bufferIndex), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -241,6 +241,9 @@ bool Renderer::RenderRaster()
 	m_deviceResources->GetCommandQ()->ExecuteCommandLists(ppCommandLists.size(), ppCommandLists.data());
 
 	if (!m_deviceResources->Render()) return false;
+
+	ppCommandLists.clear();
+	ppHeaps.clear();
 
 	return true;
 }
@@ -1219,7 +1222,7 @@ bool Renderer::DoRaytracing()
 {
 	// Bind the heaps, acceleration structure and dispatch rays
 	//CreateDescHeapViews();
-	// todo: rewrite desc heaps for memory management
+	// TODO - Aidan: rewrite desc heaps for memory management
 	ID3D12DescriptorHeap* ppHeaps[] = { m_descHeap };
 	m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 

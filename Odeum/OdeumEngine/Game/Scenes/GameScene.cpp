@@ -5,7 +5,7 @@
 
 GameScene::GameScene() : Scene()
 {
-	CollisionHandler::GetInstance()->Initialize();
+	CollisionHandler::GetInstance()->Initialize(100.0f);
 
 	// For now hardcode number of objects, this will be passed from the game later
 	Model* model = new Model("Engine/Resources/Models/Apple.obj", "Engine/Resources/Materials/Apple.mtl", ShaderHandler::GetInstance()->GetShader("BasicShader"));

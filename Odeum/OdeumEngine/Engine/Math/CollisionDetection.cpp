@@ -13,11 +13,11 @@ CollisionDetection::~CollisionDetection()
 Ray CollisionDetection::ScreenPosToWorldRay(DirectX::XMFLOAT2 mouseCoords_, DirectX::XMFLOAT2 screenSize_, Camera* camera_)
 {
 	DirectX::XMFLOAT4 raystart_NDC((mouseCoords_.x / screenSize_.x - 0.5f) * 2.0f,
-		((screenSize_.y - mouseCoords_.y) / screenSize_.y - 0.5f) * 2.0f,
+		((screenSize_.y - mouseCoords_.y) / screenSize_.y - 0.5f) * 2.0f, // DirectX screen grows downward, need to flip y values
 		-1.0f, 1.0f);
 
 	DirectX::XMFLOAT4 rayend_NDC((mouseCoords_.x / screenSize_.x - 0.5f) * 2.0f,
-		((screenSize_.y - mouseCoords_.y) / screenSize_.y - 0.5f) * 2.0f,
+		((screenSize_.y - mouseCoords_.y) / screenSize_.y - 0.5f) * 2.0f, // DirectX screen grows downward, need to flip y values
 		0.0f, 1.0f);
 
 	DirectX::XMMATRIX inverse = DirectX::XMMatrixInverse(nullptr, camera_->View() * camera_->Projection());

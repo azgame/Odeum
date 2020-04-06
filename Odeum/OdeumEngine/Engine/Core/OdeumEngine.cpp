@@ -80,7 +80,7 @@ bool OdeumEngine::Run()
 	DirectX::Mouse::State state = Input::GetInstance()->mouse;
 
 	if (Input::GetInstance()->mouse.leftButton)
-		CollisionHandler::GetInstance()->MouseUpdate(Input::GetInstance()->mouse); // TODO - Aidan: Break here to check state variable for mouse input. sometimes buggy
+		CollisionHandler::GetInstance()->MouseUpdate(Input::GetInstance()->mouse);
 
 	Input::GetInstance()->m_mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
 	
