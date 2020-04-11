@@ -53,13 +53,15 @@ public:
 
 	void AddObject(GameObject* go_);
 	GameObject* GetCollision(Ray ray_);
+	void UpdatePartition();
 private:
 
 	OctNode* root;
 	std::vector<OctNode*> m_rayIntersectionList;
 	void AddObjectToCell(OctNode* cell_, GameObject* go_);
 	void PrepareCollisionQuery(OctNode* cell_, Ray ray_);
-
+	void UpdatePartitionCell(OctNode* cell_);
+	void RemoveObjectFromCell(OctNode* cell_, GameObject* go_);
 };
 
 #endif

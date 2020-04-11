@@ -33,7 +33,10 @@ bool GameScene::Initialize()
 
 void GameScene::Update(const float deltaTime_)
 {
-	SceneGraph::GetInstance()->GetGameObject("GameObject1")->position.x += SceneGraph::GetInstance()->GetGameObject("GameObject1")->movX; // Testing mouse picking
+
+	DirectX::XMFLOAT3 pos = SceneGraph::GetInstance()->GetGameObject("GameObject1")->GetPosition();
+	float movX = SceneGraph::GetInstance()->GetGameObject("GameObject1")->movX;
+	SceneGraph::GetInstance()->GetGameObject("GameObject1")->SetPosition(DirectX::XMFLOAT3(pos.x += movX, pos.y, pos.z)); // Testing mouse picking
 
 	SceneGraph::GetInstance()->Update(deltaTime_);
 }

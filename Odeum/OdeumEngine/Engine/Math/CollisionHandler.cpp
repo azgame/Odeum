@@ -60,6 +60,11 @@ void CollisionHandler::MouseUpdate(DirectX::Mouse::State& mouse)
 		previousCollisions.push_back(hitResult);
 }
 
+void CollisionHandler::Update()
+{
+	m_scenePartition->UpdatePartition();
+}
+
 void CollisionHandler::Uninitialize()
 {
 	SAFE_DELETE(m_scenePartition);

@@ -4,6 +4,8 @@
 #include "Model.h"
 #include <string>
 
+class OctNode;
+
 class GameObject
 {
 public:
@@ -17,19 +19,30 @@ public:
 	Model* GetModel() { return m_model; }
 	BoundingBox GetBoundingBox() { return m_box; }
 	void SetHit(bool hit_, DirectX::Mouse::State mouse_);
-
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 rotation;
-	DirectX::XMFLOAT3 scale;
-	float angle;
+	
 	float movX;
 	bool hit;
 	
 	std::string tag;
+
+	DirectX::XMFLOAT3 GetPosition() { return position; }
+	float GetAngle() { return angle; }
+	DirectX::XMFLOAT3 GetRotation() { return rotation; }
+	DirectX::XMFLOAT3 GetScale() { return scale; }
+
+	void SetPosition(DirectX::XMFLOAT3 position_);
+	void SetAngle(float angle_);
+	void SetRotation(DirectX::XMFLOAT3 rotation_);
+	void SetScale(DirectX::XMFLOAT3 scale_);
+
 private:
-	Model* m_model;
-	BoundingBox m_box;
-	int m_modelInstance;
+	DirectX::XMFLOAT3		position;
+	DirectX::XMFLOAT3		rotation;
+	DirectX::XMFLOAT3		scale;
+	float					angle;
+	Model*					m_model;
+	BoundingBox				m_box;
+	int						m_modelInstance;
 };
 
 #endif

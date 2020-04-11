@@ -1,4 +1,5 @@
 #include "OctSpatialPartition.h"
+#include <algorithm>
 
 OctNode::OctNode(DirectX::SimpleMath::Vector3 pos_, float sz_, OctNode* parent_)
 	: octBounds(nullptr), parent(nullptr), children(), m_objectList(std::vector<GameObject*>())
@@ -169,6 +170,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_)
 	PrepareCollisionQuery(root, ray_);
 
 	GameObject* result = nullptr;
+	OctNode* node = nullptr;
 	float shortestDistance = FLT_MAX;
 
 	for (auto cell : m_rayIntersectionList)
@@ -179,6 +181,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_)
 			{
 				if (ray_.t < shortestDistance)
 				{
+					node = cell;
 					result = object;
 					shortestDistance = ray_.t;
 				}
@@ -186,22 +189,88 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_)
 		}
 
 		if (result != nullptr)
+		{
+			std::string msg = "Ray collision in cell at: " + std::to_string(node->getBoundingBox()->minVert.x) + " " + std::to_string(node->getBoundingBox()->minVert.y) + " " + std::to_string(node->getBoundingBox()->minVert.z);
+			Debug::Info(msg, __FILENAME__, __LINE__);
 			return result;
+		}
+			
 	}
 
 	return nullptr;
 }
 
+void OctSpatialPartition::UpdatePartition()
+{
+	UpdatePartitionCell(root);
+}
+
 void OctSpatialPartition::AddObjectToCell(OctNode* cell_, GameObject* go_)
 {
 	// TODO - Aidan: Enter cell that object aabb intersects with, and if cell is a leaf node add object to cell, if not recursively call this on children
+	if (cell_->isLeaf())
+	{
+		if (go_->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+			cell_->addCollisionObject(go_);
+		return;
+	}
 
+	for (auto cell : cell_->children)
+	{
+		if (cell->isLeaf() && go_->GetBoundingBox().Intersects(cell->getBoundingBox()))
+		{
+			cell->addCollisionObject(go_);
+			return;
+		}
 
+		if (go_->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+			AddObjectToCell(cell, go_);
+	}
 }
 
 void OctSpatialPartition::PrepareCollisionQuery(OctNode* cell_, Ray ray_)
 {
-	// TODO - Aidan: Enter cell that ray colliders with, is this cell a leaf node add it to rayintersectionlist, if not recursively call this on children
+	// TODO - Aidan: Enter cell that ray collides with, is this cell a leaf node add it to rayintersectionlist, if not recursively call this on children
 
+	if (cell_->isLeaf())
+	{
+		if (ray_.isColliding(cell_->getBoundingBox()))
+			m_rayIntersectionList.push_back(cell_);
+		return;
+	}
 
+	for (auto cell : cell_->children)
+	{
+		if (cell->isLeaf() && ray_.isColliding(cell->getBoundingBox()))
+		{
+			m_rayIntersectionList.push_back(cell);
+			return;
+		}
+
+		if (ray_.isColliding(cell->getBoundingBox()))
+			PrepareCollisionQuery(cell, ray_);
+	}
+}
+
+void OctSpatialPartition::UpdatePartitionCell(OctNode* cell_)
+{
+	if (cell_->isLeaf())
+	{
+		for (auto go : cell_->m_objectList)
+		{
+			if (!go->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+			{
+				std::remove(cell_->m_objectList.begin(), cell_->m_objectList.end(), go);
+				AddObject(go);
+			}
+		}
+		return;
+	}
+
+	for (auto cell : cell_->children)
+		UpdatePartitionCell(cell);
+}
+
+void OctSpatialPartition::RemoveObjectFromCell(OctNode* cell_, GameObject* go_)
+{
 }

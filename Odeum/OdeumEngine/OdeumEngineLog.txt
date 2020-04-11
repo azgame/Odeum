@@ -1,2 +1,10 @@
 [INFO]: Creating Start Scene in: StartScene.cpp on line: 16
 [INFO]: Creating Game Scene in: GameScene.cpp on line: 29
+[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194
+[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194

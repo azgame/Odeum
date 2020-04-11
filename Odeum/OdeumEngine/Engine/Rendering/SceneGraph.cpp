@@ -96,6 +96,8 @@ void SceneGraph::Update(const float deltaTime_)
 {
 	for (auto go : sceneGameObjects)
 		go.second->Update(deltaTime_);
+
+	CollisionHandler::GetInstance()->Update();
 }
 
 // TODO - Aidan: Can't fully implement this yet, needs more work moving rendering into models/meshes

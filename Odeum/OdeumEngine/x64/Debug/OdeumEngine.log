@@ -1,4 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   OctSpatialPartition.cpp
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.cpp(115,28): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.cpp(116,28): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.cpp(263,10): warning C4834: discarding return value of function with 'nodiscard' attribute
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

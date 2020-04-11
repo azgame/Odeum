@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-
+#include "../Math/CollisionHandler.h"
 
 GameObject::GameObject(Model* model_, DirectX::XMFLOAT3 pos_) : m_model(nullptr)
 {
@@ -50,4 +50,40 @@ void GameObject::SetHit(bool hit_, DirectX::Mouse::State mouse_)
 	hit = hit_;
 	if (hit)
 		movX = -movX;
+}
+
+void GameObject::SetPosition(DirectX::XMFLOAT3 position_)
+{
+	position = position_;
+	if (m_model) {
+		m_model->UpdateInstance(m_modelInstance, position, angle, rotation, scale);
+		m_box.transform = m_model->GetTransform(m_modelInstance);
+	}
+}
+
+void GameObject::SetAngle(float angle_)
+{
+	angle = angle_;
+	if (m_model) {
+		m_model->UpdateInstance(m_modelInstance, position, angle, rotation, scale);
+		m_box.transform = m_model->GetTransform(m_modelInstance);
+	}
+}
+
+void GameObject::SetRotation(DirectX::XMFLOAT3 rotation_)
+{
+	rotation = rotation_;
+	if (m_model) {
+		m_model->UpdateInstance(m_modelInstance, position, angle, rotation, scale);
+		m_box.transform = m_model->GetTransform(m_modelInstance);
+	}
+}
+
+void GameObject::SetScale(DirectX::XMFLOAT3 scale_)
+{
+	scale = scale_;
+	if (m_model) {
+		m_model->UpdateInstance(m_modelInstance, position, angle, rotation, scale);
+		m_box.transform = m_model->GetTransform(m_modelInstance);
+	}
 }

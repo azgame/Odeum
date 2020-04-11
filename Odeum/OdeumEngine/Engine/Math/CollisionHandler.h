@@ -19,6 +19,7 @@ public:
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
 	void MouseUpdate(DirectX::Mouse::State& mouse);
+	void Update();
 	void Uninitialize();
 
 private:

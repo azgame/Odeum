@@ -206,7 +206,7 @@ bool Renderer::RenderRaster()
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (int i = 0; i < m_renderObjects->size(); i++)
 	{
-		if (!aabbOutsideFrustum(m_renderObjects->at(i)->position, m_renderObjects->at(i)->GetBoundingBox().maxVert, planes))
+		if (!aabbOutsideFrustum(m_renderObjects->at(i)->GetPosition(), m_renderObjects->at(i)->GetBoundingBox().maxVert, planes))
 		{
 			XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
 			UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
