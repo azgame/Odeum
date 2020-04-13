@@ -47,7 +47,7 @@ bool CollisionDetection::RayOBBIntersection(Ray* ray_, BoundingBox* box_)
 	float tMin = OdeumEngine::GetInstance()->GetCamera()->NearClipPlane();
 	float tMax = OdeumEngine::GetInstance()->GetCamera()->FarClipPlane();
 
-	// Have to use the dxtk for this since built in float.../vector conversion would get hefty (see above)
+	// Have to use the dxtk for this since built in floatx/vector conversion would get hefty (see above)
 	DirectX::SimpleMath::Vector3 obbPos(box_->transform.r[3]);
 	DirectX::SimpleMath::Vector3 delta = obbPos - ray_->st;
 

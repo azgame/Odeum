@@ -43,24 +43,12 @@ void LoadOBJModel::LoadModel(const std::string& filePath_)
 			float x, y, z;
 			v >> x >> y >> z;
 
-			if (x > maxX) {
-				maxX = x;
-			}
-			if (y > maxY) {
-				maxY = y;
-			}
-			if (z > maxZ) {
-				maxZ = z;
-			}
-			if (x < minX) {
-				minX = x;
-			}
-			if (y < minY) {
-				minY = y;
-			}
-			if (z < minZ) {
-				minZ = z;
-			}
+			if (x > maxX) maxX = x;
+			if (y > maxY) maxY = y;
+			if (z > maxZ) maxZ = z;
+			if (x < minX) minX = x;
+			if (y < minY) minY = y;
+			if (z < minZ) minZ = z;
 
 			vertices.push_back(DirectX::XMFLOAT3(x, y, z));
 		}

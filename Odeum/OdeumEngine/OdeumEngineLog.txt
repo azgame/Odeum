@@ -3,8 +3,3 @@
 [INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
 [INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
 [INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
-[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
-[INFO]: Ray collision in cell at: 0.000000 -12.500000 -12.500000 in: OctSpatialPartition.cpp on line: 194
-[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194
-[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194
-[INFO]: Ray collision in cell at: -12.500000 0.000000 -12.500000 in: OctSpatialPartition.cpp on line: 194

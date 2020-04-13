@@ -31,6 +31,7 @@ PS_INPUT main(VS_INPUT input)
 	pos = mul(pos, model);
 	pos = mul(pos, view);
 	pos = mul(pos, projection);
+	
 	Output.position = pos;
 	Output.uv = input.uv;
 
