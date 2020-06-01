@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OdeumEngine", "OdeumEngine\OdeumEngine.vcxproj", "{1AF527A8-22D4-4286-8D18-5ADA79790A4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Debug|x64.ActiveCfg = Debug|x64
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Debug|x64.Build.0 = Debug|x64
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Debug|x86.ActiveCfg = Debug|Win32
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Debug|x86.Build.0 = Debug|Win32
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Release|x64.ActiveCfg = Release|x64
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Release|x64.Build.0 = Release|x64
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Release|x86.ActiveCfg = Release|Win32
+		{1AF527A8-22D4-4286-8D18-5ADA79790A4E}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {921FAA50-C10D-40A2-9036-A2D5B8440C12}
+	EndGlobalSection
+EndGlobal
