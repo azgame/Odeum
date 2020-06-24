@@ -141,12 +141,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Core\CoreSystem.cpp" />
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
+    <ClCompile Include="Engine\Events\Event.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Engine\Core\CoreSystem.h" />
     <ClInclude Include="Engine\Core\Debug.h" />
     <ClInclude Include="Engine\Core\GameInterface.h" />
     <ClInclude Include="Engine\Core\Scene.h" />
@@ -155,7 +159,9 @@
     <ClInclude Include="Engine\dxc\dxcapi.use.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
+    <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Engine\Core\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

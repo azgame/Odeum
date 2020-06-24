@@ -1,3 +1,5 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  CollisionDetection.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  App.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(98,2): warning C4065: switch statement contains 'default' but no 'case' labels
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(240): warning C4715: 'WndProc': not all control paths return a value
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe
