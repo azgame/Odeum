@@ -1,5 +1,11 @@
+#include "pch.h"
+
 #include "App.h"
 #include <crtdbg.h>
+
+
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static App* ApplicationHandle = 0;
 
 
 // WINAPI entry
@@ -31,10 +37,12 @@ bool App::Initialize()
 {
 	ApplicationHandle = this;
 
+	_window = new Window();
+
 	Debug::DebugInit();
 	Debug::SetSeverity(MessageType::TYPE_INFO);
 
-	_window->InitializeWindow();
+	_window->InitializeWindow(WndProc);
 
 	return true;
 }

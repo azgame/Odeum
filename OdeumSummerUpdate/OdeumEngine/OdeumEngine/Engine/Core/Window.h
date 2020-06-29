@@ -1,7 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../pch.h"
 #include "../Events/Event.h"
 
 class Window
@@ -12,7 +11,7 @@ public:
 	void SetWindowSize(int w_, int h_);
 	void ToggleFullscreen();
 
-	void InitializeWindow();
+	void InitializeWindow(WNDPROC wndProcHandle_);
 	void UninitializeWindow();
 
 private:

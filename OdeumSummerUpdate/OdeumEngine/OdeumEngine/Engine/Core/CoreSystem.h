@@ -1,7 +1,6 @@
 #ifndef CORESYSTEM_H
 #define CORESYSTEM_H
 
-#include "../pch.h"
 #include "../Events/Event.h"
 
 class CoreSystem

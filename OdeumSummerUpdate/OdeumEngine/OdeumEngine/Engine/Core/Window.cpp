@@ -1,7 +1,10 @@
+#include "pch.h"
+
 #include "Window.h"
 #include "../App.h"
 
-void Window::InitializeWindow()
+
+void Window::InitializeWindow(WNDPROC wndProcHandle_)
 {
 	WNDCLASSEX wc;
 
@@ -13,7 +16,7 @@ void Window::InitializeWindow()
 
 	// Setup the windows class with default settings
 	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WndProc;
+	wc.lpfnWndProc = wndProcHandle_;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = m_hInstance;

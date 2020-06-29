@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "Debug.h"
 
 MessageType Debug::m_currentSev = MessageType::TYPE_NONE;
