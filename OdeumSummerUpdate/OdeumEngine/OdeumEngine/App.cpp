@@ -103,6 +103,10 @@ LRESULT App::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 		// handle restore
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	case WM_MOVE:
+
+		// create window move event
+		// send window move event into window event handler
+
 		_window->SetWindowPosition((int)LOWORD(lparam), (int)HIWORD(lparam));
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	case WM_SIZE:
