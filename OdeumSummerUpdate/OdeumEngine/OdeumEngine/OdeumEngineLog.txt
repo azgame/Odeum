@@ -1,71 +1,95 @@
-[INFO]: Window size: 1584, 861 in: Window.cpp on line: 118
-[INFO]: Window pos: 168, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 162, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 161, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 158, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 155, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 153, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 148, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 145, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 141, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 136, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 131, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 124, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 119, 121 in: Window.cpp on line: 111
-[INFO]: Window pos: 114, 122 in: Window.cpp on line: 111
-[INFO]: Window pos: 109, 122 in: Window.cpp on line: 111
-[INFO]: Window pos: 100, 123 in: Window.cpp on line: 111
-[INFO]: Window pos: 95, 124 in: Window.cpp on line: 111
-[INFO]: Window pos: 90, 125 in: Window.cpp on line: 111
-[INFO]: Window pos: 85, 127 in: Window.cpp on line: 111
-[INFO]: Window pos: 80, 128 in: Window.cpp on line: 111
-[INFO]: Window pos: 77, 130 in: Window.cpp on line: 111
-[INFO]: Window pos: 72, 133 in: Window.cpp on line: 111
-[INFO]: Window pos: 69, 135 in: Window.cpp on line: 111
-[INFO]: Window pos: 67, 137 in: Window.cpp on line: 111
-[INFO]: Window pos: 66, 141 in: Window.cpp on line: 111
-[INFO]: Window pos: 65, 146 in: Window.cpp on line: 111
-[INFO]: Window pos: 65, 151 in: Window.cpp on line: 111
-[INFO]: Window pos: 65, 156 in: Window.cpp on line: 111
-[INFO]: Window pos: 66, 166 in: Window.cpp on line: 111
-[INFO]: Window pos: 67, 171 in: Window.cpp on line: 111
-[INFO]: Window pos: 71, 180 in: Window.cpp on line: 111
-[INFO]: Window pos: 74, 185 in: Window.cpp on line: 111
-[INFO]: Window pos: 76, 190 in: Window.cpp on line: 111
-[INFO]: Window pos: 80, 195 in: Window.cpp on line: 111
-[INFO]: Window pos: 83, 199 in: Window.cpp on line: 111
-[INFO]: Window pos: 86, 202 in: Window.cpp on line: 111
-[INFO]: Window pos: 91, 206 in: Window.cpp on line: 111
-[INFO]: Window pos: 98, 208 in: Window.cpp on line: 111
-[INFO]: Window pos: 102, 210 in: Window.cpp on line: 111
-[INFO]: Window pos: 109, 211 in: Window.cpp on line: 111
-[INFO]: Window pos: 114, 211 in: Window.cpp on line: 111
-[INFO]: Window pos: 123, 211 in: Window.cpp on line: 111
-[INFO]: Window pos: 132, 211 in: Window.cpp on line: 111
-[INFO]: Window pos: 142, 210 in: Window.cpp on line: 111
-[INFO]: Window pos: 150, 208 in: Window.cpp on line: 111
-[INFO]: Window pos: 161, 204 in: Window.cpp on line: 111
-[INFO]: Window pos: 167, 201 in: Window.cpp on line: 111
-[INFO]: Window pos: 174, 198 in: Window.cpp on line: 111
-[INFO]: Window pos: 182, 193 in: Window.cpp on line: 111
-[INFO]: Window pos: 187, 187 in: Window.cpp on line: 111
-[INFO]: Window pos: 190, 184 in: Window.cpp on line: 111
-[INFO]: Window pos: 193, 178 in: Window.cpp on line: 111
-[INFO]: Window pos: 195, 173 in: Window.cpp on line: 111
-[INFO]: Window pos: 196, 167 in: Window.cpp on line: 111
-[INFO]: Window pos: 196, 161 in: Window.cpp on line: 111
-[INFO]: Window pos: 196, 155 in: Window.cpp on line: 111
-[INFO]: Window pos: 194, 148 in: Window.cpp on line: 111
-[INFO]: Window pos: 191, 140 in: Window.cpp on line: 111
-[INFO]: Window pos: 190, 136 in: Window.cpp on line: 111
-[INFO]: Window pos: 186, 128 in: Window.cpp on line: 111
-[INFO]: Window pos: 184, 123 in: Window.cpp on line: 111
-[INFO]: Window pos: 181, 119 in: Window.cpp on line: 111
-[INFO]: Window pos: 177, 113 in: Window.cpp on line: 111
-[INFO]: Window pos: 175, 111 in: Window.cpp on line: 111
-[INFO]: Window pos: 174, 109 in: Window.cpp on line: 111
-[INFO]: Window pos: 171, 106 in: Window.cpp on line: 111
-[INFO]: Window pos: 170, 103 in: Window.cpp on line: 111
-[INFO]: Window pos: 168, 102 in: Window.cpp on line: 111
-[INFO]: Window pos: 167, 101 in: Window.cpp on line: 111
-[INFO]: Window pos: 166, 100 in: Window.cpp on line: 111
+[INFO]: Window size: 1584, 861 in: Window.cpp on line: 202 at: Sat Jul  4 19:23:42 2020
+[INFO]: Window pos: 168, 121 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:42 2020
+[INFO]: Window pos: 172, 127 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 173, 129 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 174, 131 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 176, 131 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 178, 133 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 180, 134 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 182, 134 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 187, 134 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 197, 131 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 209, 126 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 222, 117 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 241, 106 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 251, 97 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 255, 92 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 256, 90 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 257, 89 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 258, 87 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 258, 86 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 258, 85 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 258, 83 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 257, 80 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 255, 76 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 253, 71 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 249, 65 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 241, 55 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 232, 50 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 225, 44 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 222, 43 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 218, 42 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 215, 42 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 213, 42 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 211, 42 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 209, 42 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 207, 44 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 205, 45 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 204, 45 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 202, 47 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 200, 48 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 198, 49 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 196, 50 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 195, 51 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 193, 51 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 193, 52 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 192, 53 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 191, 54 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 189, 55 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 188, 56 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 187, 57 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 187, 58 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 186, 59 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 185, 60 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 184, 61 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 183, 62 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 181, 63 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 181, 66 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 180, 66 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 179, 68 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 177, 69 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 177, 70 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 177, 71 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 176, 71 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 176, 72 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 175, 73 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 175, 74 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 174, 74 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 174, 75 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 173, 77 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 173, 78 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 173, 79 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 172, 80 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 171, 81 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 170, 82 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 169, 83 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 168, 84 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 166, 87 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 164, 90 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 160, 93 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:44 2020
+[INFO]: Window pos: 159, 95 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 154, 100 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 149, 106 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 147, 111 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 144, 113 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 143, 117 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 140, 119 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 139, 120 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 138, 123 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 137, 123 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 136, 125 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 135, 126 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 135, 127 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 134, 127 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 134, 128 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020
+[INFO]: Window pos: 133, 128 in: Window.cpp on line: 195 at: Sat Jul  4 19:23:45 2020

@@ -1,11 +1,82 @@
 #include "pch.h"
 
 #include "Window.h"
-#include "../App.h"
 
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static Window* WindowHandle = 0;
 
-void Window::InitializeWindow(WNDPROC wndProcHandle_)
+void Window::Update()
 {
+	MSG msg;
+
+	ZeroMemory(&msg, sizeof(MSG));
+
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+}
+
+LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+{
+	switch (umsg)
+	{
+	case WM_DESTROY:
+		// handle destroy
+		Close();
+		PostQuitMessage(0);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case WM_CLOSE:
+		// handle destroy
+		Close();
+		PostQuitMessage(0);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case WM_KEYDOWN:
+		switch (wparam)
+		{
+		case VK_SPACE:
+			// handle fullscreen
+			ToggleFullscreen();
+			break;
+		default:
+			break;
+		}
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case SC_MINIMIZE:
+		// handle minimized
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case SC_RESTORE:
+		// handle restore
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case WM_MOVE:
+
+		// create window move event
+		// send window move event into window event handler
+
+		SetWindowPosition((int)LOWORD(lparam), (int)HIWORD(lparam));
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	case WM_SIZE:
+		SetWindowSize((int)LOWORD(lparam), (int)HIWORD(lparam));
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	default:
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+}
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+{
+	switch (umessage)
+	{
+	default:
+		return WindowHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
+}
+
+void Window::InitializeWindow()
+{
+	WindowHandle = this;
+
 	WNDCLASSEX wc;
 
 	// Get the instance of this application
@@ -16,7 +87,7 @@ void Window::InitializeWindow(WNDPROC wndProcHandle_)
 
 	// Setup the windows class with default settings
 	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = wndProcHandle_;
+	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = m_hInstance;
@@ -102,6 +173,19 @@ void Window::UninitializeWindow()
 	// Remove the application instance
 	UnregisterClass(m_applicationName, m_hInstance);
 	m_hInstance = NULL;
+
+	WindowHandle = NULL;
+}
+
+
+void Window::SetCloseEvent(std::function<void()> func_)
+{
+	closeFunc = func_;
+}
+
+void Window::Close()
+{
+	closeFunc();
 }
 
 void Window::SetWindowPosition(int x_, int y_)

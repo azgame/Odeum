@@ -9,9 +9,6 @@
 #include <dxgi1_6.h>
 #include <dwrite_3.h>
 #include <d3dcompiler.h>
-#include <DirectXMath.h>
-#include <xaudio2.h>
-#include <Xinput.h>
 
 #include <stdio.h>
 #include <vector>
@@ -23,6 +20,7 @@
 #include <list>
 #include <string>
 #include <string.h>
+#include <cassert>
 
 #include "Engine/Core/Debug.h"
 

@@ -1,3 +1,6 @@
 ﻿  App.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\App.cpp(126,2): warning C4065: switch statement contains 'default' but no 'case' labels
+  OdeumEngine.cpp
+  Window.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\Window.cpp(73,2): warning C4065: switch statement contains 'default' but no 'case' labels
+  Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

@@ -2,6 +2,8 @@
 
 #include "Debug.h"
 
+#include <chrono>
+
 MessageType Debug::m_currentSev = MessageType::TYPE_NONE;
 std::string Debug::m_outputName = "";
 
@@ -50,7 +52,14 @@ void Debug::Log(const MessageType type_, const std::string & message_, const std
 	{
 		std::ofstream out;
 		out.open(m_outputName.c_str(), std::ios::app | std::ios::out);
-		out << message_ << " in: " << fileName_ << " on line: " << line_ << std::endl;
+
+		auto timenow =
+			std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+		char mtime[100];
+		ctime_s(mtime, sizeof(mtime), &timenow);
+
+		out << message_ << " in: " << fileName_ << " on line: " << line_ << " at: " << mtime;
 		out.flush();
 		out.close();
 	}
