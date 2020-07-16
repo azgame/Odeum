@@ -29,7 +29,7 @@ bool OdeumEngine::Initialize()
 
 	_window->InitializeWindow();
 
-	std::function<void(void)> fcnPtr = std::bind(&OdeumEngine::Close, this);
+	std::function<void()> fcnPtr = std::bind(&OdeumEngine::Close, this);
 	_window->SetCloseEvent(fcnPtr);
 
 	return true;
