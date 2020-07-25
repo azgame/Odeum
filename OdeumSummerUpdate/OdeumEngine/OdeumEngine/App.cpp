@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
 #include <crtdbg.h>
 
 #include "Engine/Core/OdeumEngine.h"

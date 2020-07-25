@@ -1,5 +1,17 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  App.cpp
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(98,2): warning C4065: switch statement contains 'default' but no 'case' labels
-C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(240): warning C4715: 'WndProc': not all control paths return a value
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Renderer.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(103,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(173,81): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(187,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(188,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(247,100): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(155,28): warning C4101: 'barrier': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(287,10): warning C4101: 'result': unreferenced local variable
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(473,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(583,51): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(1008,71): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(997,10): warning C4101: 'result': unreferenced local variable
+  ShaderHandler.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\ShaderHandler.cpp(35,10): warning C4101: 'result': unreferenced local variable
+  Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\Odeum\x64\Debug\Odeum.exe

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "D3DBuffer.h"
 
+#include "D3DRenderAPI.h"
+#include "GraphicsContext.h"
 
 void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elementSize_, const void* initialData_)
 {
@@ -12,6 +14,8 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 
 	D3D12_RESOURCE_DESC rDesc = CreateBufferDescription();
 
+	m_usageState = D3D12_RESOURCE_STATE_COMMON;
+
 	D3D12_HEAP_PROPERTIES heapProps;
 	heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
 	heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -19,10 +23,16 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 	heapProps.CreationNodeMask = 1;
 	heapProps.VisibleNodeMask = 1;
 
-	// Todo Aidan access device to create committed resource
-	// if (FAILED())
-	//	Debug
-	// m_vgpuAddress = m_pResource->GetGpuVirtualAddress();
+	ID3D12Device5* device = DXGraphics::m_device;
+
+	if (FAILED(
+		device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_pResource)))
+	)	
+		Debug::Error("Could not create buffer", __FILENAME__, __LINE__);
+
+	m_vGpuAddress = m_pResource->GetGPUVirtualAddress();
+
+	device = nullptr;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size_) const
@@ -36,12 +46,14 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size
 	cbvDesc.BufferLocation = offset_;
 	cbvDesc.SizeInBytes = size_;
 
-	// Todo Aidan implement a descriptor allocation in the core graphics library or in the context
-	//D3D12_CPU_DESCRIPTOR_HANDLE hcbv = AllocateDescriptor(*data*);
-	//device->CreateCBV();
-	//return hcbv;
+	ID3D12Device5* device = DXGraphics::m_device;
 
-	return D3D12_CPU_DESCRIPTOR_HANDLE();
+	D3D12_CPU_DESCRIPTOR_HANDLE hcbv = DXGraphics::Allocate(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	device->CreateConstantBufferView(&cbvDesc, hcbv);
+
+	device = nullptr;
+
+	return hcbv;
 }
 
 D3D12_VERTEX_BUFFER_VIEW D3DBuffer::VertexBufferView(size_t offset_, uint32_t size_, uint32_t stride_) const
@@ -77,4 +89,12 @@ D3D12_RESOURCE_DESC D3DBuffer::CreateBufferDescription()
 	Desc.SampleDesc.Quality = 0;
 	Desc.Width = (UINT64)m_bufferSize;
 	return Desc;
+}
+
+void ByteAddressedBuffer::CreateDerivedView()
+{
+}
+
+void StructuredBuffer::CreateDerivedView()
+{
 }

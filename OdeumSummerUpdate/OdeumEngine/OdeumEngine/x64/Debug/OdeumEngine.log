@@ -7,5 +7,9 @@
   Window.cpp
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\Window.cpp(73,2): warning C4065: switch statement contains 'default' but no 'case' labels
   Event.cpp
+  D3DBuffer.cpp
+  D3DCore.cpp
+  D3DRenderAPI.cpp
+  GraphicsContext.cpp
   Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

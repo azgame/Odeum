@@ -21,8 +21,11 @@
 #include <string>
 #include <string.h>
 #include <cassert>
+#include <mutex>
 
 #include "Engine/Core/Debug.h"
+
+
 
 #define NAME_D3D_RESOURCES 1
 #define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }

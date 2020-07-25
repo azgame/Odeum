@@ -143,18 +143,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Rendering\DescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Rendering\D3DCore.cpp" />
+    <ClCompile Include="Engine\Rendering\D3DRenderAPI.cpp" />
     <ClCompile Include="Engine\Rendering\D3DBuffer.cpp" />
     <ClCompile Include="Engine\Core\CoreSystem.cpp" />
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
     <ClCompile Include="Engine\Events\Event.cpp" />
     <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
+    <ClCompile Include="Engine\Rendering\GraphicsContext.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Rendering\DescriptorHeap.h" />
+    <ClInclude Include="Engine\Rendering\D3DCore.h" />
+    <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
     <ClInclude Include="Engine\Rendering\D3DBuffer.h" />
     <ClInclude Include="Engine\Core\CoreSystem.h" />
     <ClInclude Include="Engine\Core\Debug.h" />
@@ -168,6 +175,7 @@
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
+    <ClInclude Include="Engine\Rendering\GraphicsContext.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
   </ItemGroup>

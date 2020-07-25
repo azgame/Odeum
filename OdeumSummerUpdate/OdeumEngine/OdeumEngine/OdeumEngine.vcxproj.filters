@@ -42,6 +42,18 @@
     <ClCompile Include="Engine\Rendering\D3DBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\GraphicsContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\D3DRenderAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\D3DCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\DescriptorHeap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -87,6 +99,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\D3DBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\GraphicsContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\D3DRenderAPI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\D3DCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\DescriptorHeap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

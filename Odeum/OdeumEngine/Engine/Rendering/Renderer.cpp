@@ -103,15 +103,15 @@ bool Renderer::InitializeRaster(int screenHeight, int screenWidth, HWND hwnd)
 	cbvDesc.SizeInBytes = c_alignedConstantBufferSize * m_renderObjects->size();
 	cbvDesc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
 
-	m_device->CreateConstantBufferView(&cbvDesc, handle);
-
-	handle.ptr += m_descHeapSize;
-	
 	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh()->GetTextureBV(), handle);
 	
 	handle.ptr += m_descHeapSize;
 
 	m_device->CreateShaderResourceView(m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBuffer(), &m_renderObjects->at(0)->GetModel()->GetMesh(1)->GetTextureBV(), handle);
+
+	handle.ptr += m_descHeapSize;
+
+	m_device->CreateConstantBufferView(&cbvDesc, handle);
 
 	return true;
 }
@@ -195,31 +195,37 @@ bool Renderer::RenderRaster()
 	// Set the back buffer as the render target
 	m_shaderProgram->commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &depthStencilView);
 
-	CD3DX12_GPU_DESCRIPTOR_HANDLE handle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0);
+	
 
 	std::vector<DirectX::XMFLOAT4> planes(6);
 	m_camera->GetViewFrustum(planes);
 	
 	int outsideFrustum = 0;
 
+	//handle.Offset(m_descHeapSize);
+
 	// Populate the command list - i.e. pass the command list to the objects in the scene (as given to the renderer)
 	// and have the objects fill the command list with their resource data (buffer data)
 	for (int i = 0; i < m_renderObjects->size(); i++)
 	{
+		CD3DX12_GPU_DESCRIPTOR_HANDLE handle(m_descHeap->GetGPUDescriptorHandleForHeapStart(), 0);
+
 		if (!aabbOutsideFrustum(m_renderObjects->at(i)->GetPosition(), m_renderObjects->at(i)->GetBoundingBox().maxVert, planes))
 		{
 			XMStoreFloat4x4(&m_constantBufferData.model, DirectX::XMMatrixTranspose(m_renderObjects->at(i)->GetModel()->GetTransform(0)));
 			UINT8* destination = m_mappedConstantBuffer + (i * c_alignedConstantBufferSize);
 			memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
-			m_shaderProgram->commandList->SetGraphicsRootConstantBufferView(0, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
-			m_shaderProgram->commandList->SetGraphicsRootDescriptorTable(1, handle);
+			m_shaderProgram->commandList->SetGraphicsRootConstantBufferView(1, m_constantBuffer->GetGPUVirtualAddress() + (i * c_alignedConstantBufferSize));
+			m_shaderProgram->commandList->SetGraphicsRootDescriptorTable(0, handle);
+			m_shaderProgram->commandList->SetGraphicsRoot32BitConstant(2, (i == 0), 0);
 			m_renderObjects->at(i)->Render(m_shaderProgram->commandList);
-			handle.Offset(m_descHeapSize); // if one object is frustum culled then the apple at the center will become red
+			//handle.Offset(m_descHeapSize); // if one object is frustum culled then the apple at the center will become red
+			//m_shaderProgram->commandList->SetGraphicsRootDescriptorTable(1, handle);
 		}	
 		else
 			outsideFrustum++;
 
-		// handle.Offset(m_descHeapSize); // this is what we'd normally do
+		//handle.Offset(m_descHeapSize); // this is what we'd normally do
 	}
 
 	if (outsideFrustum == 1)

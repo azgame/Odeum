@@ -28,6 +28,7 @@ public:
 protected:
 	ID3D12Resource* m_pResource;
 	D3D12_GPU_VIRTUAL_ADDRESS m_vGpuAddress;
+	D3D12_RESOURCE_STATES m_usageState;
 };
 
 #endif

@@ -215,16 +215,16 @@ void Window::ToggleFullscreen()
 		if (HWNDStyleEx == 0)
 			HWNDStyleEx = GetWindowLong(m_hwnd, GWL_EXSTYLE);
 
-		LONG NewHWNDStyle = HWNDStyle;
-		NewHWNDStyle &= ~WS_BORDER;
-		NewHWNDStyle &= ~WS_DLGFRAME;
-		NewHWNDStyle &= ~WS_THICKFRAME;
+		LONG newHWNDStyle = HWNDStyle;
+		newHWNDStyle &= ~WS_BORDER;
+		newHWNDStyle &= ~WS_DLGFRAME;
+		newHWNDStyle &= ~WS_THICKFRAME;
 
-		LONG NewHWNDStyleEx = HWNDStyleEx;
-		NewHWNDStyleEx &= ~WS_EX_WINDOWEDGE;
+		LONG newHWNDStyleEx = HWNDStyleEx;
+		newHWNDStyleEx &= ~WS_EX_WINDOWEDGE;
 
-		SetWindowLong(m_hwnd, GWL_STYLE, NewHWNDStyle | WS_POPUP);
-		SetWindowLong(m_hwnd, GWL_EXSTYLE, NewHWNDStyleEx | WS_EX_TOPMOST);
+		SetWindowLong(m_hwnd, GWL_STYLE, newHWNDStyle | WS_POPUP);
+		SetWindowLong(m_hwnd, GWL_EXSTYLE, newHWNDStyleEx | WS_EX_TOPMOST);
 		ShowWindow(m_hwnd, SW_SHOWMAXIMIZED);
 		SetWindowPosition(0, 0);
 		SetWindowSize(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));

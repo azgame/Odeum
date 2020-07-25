@@ -646,7 +646,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 // but previous attempts to provide the SSE2 functions with runtime
 // detection caused numerous issues. The way architecture extensions are
 // exposed in GCC/Clang is, sadly, not really suited for one-file libs.
-// New behavior: if compiled with -msse2, we use SSE2 without any
+// new behavior: if compiled with -msse2, we use SSE2 without any
 // detection; if not, we don't use it at all.
 #define STBI_NO_SIMD
 #endif

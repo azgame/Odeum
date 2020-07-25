@@ -40,23 +40,32 @@ void ShaderHandler::CreateRootSignature(DeviceResources* device_, ID3D12RootSign
 
 	D3D12_DESCRIPTOR_RANGE descriptorTableRanges[1];
 	descriptorTableRanges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorTableRanges[0].NumDescriptors = 1;
+	descriptorTableRanges[0].NumDescriptors = 2;
 	descriptorTableRanges[0].BaseShaderRegister = 0;
 	descriptorTableRanges[0].RegisterSpace = 0;
-	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = 1;
+	descriptorTableRanges[0].OffsetInDescriptorsFromTableStart = 0;
 
 	D3D12_ROOT_DESCRIPTOR_TABLE descriptorTable;
 	descriptorTable.NumDescriptorRanges = _countof(descriptorTableRanges);
 	descriptorTable.pDescriptorRanges = descriptorTableRanges;
 
-	D3D12_ROOT_PARAMETER rootParameters[2];
-	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParameters[0].Descriptor = rootCBVDescriptor;
-	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	D3D12_ROOT_PARAMETER rootParameters[3];
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].Descriptor = rootCBVDescriptor;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters[1].DescriptorTable = descriptorTable;
-	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[0].DescriptorTable = descriptorTable;
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	D3D12_ROOT_CONSTANTS rootConstants;
+	rootConstants.Num32BitValues = 1;
+	rootConstants.RegisterSpace = 0;
+	rootConstants.ShaderRegister = 1;
+
+	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	rootParameters[2].Constants = rootConstants;
+	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
 	// Init Root Signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =

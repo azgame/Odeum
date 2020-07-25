@@ -1,5 +1,13 @@
 Texture2D t1 : register(t0);
+Texture2D t2 : register(t1);
 SamplerState s1 : register(s0);
+
+struct ConstantData
+{
+	bool constant;
+};
+
+ConstantBuffer<ConstantData> myBuffer : register(b1);
 
 struct PS_INPUT
 {
@@ -11,5 +19,12 @@ struct PS_INPUT
 // Pixel Shader
 float4 main(PS_INPUT input) : SV_TARGET
 {
-	return t1.Sample(s1, input.uv);
+	if (myBuffer.constant)
+	{
+		return t1.Sample(s1, input.uv);
+	}	
+	else
+	{
+		return t2.Sample(s1, input.uv);
+	}
 }

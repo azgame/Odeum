@@ -38,6 +38,7 @@ public:
 protected:
 
 	D3D12_RESOURCE_DESC CreateBufferDescription();
+	virtual void CreateDerivedView() = 0;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE m_uav;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_srv;
@@ -47,6 +48,18 @@ protected:
 	uint32_t m_eSize;
 
 	D3D12_RESOURCE_FLAGS m_resourceFlags;
+};
+
+class ByteAddressedBuffer : public D3DBuffer
+{
+public:
+	virtual void CreateDerivedView() override;
+};
+
+class StructuredBuffer : public D3DBuffer
+{
+public:
+	virtual void CreateDerivedView() override;
 };
 
 #endif
