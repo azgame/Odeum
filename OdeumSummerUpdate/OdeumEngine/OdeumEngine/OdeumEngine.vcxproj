@@ -143,7 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp" />
+    <ClCompile Include="Engine\Rendering\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Rendering\D3DCore.cpp" />
     <ClCompile Include="Engine\Rendering\D3DRenderAPI.cpp" />
     <ClCompile Include="Engine\Rendering\D3DBuffer.cpp" />
@@ -159,7 +159,9 @@
     <ClCompile Include="Engine\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Rendering\DescriptorAllocator.h" />
+    <ClInclude Include="Engine\Core\Input.h" />
+    <ClInclude Include="Engine\Core\KeyCodes.h" />
+    <ClInclude Include="Engine\Rendering\DescriptorHeap.h" />
     <ClInclude Include="Engine\Rendering\D3DCore.h" />
     <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
     <ClInclude Include="Engine\Rendering\D3DBuffer.h" />
