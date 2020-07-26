@@ -51,7 +51,7 @@
     <ClCompile Include="Engine\Rendering\D3DCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\DescriptorHeap.cpp">
+    <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +110,7 @@
     <ClInclude Include="Engine\Rendering\D3DCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\DescriptorHeap.h">
+    <ClInclude Include="Engine\Rendering\DescriptorAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

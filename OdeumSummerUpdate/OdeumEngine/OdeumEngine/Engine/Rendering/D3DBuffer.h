@@ -7,7 +7,7 @@ class D3DBuffer : public D3DResource
 {
 public:
 
-	// Create a buffer, if initial data is given then copy into created buffer
+	// Initial data being passed in is not copied to the buffer, should be in future
 	void Create(std::string name_, uint32_t numElements_, uint32_t elementSize_, const void* initialData_ = nullptr);
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_uav; }
@@ -59,7 +59,23 @@ public:
 class StructuredBuffer : public D3DBuffer
 {
 public:
+
+	virtual void Destroy() override
+	{
+		m_counterBuffer.Destroy();
+		D3DResource::Destroy();
+	}
+
 	virtual void CreateDerivedView() override;
+
+	ByteAddressedBuffer& GetCounterBuffer() { return m_counterBuffer; }
+
+	D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV(GraphicsContext& context_);
+	D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV(GraphicsContext& context_);
+
+private:
+	ByteAddressedBuffer m_counterBuffer; // This is in case we want to use our own uav counter buffer rather than the driver's, which is faster and easier
+										// but, we only need this for reading atomic counters
 };
 
 #endif

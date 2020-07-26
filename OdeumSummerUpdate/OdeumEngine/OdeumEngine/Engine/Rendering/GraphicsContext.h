@@ -17,8 +17,6 @@ public:
 	GraphicsContext() {}
 	~GraphicsContext();
 
-	D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type_, UINT count_ = 1);
-
 private:
 };
 

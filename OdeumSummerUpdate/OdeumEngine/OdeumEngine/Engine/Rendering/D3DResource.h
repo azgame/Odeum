@@ -3,13 +3,28 @@
 
 #include "../../pch.h" // Todo Aidan fix precompiled-ness of pch for faster inclusion in .h's, if possible
 
+#define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
+#define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull
+
+class GraphicsContext;
+
 // Base class for ID3D12Resource wrapping
 class D3DResource
 {
 public:
 
-	D3DResource() {}
-	D3DResource(ID3D12Resource* resource) {}
+	D3DResource() : 
+		m_vGpuAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL), 
+		m_pResource(nullptr),
+		m_usageState(D3D12_RESOURCE_STATE_COMMON)
+	{}
+
+	D3DResource(ID3D12Resource* resource_, D3D12_RESOURCE_STATES state_) : 
+		m_pResource(resource_), 
+		m_usageState(state_) 
+	{
+		m_vGpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
+	}
 
 	virtual void Destroy()
 	{
