@@ -1,6 +1,8 @@
 #ifndef D3DRENDERAPI_H
 #define D3DRENDERAPI_H
 
+#include "../../pch.h"
+
 #include "D3DCore.h"
 
 using namespace DXGraphics;

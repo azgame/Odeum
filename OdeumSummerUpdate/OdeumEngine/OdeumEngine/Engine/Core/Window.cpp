@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "Window.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -134,7 +132,6 @@ void Window::InitializeWindow()
 	}
 	else
 	{
-		// If windowed then set it to 1280x720 resolution
 		_screenWidth = 1600;
 		_screenHeight = 900;
 
@@ -192,14 +189,12 @@ void Window::SetWindowPosition(int x_, int y_)
 {
 	_xPos = x_;
 	_yPos = y_;
-	Debug::Info("Window pos: " + std::to_string(_xPos) + ", " + std::to_string(_yPos), __FILENAME__, __LINE__);
 }
 
 void Window::SetWindowSize(int w_, int h_)
 {
 	_screenWidth = w_;
 	_screenHeight = h_;
-	Debug::Info("Window size: " + std::to_string(_screenWidth) + ", " + std::to_string(_screenHeight), __FILENAME__, __LINE__);
 }
 
 void Window::ToggleFullscreen()

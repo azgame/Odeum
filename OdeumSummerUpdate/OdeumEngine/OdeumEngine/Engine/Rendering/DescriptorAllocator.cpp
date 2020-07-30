@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "DescriptorAllocator.h"
 
 #include "D3DCore.h"
@@ -49,7 +48,6 @@ ID3D12DescriptorHeap* DescriptorAllocator::GetNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE
 		Debug::Error("Could not create descriptor heap!", __FILENAME__, __LINE__);
 
 	m_descriptorHeapPool.emplace_back(heap);
-	heap = nullptr;
-
-	return m_descriptorHeapPool.back();
+	
+	return heap;
 }

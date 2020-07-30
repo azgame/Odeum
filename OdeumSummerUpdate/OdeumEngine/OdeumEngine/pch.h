@@ -1,8 +1,10 @@
 #ifndef _PCH_H_
 #define _PCH_H_
 
+// Windows
 #include <Windows.h>
 
+// DirectX
 #include <d3d12.h>
 #include "Engine/Utilities/d3dx12.h"
 #include <d3d11_4.h>
@@ -10,6 +12,7 @@
 #include <dwrite_3.h>
 #include <d3dcompiler.h>
 
+// Libraries
 #include <stdio.h>
 #include <vector>
 #include <unordered_map>
@@ -23,6 +26,7 @@
 #include <cassert>
 #include <mutex>
 
+// Engine
 #include "Engine/Core/Debug.h"
 
 

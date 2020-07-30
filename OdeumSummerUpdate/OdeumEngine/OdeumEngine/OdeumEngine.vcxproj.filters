@@ -54,6 +54,12 @@
     <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Rendering\RootSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -110,13 +116,19 @@
     <ClInclude Include="Engine\Rendering\D3DCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\DescriptorAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\KeyCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\DescriptorAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\RootSignature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\PipelineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

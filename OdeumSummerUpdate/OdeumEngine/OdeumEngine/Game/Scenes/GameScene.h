@@ -1,6 +1,7 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
+#include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
 class GameScene : public Scene

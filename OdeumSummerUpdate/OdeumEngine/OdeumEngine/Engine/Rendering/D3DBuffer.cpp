@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "D3DBuffer.h"
 
 #include "D3DRenderAPI.h"
@@ -23,16 +22,12 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 	heapProps.CreationNodeMask = 1;
 	heapProps.VisibleNodeMask = 1;
 
-	ID3D12Device5* device = DXGraphics::m_device;
-
 	if (FAILED(
-		device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_pResource)))
+		DXGraphics::m_device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_pResource)))
 	)	
 		Debug::Error("Could not create buffer", __FILENAME__, __LINE__);
 
 	m_vGpuAddress = m_pResource->GetGPUVirtualAddress();
-
-	device = nullptr;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size_) const
@@ -46,12 +41,8 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size
 	cbvDesc.BufferLocation = offset_;
 	cbvDesc.SizeInBytes = size_;
 
-	ID3D12Device5* device = DXGraphics::m_device;
-
 	D3D12_CPU_DESCRIPTOR_HANDLE hcbv = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	device->CreateConstantBufferView(&cbvDesc, hcbv);
-
-	device = nullptr;
+	DXGraphics::m_device->CreateConstantBufferView(&cbvDesc, hcbv);
 
 	return hcbv;
 }

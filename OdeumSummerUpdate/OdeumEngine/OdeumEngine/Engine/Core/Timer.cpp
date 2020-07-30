@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "Timer.h"
 
 Timer::Timer() : m_prevTicks(0), m_currentTicks(0)

@@ -1,7 +1,4 @@
-#include "pch.h"
-
 #include "Debug.h"
-
 #include <chrono>
 
 MessageType Debug::m_currentSev = MessageType::TYPE_NONE;

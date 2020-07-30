@@ -12,7 +12,7 @@ class GraphicsContext
 {
 public:
 
-	static GraphicsContext* Initialize();
+	static GraphicsContext* Initialize(std::string name_ = "");
 
 	GraphicsContext() {}
 	~GraphicsContext();

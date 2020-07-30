@@ -1,6 +1,8 @@
 #ifndef D3DCORE_H
 #define D3DCORE_H
 
+#include "../../pch.h"
+
 #include "DescriptorAllocator.h"
 
 namespace DXGraphics

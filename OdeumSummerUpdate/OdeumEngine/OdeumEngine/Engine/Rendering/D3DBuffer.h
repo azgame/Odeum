@@ -1,6 +1,8 @@
 #ifndef D3DBUFFER_H
 #define D3DBUFFER_H
 
+#include "../../pch.h"
+
 #include "D3DResource.h"
 
 class D3DBuffer : public D3DResource
@@ -75,7 +77,7 @@ public:
 
 private:
 	ByteAddressedBuffer m_counterBuffer; // This is in case we want to use our own uav counter buffer rather than the driver's, which is faster and easier
-										// but, we only need this for reading atomic counters
+										// but, we only need this for reading atomic counters, so only really used for indirect drawing in some contexts (moving cpu work to gpu)
 };
 
 #endif

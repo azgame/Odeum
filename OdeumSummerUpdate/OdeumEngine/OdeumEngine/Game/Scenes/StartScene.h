@@ -1,6 +1,7 @@
 #ifndef STARTSCENE_H
 #define STARTSCENE_H
 
+#include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
 class StartScene : public Scene

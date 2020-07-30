@@ -6,7 +6,6 @@
 
 #include "Engine/Core/OdeumEngine.h"
 
-// WINAPI entry
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
 
 	OdeumEngine* app;

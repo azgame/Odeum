@@ -1,6 +1,8 @@
 #ifndef ODEUMENGINE_H
 #define ODEUMENGINE_H
 
+#include "../../pch.h"
+
 #include "Window.h"
 
 class OdeumEngine
@@ -16,8 +18,8 @@ public:
 	void Close();
 
 private:
-	Window* _window;
-	bool _isRunning;
+	Window* m_window;
+	bool m_isRunning;
 };
 
 #endif

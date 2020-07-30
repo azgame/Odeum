@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "OdeumEngine.h"
 
 
@@ -12,36 +11,36 @@ OdeumEngine::~OdeumEngine()
 
 void OdeumEngine::Run()
 {
-	_isRunning = true;
+	m_isRunning = true;
 
-	while (_isRunning)
+	while (m_isRunning)
 	{
-		_window->Update();
+		m_window->Update();
 	}
 }
 
 bool OdeumEngine::Initialize()
 {	
-	_window = new Window();
+	m_window = new Window();
 
 	Debug::DebugInit();
 	Debug::SetSeverity(MessageType::TYPE_INFO);
 
-	_window->InitializeWindow();
+	m_window->InitializeWindow();
 
 	std::function<void()> fcnPtr = std::bind(&OdeumEngine::Close, this);
-	_window->SetCloseEvent(fcnPtr);
+	m_window->SetCloseEvent(fcnPtr);
 
 	return true;
 }
 
 void OdeumEngine::Uninitialize()
 {
-	_window->UninitializeWindow();
-	SAFE_DELETE(_window);
+	m_window->UninitializeWindow();
+	SAFE_DELETE(m_window);
 }
 
 void OdeumEngine::Close()
 {
-	_isRunning = false;
+	m_isRunning = false;
 }

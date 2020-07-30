@@ -1,9 +1,8 @@
-#include "pch.h"
 #include "GraphicsContext.h"
 
 
 
-GraphicsContext* GraphicsContext::Initialize()
+GraphicsContext* GraphicsContext::Initialize(std::string name_)
 {
 	return nullptr;
 }

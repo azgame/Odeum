@@ -1,6 +1,8 @@
 #ifndef DESCRIPTORALLOCATOR_H
 #define DESCRIPTORALLOCATOR_H
 
+#include "../../pch.h"
+
 class DescriptorAllocator
 {
 public:

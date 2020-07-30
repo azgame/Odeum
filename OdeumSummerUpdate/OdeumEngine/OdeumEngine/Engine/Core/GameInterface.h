@@ -1,6 +1,8 @@
 #ifndef GAMEINTERFACE_H
 #define GAMEINTERFACE_H
 
+#include "../../pch.h"
+
 class GameInterface 
 {
 public:

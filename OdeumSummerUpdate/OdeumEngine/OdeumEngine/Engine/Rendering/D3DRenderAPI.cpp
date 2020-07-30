@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "D3DRenderAPI.h"
 
 using namespace DXGraphics;
