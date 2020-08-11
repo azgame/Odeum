@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -162,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Input.h" />
-    <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Rendering\DescriptorAllocator.h" />
     <ClInclude Include="Engine\Rendering\D3DCore.h" />
     <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
