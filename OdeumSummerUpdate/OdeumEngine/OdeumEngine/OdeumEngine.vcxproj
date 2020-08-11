@@ -162,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Input.h" />
+    <ClInclude Include="Engine\Math\Matrix.h" />
+    <ClInclude Include="Engine\Math\Vector.h" />
     <ClInclude Include="Engine\Rendering\DescriptorAllocator.h" />
     <ClInclude Include="Engine\Rendering\D3DCore.h" />
     <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
