@@ -11,6 +11,7 @@
 #include <dxgi1_6.h>
 #include <dwrite_3.h>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 // Libraries
 #include <stdio.h>
