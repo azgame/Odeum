@@ -13,19 +13,20 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-// Libraries
+// C/C++ Libraries
 #include <stdio.h>
-#include <vector>
-#include <unordered_map>
-#include <memory>
 #include <stdlib.h>
-#include <sstream>
-#include <iomanip>
-#include <list>
-#include <string>
-#include <string.h>
+
+#include <memory>
 #include <cassert>
 #include <mutex>
+
+#include <vector>
+
+#include <string>
+#include <string.h>
+#include <sstream>
+#include <iomanip>
 
 // Engine
 #include "Engine/Core/Debug.h"

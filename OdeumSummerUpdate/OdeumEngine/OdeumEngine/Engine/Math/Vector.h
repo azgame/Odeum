@@ -1,7 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-// Many of these functions were adapted from the DirectX graphics samples github repo.
+// Many of these functions were adapted from the DirectX graphics samples github repo
 
 #include "../../pch.h"
 
@@ -14,13 +14,13 @@ public:
 	inline Scalar(float f_) { vec = DirectX::XMVectorReplicate(f_); }
 	// Create a new Scalar from an existing FXMVector
 	inline explicit Scalar(DirectX::FXMVECTOR vec_) { vec = vec_; }
-	// returns the XMVECTOR, I had to create this function because XMVector functions can't have a scalar given to them.
+	// returns the XMVECTOR, I had to create this function because XMVector functions can't have a scalar given to them
 	inline DirectX::XMVECTOR GetVec() { return vec; }
 private:
 	DirectX::XMVECTOR vec;
 };
 
-// Operator overloads for Scalars, using XMVector functions and overloads.
+// Operator overloads for Scalars, using XMVector functions and overloads
 inline Scalar operator- (Scalar s) { return Scalar(DirectX::XMVectorNegate(s.GetVec())); }
 inline Scalar operator+ (Scalar s1, Scalar s2) { return Scalar(DirectX::XMVectorAdd(s1.GetVec(), s2.GetVec())); }
 inline Scalar operator- (Scalar s1, Scalar s2) { return Scalar(DirectX::XMVectorSubtract(s1.GetVec(), s2.GetVec())); }

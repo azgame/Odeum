@@ -13,12 +13,12 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(UINT count_)
 		m_currentHandle = m_currentHeap->GetCPUDescriptorHandleForHeapStart();
 		m_numFreeHandles = kDescriptorsPerHeap;
 
-		if (m_descrptorSize == 0)
-			m_descrptorSize = DXGraphics::m_device->GetDescriptorHandleIncrementSize(m_type);
+		if (m_descriptorSize == 0)
+			m_descriptorSize = DXGraphics::m_device->GetDescriptorHandleIncrementSize(m_type);
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_currentHandle;
-	m_currentHandle.ptr += count_ * m_descrptorSize;
+	m_currentHandle.ptr += count_ * m_descriptorSize;
 	m_numFreeHandles -= count_;
 
 	return handle;
