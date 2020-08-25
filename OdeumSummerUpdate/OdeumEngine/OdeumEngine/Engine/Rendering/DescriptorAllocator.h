@@ -29,7 +29,7 @@ private:
 	ID3D12DescriptorHeap* m_currentHeap;
 	D3D12_DESCRIPTOR_HEAP_TYPE m_type;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_currentHandle;
-	uint32_t m_descrptorSize;
+	uint32_t m_descriptorSize;
 	uint32_t m_numFreeHandles;
 };
 
