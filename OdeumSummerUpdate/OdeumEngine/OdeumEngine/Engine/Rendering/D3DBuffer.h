@@ -5,6 +5,7 @@
 
 #include "D3DResource.h"
 
+
 class D3DBuffer : public D3DResource
 {
 public:

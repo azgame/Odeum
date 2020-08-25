@@ -3,6 +3,11 @@
 
 #include "../../pch.h"
 
+namespace DXGraphics
+{
+	extern ID3D12Device5* m_device;
+}
+
 class DescriptorAllocator
 {
 public:
@@ -26,6 +31,53 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE m_currentHandle;
 	uint32_t m_descrptorSize;
 	uint32_t m_numFreeHandles;
+};
+
+class DescriptorHandle
+{
+public:
+    DescriptorHandle()
+    {
+        m_cpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+        m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+    }
+
+    DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle)
+        : m_cpuHandle(CpuHandle)
+    {
+        m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+    }
+
+    DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE GpuHandle)
+        : m_cpuHandle(CpuHandle), m_gpuHandle(GpuHandle)
+    {
+    }
+
+    DescriptorHandle operator+ (int OffsetScaledByDescriptorSize) const
+    {
+        DescriptorHandle ret = *this;
+        ret += OffsetScaledByDescriptorSize;
+        return ret;
+    }
+
+    void operator += (int OffsetScaledByDescriptorSize)
+    {
+        if (m_cpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+            m_cpuHandle.ptr += OffsetScaledByDescriptorSize;
+        if (m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+            m_gpuHandle.ptr += OffsetScaledByDescriptorSize;
+    }
+
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const { return m_cpuHandle; }
+
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const { return m_gpuHandle; }
+
+    bool isNull() const { return m_cpuHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
+    bool isShaderVisible() const { return m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
+
+private:
+    D3D12_CPU_DESCRIPTOR_HANDLE m_cpuHandle;
+    D3D12_GPU_DESCRIPTOR_HANDLE m_gpuHandle;
 };
 
 #endif

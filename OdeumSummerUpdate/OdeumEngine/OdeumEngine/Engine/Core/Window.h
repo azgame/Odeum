@@ -25,7 +25,7 @@ public:
 
 private:
 
-	int						_screenWidth, _screenHeight, _xPos, _yPos;
+	int						m_screenWidth, m_screenHeight, m_xPos, m_yPos;
 	bool					isRunning, FULL_SCREEN;
 	std::function<void()>	closeFunc;
 

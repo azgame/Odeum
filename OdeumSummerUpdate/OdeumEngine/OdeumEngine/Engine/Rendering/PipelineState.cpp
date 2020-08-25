@@ -4,6 +4,8 @@
 
 #include "D3DCore.h"
 
+using namespace DXGraphics;
+
 void PSO::Destroy()
 {
 	m_rootSignature = nullptr;
@@ -91,6 +93,6 @@ void GraphicsPSO::Finalize()
 
 	m_psoDesc.InputLayout.pInputElementDescs = m_inputLayouts.get();
 
-	if (FAILED(DXGraphics::m_device->CreateGraphicsPipelineState(&m_psoDesc, IID_PPV_ARGS(&m_pso))))
+	if (FAILED(m_device->CreateGraphicsPipelineState(&m_psoDesc, IID_PPV_ARGS(&m_pso))))
 		Debug::FatalError("Graphics PSO could not be created!", __FILENAME__, __LINE__);
 }

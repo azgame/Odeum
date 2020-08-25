@@ -101,8 +101,8 @@ void Window::InitializeWindow()
 	RegisterClassEx(&wc);
 
 	// Determine the resolution of the clients desktop screen
-	_screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	_screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	m_screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
 
 	// Start full screen or windowed
 	FULL_SCREEN = false;
@@ -114,8 +114,8 @@ void Window::InitializeWindow()
 		// If full screen set the screen to maximum size of the users desktop and 32bit
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsHeight = (unsigned long)_screenHeight;
-		dmScreenSettings.dmPelsWidth = (unsigned long)_screenWidth;
+		dmScreenSettings.dmPelsHeight = (unsigned long)m_screenHeight;
+		dmScreenSettings.dmPelsWidth = (unsigned long)m_screenWidth;
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -123,26 +123,26 @@ void Window::InitializeWindow()
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
 		// Set the position of the window to the top left corner
-		_xPos = _yPos = 0;
+		m_xPos = m_yPos = 0;
 
 		// Create the window with the screen settings and get the handle to it
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 			WS_POPUP,
-			_xPos, _yPos, _screenWidth, _screenHeight, NULL, NULL, m_hInstance, NULL);
+			m_xPos, m_yPos, m_screenWidth, m_screenHeight, NULL, NULL, m_hInstance, NULL);
 	}
 	else
 	{
-		_screenWidth = 1600;
-		_screenHeight = 900;
+		m_screenWidth = 1600;
+		m_screenHeight = 900;
 
 		// Place the window in the middle of the screen
-		_xPos = (GetSystemMetrics(SM_CXSCREEN) - _screenWidth) / 2;
-		_yPos = (GetSystemMetrics(SM_CYSCREEN) - _screenHeight) / 2;
+		m_xPos = (GetSystemMetrics(SM_CXSCREEN) - m_screenWidth) / 2;
+		m_yPos = (GetSystemMetrics(SM_CYSCREEN) - m_screenHeight) / 2;
 
 		// Create the window with the screen settings and get the handle to it
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 			WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_THICKFRAME | WS_OVERLAPPEDWINDOW,
-			_xPos, _yPos, _screenWidth, _screenHeight, NULL, NULL, m_hInstance, NULL);
+			m_xPos, m_yPos, m_screenWidth, m_screenHeight, NULL, NULL, m_hInstance, NULL);
 	}
 
 	// Bring the window up on the screen and set it as main focus
@@ -174,7 +174,6 @@ void Window::UninitializeWindow()
 	WindowHandle = NULL;
 }
 
-
 void Window::SetCloseEvent(std::function<void()> func_)
 {
 	closeFunc = func_;
@@ -187,14 +186,14 @@ void Window::Close()
 
 void Window::SetWindowPosition(int x_, int y_)
 {
-	_xPos = x_;
-	_yPos = y_;
+	m_xPos = x_;
+	m_yPos = y_;
 }
 
 void Window::SetWindowSize(int w_, int h_)
 {
-	_screenWidth = w_;
-	_screenHeight = h_;
+	m_screenWidth = w_;
+	m_screenHeight = h_;
 }
 
 void Window::ToggleFullscreen()

@@ -1,7 +1,9 @@
 #include "D3DBuffer.h"
 
-#include "D3DRenderAPI.h"
+#include "D3DCore.h"
 #include "GraphicsContext.h"
+
+using namespace DXGraphics;
 
 void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elementSize_, const void* initialData_)
 {

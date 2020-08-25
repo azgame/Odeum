@@ -2,6 +2,8 @@
 
 #include "D3DCore.h"
 
+using namespace DXGraphics;
+
 std::mutex DescriptorAllocator::m_allocatorMutex;
 std::vector<ID3D12DescriptorHeap*> DescriptorAllocator::m_descriptorHeapPool;
 
@@ -14,7 +16,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(UINT count_)
 		m_numFreeHandles = kDescriptorsPerHeap;
 
 		if (m_descrptorSize == 0)
-			m_descrptorSize = DXGraphics::m_device->GetDescriptorHandleIncrementSize(m_type);
+			m_descrptorSize = m_device->GetDescriptorHandleIncrementSize(m_type);
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = m_currentHandle;
@@ -44,7 +46,7 @@ ID3D12DescriptorHeap* DescriptorAllocator::GetNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE
 
 	ID3D12DescriptorHeap* heap;
 
-	if (FAILED(DXGraphics::m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap))))
+	if (FAILED(m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap))))
 		Debug::Error("Could not create descriptor heap!", __FILENAME__, __LINE__);
 
 	m_descriptorHeapPool.emplace_back(heap);
