@@ -88,7 +88,7 @@ public:
 	void WaitForFence(uint64_t fenceValue_);
 
 	// The CPU will wait for all command queues to empty (so that the GPU is idle)
-	void IdleGPU(void)
+	void IdleGPU()
 	{
 		m_graphicsQueue.WaitForIdle();
 		m_computeQueue.WaitForIdle();

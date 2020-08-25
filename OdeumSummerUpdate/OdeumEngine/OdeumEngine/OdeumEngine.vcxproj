@@ -143,6 +143,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Rendering\CommandAllocatorPool.cpp" />
+    <ClCompile Include="Engine\Rendering\CommandListManager.cpp" />
     <ClCompile Include="Engine\Rendering\DynamicDescriptorHeap.cpp" />
     <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp" />
     <ClCompile Include="Engine\Rendering\D3DCore.cpp" />
@@ -162,6 +164,8 @@
     <ClCompile Include="Engine\Rendering\RootSignature.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Rendering\CommandAllocatorPool.h" />
+    <ClInclude Include="Engine\Rendering\CommandListManager.h" />
     <ClInclude Include="Engine\Rendering\DynamicDescriptorHeap.h" />
     <ClInclude Include="Engine\Core\Input.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />

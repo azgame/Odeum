@@ -163,10 +163,10 @@ void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3
 	assert(type_ != D3D12_COMMAND_LIST_TYPE_BUNDLE, "Bundles are not yet supported");
 	switch (type_)
 	{
-	case D3D12_COMMAND_LIST_TYPE_DIRECT: *allocator_ = m_graphicsQueue.RequestAllocator(); break;
-	case D3D12_COMMAND_LIST_TYPE_BUNDLE: break;
-	case D3D12_COMMAND_LIST_TYPE_COMPUTE: *allocator_ = m_computeQueue.RequestAllocator(); break;
-	case D3D12_COMMAND_LIST_TYPE_COPY: *allocator_ = m_copyQueue.RequestAllocator(); break;
+		case D3D12_COMMAND_LIST_TYPE_DIRECT: *allocator_ = m_graphicsQueue.RequestAllocator(); break;
+		case D3D12_COMMAND_LIST_TYPE_BUNDLE: break;
+		case D3D12_COMMAND_LIST_TYPE_COMPUTE: *allocator_ = m_computeQueue.RequestAllocator(); break;
+		case D3D12_COMMAND_LIST_TYPE_COPY: *allocator_ = m_copyQueue.RequestAllocator(); break;
 	}
 
 	if (FAILED(m_device->CreateCommandList(1, type_, *allocator_, nullptr, IID_PPV_ARGS(&cmdList_))))
