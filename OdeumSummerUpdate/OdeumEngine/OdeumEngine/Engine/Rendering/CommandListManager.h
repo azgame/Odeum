@@ -20,6 +20,15 @@ public:
 
 	inline bool isReady() { return m_commandQueue != nullptr; }
 
+	uint64_t IncrementFence();
+	bool IsFenceComplete(uint64_t fenceValue_);
+	void StallForFence(uint64_t fenceValue_);
+	void StallForQueue(CommandQueue& queue_);
+	void WaitForFence(uint64_t fenceValue_);
+	void WaitForIdle() { WaitForFence(IncrementFence()); }
+
+	ID3D12CommandQueue* GetCommandQueue() { return m_commandQueue; }
+
 private:
 
 	uint64_t ExecuteCommandList(ID3D12CommandList* cmdList_);
@@ -40,6 +49,59 @@ private:
 
 class CommandListManager
 {
+	friend class GraphicsContext;
+
+public:
+
+	CommandListManager();
+	~CommandListManager();
+
+	void Initialize(ID3D12Device* device_);
+	void Uninitialize();
+
+	CommandQueue& GetGraphicsQueue() { return m_graphicsQueue; }
+	CommandQueue& GetComputeQueue() { return m_computeQueue; }
+	CommandQueue& GetCopyQueue() { return m_copyQueue; }
+
+	CommandQueue& GetQueue(D3D12_COMMAND_LIST_TYPE type_ = D3D12_COMMAND_LIST_TYPE_DIRECT)
+	{
+		switch (type_)
+		{
+			case D3D12_COMMAND_LIST_TYPE_COMPUTE: return m_computeQueue;
+			case D3D12_COMMAND_LIST_TYPE_COPY: return m_copyQueue;
+			default: return m_graphicsQueue;
+		}
+	}
+
+	ID3D12CommandQueue* GetCommandQueue()
+	{
+		return m_graphicsQueue.GetCommandQueue();
+	}
+
+	void CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3D12GraphicsCommandList** cmdList_, ID3D12CommandAllocator** allocator_);
+
+	bool IsFenceComplete(uint64_t fenceValue_)
+	{
+		return GetQueue(D3D12_COMMAND_LIST_TYPE(fenceValue_ >> 56)).IsFenceComplete(fenceValue_);
+	}
+
+	void WaitForFence(uint64_t fenceValue_);
+
+	// The CPU will wait for all command queues to empty (so that the GPU is idle)
+	void IdleGPU(void)
+	{
+		m_graphicsQueue.WaitForIdle();
+		m_computeQueue.WaitForIdle();
+		m_copyQueue.WaitForIdle();
+	}
+
+private:
+
+	ID3D12Device* m_device;
+
+	CommandQueue m_graphicsQueue;
+	CommandQueue m_computeQueue;
+	CommandQueue m_copyQueue;
 };
 
 #endif

@@ -3,6 +3,7 @@
 namespace DXGraphics
 {
 	ID3D12Device5* m_device = nullptr;
+	CommandListManager m_commandManager;
 
 	DescriptorAllocator m_descriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
 	{
