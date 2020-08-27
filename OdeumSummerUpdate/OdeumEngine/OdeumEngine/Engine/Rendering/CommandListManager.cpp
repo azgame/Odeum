@@ -161,6 +161,7 @@ void CommandListManager::Uninitialize()
 void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3D12GraphicsCommandList** cmdList_, ID3D12CommandAllocator** allocator_)
 {
 	assert(type_ != D3D12_COMMAND_LIST_TYPE_BUNDLE, "Bundles are not yet supported");
+
 	switch (type_)
 	{
 		case D3D12_COMMAND_LIST_TYPE_DIRECT: *allocator_ = m_graphicsQueue.RequestAllocator(); break;
