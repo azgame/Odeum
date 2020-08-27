@@ -28,21 +28,25 @@ void CommandQueue::Initialize(ID3D12Device* device_)
 	assert(!isReady());
 	assert(m_allocatorPool.Size() == 0);
 
+	// Create our command queue
 	D3D12_COMMAND_QUEUE_DESC qDesc = {};
 	qDesc.Type = m_type;
 	qDesc.NodeMask = 1;
 	device_->CreateCommandQueue(&qDesc, IID_PPV_ARGS(&m_commandQueue));
 	m_commandQueue->SetName(L"Command Queue");
 
+	// create our fence
 	if (FAILED(device_->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence))))
 		Debug::Error("Fence could not be created", __FILENAME__, __LINE__);
 
 	m_fence->SetName(L"CommandList Fence");
 	m_fence->Signal((uint64_t)m_type << 56);
 
+	// Initialize the fence event handle
 	m_fenceEventHandle = CreateEvent(nullptr, false, false, nullptr);
 	assert(m_fenceEventHandle != NULL);
 
+	// Initialize our allocator pool
 	m_allocatorPool.Initialize(device_);
 
 	assert(isReady());
@@ -64,6 +68,7 @@ void CommandQueue::Uninitialize()
 	m_commandQueue = nullptr;
 }
 
+// Increment fence value, thread safe
 uint64_t CommandQueue::IncrementFence()
 {
 	std::lock_guard<std::mutex> LockGuard(m_fenceMutex);
@@ -71,6 +76,7 @@ uint64_t CommandQueue::IncrementFence()
 	return m_nextFenceValue++;
 }
 
+// check if the fence is complete
 bool CommandQueue::IsFenceComplete(uint64_t fenceValue_)
 {
 	if (fenceValue_ > m_lastCompletedFenceValue)
@@ -79,18 +85,21 @@ bool CommandQueue::IsFenceComplete(uint64_t fenceValue_)
 	return fenceValue_ <= m_lastCompletedFenceValue;
 }
 
+// Tell a queue to wait for a fence value
 void CommandQueue::StallForFence(uint64_t fenceValue_)
 {
 	CommandQueue& queue = DXGraphics::m_commandManager.GetQueue((D3D12_COMMAND_LIST_TYPE)(fenceValue_ >> 56));
 	m_commandQueue->Wait(queue.m_fence, fenceValue_);
 }
 
+// Tell a queue to wait on another queue
 void CommandQueue::StallForQueue(CommandQueue& queue_)
 {
 	assert(queue_.m_nextFenceValue > 0);
 	m_commandQueue->Wait(queue_.m_fence, queue_.m_nextFenceValue - 1);
 }
 
+// Wait for fence completion
 void CommandQueue::WaitForFence(uint64_t fenceValue_)
 {
 	if (IsFenceComplete(fenceValue_))
@@ -103,6 +112,7 @@ void CommandQueue::WaitForFence(uint64_t fenceValue_)
 	m_lastCompletedFenceValue = fenceValue_;
 }
 
+// Execute the given command list and signal the queue fence values
 uint64_t CommandQueue::ExecuteCommandList(ID3D12CommandList* cmdList_)
 {
 	std::lock_guard<std::mutex> LockGuard(m_fenceMutex);
@@ -158,6 +168,7 @@ void CommandListManager::Uninitialize()
 	m_copyQueue.Uninitialize();
 }
 
+// Create a new command list of the given type
 void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3D12GraphicsCommandList** cmdList_, ID3D12CommandAllocator** allocator_)
 {
 	assert(type_ != D3D12_COMMAND_LIST_TYPE_BUNDLE, "Bundles are not yet supported");
@@ -176,6 +187,7 @@ void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3
 	(*cmdList_)->SetName(L"CommandList");
 }
 
+// Tell the specified queue to wait for the fence
 void CommandListManager::WaitForFence(uint64_t fenceValue_)
 {
 	CommandQueue& queue = DXGraphics::m_commandManager.GetQueue((D3D12_COMMAND_LIST_TYPE)(fenceValue_ >> 56));

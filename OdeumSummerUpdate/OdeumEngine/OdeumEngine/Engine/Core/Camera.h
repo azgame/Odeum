@@ -3,31 +3,21 @@
 
 #include "../Math/Vector.h"
 
-class Camera
+class BaseCamera
 {
-	Camera();
+public:
 
-	void SetPerspective(float fieldOfView_, float aspectRatio_, float nearPlane_, float farPlane_);
-
+	BaseCamera();
+	
 	void SetEyeAtUp(Vector3 eye_, Vector3 at_, Vector3 up_);
 	void SetPosition(Vector3 position_);
 	void SetLookDirection(Vector3 forward_, Vector3 up_);
 	// void SetRotation(Quaternion rotation_);
 
-	void SetFOV(float fov_) { m_fieldOfView = fov_; UpdateProjectionMatrix(); }
-	void SetAspectRatio(float aspectRatio_) { m_aspectRatio = aspectRatio_; UpdateProjectionMatrix(); }
-	void SetZRange(float near_, float far_) { m_nearPlane = near_; m_farPlane = far_; UpdateProjectionMatrix(); }
-	
 	void UpdateCamera();
-	void UpdateProjectionMatrix();
 
 	Vector3 GetPosition() { return m_eye; }
 
-	float FieldOfView() { return m_fieldOfView; }
-	float NearClipPlane() { return m_nearPlane; }
-	float FarClipPlane() { return m_farPlane; }
-	float Pitch() { return m_pitch; }
-	float Yaw() { return m_yaw; }
 	Vector3 Eye() { return m_eye; }
 	Vector3 LookAt() { return m_lookAt; }
 
@@ -52,19 +42,41 @@ private:
 	Vector3 m_forward;
 	Vector3 m_right;
 
+
+};
+
+class Camera : public BaseCamera
+{
+public:
+
+	void SetPerspective(float fieldOfView_, float aspectRatio_, float nearPlane_, float farPlane_);
+
+	void SetFOV(float fov_) { m_fieldOfView = fov_; UpdateProjectionMatrix(); }
+	void SetAspectRatio(float aspectRatio_) { m_aspectRatio = aspectRatio_; UpdateProjectionMatrix(); }
+	void SetZRange(float near_, float far_) { m_nearPlane = near_; m_farPlane = far_; UpdateProjectionMatrix(); }
+	float FieldOfView() { return m_fieldOfView; }
+	float NearClipPlane() { return m_nearPlane; }
+	float FarClipPlane() { return m_farPlane; }
+	float Pitch() { return m_pitch; }
+	float Yaw() { return m_yaw; }
+
+private:
+
+	void UpdateProjectionMatrix();
+
 	float m_pitch, m_yaw, m_roll;
 	float m_fieldOfView;
 	float m_aspectRatio;
 	float m_nearPlane, m_farPlane;
 };
 
-inline void Camera::SetEyeAtUp(Vector3 eye_, Vector3 at_, Vector3 up_)
+inline void BaseCamera::SetEyeAtUp(Vector3 eye_, Vector3 at_, Vector3 up_)
 {
 	SetLookDirection(at_ - eye_, up_);
 	SetPosition(eye_);
 }
 
-inline void Camera::SetPosition(Vector3 position_)
+inline void BaseCamera::SetPosition(Vector3 position_)
 {
 	m_eye = position_;
 }

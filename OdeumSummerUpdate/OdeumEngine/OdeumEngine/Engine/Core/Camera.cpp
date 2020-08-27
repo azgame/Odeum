@@ -2,12 +2,16 @@
 
 #include <math.h>
 
-void Camera::SetLookDirection(Vector3 forward_, Vector3 up_)
+
+BaseCamera::BaseCamera()
 {
-	
 }
 
-void Camera::UpdateCamera()
+void BaseCamera::SetLookDirection(Vector3 forward_, Vector3 up_)
+{
+}
+
+void BaseCamera::UpdateCamera()
 {
 	// m_previousViewProjMatrix = m_viewProjMatrix;
 

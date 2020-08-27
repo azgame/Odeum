@@ -41,7 +41,8 @@ private:
 	std::mutex m_fenceMutex;
 	std::mutex m_eventMutex;
 
-	ID3D12Fence* m_fence;
+	ID3D12Fence* m_fence;	// fences are used for synchronization between the cpu and one or more gpus using a fence value (read/write from cpu and gpu).
+							// Fence and fence event handle will frequently be used to delay cpu to wait for completion of commands on the gpu
 	uint64_t m_nextFenceValue;
 	uint64_t m_lastCompletedFenceValue;
 	HANDLE m_fenceEventHandle;
