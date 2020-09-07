@@ -4,11 +4,13 @@
 #include "../../pch.h"
 
 class RootSignature;
+class CommandContext;
 class GraphicsContext;
 
+// PSO and derived classes used to wrap pipeline states in an interface
 class PSO
 {
-	friend class GraphicsContext;
+	friend class CommandContext;
 public:
 
 	PSO() : m_rootSignature(nullptr) {}

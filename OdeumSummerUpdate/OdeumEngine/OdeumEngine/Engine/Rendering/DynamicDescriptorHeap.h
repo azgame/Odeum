@@ -18,18 +18,19 @@
 
 #include "../../pch.h"
 
-#include "GraphicsContext.h"
 #include "DescriptorAllocator.h"
 #include "RootSignature.h"
 
 #include <queue>
 
-// Todo Aidan: Add compute
+class CommandContext;
+
+// TODO Aidan: Add compute
 
 class DynamicDescriptorHeap
 {
 public:
-	DynamicDescriptorHeap(GraphicsContext& context_, D3D12_DESCRIPTOR_HEAP_TYPE type_);
+	DynamicDescriptorHeap(CommandContext& context_, D3D12_DESCRIPTOR_HEAP_TYPE type_);
 	~DynamicDescriptorHeap();
 
 	void Destroy()
@@ -70,7 +71,7 @@ private:
 	static ID3D12DescriptorHeap* RequestDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_);
 	static void DiscardDescriptorHeaps(D3D12_DESCRIPTOR_HEAP_TYPE type_, uint64_t fenceValue_, const std::vector<ID3D12DescriptorHeap*>& usedHeaps_);
 
-	GraphicsContext& m_context;
+	CommandContext& m_context;
 	ID3D12DescriptorHeap* m_currentHeapPtr;
 	const D3D12_DESCRIPTOR_HEAP_TYPE m_descriptorType;
 	uint32_t m_descriptorSize;

@@ -181,7 +181,7 @@ void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3
 		case D3D12_COMMAND_LIST_TYPE_COPY: *allocator_ = m_copyQueue.RequestAllocator(); break;
 	}
 
-	if (FAILED(m_device->CreateCommandList(1, type_, *allocator_, nullptr, IID_PPV_ARGS(&cmdList_))))
+	if (FAILED(m_device->CreateCommandList(1, type_, *allocator_, nullptr, IID_PPV_ARGS(cmdList_))))
 		Debug::Error("Failed to create new command list", __FILENAME__, __LINE__);
 
 	(*cmdList_)->SetName(L"CommandList");

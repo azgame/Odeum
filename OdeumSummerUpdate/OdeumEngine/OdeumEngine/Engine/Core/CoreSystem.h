@@ -8,11 +8,19 @@ class CoreSystem
 {
 public:
 
-	virtual void attach() {}
-	virtual void detach() {}
-	virtual void update(float deltaTime_) {}
-	virtual void uiRender() {}
-	virtual void handleEvent(Event& event_) {}
+	CoreSystem(const std::string& name_ = "System") : m_debugName(name_) {}
+	virtual ~CoreSystem() = default;
+
+	virtual void Attach() {}
+	virtual void Detach() {}
+	virtual void Update(float deltaTime_) {}
+	virtual void UIRender() {}
+	virtual void HandleEvent(Event& event_) {}
+
+	const std::string& Name() const { return m_debugName; }
+
+protected:
+	std::string m_debugName;
 };
 
 #endif

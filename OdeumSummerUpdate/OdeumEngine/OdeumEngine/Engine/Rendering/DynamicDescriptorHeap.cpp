@@ -1,5 +1,7 @@
 #include "DynamicDescriptorHeap.h"
 
+#include "GraphicsContext.h"
+
 // Comments by Aidan Zizys, 08-20-2020
 
 using namespace DXGraphics;
@@ -11,7 +13,7 @@ std::vector<ID3D12DescriptorHeap*> DynamicDescriptorHeap::sm_descriptorHeapPool[
 std::queue<std::pair<uint64_t, ID3D12DescriptorHeap*>> DynamicDescriptorHeap::sm_retiredDescriptorHeaps[2];
 std::queue<ID3D12DescriptorHeap*> DynamicDescriptorHeap::sm_availableDescriptorHeaps[2];
 
-DynamicDescriptorHeap::DynamicDescriptorHeap(GraphicsContext& context_, D3D12_DESCRIPTOR_HEAP_TYPE type_)
+DynamicDescriptorHeap::DynamicDescriptorHeap(CommandContext& context_, D3D12_DESCRIPTOR_HEAP_TYPE type_)
 	: m_context(context_), m_descriptorType(type_)
 {
 	m_currentHeapPtr = nullptr;
@@ -40,7 +42,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE DynamicDescriptorHeap::UploadDirect(D3D12_CPU_DESCRI
 	}
 
 	// This can trigger the creation of a new heap
-	m_context.SetDescriptorHeap(m_descriptorType, GetHeapPointer()); // TODO Aidan: Add comment
+	m_context.SetDescriptorHeap(m_descriptorType, GetHeapPointer());
 
 	DescriptorHandle DestHandle = m_descriptorForHeapStart + m_currentOffset * m_descriptorSize;
 	m_currentOffset += 1;
@@ -58,7 +60,7 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::RequestDescriptorHeap(D3D12_DESCRIP
 	uint32_t heapType = type_ == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER ? 1 : 0; // what type of heap do we want
 
 	// If retired heaps have been cleaned up and fence signals they are ready for use, return them to the list of available heaps
-	while (!sm_retiredDescriptorHeaps[heapType].empty() && g_CommandManager.IsFenceComplete(sm_retiredDescriptorHeaps[heapType].front().first))
+	while (!sm_retiredDescriptorHeaps[heapType].empty() && m_commandManager.IsFenceComplete(sm_retiredDescriptorHeaps[heapType].front().first))
 	{
 		sm_availableDescriptorHeaps[heapType].push(sm_retiredDescriptorHeaps[heapType].front().second);
 		sm_retiredDescriptorHeaps[heapType].pop();

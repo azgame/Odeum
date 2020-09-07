@@ -3,9 +3,9 @@
 
 #include "../../pch.h"
 
-
 #define D3D12_ROOT_PARAMETER_NULL (D3D12_ROOT_PARAMETER_TYPE)0xFFFFFFFF
 
+// Root parameter uses functions to initialize root params to certain states. Pretty straightforward
 class RootParameter
 {
 	friend class RootSignature;
@@ -94,7 +94,7 @@ protected:
 	D3D12_ROOT_PARAMETER m_rootParam;
 };
 
-
+// Root signature acts as a collection of root parameters, including a bitmap for used parameter indices and size of tables
 class RootSignature
 {
 	friend class DynamicDescriptorHeap;

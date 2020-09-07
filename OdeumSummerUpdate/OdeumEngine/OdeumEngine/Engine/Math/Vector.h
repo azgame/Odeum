@@ -85,12 +85,12 @@ public:
 	inline Vector4() { vec = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); }
 	inline Vector4(float x_, float y_, float z_, float w_) { vec = DirectX::XMVectorSet(x_, y_, z_, w_); }
 	inline Vector4(Vector3 vec_, float w_) { vec = DirectX::XMVectorSetW(vec_.GetVec(), w_); }
-	inline Vector4(const Vector4& v_) { vec = v_.GetVec(); };
-	inline Vector4(const Scalar& s_) { vec = s_.GetVec(); };
+	inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
+	inline Vector4(Scalar& s_) { vec = s_.GetVec(); }
 
 	inline DirectX::XMVECTOR GetVec() { return vec; }
 protected:
 	DirectX::XMVECTOR vec;
 };
 
-#endif // !VECTOR_H
+#endif

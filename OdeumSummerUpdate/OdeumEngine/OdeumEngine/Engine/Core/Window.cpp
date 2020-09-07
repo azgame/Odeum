@@ -30,7 +30,7 @@ LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		Close();
 		PostQuitMessage(0);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	case WM_KEYDOWN:
+	case WM_KEYDOWN: // Move into input handling
 		switch (wparam)
 		{
 		case VK_SPACE:
@@ -48,10 +48,6 @@ LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 		// handle restore
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	case WM_MOVE:
-
-		// create window move event
-		// send window move event into window event handler
-
 		SetWindowPosition((int)LOWORD(lparam), (int)HIWORD(lparam));
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	case WM_SIZE:

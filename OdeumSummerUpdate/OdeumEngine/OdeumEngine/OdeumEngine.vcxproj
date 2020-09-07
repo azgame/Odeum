@@ -143,9 +143,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Core\Input.cpp" />
     <ClCompile Include="Engine\Rendering\Colour.cpp" />
-    <ClCompile Include="Engine\Rendering\ColourBuffer.cpp" />
-    <ClCompile Include="Engine\Rendering\DepthBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\Buffers\ColourBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\Buffers\DepthBuffer.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\CameraController.cpp" />
     <ClCompile Include="Engine\Rendering\CommandAllocatorPool.cpp" />
@@ -154,11 +155,9 @@
     <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp" />
     <ClCompile Include="Engine\Rendering\D3DCore.cpp" />
     <ClCompile Include="Engine\Rendering\D3DRenderAPI.cpp" />
-    <ClCompile Include="Engine\Rendering\D3DBuffer.cpp" />
-    <ClCompile Include="Engine\Core\CoreSystem.cpp" />
+    <ClCompile Include="Engine\Rendering\Buffers\D3DBuffer.cpp" />
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
-    <ClCompile Include="Engine\Events\Event.cpp" />
     <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
     <ClCompile Include="Engine\Rendering\GraphicsContext.cpp" />
     <ClCompile Include="Engine\Rendering\PipelineState.cpp" />
@@ -167,12 +166,16 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\Window.cpp" />
     <ClCompile Include="Engine\Rendering\RootSignature.cpp" />
-    <ClCompile Include="Engine\Rendering\PixelBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\Buffers\PixelBuffer.cpp" />
+    <ClCompile Include="Engine\Core\SystemStack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Events\ApplicationEvent.h" />
+    <ClInclude Include="Engine\Events\KeyEvent.h" />
+    <ClInclude Include="Engine\Events\MouseEvent.h" />
     <ClInclude Include="Engine\Rendering\Colour.h" />
-    <ClInclude Include="Engine\Rendering\ColourBuffer.h" />
-    <ClInclude Include="Engine\Rendering\DepthBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Buffers\ColourBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Buffers\DepthBuffer.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\CameraController.h" />
     <ClInclude Include="Engine\Rendering\CommandAllocatorPool.h" />
@@ -183,7 +186,7 @@
     <ClInclude Include="Engine\Rendering\DescriptorAllocator.h" />
     <ClInclude Include="Engine\Rendering\D3DCore.h" />
     <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
-    <ClInclude Include="Engine\Rendering\D3DBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Buffers\D3DBuffer.h" />
     <ClInclude Include="Engine\Core\CoreSystem.h" />
     <ClInclude Include="Engine\Core\Debug.h" />
     <ClInclude Include="Engine\Core\GameInterface.h" />
@@ -191,7 +194,7 @@
     <ClInclude Include="Engine\Core\Timer.h" />
     <ClInclude Include="Engine\dxc\dxcapi.h" />
     <ClInclude Include="Engine\dxc\dxcapi.use.h" />
-    <ClInclude Include="Engine\Rendering\D3DResource.h" />
+    <ClInclude Include="Engine\Rendering\Buffers\D3DResource.h" />
     <ClInclude Include="Engine\Rendering\PipelineState.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
@@ -201,7 +204,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\RootSignature.h" />
-    <ClInclude Include="Engine\Rendering\PixelBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Buffers\PixelBuffer.h" />
+    <ClInclude Include="Engine\Core\SystemStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

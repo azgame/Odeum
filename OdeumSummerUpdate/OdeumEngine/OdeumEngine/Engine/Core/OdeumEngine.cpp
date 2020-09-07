@@ -1,8 +1,10 @@
 #include "OdeumEngine.h"
 
+OdeumEngine* OdeumEngine::m_instance = nullptr;
 
 OdeumEngine::OdeumEngine()
 {
+	m_instance = this;
 }
 
 OdeumEngine::~OdeumEngine()

@@ -80,7 +80,8 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 	m_descriptorTableBitMap = 0;
 	m_SamplerTableBitMap = 0;
 
-	for (UINT param = 0; param < m_numParameters; param++) // This is cool, thanks msft
+	// For each root parameter, flag entry in bitmap as used (1) or leave unused (0). Also set descriptor table size based on ranges in each param
+	for (UINT param = 0; param < m_numParameters; param++) 
 	{
 		const D3D12_ROOT_PARAMETER& rootParam = rootDesc.pParameters[param];
 		m_descriptorTableSize[param] = 0;

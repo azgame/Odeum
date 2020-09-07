@@ -8,7 +8,7 @@
 class CommandQueue
 {
 	friend class CommandListManager;
-	friend class GraphicsContext;
+	friend class CommandContext;
 
 public:
 

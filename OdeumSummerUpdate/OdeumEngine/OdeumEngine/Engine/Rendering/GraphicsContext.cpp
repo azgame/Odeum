@@ -1,15 +1,17 @@
 #include "GraphicsContext.h"
 
-GraphicsContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type_)
+// TODO Aidan: Make comments
+
+CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type_)
 {
     std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex);
 
     auto& AvailableContexts = sm_availableContexts[type_];
 
-    GraphicsContext* ret = nullptr;
+    CommandContext* ret = nullptr;
     if (AvailableContexts.empty())
     {
-        ret = new GraphicsContext(type_);
+        ret = new CommandContext(type_);
         sm_ContextPool[type_].emplace_back(ret);
         ret->Initialize();
     }
@@ -26,7 +28,7 @@ GraphicsContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type_)
     return ret;
 }
 
-void ContextManager::FreeContext(GraphicsContext* context_)
+void ContextManager::FreeContext(CommandContext* context_)
 {
 	assert(context_ != nullptr);
 	std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex);
@@ -35,23 +37,41 @@ void ContextManager::FreeContext(GraphicsContext* context_)
 
 void ContextManager::DestroyAllContexts()
 {
-	for (auto context : sm_ContextPool)
-		context.clear();
+    for (uint32_t i = 0; i < 4; ++i)
+        sm_ContextPool[i].clear();
 }
 
-GraphicsContext* GraphicsContext::Initialize(std::string name_)
+CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE type_) :
+    m_type(type_),
+    m_dynamicViewDescHeap(*this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
+    m_dynamicSamplerDescHeap(*this, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER)
 {
-	return nullptr;
+    m_manager = nullptr;
+    m_commandList = nullptr;
+    ZeroMemory(m_currentDescHeap, sizeof(m_currentDescHeap));
+
+    m_curGraphicsRootSignature = nullptr;
+    m_curComputeRootSignature = nullptr;
+    m_curPipelineState = nullptr;
+    m_numBarriersToFlush = 0;
 }
 
-void GraphicsContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_)
+CommandContext::~CommandContext()
 {
 }
 
-GraphicsContext::~GraphicsContext()
+CommandContext& CommandContext::Initialize(std::wstring name_)
 {
+    CommandContext* context = DXGraphics::m_contextManager.AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    // set id
+    return *context;
 }
 
-void GraphicsContext::Reset()
+void CommandContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_)
+{
+    
+}
+
+void CommandContext::Reset()
 {
 }
