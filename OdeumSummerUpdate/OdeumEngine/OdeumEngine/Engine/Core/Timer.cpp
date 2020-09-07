@@ -24,14 +24,13 @@ float Timer::GetDeltaTime() const
 unsigned int Timer::GetSleepTime(const unsigned int fps_)
 {
 	unsigned int milliPerFrame = 1000 / fps_;
-	if (milliPerFrame == 0) {
+	if (milliPerFrame == 0)
 		return 0;
-	}
 
 	unsigned int sleepTime = milliPerFrame - GetTickCount();
-	if (sleepTime > milliPerFrame) {
+	if (sleepTime > milliPerFrame)
 		return milliPerFrame;
-	}
+
 	return sleepTime;
 }
 

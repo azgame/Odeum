@@ -96,8 +96,6 @@ class GraphicsContext : public CommandContext
 {
 public:
 
-	
-
     static GraphicsContext& Initialize(const std::wstring& ID = L"")
     {
         return CommandContext::Initialize(ID).GetGraphicsContext();

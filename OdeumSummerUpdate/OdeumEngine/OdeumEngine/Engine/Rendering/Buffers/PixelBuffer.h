@@ -3,6 +3,7 @@
 
 #include "D3DResource.h"
 
+// defines a buffer that represents a collection of pixels (width * height, possible depth). Useful for finding appropriate dxgi format (bits/bytes per pixel and type)
 class PixelBuffer : public D3DResource
 {
 public:

@@ -12,7 +12,7 @@ public:
 	OdeumEngine();
 	~OdeumEngine();
 
-	static OdeumEngine& Get() { return *m_instance; }
+	static OdeumEngine& Get() { return *sm_instance; }
 	Window& GetWindow() { return *m_window; }
 
 	void Run();
@@ -24,7 +24,7 @@ private:
 	Window* m_window;
 	bool m_isRunning;
 
-	static OdeumEngine* m_instance;
+	static OdeumEngine* sm_instance;
 };
 
 #endif

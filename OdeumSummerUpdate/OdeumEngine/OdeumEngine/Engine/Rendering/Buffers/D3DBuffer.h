@@ -7,12 +7,12 @@
 
 class CommandContext;
 
-
+// default Buffer. Contains: buffer size, number of elements, size of elements, relevant flags, and two cpu desc handles
 class D3DBuffer : public D3DResource
 {
 public:
 
-	// Initial data being passed in is not copied to the buffer, should be in future
+	// Initial data being passed in is not copied to the buffer, can be in the future
 	void Create(std::string name_, uint32_t numElements_, uint32_t elementSize_, const void* initialData_ = nullptr);
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_uav; }
@@ -79,8 +79,7 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCounterUAV(CommandContext& context_);
 
 private:
-	ByteAddressedBuffer m_counterBuffer; // This is in case we want to use our own uav counter buffer rather than the driver's, which is faster and easier
-										// but, we only need this for reading atomic counters, so only really used for indirect drawing in some contexts (moving cpu work to gpu)
+	ByteAddressedBuffer m_counterBuffer; // if we want to read the atomic compute counter for this buffer
 };
 
 #endif

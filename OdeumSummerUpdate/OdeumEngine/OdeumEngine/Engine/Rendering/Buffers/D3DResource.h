@@ -15,12 +15,12 @@ public:
 
 	D3DResource() : 
 		m_vGpuAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL), 
-		m_pResource(nullptr),
+		m_resource(nullptr),
 		m_usageState(D3D12_RESOURCE_STATE_COMMON)
 	{}
 
 	D3DResource(ID3D12Resource* resource_, D3D12_RESOURCE_STATES state_) : 
-		m_pResource(resource_), 
+		m_resource(resource_), 
 		m_usageState(state_) 
 	{
 		m_vGpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
@@ -28,20 +28,20 @@ public:
 
 	virtual void Destroy()
 	{
-		m_pResource->Release();
+		m_resource->Release();
 	}
 
-	ID3D12Resource* operator->() { return m_pResource; }
-	const ID3D12Resource* operator->() const { return m_pResource; }
+	ID3D12Resource* operator->() { return m_resource; }
+	const ID3D12Resource* operator->() const { return m_resource; }
 
-	ID3D12Resource* GetResource() { return m_pResource; }
-	const ID3D12Resource* GetResource() const { return m_pResource; }
+	ID3D12Resource* GetResource() { return m_resource; }
+	const ID3D12Resource* GetResource() const { return m_resource; }
 
 	D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() { return m_vGpuAddress; }
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const { return m_vGpuAddress; }
 
 protected:
-	ID3D12Resource* m_pResource;
+	ID3D12Resource* m_resource;
 	D3D12_GPU_VIRTUAL_ADDRESS m_vGpuAddress;
 	D3D12_RESOURCE_STATES m_usageState;
 };

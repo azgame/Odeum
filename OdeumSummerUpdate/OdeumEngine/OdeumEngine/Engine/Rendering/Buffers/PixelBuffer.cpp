@@ -14,10 +14,10 @@ D3D12_RESOURCE_DESC PixelBuffer::CreateTextureDesc(uint32_t width_, uint32_t hei
     m_format = format_;
 
     D3D12_RESOURCE_DESC desc = {};
-    desc.Width = (UINT64)m_width;
-    desc.Height = (UINT)m_height;
-    desc.DepthOrArraySize = (UINT16)m_depth;
-    desc.MipLevels = (UINT16)numMips_;
+    desc.Width = m_width;
+    desc.Height = m_height;
+    desc.DepthOrArraySize = m_depth;
+    desc.MipLevels = numMips_;
     desc.Format = GetBaseFormat(m_format);
     desc.Alignment = 0;
     desc.Dimension = D3D12_RESOURCE_DIMENSION_UNKNOWN;
@@ -35,15 +35,15 @@ void PixelBuffer::ConnectToResource(ID3D12Device* device_, const std::wstring& n
     assert(resource_ != nullptr);
 
     D3D12_RESOURCE_DESC desc = resource_->GetDesc();
-    m_pResource = resource_;
+    m_resource = resource_;
     m_usageState = state_;
 
-    m_width = (uint32_t)desc.Width;
+    m_width = desc.Width;
     m_height = desc.Height;
     m_depth = desc.DepthOrArraySize;
     m_format = desc.Format;
 
-    m_pResource->SetName(name_.c_str());
+    m_resource->SetName(name_.c_str());
 }
 
 // Reset and recreate resource based on given desc. Can use given gpuAddress in future to place resource instead of creating new
@@ -54,13 +54,13 @@ void PixelBuffer::CreateTextureResource(ID3D12Device* device_, const std::wstrin
     CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_DEFAULT);
 
     if (FAILED(device_->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &desc_,
-        D3D12_RESOURCE_STATE_COMMON, &clearValue_, IID_PPV_ARGS(&m_pResource))))
+        D3D12_RESOURCE_STATE_COMMON, &clearValue_, IID_PPV_ARGS(&m_resource))))
         Debug::Error("Failed to create texture resource", __FILENAME__, __LINE__);
 
     m_usageState = D3D12_RESOURCE_STATE_COMMON;
     m_vGpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 
-    m_pResource->SetName(name_.c_str());
+    m_resource->SetName(name_.c_str());
 }
 
 // Getting the byte format for given format

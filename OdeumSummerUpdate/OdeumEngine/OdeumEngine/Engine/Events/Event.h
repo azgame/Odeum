@@ -14,14 +14,14 @@ enum class EventType
 enum EventCategory
 {
 	None = 0,
-	EventCategoryApplication =	0x00000001,
-	EventCategoryInput =		0x00000010,
-	EventCategoryKeyboard =		0x00000100,
-	EventCategoryMouse =		0x00001000,
-	EventCategoryMouseButton =	0x00010000,
+	EventCategoryApplication =	0x1,
+	EventCategoryInput =		0x2,
+	EventCategoryKeyboard =		0x4,
+	EventCategoryMouse =		0x8,
+	EventCategoryMouseButton =	0x10,
 };
 
-// macro so we don't have to retype this in every derived event
+// macro so we don't have to retype this in every derived event, thanks cherno
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
 																virtual EventType GetEventType() const override { return GetStaticType(); }\
 																virtual const char* GetName() const override { return #type; } // this is a debugging thing only
@@ -52,8 +52,8 @@ class EventDispatcher
 public:
 	EventDispatcher(Event& event_) : m_event(event_) {}
 
-	template<typename T, typename F> // F determined by compiler
-	bool Dispatch(const F& func)
+	template<typename T, typename F> // F determined by compiler, spooky
+	bool Dispatch(const F& func) // signature must match bool func<EventToCheckAgainst>(Event&)
 	{
 		if (m_event.GetEventType() == T::GetStaticType()) // if our event is equal to the given event type (better be an event)
 		{

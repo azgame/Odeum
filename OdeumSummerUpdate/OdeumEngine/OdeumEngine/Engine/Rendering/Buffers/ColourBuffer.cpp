@@ -9,7 +9,7 @@ void ColourBuffer::CreateFromSwapChain(const std::wstring& name_, ID3D12Resource
 	ConnectToResource(DXGraphics::m_device, name_, pResource_, D3D12_RESOURCE_STATE_PRESENT);
 
 	m_rtvHandle = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	DXGraphics::m_device->CreateRenderTargetView(m_pResource, nullptr, m_rtvHandle);
+	DXGraphics::m_device->CreateRenderTargetView(m_resource, nullptr, m_rtvHandle);
 }
 
 // Wholesale creation of buffer. Determine num mips, set flags, create texture desc using num mip maps. Then set clear colour and create the texture resource and call any derived functions at the end
@@ -116,8 +116,8 @@ void ColourBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_
 		m_srvHandle = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	}
 
-	device_->CreateRenderTargetView(m_pResource, &rtvDesc, m_rtvHandle);
-	device_->CreateShaderResourceView(m_pResource, &srvDesc, m_srvHandle);
+	device_->CreateRenderTargetView(m_resource, &rtvDesc, m_rtvHandle);
+	device_->CreateShaderResourceView(m_resource, &srvDesc, m_srvHandle);
 
 	if (m_fragmentCount > 1)
 		return;
@@ -128,7 +128,7 @@ void ColourBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_
 		if (m_uavHandle[i].ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 			m_uavHandle[i] = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-		device_->CreateUnorderedAccessView(m_pResource, nullptr, &uavDesc, m_uavHandle[i]);
+		device_->CreateUnorderedAccessView(m_resource, nullptr, &uavDesc, m_uavHandle[i]);
 
 		uavDesc.Texture2D.MipSlice++;
 	}

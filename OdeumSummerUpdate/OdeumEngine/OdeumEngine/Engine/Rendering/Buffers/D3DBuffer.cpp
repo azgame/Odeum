@@ -27,11 +27,12 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 	heapProps.VisibleNodeMask = 1;
 
 	if (FAILED(
-		DXGraphics::m_device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_pResource)))
+		DXGraphics::m_device->CreateCommittedResource(
+			&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_resource)))
 	)	
 		Debug::Error("Could not create buffer", __FILENAME__, __LINE__);
 
-	m_vGpuAddress = m_pResource->GetGPUVirtualAddress();
+	m_vGpuAddress = m_resource->GetGPUVirtualAddress();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size_) const
@@ -86,6 +87,7 @@ D3D12_RESOURCE_DESC D3DBuffer::CreateBufferDescription()
 	return Desc;
 }
 
+// create views for uav and srv
 void ByteAddressedBuffer::CreateDerivedView()
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -97,7 +99,7 @@ void ByteAddressedBuffer::CreateDerivedView()
 
 	if (m_srv.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_srv = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateShaderResourceView(m_pResource, &srvDesc, m_srv);
+	DXGraphics::m_device->CreateShaderResourceView(m_resource, &srvDesc, m_srv);
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -107,9 +109,10 @@ void ByteAddressedBuffer::CreateDerivedView()
 
 	if (m_uav.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_uav = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateUnorderedAccessView(m_pResource, nullptr, &uavDesc, m_uav);
+	DXGraphics::m_device->CreateUnorderedAccessView(m_resource, nullptr, &uavDesc, m_uav);
 }
 
+// Create views for srv and uav
 void StructuredBuffer::CreateDerivedView()
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -122,7 +125,7 @@ void StructuredBuffer::CreateDerivedView()
 
 	if (m_srv.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_srv = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateShaderResourceView(m_pResource, &srvDesc, m_srv);
+	DXGraphics::m_device->CreateShaderResourceView(m_resource, &srvDesc, m_srv);
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -136,7 +139,7 @@ void StructuredBuffer::CreateDerivedView()
 
 	if (m_uav.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_uav = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateUnorderedAccessView(m_pResource, m_counterBuffer.GetResource(), &uavDesc, m_uav);
+	DXGraphics::m_device->CreateUnorderedAccessView(m_resource, m_counterBuffer.GetResource(), &uavDesc, m_uav);
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterSRV(CommandContext& context_)

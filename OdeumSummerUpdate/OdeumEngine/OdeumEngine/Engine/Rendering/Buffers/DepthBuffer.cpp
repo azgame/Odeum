@@ -30,7 +30,7 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_)
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	dsvDesc.Format = GetDSVFormat(format_);
 
-	if (m_pResource->GetDesc().SampleDesc.Count == 1)
+	if (m_resource->GetDesc().SampleDesc.Count == 1)
 	{
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
@@ -49,10 +49,10 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_)
 	}
 
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-	device_->CreateDepthStencilView(m_pResource, &dsvDesc, m_DSVHandles[0]); // create standard dsv
+	device_->CreateDepthStencilView(m_resource, &dsvDesc, m_DSVHandles[0]); // create standard dsv
 
 	dsvDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;
-	device_->CreateDepthStencilView(m_pResource, &dsvDesc, m_DSVHandles[1]); // create dsv read only depth
+	device_->CreateDepthStencilView(m_resource, &dsvDesc, m_DSVHandles[1]); // create dsv read only depth
 
 	// Stencil read format
 	DXGI_FORMAT stencilReadFormat = GetStencilFormat(format_);
@@ -66,10 +66,10 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_)
 		}
 
 		dsvDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_STENCIL;
-		device_->CreateDepthStencilView(m_pResource, &dsvDesc, m_DSVHandles[2]); // create dsv read only stencil
+		device_->CreateDepthStencilView(m_resource, &dsvDesc, m_DSVHandles[2]); // create dsv read only stencil
 
 		dsvDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH | D3D12_DSV_FLAG_READ_ONLY_STENCIL;
-		device_->CreateDepthStencilView(m_pResource, &dsvDesc, m_DSVHandles[3]); // create dsv read only both
+		device_->CreateDepthStencilView(m_resource, &dsvDesc, m_DSVHandles[3]); // create dsv read only both
 	}
 	else // if no know stencil read format, stencil = depth format
 	{
@@ -93,7 +93,7 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_)
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DMS;
 
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	device_->CreateShaderResourceView(m_pResource, &srvDesc, m_depthSRVHandle);
+	device_->CreateShaderResourceView(m_resource, &srvDesc, m_depthSRVHandle);
 
 	// Create stencil shader resource view
 	if (stencilReadFormat != DXGI_FORMAT_UNKNOWN)
@@ -102,6 +102,6 @@ void DepthBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_)
 			m_stencilSRVHandle = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 		srvDesc.Format = stencilReadFormat;
-		device_->CreateShaderResourceView(m_pResource, &srvDesc, m_stencilSRVHandle);
+		device_->CreateShaderResourceView(m_resource, &srvDesc, m_stencilSRVHandle);
 	}
 }
