@@ -32,7 +32,7 @@ public:
 
     void SetMsaaMode(uint32_t numColorSamples_, uint32_t numCoverageSamples_)
     {
-        assert(numCoverageSamples_ >= numColorSamples_);
+        ASSERT(numCoverageSamples_ >= numColorSamples_, "Number of Coverage samples must be equal to or greater than the number of colour samples.");
         m_fragmentCount = numColorSamples_;
         m_sampleCount = numCoverageSamples_;
     }
@@ -54,10 +54,11 @@ protected:
         return D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | flags;
     }
 
+    // excessively clever. Mipmaps are decrements in quality by half, so to find that, find most significant bit position (eg. width > height, and is 64, so msb is 0b01000000, so number of halves is 8 (7 and +1 for default)
     static inline uint32_t CalculateNumMips(uint32_t width_, uint32_t height_)
     {
         uint32_t hBit;
-        _BitScanReverse((unsigned long*)&hBit, width_ | height_);
+        _BitScanReverse((unsigned long*)&hBit, width_ | height_); 
         return hBit + 1;
     }
 

@@ -5,6 +5,9 @@ OdeumEngine* OdeumEngine::sm_instance = nullptr;
 OdeumEngine::OdeumEngine()
 {
 	sm_instance = this;
+
+	Debug::DebugInit();
+	Debug::SetSeverity(MessageType::TYPE_INFO);
 }
 
 OdeumEngine::~OdeumEngine()
@@ -25,8 +28,7 @@ bool OdeumEngine::Initialize()
 {	
 	m_window = new Window();
 
-	Debug::DebugInit();
-	Debug::SetSeverity(MessageType::TYPE_INFO);
+	
 
 	m_window->InitializeWindow();
 

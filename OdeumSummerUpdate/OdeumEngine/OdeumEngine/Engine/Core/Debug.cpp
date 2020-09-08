@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include <chrono>
+#include <cstdarg>
 
 MessageType Debug::m_currentSev = MessageType::TYPE_NONE;
 std::string Debug::m_outputName = "";
@@ -41,6 +42,18 @@ void Debug::Error(const std::string & message_, const std::string & fileName_, c
 void Debug::FatalError(const std::string & message_, const std::string & fileName_, const int line_)
 {
 	Log(MessageType::TYPE_FATAL_ERROR, "[FATAL_ERROR]: " + message_, fileName_, line_);
+}
+
+void Debug::AssertionError(int pNum, ...)
+{
+	va_list va_args;
+	va_start(va_args, pNum);
+	std::string msg = std::string(va_arg(va_args, char*));
+	std::string file = std::string(va_arg(va_args, char*));
+	int line = va_arg(va_args, int);
+	Log(MessageType::TYPE_ASSERTION_ERROR, msg, file, line);
+
+	va_end(va_args);
 }
 
 void Debug::Log(const MessageType type_, const std::string & message_, const std::string & fileName_, const int line_)

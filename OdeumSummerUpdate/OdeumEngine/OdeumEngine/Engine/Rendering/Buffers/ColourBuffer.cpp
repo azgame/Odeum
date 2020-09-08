@@ -60,7 +60,7 @@ void ColourBuffer::GenerateMipMaps(GraphicsContext& context_)
 
 void ColourBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_, uint32_t arraySize_, uint32_t numMips_)
 {
-	assert(arraySize_ == 1 || numMips_ == 1);
+	ASSERT(arraySize_ == 1 || numMips_ == 1, "Only one of array size or num mips must equal 0!");
 
 	m_numMipMaps = numMips_;
 

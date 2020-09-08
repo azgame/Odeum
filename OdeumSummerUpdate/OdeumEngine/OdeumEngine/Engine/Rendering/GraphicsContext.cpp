@@ -2,37 +2,38 @@
 
 // TODO Aidan: Make comments
 
+// Get a new context
 CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type_)
 {
-    std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex);
+    std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex); // thread lock
 
-    auto& AvailableContexts = sm_availableContexts[type_];
+    auto& AvailableContexts = sm_availableContexts[type_]; // get a queue of contexts for the given type
 
     CommandContext* ret = nullptr;
-    if (AvailableContexts.empty())
+    if (AvailableContexts.empty()) // if there are no contexts
     {
-        ret = new CommandContext(type_);
-        sm_ContextPool[type_].emplace_back(ret);
-        ret->Initialize();
+        ret = new CommandContext(type_); // create a new one
+        sm_ContextPool[type_].emplace_back(ret); // and add to pool
+        ret->Initialize(); // Initialize the context
     }
     else
     {
-        ret = AvailableContexts.front();
-        AvailableContexts.pop();
-        ret->Reset();
+        ret = AvailableContexts.front(); // get the first available context
+        AvailableContexts.pop(); // remove from the list of available contexts
+        ret->Reset(); // reset the state of the context
     }
 
-    assert(ret != nullptr);
-    assert(ret->m_type == type_);
+    ASSERT(ret != nullptr, "The returned command context must not be null");
+    ASSERT(ret->m_type == type_, "The returned command context must match the type of the given type");
 
     return ret;
 }
 
 void ContextManager::FreeContext(CommandContext* context_)
 {
-	assert(context_ != nullptr);
-	std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex);
-	sm_availableContexts[context_->m_type].push(context_);
+    ASSERT(context_ != nullptr, "The given context must not be null");
+	std::lock_guard<std::mutex> LockGuard(sm_contextAllocationMutex); // thread lock
+	sm_availableContexts[context_->m_type].push(context_); // Add the used context to the queue of available contexts
 }
 
 void ContextManager::DestroyAllContexts()
@@ -60,16 +61,77 @@ CommandContext::~CommandContext()
 {
 }
 
-CommandContext& CommandContext::Initialize(std::wstring name_)
+// Ask for an available context
+CommandContext& CommandContext::RequestContext(std::wstring name_)
 {
     CommandContext* context = DXGraphics::m_contextManager.AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
-    // set id
+    context->m_id = name_;
     return *context;
+}
+
+void CommandContext::Initialize()
+{
+    DXGraphics::m_commandManager.CreateNewCommandList(m_type, &m_commandList, &m_currentAllocator);
+}
+
+void CommandContext::CopyBuffer(D3DResource& dest_, D3DResource& src_)
+{
+}
+
+void CommandContext::CopyBufferRegion(D3DResource& dest_, size_t destOffset_, D3DResource& src_, size_t srcOffset_, size_t numBytes_)
+{
+}
+
+void CommandContext::CopySubresource(D3DResource& dest_, UINT destSubIndex_, D3DResource& src_, UINT srcSubIndex)
+{
+}
+
+void CommandContext::InitializeTexture(D3DResource& dest_, UINT numSubresources_, D3D12_SUBRESOURCE_DATA subResource_[])
+{
+}
+
+void CommandContext::InitializeBuffer(D3DResource& dest_, const void* pData_, size_t numBytes_, size_t offset_)
+{
+}
+
+void CommandContext::InitializeTextureArraySlice(D3DResource& dest_, UINT sliceIndex_, D3DResource& src_)
+{
+}
+
+void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_)
+{
+}
+
+void CommandContext::TransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow)
+{
+}
+
+void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow)
+{
+}
+
+void CommandContext::InsertUAVBarrier(D3DResource& resource_, bool flushNow)
+{
+}
+
+void CommandContext::InsertAliasBuffer(D3DResource& before_, D3DResource after_, bool flushNow)
+{
+}
+
+inline void CommandContext::FlushResourceBarriers()
+{
+}
+
+void CommandContext::SetPipelineState(const PSO& pso_)
+{
 }
 
 void CommandContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_)
 {
-    
+}
+
+void CommandContext::SetDescriptorHeaps(UINT heapCount_, D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heapPtrs_[])
+{
 }
 
 void CommandContext::Reset()

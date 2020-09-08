@@ -30,7 +30,7 @@ void RootSignature::Reset(UINT numRootParams_, UINT numStaticSamplers)
 
 void RootSignature::InitStaticSampler(UINT register_, const D3D12_SAMPLER_DESC& nonStaticSamplerDesc_, D3D12_SHADER_VISIBILITY visibility_)
 {
-	assert(m_numInitializedStaticSamplers < m_numStaticSamplers);
+	ASSERT(m_numInitializedStaticSamplers < m_numStaticSamplers, "If we're initializing a static sampler, the number of currently initialized ones should be less than our cap");
 	D3D12_STATIC_SAMPLER_DESC& staticSamplerDesc = m_samplerArray[m_numInitializedStaticSamplers++];
 
 	staticSamplerDesc.Filter = nonStaticSamplerDesc_.Filter;
@@ -68,7 +68,7 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 	if (m_finalized)
 		return; // Can't finalize a root signature that's already ready for submission
 
-	assert(m_numInitializedStaticSamplers == m_numStaticSamplers);
+	ASSERT(m_numInitializedStaticSamplers == m_numStaticSamplers, "The number of initialized static samplers should be equal to the total number");
 
 	D3D12_ROOT_SIGNATURE_DESC rootDesc;
 	rootDesc.NumParameters = m_numParameters;
@@ -88,7 +88,7 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 
 		if (rootParam.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
 		{
-			assert(rootParam.DescriptorTable.pDescriptorRanges != nullptr);
+			ASSERT(rootParam.DescriptorTable.pDescriptorRanges != nullptr, "the descriptor ranges of the given root param's desc table must not be null");
 
 			if (rootParam.DescriptorTable.pDescriptorRanges->RangeType == D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER)
 				m_SamplerTableBitMap |= (1 << param);

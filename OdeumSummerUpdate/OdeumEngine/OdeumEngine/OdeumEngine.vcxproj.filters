@@ -66,9 +66,6 @@
     <ClCompile Include="Engine\Core\CameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\Colour.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\Buffers\ColourBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

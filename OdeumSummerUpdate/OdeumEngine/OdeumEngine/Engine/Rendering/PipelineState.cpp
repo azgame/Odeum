@@ -42,7 +42,7 @@ void GraphicsPSO::SetSampleMask(UINT sampleMask_)
 
 void GraphicsPSO::SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType_)
 {
-	assert(topologyType_ != D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED);
+	ASSERT(topologyType_ != D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED, "We don't support undefined topology in the graphics pso");
 	m_psoDesc.PrimitiveTopologyType = topologyType_;
 }
 
@@ -53,7 +53,7 @@ void GraphicsPSO::SetRenderTargetFormat(DXGI_FORMAT rtvFormat_, DXGI_FORMAT dsvF
 
 void GraphicsPSO::SetRenderTargetFormats(UINT numRTVs_, const DXGI_FORMAT* rtvFormats_, DXGI_FORMAT dsvFormat_, UINT MsaaCount_, UINT MsaaQuality_)
 {
-	assert(numRTVs_ == 0 || rtvFormats_ != nullptr);
+	ASSERT(numRTVs_ == 0 || rtvFormats_ != nullptr, "Either the number of rtvs must be 0 and no format is set, or the format is given and we have more than 0 rtvs");
 
 	for (UINT i = 0; i < numRTVs_; i++)
 		m_psoDesc.RTVFormats[i] = rtvFormats_[i];
@@ -89,7 +89,7 @@ void GraphicsPSO::SetPrimitiveRestart(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE indexBu
 void GraphicsPSO::Finalize()
 {
 	m_psoDesc.pRootSignature = m_rootSignature->GetRootSignature();
-	assert(m_psoDesc.pRootSignature != nullptr);
+	ASSERT(m_psoDesc.pRootSignature != nullptr, "If we're finalizing the pso, the root sig should not be null");
 
 	m_psoDesc.InputLayout.pInputElementDescs = m_inputLayouts.get();
 

@@ -24,7 +24,7 @@ public:
 
 	const RootSignature& GetRootSignature() const
 	{
-		assert(m_rootSignature != nullptr);
+        ASSERT(m_rootSignature != nullptr, "If we're getting the root sig, it can't be null");
 		return *m_rootSignature;
 	}
 

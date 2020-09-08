@@ -144,7 +144,6 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
-    <ClCompile Include="Engine\Rendering\Colour.cpp" />
     <ClCompile Include="Engine\Rendering\Buffers\ColourBuffer.cpp" />
     <ClCompile Include="Engine\Rendering\Buffers\DepthBuffer.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />

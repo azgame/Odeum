@@ -8,6 +8,7 @@
 enum class MessageType : unsigned short
 {
 	TYPE_NONE,
+	TYPE_ASSERTION_ERROR,
 	TYPE_FATAL_ERROR,
 	TYPE_ERROR,
 	TYPE_WARNING,
@@ -31,6 +32,8 @@ public:
 	static void Warning(const std::string& message_, const std::string& fileName_, const int line_);
 	static void Error(const std::string& message_, const std::string& fileName_, const int line_);
 	static void FatalError(const std::string& message_, const std::string& fileName_, const int line_);
+
+	static void AssertionError(int pNum, ...);
 
 private:
 	static void Log(const MessageType type_, const std::string& message_, const std::string& fileName_, const int line_);

@@ -6,6 +6,7 @@
 #include "Colour.h"
 #include "PipelineState.h"
 #include "RootSignature.h"
+#include "Buffers/D3DResource.h"
 #include "Buffers/D3DBuffer.h"
 #include "Buffers/PixelBuffer.h"
 #include "DynamicDescriptorHeap.h"
@@ -35,6 +36,7 @@ private:
     std::mutex sm_contextAllocationMutex;
 };
 
+// Base Class for calling commands on the gpu. Base class is graphics/compute agnostic, derived specify procedures for each render type
 class CommandContext
 {
     friend class ContextManager;
@@ -51,24 +53,45 @@ public:
 
     ~CommandContext();
 
-    static CommandContext& Initialize(std::wstring name_ = L"");
+    static CommandContext& RequestContext(std::wstring name_ = L"");
+
+    void Initialize();
 
     GraphicsContext& GetGraphicsContext() {
-        assert(m_type != D3D12_COMMAND_LIST_TYPE_COMPUTE, "Cannot convert async compute context to graphics");
+        ASSERT(m_type != D3D12_COMMAND_LIST_TYPE_COMPUTE, "Cannot convert compute context to graphics context");
         return reinterpret_cast<GraphicsContext&>(*this);
     }
 
-    ComputeContext& GetComputeContext() {
-        return reinterpret_cast<ComputeContext&>(*this);
-    }
+    ComputeContext& GetComputeContext() { return reinterpret_cast<ComputeContext&>(*this); }
+    ID3D12GraphicsCommandList* GetCommandList() { return m_commandList; }
 
-    ID3D12GraphicsCommandList* GetCommandList() {
-        return m_commandList;
-    }
+    void CopyBuffer(D3DResource& dest_, D3DResource& src_);
+    void CopyBufferRegion(D3DResource& dest_, size_t destOffset_, D3DResource& src_, size_t srcOffset_, size_t numBytes_);
+    void CopySubresource(D3DResource& dest_, UINT destSubIndex_, D3DResource& src_, UINT srcSubIndex);
+    // void CopyCounter(D3DResource& dest_, size_t destOffset_, StructuredBuffer& src_);
+    // void ResetCount(StructuredBbuffer& buffer_, uint32_t value_ = 0);
 
+    static void InitializeTexture(D3DResource& dest_, UINT numSubresources_, D3D12_SUBRESOURCE_DATA subResource_[]);
+    static void InitializeBuffer(D3DResource& dest_, const void* pData_, size_t numBytes_, size_t offset_ = 0);
+    static void InitializeTextureArraySlice(D3DResource& dest_, UINT sliceIndex_, D3DResource& src_);
+    // static void ReadbackTexture2D(D3DResource& readBackBuffer_, PixelBuffer& srcBuffer_);
+
+    void WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_);
+    // void FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_);
+
+    void TransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow = false);
+    void BeginTransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow = false);
+    void InsertUAVBarrier(D3DResource& resource_, bool flushNow = false);
+    void InsertAliasBuffer(D3DResource& before_, D3DResource after_, bool flushNow = false);
+    inline void FlushResourceBarriers();
+
+    void SetPipelineState(const PSO& pso_);
     void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_);
+    void SetDescriptorHeaps(UINT heapCount_, D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heapPtrs_[]);
 
 protected:
+
+    void BindDescriptorHeaps();
 
     CommandListManager* m_manager;
     ID3D12GraphicsCommandList* m_commandList;
@@ -89,24 +112,86 @@ protected:
     std::wstring m_id;
 
     D3D12_COMMAND_LIST_TYPE m_type;
-
 };
 
 class GraphicsContext : public CommandContext
 {
 public:
 
-    static GraphicsContext& Initialize(const std::wstring& ID = L"")
+    static GraphicsContext& RequestContext(const std::wstring& ID = L"")
     {
-        return CommandContext::Initialize(ID).GetGraphicsContext();
+        return CommandContext::RequestContext(ID).GetGraphicsContext();
     }
+
+    // Clear buffers for draw
+    void ClearUAV(D3DResource& target_);
+    void ClearUAV(D3DResource& target_);
+    void ClearColor(D3DResource& target_);
+    void ClearDepth(D3DResource& target_);
+    void ClearStencil(D3DResource& target_);
+    void ClearDepthAndStencil(D3DResource& target_);
+
+    // Set base root signature
+    void SetRootSignature(const RootSignature& rootSig_);
+
+    // Set render target
+    void SetRenderTargets(UINT numRTVs_, const D3D12_CPU_DESCRIPTOR_HANDLE rtvs_[]);
+    void SetRenderTargets(UINT numRTVs_, const D3D12_CPU_DESCRIPTOR_HANDLE rtvs_[], D3D12_CPU_DESCRIPTOR_HANDLE dsv_);
+    void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv_) { SetRenderTargets(1, &rtv_); }
+    void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv_, D3D12_CPU_DESCRIPTOR_HANDLE dsv_) { SetRenderTargets(1, &rtv_, dsv_); }
+    void SetDepthStencilTarget(D3D12_CPU_DESCRIPTOR_HANDLE dsv_) { SetRenderTargets(0, nullptr, dsv_); }
+
+    // Set viewport and drawing settings
+    void SetViewport(const D3D12_VIEWPORT& viewport_);
+    void SetViewport(FLOAT x_, FLOAT y_, FLOAT w_, FLOAT h_, FLOAT minDepth_ = 0.0f, FLOAT maxDepth_ = 1.0f);
+    void SetScissor(const D3D12_RECT& rect_);
+    void SetScissor(UINT left_, UINT top_, UINT right_, UINT bottom_);
+    void SetViewportAndScissor(const D3D12_VIEWPORT& viewport_, const D3D12_RECT& rect_);
+    void SetViewportAndScissor(UINT x_, UINT y_, UINT w_, UINT h_);
+    void SetStencilRef(UINT stencilRef_);
+    void SetBlendFactor(Colour blend_);
+    void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology_);
+
+    // Set data into root signature
+    void SetConstantArray(UINT rootIndex_, UINT numConstants_, const void* pConstants);
+    void SetConstant(UINT rootIndex_, UINT val_, UINT Offset = 0);
+    void SetConstants(UINT rootIndex_, UINT x_);
+    void SetConstants(UINT rootIndex_, UINT x_, UINT y_);
+    void SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_);
+    void SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_, UINT w_);
+    void SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUAL_ADDRESS cbv_);
+    void SetDynamicConstantBufferView(UINT rootIndex_, size_t bufferSize_, const void* cBufferData_);
+    void SetBufferSRV(UINT rootIndex_, const D3DResource& srv_, UINT64 offset_ = 0);
+    void SetBufferUAV(UINT rootIndex_, const D3DResource& uav_, UINT64 offset_ = 0);
+    void SetDescriptorTable(UINT rootIndex_, D3D12_GPU_DESCRIPTOR_HANDLE handle_);
+
+    // Set Dynamic descriptors and samplers from heaps
+    void SetDynamicDescriptor(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_);
+    void SetDynamicDescriptors(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[]);
+    void SetDynamicSampler(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_);
+    void SetDynamicSamplers(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[]);
+
+    // Setting our primary buffers
+    void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& indexBufferView_);
+    void SetVertexBuffer(UINT slot_, const D3D12_VERTEX_BUFFER_VIEW& vertexBufferView_);
+    void SetVertexBuffers(UINT startSlot_, UINT count_, const D3D12_VERTEX_BUFFER_VIEW vertexBufferViews_[]);
+    void SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_);
+    void SetDynamicIB(size_t indexCount_, const uint16_t* indexBufferData_);
+    void SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, const void* srvBufferData_);
+
+    // Different kinds of drawing
+    void Draw(UINT vertexCount_, UINT vertexStartOffset_ = 0);
+    void DrawIndexed(UINT indexCount_, UINT startIndexLocation_ = 0, int baseVertexLocation_ = 0);
+    void DrawInstanced(UINT vertexCountPerInstance_, UINT instanceCount_,
+        UINT startVertexLocation_ = 0, UINT startInstanceLocation_ = 0);
+    void DrawIndexedInstanced(UINT indexCountPerInstance_, UINT instanceCount_, UINT startIndexLocation_,
+        int baseVertexLocation_, UINT startInstanceLocation_);
 
 private:
 };
 
 class ComputeContext : public CommandContext
 {
-
 };
 
 #endif

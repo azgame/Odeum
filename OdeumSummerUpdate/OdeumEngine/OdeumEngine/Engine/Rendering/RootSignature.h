@@ -121,13 +121,13 @@ public:
 
 	RootParameter& operator[](size_t index_)
 	{
-		assert(index_ < m_numParameters);
+		ASSERT(index_ < m_numParameters, "If we're accessing a root parameter, it must be within the range");
 		return m_parameterArray.get()[index_];
 	}
 
 	const RootParameter& operator[](size_t index_) const
 	{
-		assert(index_ < m_numParameters);
+		ASSERT(index_ < m_numParameters, "If we're accessing a root parameter, it must be within the range");
 		return m_parameterArray.get()[index_];
 	}
 

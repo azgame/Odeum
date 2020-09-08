@@ -11,8 +11,8 @@ CommandQueue::CommandQueue(D3D12_COMMAND_LIST_TYPE type_) :
 	m_type(type_),
 	m_commandQueue(nullptr),
 	m_fence(nullptr),
-	m_nextFenceValue((uint64_t)type_ << 56 | 1), // not sure why we do this
-	m_lastCompletedFenceValue((uint64_t)type_ << 56), // not sure why we do this
+	m_nextFenceValue((uint64_t)type_ << 56 | 1), // set nextfencevalue to a large value based on commandlist type, +1 (eg. 1000...0001)
+	m_lastCompletedFenceValue((uint64_t)type_ << 56), // set last completed to large value based on commandlist type, no +1 (eg. 1000...0000)
 	m_allocatorPool(type_)
 {
 }
@@ -24,9 +24,9 @@ CommandQueue::~CommandQueue()
 
 void CommandQueue::Initialize(ID3D12Device* device_)
 {
-	assert(device_ != nullptr);
-	assert(!isReady());
-	assert(m_allocatorPool.Size() == 0);
+	ASSERT(device_ != nullptr, "Device is null!");
+	ASSERT(!isReady(), "Command queue as been initialized!");
+	ASSERT(m_allocatorPool.Size() == 0, "Allocator pool size if not 0!");
 
 	// Create our command queue
 	D3D12_COMMAND_QUEUE_DESC qDesc = {};
@@ -44,12 +44,12 @@ void CommandQueue::Initialize(ID3D12Device* device_)
 
 	// Initialize the fence event handle
 	m_fenceEventHandle = CreateEvent(nullptr, false, false, nullptr);
-	assert(m_fenceEventHandle != NULL);
+	ASSERT(m_fenceEventHandle != NULL, "Fence event handle is null!");
 
 	// Initialize our allocator pool
 	m_allocatorPool.Initialize(device_);
 
-	assert(isReady());
+	ASSERT(isReady(), "Command queue failed to initialize!");
 }
 
 void CommandQueue::Uninitialize()
@@ -95,7 +95,7 @@ void CommandQueue::StallForFence(uint64_t fenceValue_)
 // Tell a queue to wait on another queue
 void CommandQueue::StallForQueue(CommandQueue& queue_)
 {
-	assert(queue_.m_nextFenceValue > 0);
+	ASSERT(queue_.m_nextFenceValue > 0, "Next fence value is 0 or less!");
 	m_commandQueue->Wait(queue_.m_fence, queue_.m_nextFenceValue - 1);
 }
 
@@ -152,7 +152,7 @@ CommandListManager::~CommandListManager()
 
 void CommandListManager::Initialize(ID3D12Device* device_)
 {
-	assert(device_ != nullptr);
+	ASSERT(device_ != nullptr, "Device is null!");
 
 	m_device = device_;
 
@@ -171,7 +171,7 @@ void CommandListManager::Uninitialize()
 // Create a new command list of the given type
 void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type_, ID3D12GraphicsCommandList** cmdList_, ID3D12CommandAllocator** allocator_)
 {
-	assert(type_ != D3D12_COMMAND_LIST_TYPE_BUNDLE, "Bundles are not yet supported");
+	ASSERT(type_ != D3D12_COMMAND_LIST_TYPE_BUNDLE, "Bundles are not yet supported");
 
 	switch (type_)
 	{

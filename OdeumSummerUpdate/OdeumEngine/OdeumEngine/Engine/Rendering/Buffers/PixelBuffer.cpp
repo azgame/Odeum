@@ -32,7 +32,7 @@ D3D12_RESOURCE_DESC PixelBuffer::CreateTextureDesc(uint32_t width_, uint32_t hei
 // Essentially copying the memory address and values of a given resource
 void PixelBuffer::ConnectToResource(ID3D12Device* device_, const std::wstring& name_, ID3D12Resource* resource_, D3D12_RESOURCE_STATES state_)
 {
-    assert(resource_ != nullptr);
+    ASSERT(resource_ != nullptr, "Can't connect to resource if its null");
 
     D3D12_RESOURCE_DESC desc = resource_->GetDesc();
     m_resource = resource_;
@@ -146,7 +146,7 @@ DXGI_FORMAT PixelBuffer::GetUAVFormat(DXGI_FORMAT format_)
     case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
     case DXGI_FORMAT_D16_UNORM:
 
-        assert(false, "Requested a UAV format for a depth stencil format.");
+        ASSERT(false, "Requested a UAV format for a depth stencil format.");
 #endif
 
     default:

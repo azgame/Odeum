@@ -4,8 +4,6 @@
 
 // Comments by Aidan Zizys, 08-20-2020
 
-using namespace DXGraphics;
-
 std::mutex DynamicDescriptorHeap::sm_mutex;
 
 // static for safe thread use and access
@@ -18,7 +16,7 @@ DynamicDescriptorHeap::DynamicDescriptorHeap(CommandContext& context_, D3D12_DES
 {
 	m_currentHeapPtr = nullptr;
 	m_currentOffset = 0;
-	m_descriptorSize = m_device->GetDescriptorHandleIncrementSize(type_);
+	m_descriptorSize = DXGraphics::m_device->GetDescriptorHandleIncrementSize(type_);
 }
 
 DynamicDescriptorHeap::~DynamicDescriptorHeap()
@@ -47,7 +45,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE DynamicDescriptorHeap::UploadDirect(D3D12_CPU_DESCRI
 	DescriptorHandle DestHandle = m_descriptorForHeapStart + m_currentOffset * m_descriptorSize;
 	m_currentOffset += 1;
 
-	m_device->CopyDescriptorsSimple(1, DestHandle.GetCpuHandle(), handle_, m_descriptorType);
+	DXGraphics::m_device->CopyDescriptorsSimple(1, DestHandle.GetCpuHandle(), handle_, m_descriptorType);
 
 	return DestHandle.GetGpuHandle();
 }
@@ -60,7 +58,7 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::RequestDescriptorHeap(D3D12_DESCRIP
 	uint32_t heapType = type_ == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER ? 1 : 0; // what type of heap do we want
 
 	// If retired heaps have been cleaned up and fence signals they are ready for use, return them to the list of available heaps
-	while (!sm_retiredDescriptorHeaps[heapType].empty() && m_commandManager.IsFenceComplete(sm_retiredDescriptorHeaps[heapType].front().first))
+	while (!sm_retiredDescriptorHeaps[heapType].empty() && DXGraphics::m_commandManager.IsFenceComplete(sm_retiredDescriptorHeaps[heapType].front().first))
 	{
 		sm_availableDescriptorHeaps[heapType].push(sm_retiredDescriptorHeaps[heapType].front().second);
 		sm_retiredDescriptorHeaps[heapType].pop();
@@ -81,7 +79,7 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::RequestDescriptorHeap(D3D12_DESCRIP
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		heapDesc.NodeMask = 1;
 		ID3D12DescriptorHeap* heapPtr;
-		if (FAILED(m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heapPtr))))
+		if (FAILED(DXGraphics::m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heapPtr))))
 			Debug::Error("Could not create new descriptor heap", __FILENAME__, __LINE__);
 
 		sm_descriptorHeapPool[heapType].emplace_back(heapPtr);
@@ -104,11 +102,11 @@ void DynamicDescriptorHeap::RetireCurrentHeap()
 {
 	if (m_currentOffset == 0)
 	{
-		assert(m_currentHeapPtr == nullptr);
+		ASSERT(m_currentHeapPtr == nullptr, "If the current offset is 0, the current heap ptr should also be null.");
 		return;
 	}
 
-	assert(m_currentHeapPtr != nullptr);
+	ASSERT(m_currentHeapPtr != nullptr, "If we have an in use heap, it cannot be null!");
 	m_retiredHeaps.push_back(m_currentHeapPtr);
 	m_currentHeapPtr = 0;
 	m_currentOffset = 0;
@@ -125,7 +123,7 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::GetHeapPointer()
 {
 	if (m_currentHeapPtr == nullptr) // if there is no current heap, trigger a request
 	{
-		assert(m_currentOffset == 0);
+		ASSERT(m_currentOffset == 0, "If we're getting a new heap, the current offset must be 0!");
 		m_currentHeapPtr = RequestDescriptorHeap(m_descriptorType);
 		m_descriptorForHeapStart = DescriptorHandle(
 			m_currentHeapPtr->GetCPUDescriptorHandleForHeapStart(),
@@ -170,7 +168,7 @@ uint32_t DynamicDescriptorHeap::DescriptorHandleCache::ComputeStagedSize()
 		uint32_t maxSetHandle;
 
 		// scan assigned handles bit map for given root desc table from msb to lsb, finding the index of the max set handle
-		assert(_BitScanReverse((unsigned long*)&maxSetHandle, m_rootDescriptorTable[rootIndex].assignedHandlesBitMap)); 
+		ASSERT(_BitScanReverse((unsigned long*)&maxSetHandle, m_rootDescriptorTable[rootIndex].assignedHandlesBitMap), "If we don't find any assigned handles, we've done something wrong.");
 
 		// add to needed space
 		neededSpace += maxSetHandle + 1;
@@ -196,7 +194,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 		staleParams ^= (1 << rootIndex);
 
 		uint32_t MaxSetHandle;
-		assert(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_rootDescriptorTable[rootIndex].assignedHandlesBitMap),
+		ASSERT(TRUE == _BitScanReverse((unsigned long*)&MaxSetHandle, m_rootDescriptorTable[rootIndex].assignedHandlesBitMap),
 			"Root entry marked as stale but has no stale descriptors");
 
 		neededSpace += MaxSetHandle + 1;
@@ -205,7 +203,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 		++staleParamCount;
 	}
 
-	assert(staleParamCount <= DescriptorHandleCache::maxNumDescriptorTables,
+	ASSERT(staleParamCount <= DescriptorHandleCache::maxNumDescriptorTables,
 		"Only so many descriptor tables allowed");
 
 	m_staleRootParamsBitMap = 0;
@@ -247,7 +245,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 			// If we run out of temp room, copy what we've got so far
 			if (NumSrcDescriptorRanges + DescriptorCount > kMaxDescriptorsPerCopy)
 			{
-				m_device->CopyDescriptors(
+				DXGraphics::m_device->CopyDescriptors(
 					NumDestDescriptorRanges, pDestDescriptorRangeStarts, pDestDescriptorRangeSizes,
 					NumSrcDescriptorRanges, pSrcDescriptorRangeStarts, pSrcDescriptorRangeSizes,
 					type_);
@@ -275,7 +273,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_
 		}
 	}
 
-	m_device->CopyDescriptors(
+	DXGraphics::m_device->CopyDescriptors(
 		NumDestDescriptorRanges, pDestDescriptorRangeStarts, pDestDescriptorRangeSizes,
 		NumSrcDescriptorRanges, pSrcDescriptorRangeStarts, pSrcDescriptorRangeSizes,
 		type_);
@@ -298,8 +296,8 @@ void DynamicDescriptorHeap::DescriptorHandleCache::UnbindAllValid()
 
 void DynamicDescriptorHeap::DescriptorHandleCache::StageDescriptorHandles(UINT rootIndex_, UINT offset_, UINT numHandles_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
 {
-	assert(((1 << rootIndex_) & m_rootDescriptorTablesBitMap) != 0, "Root parameter is not a CBV_SRV_UAV descriptor table");
-	assert(offset_ + numHandles_ <= m_rootDescriptorTable[rootIndex_].tableSize);
+	ASSERT(((1 << rootIndex_) & m_rootDescriptorTablesBitMap) != 0, "Root parameter is not a CBV_SRV_UAV descriptor table");
+	ASSERT(offset_ + numHandles_ <= m_rootDescriptorTable[rootIndex_].tableSize, "We cannot exceed table size");
 
 	// Copy given handles into table cache at root index
 	DescriptorTableCache& TableCache = m_rootDescriptorTable[rootIndex_];
@@ -315,12 +313,12 @@ void DynamicDescriptorHeap::DescriptorHandleCache::StageDescriptorHandles(UINT r
 
 void DynamicDescriptorHeap::DescriptorHandleCache::ParseRootSignature(D3D12_DESCRIPTOR_HEAP_TYPE type_, const RootSignature& rootSig_)
 {
-	UINT CurrentOffset = 0;
+	UINT currentOffset = 0;
 
-	assert(rootSig_.m_numParameters <= 16);
+	ASSERT(rootSig_.m_numParameters <= 16, "Num params must be less than or equal to 16");
 
 	m_staleRootParamsBitMap = 0;
-	m_rootDescriptorTablesBitMap = (type_ == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER ?
+	m_rootDescriptorTablesBitMap = (type_ == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER ? // which bitmap?
 		rootSig_.m_SamplerTableBitMap : rootSig_.m_descriptorTableBitMap);
 
 	unsigned long tableParams = m_rootDescriptorTablesBitMap;
@@ -329,19 +327,19 @@ void DynamicDescriptorHeap::DescriptorHandleCache::ParseRootSignature(D3D12_DESC
 	{
 		tableParams ^= (1 << rootIndex);
 
-		UINT TableSize = rootSig_.m_descriptorTableSize[rootIndex];
-		assert(TableSize > 0);
+		UINT tableSize = rootSig_.m_descriptorTableSize[rootIndex];
+		ASSERT(tableSize > 0, "If we're parsing a descriptor table, its size must be greater than 0");
 
 		// Get a table cache at used root index and set the table start/size based on the tables in the root sig
 		DescriptorTableCache& rootDescriptorTable = m_rootDescriptorTable[rootIndex]; 
 		rootDescriptorTable.assignedHandlesBitMap = 0;
-		rootDescriptorTable.tableStart = m_handleCache + CurrentOffset;
-		rootDescriptorTable.tableSize = TableSize;
+		rootDescriptorTable.tableStart = m_handleCache + currentOffset;
+		rootDescriptorTable.tableSize = tableSize;
 
-		CurrentOffset += TableSize;
+		currentOffset += tableSize;
 	}
 
-	m_maxCachedDescriptors = CurrentOffset;
+	m_maxCachedDescriptors = currentOffset;
 
-	assert(m_maxCachedDescriptors <= maxNumDescriptors);
+	ASSERT(m_maxCachedDescriptors <= maxNumDescriptors, "Max chached descriptors must be less than max num descriptors");
 }

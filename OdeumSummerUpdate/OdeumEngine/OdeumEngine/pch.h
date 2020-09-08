@@ -1,6 +1,10 @@
 #ifndef _PCH_H_
 #define _PCH_H_
 
+#ifndef WIN32_LEAN_AND_MEAN
+	#define WIN32_LEAN_AND_MEAN
+#endif
+
 // Windows
 #include <Windows.h>
 
@@ -14,11 +18,11 @@
 #include <DirectXMath.h>
 
 // C/C++ Libraries
+#include <cstdarg>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <memory>
-#include <cassert>
 #include <mutex>
 
 #include <vector>
@@ -31,8 +35,6 @@
 // Engine
 #include "Engine/Core/Debug.h"
 
-
-
 #define NAME_D3D_RESOURCES 1
 #define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }
 #define SAFE_DELETE_ARRAY( x ) { if( x ) delete[] x; x = NULL; }
@@ -40,4 +42,26 @@
 #define ALIGN(_alignment, _val) (((_val + _alignment - 1) / _alignment) * _alignment)
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
-#endif // !_PCH_H_
+#ifdef ASSERT
+#undef ASSERT
+#endif
+
+#ifdef RELEASE
+	#define ASSERT(expression,...) (void)(expression)
+#else //--Debug
+
+	#define ASSERT(expression,...) \
+		if (!(bool)(expression)) { \
+			Debug::AssertionError(3, __VA_ARGS__, __FILENAME__, __LINE__); \
+			__debugbreak(); \
+	}
+
+#endif
+
+// Move to utilities file
+std::wstring MakeWString(const std::string & string_)
+{
+	return std::wstring(string_.begin(), string_.end());
+}
+
+#endif

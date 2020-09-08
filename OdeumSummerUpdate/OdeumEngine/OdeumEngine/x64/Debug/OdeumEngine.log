@@ -1,13 +1,6 @@
 ﻿  DynamicDescriptorHeap.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(57,9): warning C4002: too many arguments for function-like macro invocation 'assert'
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DynamicDescriptorHeap.cpp(200,1): warning C4002: too many arguments for function-like macro invocation 'assert'
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DynamicDescriptorHeap.cpp(209,1): warning C4002: too many arguments for function-like macro invocation 'assert'
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DynamicDescriptorHeap.cpp(301,2): warning C4002: too many arguments for function-like macro invocation 'assert'
   D3DCore.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(57,9): warning C4002: too many arguments for function-like macro invocation 'assert'
   D3DBuffer.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(57,9): warning C4002: too many arguments for function-like macro invocation 'assert'
   GraphicsContext.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(57,9): warning C4002: too many arguments for function-like macro invocation 'assert'
   Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

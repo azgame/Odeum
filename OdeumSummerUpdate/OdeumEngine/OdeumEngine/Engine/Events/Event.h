@@ -3,7 +3,7 @@
 
 #include "../../pch.h"
 
-enum class EventType
+enum class EventType : uint8_t
 {
 	None = 0,
 	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -11,7 +11,7 @@ enum class EventType
 	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 };
 
-enum EventCategory
+enum EventCategory : uint8_t
 {
 	None = 0,
 	EventCategoryApplication =	0x1,
@@ -22,12 +22,11 @@ enum EventCategory
 };
 
 // macro so we don't have to retype this in every derived event, thanks cherno
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
-																virtual EventType GetEventType() const override { return GetStaticType(); }\
-																virtual const char* GetName() const override { return #type; } // this is a debugging thing only
+#define EVENT_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
+																virtual EventType GetEventType() const override { return GetStaticType(); }
 
 // same here
-#define EVENT_CLASS_CATEGORY(category) virtual uint32_t GetCategoryFlags() const override { return category; }
+#define EVENT_CATEGORY(category) virtual uint32_t GetCategoryFlags() const override { return category; }
 
 class Event
 {
@@ -37,9 +36,7 @@ public:
 	bool handled = false;
 
 	virtual EventType GetEventType() const = 0;
-	virtual const char* GetName() const = 0;
 	virtual uint32_t GetCategoryFlags() const = 0;
-	virtual std::string ToString() const { return GetName(); }
 
 	bool isInCategory(EventCategory category_)
 	{

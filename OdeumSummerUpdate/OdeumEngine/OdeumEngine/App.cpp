@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	OdeumEngine* app;
 	app = new OdeumEngine();
-	assert(app);
+	ASSERT(app != nullptr, "App is null!");
 
 	if (app->Initialize())
 		app->Run();
