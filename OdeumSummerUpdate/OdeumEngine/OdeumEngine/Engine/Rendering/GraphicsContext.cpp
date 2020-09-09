@@ -74,14 +74,6 @@ void CommandContext::Initialize()
     DXGraphics::m_commandManager.CreateNewCommandList(m_type, &m_commandList, &m_currentAllocator);
 }
 
-void CommandContext::CopyBuffer(D3DResource& dest_, D3DResource& src_)
-{
-}
-
-void CommandContext::CopyBufferRegion(D3DResource& dest_, size_t destOffset_, D3DResource& src_, size_t srcOffset_, size_t numBytes_)
-{
-}
-
 void CommandContext::CopySubresource(D3DResource& dest_, UINT destSubIndex_, D3DResource& src_, UINT srcSubIndex)
 {
 }
@@ -118,22 +110,62 @@ void CommandContext::InsertAliasBuffer(D3DResource& before_, D3DResource after_,
 {
 }
 
-inline void CommandContext::FlushResourceBarriers()
-{
-}
-
-void CommandContext::SetPipelineState(const PSO& pso_)
-{
-}
-
-void CommandContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_)
-{
-}
-
-void CommandContext::SetDescriptorHeaps(UINT heapCount_, D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heapPtrs_[])
+void CommandContext::BindDescriptorHeaps()
 {
 }
 
 void CommandContext::Reset()
+{
+}
+
+void GraphicsContext::ClearUAV(D3DResource& target_)
+{
+}
+
+void GraphicsContext::ClearUAV(ColourBuffer& target_)
+{
+}
+
+void GraphicsContext::ClearColor(ColourBuffer& target_)
+{
+}
+
+void GraphicsContext::ClearDepth(DepthBuffer& target_)
+{
+}
+
+void GraphicsContext::ClearStencil(DepthBuffer& target_)
+{
+}
+
+void GraphicsContext::ClearDepthAndStencil(DepthBuffer& target_)
+{
+}
+
+void GraphicsContext::SetRenderTargets(UINT numRTVs_, const D3D12_CPU_DESCRIPTOR_HANDLE rtvs_[])
+{
+}
+
+void GraphicsContext::SetRenderTargets(UINT numRTVs_, const D3D12_CPU_DESCRIPTOR_HANDLE rtvs_[], D3D12_CPU_DESCRIPTOR_HANDLE dsv_)
+{
+}
+
+void GraphicsContext::SetViewport(const D3D12_VIEWPORT& viewport_)
+{
+}
+
+void GraphicsContext::SetViewport(FLOAT x_, FLOAT y_, FLOAT w_, FLOAT h_, FLOAT minDepth_, FLOAT maxDepth_)
+{
+}
+
+void GraphicsContext::SetScissor(const D3D12_RECT& rect_)
+{
+}
+
+void GraphicsContext::SetViewportAndScissor(const D3D12_VIEWPORT& viewport_, const D3D12_RECT& rect_)
+{
+}
+
+void GraphicsContext::SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, const void* srvBufferData_)
 {
 }

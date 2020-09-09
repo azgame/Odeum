@@ -6,18 +6,39 @@
 #include "Colour.h"
 #include "PipelineState.h"
 #include "RootSignature.h"
-#include "Buffers/D3DResource.h"
 #include "Buffers/D3DBuffer.h"
-#include "Buffers/PixelBuffer.h"
 #include "DynamicDescriptorHeap.h"
 #include "D3DCore.h"
 #include <queue>
 
+class ColourBuffer;
+class DepthBuffer;
 class CommandContext;
 class GraphicsContext;
 class ComputeContext;
 
 // TODO Aidan: Make comments
+
+/*
+The idea of the context is to extrapolate all of the functions needed for setting up and drawing a rendering state.
+
+ This includes:
+      --- Initialize
+      Set the root signature
+      Set the pipeline state
+      --- Render
+      Clearing various render/dsv targets
+      Setting the non scene-specific resources (render targets, dsvs, topology, viewport/scissor rect, etc.)
+      Set heaped handles and root const views
+      Set vertex/index data
+      Draw
+
+ The context also manages the creation of some objects and manages the barriers and fences
+  needed for proper work submission/completion and synchronizing between cpu/gpu.
+
+ The code here is the culmination of all the wrappers and managers created. The context simply wraps the specific gpu calls such that it is simpler for the end user
+*/
+
 
 class ContextManager
 {
@@ -125,11 +146,11 @@ public:
 
     // Clear buffers for draw
     void ClearUAV(D3DResource& target_);
-    void ClearUAV(D3DResource& target_);
-    void ClearColor(D3DResource& target_);
-    void ClearDepth(D3DResource& target_);
-    void ClearStencil(D3DResource& target_);
-    void ClearDepthAndStencil(D3DResource& target_);
+    void ClearUAV(ColourBuffer& target_);
+    void ClearColor(ColourBuffer& target_);
+    void ClearDepth(DepthBuffer& target_);
+    void ClearStencil(DepthBuffer& target_);
+    void ClearDepthAndStencil(DepthBuffer& target_);
 
     // Set base root signature
     void SetRootSignature(const RootSignature& rootSig_);
@@ -186,12 +207,160 @@ public:
         UINT startVertexLocation_ = 0, UINT startInstanceLocation_ = 0);
     void DrawIndexedInstanced(UINT indexCountPerInstance_, UINT instanceCount_, UINT startIndexLocation_,
         int baseVertexLocation_, UINT startInstanceLocation_);
-
-private:
 };
 
 class ComputeContext : public CommandContext
 {
 };
+
+inline void CommandContext::FlushResourceBarriers()
+{
+    if (m_numBarriersToFlush > 0)
+    {
+        m_commandList->ResourceBarrier(m_numBarriersToFlush, m_barrierBuffer);
+        m_numBarriersToFlush = 0;
+    }
+}
+
+inline void CommandContext::SetPipelineState(const PSO& pso_)
+{
+
+}
+
+inline void CommandContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heap_)
+{
+}
+
+inline void CommandContext::SetDescriptorHeaps(UINT heapCount_, D3D12_DESCRIPTOR_HEAP_TYPE type_, ID3D12DescriptorHeap* heapPtrs_[])
+{
+}
+
+inline void CommandContext::CopyBuffer(D3DResource& dest_, D3DResource& src_)
+{
+}
+
+inline void CommandContext::CopyBufferRegion(D3DResource& dest_, size_t destOffset_, D3DResource& src_, size_t srcOffset_, size_t numBytes_)
+{
+}
+
+inline void GraphicsContext::SetRootSignature(const RootSignature& rootSig_)
+{
+}
+
+inline void GraphicsContext::SetScissor(UINT left_, UINT top_, UINT right_, UINT bottom_)
+{
+}
+
+inline void GraphicsContext::SetViewportAndScissor(UINT x_, UINT y_, UINT w_, UINT h_)
+{
+}
+
+inline void GraphicsContext::SetStencilRef(UINT stencilRef_)
+{
+}
+
+inline void GraphicsContext::SetBlendFactor(Colour blend_)
+{
+}
+
+inline void GraphicsContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology_)
+{
+}
+
+inline void GraphicsContext::SetConstantArray(UINT rootIndex_, UINT numConstants_, const void* pConstants)
+{
+}
+
+inline void GraphicsContext::SetConstant(UINT rootIndex_, UINT val_, UINT Offset)
+{
+}
+
+inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_)
+{
+}
+
+inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_)
+{
+}
+
+inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_)
+{
+}
+
+inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_, UINT w_)
+{
+}
+
+inline void GraphicsContext::SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUAL_ADDRESS cbv_)
+{
+}
+
+inline void GraphicsContext::SetDynamicConstantBufferView(UINT rootIndex_, size_t bufferSize_, const void* cBufferData_)
+{
+}
+
+inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_)
+{
+}
+
+inline void GraphicsContext::SetDynamicIB(size_t indexCount_, const uint16_t* indexBufferData_)
+{
+}
+
+inline void GraphicsContext::SetBufferSRV(UINT rootIndex_, const D3DResource& srv_, UINT64 offset_)
+{
+}
+
+inline void GraphicsContext::SetBufferUAV(UINT rootIndex_, const D3DResource& uav_, UINT64 offset_)
+{
+}
+
+inline void GraphicsContext::SetDescriptorTable(UINT rootIndex_, D3D12_GPU_DESCRIPTOR_HANDLE handle_)
+{
+}
+
+inline void GraphicsContext::SetDynamicDescriptor(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_)
+{
+}
+
+inline void GraphicsContext::SetDynamicDescriptors(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
+{
+}
+
+inline void GraphicsContext::SetDynamicSampler(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_)
+{
+}
+
+inline void GraphicsContext::SetDynamicSamplers(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
+{
+}
+
+inline void GraphicsContext::SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& indexBufferView_)
+{
+}
+
+inline void GraphicsContext::SetVertexBuffer(UINT slot_, const D3D12_VERTEX_BUFFER_VIEW& vertexBufferView_)
+{
+}
+
+inline void GraphicsContext::SetVertexBuffers(UINT startSlot_, UINT count_, const D3D12_VERTEX_BUFFER_VIEW vertexBufferViews_[])
+{
+}
+
+inline void GraphicsContext::Draw(UINT vertexCount_, UINT vertexStartOffset_)
+{
+}
+
+inline void GraphicsContext::DrawIndexed(UINT indexCount_, UINT startIndexLocation_, int baseVertexLocation_)
+{
+}
+
+inline void GraphicsContext::DrawInstanced(UINT vertexCountPerInstance_, UINT instanceCount_, UINT startVertexLocation_, UINT startInstanceLocation_)
+{
+}
+
+inline void GraphicsContext::DrawIndexedInstanced(UINT indexCountPerInstance_, UINT instanceCount_, UINT startIndexLocation_, int baseVertexLocation_, UINT startInstanceLocation_)
+{
+}
 
 #endif

@@ -79,6 +79,7 @@ private:
 	DescriptorHandle m_descriptorForHeapStart;
 	std::vector<ID3D12DescriptorHeap*> m_retiredHeaps;
 
+	// Cache used to track table location and size (using indirection) and bitmap for knowing which handles are assigned
 	struct DescriptorTableCache
 	{
 		DescriptorTableCache() : assignedHandlesBitMap(0) {}
@@ -87,6 +88,8 @@ private:
 		uint32_t tableSize;
 	};
 
+	// Cache used to track descriptor table caches and their assignment
+	// Used to parse an incoming root signature to match the handle layout of the heap and interior descriptor tables
 	struct DescriptorHandleCache
 	{
 		DescriptorHandleCache()
