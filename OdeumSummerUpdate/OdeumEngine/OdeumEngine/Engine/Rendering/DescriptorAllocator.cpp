@@ -1,5 +1,7 @@
 #include "DescriptorAllocator.h"
 
+#include "Buffers/D3DResource.h"
+
 #include "D3DCore.h"
 
 using namespace DXGraphics;

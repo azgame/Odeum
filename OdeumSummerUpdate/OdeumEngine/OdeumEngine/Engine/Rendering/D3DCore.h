@@ -5,7 +5,6 @@
 
 #include "DescriptorAllocator.h"
 
-
 class CommandListManager;
 class ContextManager;
 

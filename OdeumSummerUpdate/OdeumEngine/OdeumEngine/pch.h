@@ -51,6 +51,9 @@
 #define ALIGN(_alignment, _val) (((_val + _alignment - 1) / _alignment) * _alignment)
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
+#define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
+#define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull
+
 #ifdef ASSERT
 #undef ASSERT
 #endif

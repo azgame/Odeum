@@ -3,9 +3,6 @@
 
 #include "../../../pch.h"
 
-#define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
-#define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull
-
 class GraphicsContext;
 
 // Base class for ID3D12Resource wrapping
@@ -41,6 +38,7 @@ public:
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const { return m_vGpuAddress; }
 
 	D3D12_RESOURCE_STATES m_usageState;
+	D3D12_RESOURCE_STATES m_transitioningState;
 
 protected:
 	ID3D12Resource* m_resource;

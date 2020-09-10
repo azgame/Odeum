@@ -13,9 +13,7 @@ public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void Render();
-	virtual std::vector<GameObject*>* GetRenderObjects() { return &m_renderObjects; }
 private:
-	std::vector<GameObject*> m_renderObjects;
 };
 
 #endif

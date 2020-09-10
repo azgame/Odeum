@@ -8,6 +8,7 @@
 #include "RootSignature.h"
 #include "Buffers/D3DBuffer.h"
 #include "DynamicDescriptorHeap.h"
+#include "BufferAllocator.h"
 #include "D3DCore.h"
 #include <queue>
 
@@ -39,6 +40,11 @@ The idea of the context is to extrapolate all of the functions needed for settin
  The code here is the culmination of all the wrappers and managers created. The context simply wraps the specific gpu calls such that it is simpler for the end user
 */
 
+#define VALID_COMPUTE_QUEUE_RESOURCE_STATES \
+    ( D3D12_RESOURCE_STATE_UNORDERED_ACCESS \
+    | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE \
+    | D3D12_RESOURCE_STATE_COPY_DEST \
+    | D3D12_RESOURCE_STATE_COPY_SOURCE )
 
 class ContextManager
 {
@@ -76,11 +82,20 @@ public:
 
     static CommandContext& RequestContext(std::wstring name_ = L"");
 
+    uint64_t Flush(bool waitForCompletion_ = false);
+
+    uint64_t Finish(bool waitForCompletion_ = false);
+
     void Initialize();
 
     GraphicsContext& GetGraphicsContext() {
         ASSERT(m_type != D3D12_COMMAND_LIST_TYPE_COMPUTE, "Cannot convert compute context to graphics context");
         return reinterpret_cast<GraphicsContext&>(*this);
+    }
+
+    AllocatedBuffer ReserveBufferMemory(size_t byteSize_)
+    {
+        return m_CpuBufferAllocator.Allocate(byteSize_);
     }
 
     ComputeContext& GetComputeContext() { return reinterpret_cast<ComputeContext&>(*this); }
@@ -130,6 +145,9 @@ protected:
 
     ID3D12DescriptorHeap* m_currentDescHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
+    BufferAllocator m_CpuBufferAllocator;
+    BufferAllocator m_GpuBufferAllocator;
+
     std::wstring m_id;
 
     D3D12_COMMAND_LIST_TYPE m_type;
@@ -145,7 +163,7 @@ public:
     }
 
     // Clear buffers for draw
-    void ClearUAV(D3DResource& target_);
+    void ClearUAV(D3DBuffer& target_);
     void ClearUAV(ColourBuffer& target_);
     void ClearColor(ColourBuffer& target_);
     void ClearDepth(DepthBuffer& target_);
@@ -353,6 +371,10 @@ inline void GraphicsContext::SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUA
 
 inline void GraphicsContext::SetDynamicConstantBufferView(UINT rootIndex_, size_t bufferSize_, const void* cBufferData_)
 {
+    ASSERT(cBufferData_ != nullptr && isAligned(cBufferData_, 16));
+    AllocatedBuffer constantBuffer = m_CpuBufferAllocator.Allocate(bufferSize_);
+    memcpy(constantBuffer.CpuAddress, cBufferData_, bufferSize_);
+    m_commandList->SetGraphicsRootConstantBufferView(rootIndex_, constantBuffer.GpuAddress);
 }
 
 inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_)
@@ -361,12 +383,12 @@ inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t v
     size_t bufferSize = numVerts_ * vertStride_;
     ALIGN(bufferSize, 16);
 
-    ID3D12Resource* buffer; 
-    
+    AllocatedBuffer vertexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
 
+    memcpy(vertexBuffer.CpuAddress, vertexBufferData_, bufferSize);
 
     D3D12_VERTEX_BUFFER_VIEW vbView;
-    vbView.BufferLocation = buffer->GetGPUVirtualAddress();
+    vbView.BufferLocation = vertexBuffer.GpuAddress;
     vbView.SizeInBytes = bufferSize;
     vbView.StrideInBytes = vertStride_;
 
@@ -375,6 +397,29 @@ inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t v
 
 inline void GraphicsContext::SetDynamicIB(size_t indexCount_, const uint16_t* indexBufferData_)
 {
+    ASSERT(indexBufferData_ != nullptr && isAligned(indexBufferData_, 16));
+    size_t bufferSize = indexCount_ * sizeof(uint16_t);
+    ALIGN(bufferSize, 16);
+
+    AllocatedBuffer indexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
+
+    memcpy(indexBuffer.CpuAddress, indexBufferData_, bufferSize);
+
+    D3D12_INDEX_BUFFER_VIEW ibView;
+    ibView.BufferLocation = indexBuffer.GpuAddress;
+    ibView.SizeInBytes = (UINT)(indexCount_ * sizeof(uint16_t));
+    ibView.Format = DXGI_FORMAT_R16_UINT;
+
+    m_commandList->IASetIndexBuffer(&ibView);
+}
+
+inline void GraphicsContext::SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, const void* srvBufferData_)
+{
+    ASSERT(srvBufferData_ != nullptr && isAligned(srvBufferData_, 16));
+    AllocatedBuffer buffer = m_CpuBufferAllocator.Allocate(bufferSize_);
+    ALIGN(bufferSize_, 16);
+    memcpy(buffer.CpuAddress, srvBufferData_, bufferSize_);
+    m_commandList->SetGraphicsRootShaderResourceView(rootIndex_, buffer.GpuAddress);
 }
 
 inline void GraphicsContext::SetBufferSRV(UINT rootIndex_, const D3DBuffer& srv_, UINT64 offset_)

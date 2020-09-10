@@ -11,20 +11,18 @@ Game1::~Game1()
 
 bool Game1::Initialize()
 {
-	if (OdeumEngine::GetInstance()->GetCurrentScene() == 0)
-	{
-		m_currentScene = new StartScene();
-		m_currentSceneNum = 0;
-		return m_currentScene->Initialize();
-	}
+	ASSERT(OdeumEngine::Get().GetCurrentScene() != 0, "Engine's default scene is not 0");
 
-	Debug::FatalError("Engine's scene is not initialized to 0", __FILENAME__, __LINE__);
+	m_currentScene = new StartScene();
+	m_currentSceneNum = 0;
+	return m_currentScene->Initialize();
+
 	return false;
 }
 
 void Game1::Update(const float deltaTime_)
 {
-	if (m_currentSceneNum != OdeumEngine::GetInstance()->GetCurrentScene())
+	if (m_currentSceneNum != OdeumEngine::Get().GetCurrentScene())
 	{
 		BuildScene();
 	}
@@ -38,12 +36,12 @@ void Game1::Render()
 
 void Game1::BuildScene()
 {
-	// cleanup previous scene
 	delete m_currentScene;
 	m_currentScene = nullptr;
 
-	// Change to enum or queue of scenes
-	switch (OdeumEngine::GetInstance()->GetCurrentScene())
+	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to -1");
+
+	switch (OdeumEngine::Get().GetCurrentScene())
 	{
 	case 1:
 		m_currentScene = new GameScene();
@@ -53,7 +51,7 @@ void Game1::BuildScene()
 		break;
 	}
 
-	m_currentSceneNum = OdeumEngine::GetInstance()->GetCurrentScene();
+	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
 }

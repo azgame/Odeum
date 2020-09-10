@@ -9,6 +9,7 @@
 // Individually allocated buffer
 class AllocatedBuffer
 {
+public:
 	AllocatedBuffer(D3DResource& resource_, size_t offset_, size_t size_) :
 		buffer(resource_), offset(offset_), size(size_) {}
 

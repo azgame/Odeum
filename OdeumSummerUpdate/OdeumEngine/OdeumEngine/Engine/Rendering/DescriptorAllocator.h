@@ -2,7 +2,6 @@
 #define DESCRIPTORALLOCATOR_H
 
 #include "../../pch.h"
-#include "Buffers/D3DResource.h"
 
 // Acts as a place for allocating cpu visible descriptors, not for gpu use
 // Has a pool of descriptors and can, in a thread safe way, allocate descriptors into that heap for use by other objects

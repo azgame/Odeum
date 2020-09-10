@@ -14,6 +14,12 @@ OdeumEngine::~OdeumEngine()
 {
 }
 
+void OdeumEngine::AddSystem(CoreSystem* system_)
+{
+	m_systemStack.Push(system_);
+	system_->Attach();
+}
+
 void OdeumEngine::Run()
 {
 	m_isRunning = true;
@@ -27,8 +33,6 @@ void OdeumEngine::Run()
 bool OdeumEngine::Initialize()
 {	
 	m_window = new Window();
-
-	
 
 	m_window->InitializeWindow();
 
