@@ -175,6 +175,9 @@
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Math\Matrix.h" />
+    <ClInclude Include="Engine\Math\Quaternion.h" />
+    <ClInclude Include="Engine\Math\Vector.h" />
     <ClInclude Include="Engine\Rendering\BufferAllocator.h" />
     <ClInclude Include="Engine\Events\ApplicationEvent.h" />
     <ClInclude Include="Engine\Events\KeyEvent.h" />
