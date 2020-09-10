@@ -10,7 +10,7 @@
 
 // DirectX
 #include <d3d12.h>
-#include "Engine/Utilities/d3dx12.h"
+#include "Engine/Utilities/d3dx12.h" // Helper that provides a couple useful wrappers (CDXD12- prefaced)
 #include <d3d11_4.h>
 #include <dxgi1_6.h>
 #include <dwrite_3.h>
@@ -18,13 +18,13 @@
 #include <DirectXMath.h>
 
 // Vulkan
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
+//#define GLFW_INCLUDE_VULKAN
+//#include <GLFW/glfw3.h>
+//
+//#define GLM_FORCE_RADIANS
+//#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+//#include <glm/vec4.hpp>
+//#include <glm/mat4x4.hpp>
 
 // C/C++ Libraries
 #include <cstdarg>
@@ -71,6 +71,11 @@
 std::wstring MakeWString(const std::string & string_)
 {
 	return std::wstring(string_.begin(), string_.end());
+}
+
+template <typename T> bool isAligned(T value_, size_t alignment_)
+{
+	return 0 == ((size_t)value_ & (alignment_ - 1));
 }
 
 #endif

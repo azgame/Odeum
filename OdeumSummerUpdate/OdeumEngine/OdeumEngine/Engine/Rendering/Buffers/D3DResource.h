@@ -40,10 +40,11 @@ public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() { return m_vGpuAddress; }
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const { return m_vGpuAddress; }
 
+	D3D12_RESOURCE_STATES m_usageState;
+
 protected:
 	ID3D12Resource* m_resource;
 	D3D12_GPU_VIRTUAL_ADDRESS m_vGpuAddress;
-	D3D12_RESOURCE_STATES m_usageState;
 };
 
 #endif

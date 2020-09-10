@@ -49,7 +49,7 @@ CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE type_) :
 {
     m_manager = nullptr;
     m_commandList = nullptr;
-    ZeroMemory(m_currentDescHeap, sizeof(m_currentDescHeap));
+    ZeroMemory(m_currentDescHeaps, sizeof(m_currentDescHeaps));
 
     m_curGraphicsRootSignature = nullptr;
     m_curComputeRootSignature = nullptr;

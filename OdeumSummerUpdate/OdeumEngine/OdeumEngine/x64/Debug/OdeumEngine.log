@@ -1,6 +1,41 @@
-﻿  DynamicDescriptorHeap.cpp
+﻿  App.cpp
+  BufferAllocator.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\BufferAllocator.cpp(20,64): error C2027: use of undefined type 'CommandListManager'
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\D3DCore.h(9): message : see declaration of 'CommandListManager'
+  Input.cpp
+  ColourBuffer.cpp
+  DepthBuffer.cpp
+  Camera.cpp
+  CommandAllocatorPool.cpp
+  CommandListManager.cpp
+  DynamicDescriptorHeap.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(248,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(370,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(371,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  DescriptorAllocator.cpp
   D3DCore.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(248,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(370,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(371,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  D3DRenderAPI.cpp
   D3DBuffer.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(248,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(370,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(371,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  Timer.cpp
+  OdeumEngine.cpp
   GraphicsContext.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(248,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(370,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\GraphicsContext.h(371,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  PipelineState.cpp
+  pch.cpp
+  Window.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\Window.cpp(67,2): warning C4065: switch statement contains 'default' but no 'case' labels
+  RootSignature.cpp
   Generating Code...
-  OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe
+  Compiling...
+  PixelBuffer.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\Buffers\PixelBuffer.cpp(41,19): warning C4244: '=': conversion from 'UINT64' to 'uint32_t', possible loss of data
+  SystemStack.cpp
+  Generating Code...

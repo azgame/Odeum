@@ -29,6 +29,8 @@ public:
 	inline float GetA() { return DirectX::XMVectorGetW(m_colourValue); }
 	inline void PutA(float val_) { DirectX::XMVectorSetW(m_colourValue, val_); }
 
+	float* GetPtr() { return reinterpret_cast<float*>(this); }
+
 private:
 	DirectX::XMVECTORF32 m_colourValue;
 };

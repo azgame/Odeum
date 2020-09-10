@@ -1,6 +1,10 @@
 #include "CommandListManager.h"
 
+#include <algorithm>
+
 #include "D3DCore.h"
+
+
 
 namespace DXGraphics
 {
