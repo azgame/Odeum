@@ -99,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Include;C:\GameDev\glm-0.9.9.8;C:\GameDev\glfw-3.3.2.bin.WIN64\include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>Default</LanguageStandard>
@@ -107,8 +107,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\glfw-3.3.2.bin.WIN64\lib-vc2019;C:\GameDev\VulkanSDK\1.2.148.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -145,24 +145,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Engine\Rendering\BufferAllocator.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
-    <ClCompile Include="Engine\Rendering\Buffers\ColourBuffer.cpp" />
-    <ClCompile Include="Engine\Rendering\Buffers\DepthBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\CameraController.cpp" />
-    <ClCompile Include="Engine\Rendering\CommandAllocatorPool.cpp" />
-    <ClCompile Include="Engine\Rendering\CommandListManager.cpp" />
-    <ClCompile Include="Engine\Rendering\DynamicDescriptorHeap.cpp" />
-    <ClCompile Include="Engine\Rendering\DescriptorAllocator.cpp" />
-    <ClCompile Include="Engine\Rendering\D3DCore.cpp" />
-    <ClCompile Include="Engine\Rendering\D3DRenderAPI.cpp" />
-    <ClCompile Include="Engine\Rendering\Buffers\D3DBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandAllocatorPool.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandListManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\DescriptorAllocator.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\D3DCore.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderAPI.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.cpp" />
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
     <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
-    <ClCompile Include="Engine\Rendering\GraphicsContext.cpp" />
-    <ClCompile Include="Engine\Rendering\PipelineState.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\GraphicsContext.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
@@ -170,32 +170,33 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\Core\Window.cpp" />
-    <ClCompile Include="Engine\Rendering\RootSignature.cpp" />
-    <ClCompile Include="Engine\Rendering\Buffers\PixelBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\RootSignature.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.cpp" />
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\Vector.h" />
-    <ClInclude Include="Engine\Rendering\BufferAllocator.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\BufferAllocator.h" />
     <ClInclude Include="Engine\Events\ApplicationEvent.h" />
     <ClInclude Include="Engine\Events\KeyEvent.h" />
     <ClInclude Include="Engine\Events\MouseEvent.h" />
-    <ClInclude Include="Engine\Rendering\Colour.h" />
-    <ClInclude Include="Engine\Rendering\Buffers\ColourBuffer.h" />
-    <ClInclude Include="Engine\Rendering\Buffers\DepthBuffer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Colour.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\CameraController.h" />
-    <ClInclude Include="Engine\Rendering\CommandAllocatorPool.h" />
-    <ClInclude Include="Engine\Rendering\CommandListManager.h" />
-    <ClInclude Include="Engine\Rendering\DynamicDescriptorHeap.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandAllocatorPool.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandListManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DXIncludes.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.h" />
     <ClInclude Include="Engine\Core\Input.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
-    <ClInclude Include="Engine\Rendering\DescriptorAllocator.h" />
-    <ClInclude Include="Engine\Rendering\D3DCore.h" />
-    <ClInclude Include="Engine\Rendering\D3DRenderAPI.h" />
-    <ClInclude Include="Engine\Rendering\Buffers\D3DBuffer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DescriptorAllocator.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DCore.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderAPI.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.h" />
     <ClInclude Include="Engine\Core\CoreSystem.h" />
     <ClInclude Include="Engine\Core\Debug.h" />
     <ClInclude Include="Engine\Core\GameInterface.h" />
@@ -203,20 +204,20 @@
     <ClInclude Include="Engine\Core\Timer.h" />
     <ClInclude Include="Engine\dxc\dxcapi.h" />
     <ClInclude Include="Engine\dxc\dxcapi.use.h" />
-    <ClInclude Include="Engine\Rendering\Buffers\D3DResource.h" />
-    <ClInclude Include="Engine\Rendering\PipelineState.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DResource.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\PipelineState.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
-    <ClInclude Include="Engine\Rendering\GraphicsContext.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\GraphicsContext.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
-    <ClInclude Include="Engine\Rendering\RootSignature.h" />
-    <ClInclude Include="Engine\Rendering\Buffers\PixelBuffer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.h" />
     <ClInclude Include="Engine\Core\SystemStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

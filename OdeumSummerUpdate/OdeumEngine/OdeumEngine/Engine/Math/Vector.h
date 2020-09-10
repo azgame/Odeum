@@ -16,7 +16,7 @@
 // Author:  James Stanard 
 //
 
-#include "../../pch.h"
+#include "../Rendering/DirectX12/DXIncludes.h"
 
 // made Scalar inside of Vector for ease of access but I might move Scalar to its own class if we end up using it more
 class Scalar {
