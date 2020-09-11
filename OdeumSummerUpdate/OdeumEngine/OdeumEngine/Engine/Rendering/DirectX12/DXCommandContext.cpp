@@ -66,6 +66,13 @@ CommandContext::~CommandContext()
 {
 }
 
+void CommandContext::DestroyAllContexts()
+{
+    BufferAllocator::DestroyAllPages();
+    DynamicDescriptorHeap::Destroy();
+    DXGraphics::m_contextManager.DestroyAllContexts();
+}
+
 // Ask for an available context
 CommandContext& CommandContext::RequestContext(std::wstring name_)
 {

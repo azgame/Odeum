@@ -24,10 +24,10 @@ void ColourBuffer::Create(const std::wstring& name_, uint32_t width_, uint32_t h
 
 	D3D12_CLEAR_VALUE clearValue = {};
 	clearValue.Format = format_;
-	clearValue.Color[0] = m_clearColour.r;
-	clearValue.Color[1] = m_clearColour.g;
-	clearValue.Color[2] = m_clearColour.b;
-	clearValue.Color[3] = m_clearColour.a;
+	clearValue.Color[0] = m_clearColour.GetR();
+	clearValue.Color[1] = m_clearColour.GetG();
+	clearValue.Color[2] = m_clearColour.GetB();
+	clearValue.Color[3] = m_clearColour.GetA();
 
 	CreateTextureResource(DXGraphics::m_device, name_, desc, clearValue, vmPtr);
 	CreateDerivedViews(DXGraphics::m_device, format_, 1, numMips_);
@@ -44,10 +44,10 @@ void ColourBuffer::CreateArray(const std::wstring& name_, uint32_t width_, uint3
 
 	D3D12_CLEAR_VALUE clearValue = {};
 	clearValue.Format = format_;
-	clearValue.Color[0] = m_clearColour.r;
-	clearValue.Color[1] = m_clearColour.g;
-	clearValue.Color[2] = m_clearColour.b;
-	clearValue.Color[3] = m_clearColour.a;
+	clearValue.Color[0] = m_clearColour.GetR();
+	clearValue.Color[1] = m_clearColour.GetG();
+	clearValue.Color[2] = m_clearColour.GetB();
+	clearValue.Color[3] = m_clearColour.GetA();
 
 	CreateTextureResource(DXGraphics::m_device, name_, desc, clearValue, vmPtr);
 	CreateDerivedViews(DXGraphics::m_device, format_, arrayCount_, 1);

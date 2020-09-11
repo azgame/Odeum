@@ -4,6 +4,7 @@
 #include "../../pch.h"
 
 #include "Window.h"
+#include "Timer.h"
 #include "SystemStack.h"
 
 #include "GameInterface.h"
@@ -18,6 +19,7 @@ public:
 
 	static OdeumEngine& Get() { return *sm_instance; }
 	Window& GetWindow() { return *m_window; }
+	Timer& GetTimer() { return m_engineTimer; }
 
 	uint32_t GetCurrentScene() { return m_currentScene; }
 
@@ -30,6 +32,7 @@ public:
 
 private:
 	Window* m_window;
+	Timer m_engineTimer;
 	bool m_isRunning;
 
 	uint32_t m_currentScene;

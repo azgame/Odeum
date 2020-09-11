@@ -161,7 +161,7 @@
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
     <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
-    <ClCompile Include="Engine\Rendering\DirectX12\GraphicsContext.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\DXCommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
@@ -173,6 +173,8 @@
     <ClCompile Include="Engine\Rendering\DirectX12\RootSignature.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.cpp" />
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Math\Matrix.h" />
@@ -207,10 +209,11 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DResource.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\PipelineState.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
-    <ClInclude Include="Engine\Rendering\DirectX12\GraphicsContext.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DXCommandContext.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
@@ -219,6 +222,8 @@
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.h" />
     <ClInclude Include="Engine\Core\SystemStack.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

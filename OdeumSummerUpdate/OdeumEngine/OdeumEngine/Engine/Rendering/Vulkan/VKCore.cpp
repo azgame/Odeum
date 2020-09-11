@@ -9,28 +9,27 @@ namespace VKGraphics
 	uint64_t s_frameIndex = 0;
 	int64_t s_frameStartTick = 0;
 
-	const uint32_t maxNativeWidth = 3840;
-	const uint32_t maxNativeHeight = 2160;
-	const uint32_t numPresetResolutions = 6;
-
 	uint32_t m_nativeWidth = 0;
 	uint32_t m_nativeHeight = 0;
 	uint32_t m_displayWidth = 0;
 	uint32_t m_displayHeight = 0;
 
+	bool s_enableVSync = false;
+
 	UINT m_currentBuffer = 0;
+
+	ResolutionOptions m_targetResolution = k1440p;
 
 	// DisplayBuffer m_preDisplayBuffer
 
-	extern VkDevice m_device;
-
-	extern VkInstance m_instance;
+	VkDevice m_device;
+	VkInstance m_instance;
 
 	void SetNativeResolution()
 	{
 		uint32_t nativeWidth, nativeHeight;
 
-		switch (ResolutionOptions((int)targetResolution))
+		switch (ResolutionOptions((int)m_targetResolution))
 		{
 		default:
 		case k720p:

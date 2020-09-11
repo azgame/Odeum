@@ -80,6 +80,8 @@ public:
 
     ~CommandContext();
 
+    static void DestroyAllContexts();
+
     static CommandContext& RequestContext(std::wstring name_ = L"");
 
     uint64_t Flush(bool waitForCompletion_ = false);

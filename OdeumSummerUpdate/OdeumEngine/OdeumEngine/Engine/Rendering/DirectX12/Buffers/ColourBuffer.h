@@ -15,7 +15,7 @@ public:
     {
         m_srvHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
         m_rtvHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
-        ZeroMemory(m_uavHandle, sizeof(m_uavHandle));
+        std::memset(m_uavHandle, 0xFF, sizeof(m_uavHandle));
     }
 
     void CreateFromSwapChain(const std::wstring& name_, ID3D12Resource* pResource_);

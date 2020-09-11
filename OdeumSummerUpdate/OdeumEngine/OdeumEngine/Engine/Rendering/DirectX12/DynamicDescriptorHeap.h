@@ -33,7 +33,7 @@ public:
 	DynamicDescriptorHeap(CommandContext& context_, D3D12_DESCRIPTOR_HEAP_TYPE type_);
 	~DynamicDescriptorHeap();
 
-	void Destroy()
+	static void Destroy()
 	{
 		sm_descriptorHeapPool[0].clear();
 		sm_descriptorHeapPool[1].clear();

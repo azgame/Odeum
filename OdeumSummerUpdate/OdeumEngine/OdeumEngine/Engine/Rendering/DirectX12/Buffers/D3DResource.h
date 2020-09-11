@@ -13,19 +13,22 @@ public:
 	D3DResource() : 
 		m_vGpuAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL), 
 		m_resource(nullptr),
-		m_usageState(D3D12_RESOURCE_STATE_COMMON)
+		m_usageState(D3D12_RESOURCE_STATE_COMMON),
+		m_transitioningState((D3D12_RESOURCE_STATES)-1)
 	{}
 
 	D3DResource(ID3D12Resource* resource_, D3D12_RESOURCE_STATES state_) : 
 		m_resource(resource_), 
-		m_usageState(state_) 
+		m_usageState(state_),
+		m_transitioningState((D3D12_RESOURCE_STATES)-1)
 	{
 		m_vGpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 	}
 
 	virtual void Destroy()
 	{
-		m_resource->Release();
+		if (m_resource != nullptr)
+			m_resource->Release();
 	}
 
 	ID3D12Resource* operator->() { return m_resource; }

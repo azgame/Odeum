@@ -20,7 +20,7 @@ D3D12_RESOURCE_DESC PixelBuffer::CreateTextureDesc(uint32_t width_, uint32_t hei
     desc.MipLevels = numMips_;
     desc.Format = GetBaseFormat(m_format);
     desc.Alignment = 0;
-    desc.Dimension = D3D12_RESOURCE_DIMENSION_UNKNOWN;
+    desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     desc.Flags = (D3D12_RESOURCE_FLAGS)flags_;
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;

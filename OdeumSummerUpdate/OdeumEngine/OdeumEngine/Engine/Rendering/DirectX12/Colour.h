@@ -7,27 +7,24 @@ class Colour
 {
 public:
 
-	Colour(float r_, float g_, float b_, float a_)
+	Colour(float r_, float g_, float b_, float a_ = 1.0f)
 	{
-		r = r_;
-		g = g_;
-		b = b_;
-		a = a_;
+		m_colourValue.v = DirectX::XMVectorSet(r_, g_, b_, a_);
 	}
 
-	__declspec(property( get = GetR, put = PutR )) float r;
-	__declspec(property( get = GetG, put = PutG )) float g;
-	__declspec(property( get = GetB, put = PutB )) float b;
-	__declspec(property( get = GetA, put = PutA )) float a;
+	void operator=(Colour& other_)
+	{
+		m_colourValue = other_.m_colourValue;
+	}
 
 	inline float GetR() { return DirectX::XMVectorGetX(m_colourValue); }
-	inline void PutR(float val_) { DirectX::XMVectorSetX(m_colourValue, val_); }
+	inline void SetR(float val_) { m_colourValue.f[0] = val_; }
 	inline float GetG() { return DirectX::XMVectorGetY(m_colourValue); }
-	inline void PutG(float val_) { DirectX::XMVectorSetY(m_colourValue, val_); }
+	inline void SetG(float val_) { m_colourValue.f[1] = val_; }
 	inline float GetB() { return DirectX::XMVectorGetZ(m_colourValue); }
-	inline void PutB(float val_) { DirectX::XMVectorSetZ(m_colourValue, val_); }
+	inline void SetB(float val_) { m_colourValue.f[2] = val_; }
 	inline float GetA() { return DirectX::XMVectorGetW(m_colourValue); }
-	inline void PutA(float val_) { DirectX::XMVectorSetW(m_colourValue, val_); }
+	inline void SetA(float val_) { m_colourValue.f[3] = val_; }
 
 	float* GetPtr() { return reinterpret_cast<float*>(this); }
 

@@ -1,7 +1,11 @@
-﻿  App.cpp
-  Camera.cpp
-  CommandAllocatorPool.cpp
-  StartScene.cpp
-  SystemStack.cpp
+﻿  ColourBuffer.cpp
+  DynamicDescriptorHeap.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(268,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(394,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(395,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  D3DBuffer.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(268,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(394,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(395,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
   Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

@@ -1,5 +1,7 @@
 #include "OdeumEngine.h"
 
+#include "../Rendering/DirectX12/D3DCore.h"
+
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
 OdeumEngine::OdeumEngine()
@@ -26,18 +28,25 @@ void OdeumEngine::Run()
 
 	while (m_isRunning)
 	{
+		m_engineTimer.UpdateFrameTicks();
 		m_window->Update();
+
+		DXGraphics::Present();
 	}
 }
 
 bool OdeumEngine::Initialize()
 {	
 	m_window = new Window();
+	
+	m_engineTimer.Initialize();
 
 	m_window->InitializeWindow();
 
 	std::function<void()> fcnPtr = std::bind(&OdeumEngine::Close, this);
 	m_window->SetCloseEvent(fcnPtr);
+
+	DXGraphics::Initialize();
 
 	return true;
 }

@@ -23,6 +23,14 @@ public:
 	void SetCloseEvent(std::function<void()> func_);
 	void Close();
 
+	HWND GetHWND() { return m_hwnd; }
+	const HWND GetHWND() const { return m_hwnd; }
+
+	int GetWidth() { return m_screenWidth; }
+	int GetHeight() { return m_screenHeight; }
+	int GetXPos() { return m_xPos; }
+	int GetYPos() { return m_yPos; }
+
 private:
 
 	int						m_screenWidth, m_screenHeight, m_xPos, m_yPos;
