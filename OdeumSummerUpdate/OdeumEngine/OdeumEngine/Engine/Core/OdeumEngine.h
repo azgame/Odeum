@@ -10,6 +10,8 @@
 #include "GameInterface.h"
 #include "Scene.h"
 
+#include "TestRender.h"
+
 class OdeumEngine
 {
 public:
@@ -38,6 +40,8 @@ private:
 	uint32_t m_currentScene;
 
 	SystemStack m_systemStack;
+
+	TestRender testCase;
 
 	static OdeumEngine* sm_instance;
 };

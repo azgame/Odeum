@@ -130,6 +130,7 @@ void Window::InitializeWindow()
 	{
 		m_screenWidth = 1600;
 		m_screenHeight = 900;
+		m_ultraWideEnabled = (m_screenWidth / m_screenHeight == 21.0f / 9.0f);
 
 		// Place the window in the middle of the screen
 		m_xPos = (GetSystemMetrics(SM_CXSCREEN) - m_screenWidth) / 2;

@@ -30,10 +30,12 @@ public:
 	int GetHeight() { return m_screenHeight; }
 	int GetXPos() { return m_xPos; }
 	int GetYPos() { return m_yPos; }
+	bool GetUltraWide() { return m_ultraWideEnabled; }
 
 private:
 
 	int						m_screenWidth, m_screenHeight, m_xPos, m_yPos;
+	bool					m_ultraWideEnabled;
 	bool					isRunning, FULL_SCREEN;
 	std::function<void()>	closeFunc;
 

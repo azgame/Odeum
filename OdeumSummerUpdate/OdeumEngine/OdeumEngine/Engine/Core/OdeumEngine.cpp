@@ -31,6 +31,8 @@ void OdeumEngine::Run()
 		m_engineTimer.UpdateFrameTicks();
 		m_window->Update();
 
+		testCase.Render();
+
 		DXGraphics::Present();
 	}
 }
@@ -47,6 +49,8 @@ bool OdeumEngine::Initialize()
 	m_window->SetCloseEvent(fcnPtr);
 
 	DXGraphics::Initialize();
+
+	testCase.Initialize();
 
 	return true;
 }

@@ -107,7 +107,7 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 		&pResult, &pError)))
 		Debug::FatalError("Root Signature could not be serialized!", __FILENAME__, __LINE__);
 
-	if (FAILED(m_device->CreateRootSignature(1, pResult, pResult->GetBufferSize(),
+	if (FAILED(m_device->CreateRootSignature(1, pResult->GetBufferPointer(), pResult->GetBufferSize(),
 		IID_PPV_ARGS(&m_rootSignature))))
 		Debug::FatalError("Root Signature could not be created!", __FILENAME__, __LINE__);
 

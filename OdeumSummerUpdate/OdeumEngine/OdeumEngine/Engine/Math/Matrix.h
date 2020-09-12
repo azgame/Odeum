@@ -26,8 +26,9 @@ _declspec(align(16))class Matrix3
 public:
 	inline Matrix3() {}
 	inline Matrix3(Vector3 x_, Vector3 y_, Vector3 z_) { mat[0] = x_; mat[1] = y_; mat[2] = z_; }
-	inline Matrix3(const Matrix3& m_) { m[0] = m_.m[0]; m[1] = m_.m[1]; m[2] = m_.m[2]; }
-	inline Matrix3(Quaternion q_) { *this = Matrix3(DirectX::XMMatrixRotationQuaternion(q_));  }
+	inline Matrix3(const Matrix3& m_) { mat[0] = m_.mat[0]; mat[1] = m_.mat[1]; mat[2] = m_.mat[2]; }
+	inline Matrix3(Quaternion q_) { *this = Matrix3(DirectX::XMMatrixRotationQuaternion(q_)); }
+	inline Matrix3(DirectX::XMMATRIX m_) {}
 private:
 	Vector3 mat[3];
 };

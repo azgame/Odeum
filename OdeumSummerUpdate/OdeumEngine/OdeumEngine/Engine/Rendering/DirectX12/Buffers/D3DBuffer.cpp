@@ -33,6 +33,9 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 		Debug::Error("Could not create buffer", __FILENAME__, __LINE__);
 
 	m_vGpuAddress = m_resource->GetGPUVirtualAddress();
+
+	if (initialData_)
+		CommandContext::InitializeBuffer(*this, initialData_, m_bufferSize);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size_) const
@@ -40,7 +43,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size
 	if (offset_ + size_ > m_bufferSize)
 		Debug::Error("Attempted allocation of descriptor failed!", __FILENAME__, __LINE__);
 
-	size_ = ALIGN(size_, 16);
+	ALIGN(size_, 16);
 
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
 	cbvDesc.BufferLocation = offset_;
@@ -55,7 +58,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size
 D3D12_VERTEX_BUFFER_VIEW D3DBuffer::VertexBufferView(size_t offset_, uint32_t size_, uint32_t stride_) const
 {
 	D3D12_VERTEX_BUFFER_VIEW vertBufferView;
-	vertBufferView.BufferLocation = offset_;
+	vertBufferView.BufferLocation = m_vGpuAddress + offset_;
 	vertBufferView.SizeInBytes = size_;
 	vertBufferView.StrideInBytes = stride_;
 	return vertBufferView;
@@ -64,7 +67,7 @@ D3D12_VERTEX_BUFFER_VIEW D3DBuffer::VertexBufferView(size_t offset_, uint32_t si
 D3D12_INDEX_BUFFER_VIEW D3DBuffer::IndexBufferView(size_t offset_, uint32_t size_, bool b32Bit) const
 {
 	D3D12_INDEX_BUFFER_VIEW indexBufferView;
-	indexBufferView.BufferLocation = offset_;
+	indexBufferView.BufferLocation = m_vGpuAddress + offset_;
 	indexBufferView.SizeInBytes = size_;
 	indexBufferView.Format = b32Bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 	return indexBufferView;

@@ -27,8 +27,7 @@ public:
 
 	virtual void Destroy()
 	{
-		if (m_resource != nullptr)
-			m_resource->Release();
+		m_resource = nullptr;
 	}
 
 	ID3D12Resource* operator->() { return m_resource; }

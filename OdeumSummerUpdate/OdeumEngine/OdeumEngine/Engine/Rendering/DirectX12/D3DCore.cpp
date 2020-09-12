@@ -8,11 +8,11 @@
 
 #include "../../Core/OdeumEngine.h"
 
-#define SWAP_CHAIN_BUFFER_COUNT 3
+
 
 namespace DXGraphics
 {
-	ID3D12Device5* m_device = nullptr;
+	ID3D12Device* m_device = nullptr;
 	CommandListManager m_commandManager;
 	ContextManager m_contextManager;
 
@@ -28,16 +28,16 @@ namespace DXGraphics
 	uint64_t s_frameIndex = 0;
 	int64_t s_frameStartTick = 0;
 	bool s_ultraWide = false;
+	float ultraWideRatio = 1.34375f;
 
 	uint32_t m_nativeWidth = 0;
 	uint32_t m_nativeHeight = 0;
 	uint32_t m_displayWidth = 0;
 	uint32_t m_displayHeight = 0;
-	ColourBuffer m_preDisplayBuffer;
 
 	bool s_enableVSync = false;
 
-	ResolutionOptions m_targetResolution = k1440p;
+	ResolutionOptions m_targetResolution = k900p;
 
 	D3D_FEATURE_LEVEL g_D3DFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
@@ -49,7 +49,7 @@ namespace DXGraphics
 	{
 		uint32_t nativeWidth, nativeHeight;
 
-		float ultraWideExpansion = s_ultraWide ? 1.34375f : 1.0f;
+		float ultraWideExpansion = s_ultraWide ? ultraWideRatio : 1.0f;
 
 		switch (ResolutionOptions((int)m_targetResolution))
 		{
@@ -87,10 +87,12 @@ namespace DXGraphics
 		m_nativeHeight = nativeHeight;
 
 		m_commandManager.IdleGPU();
-		// InitializeRenderingBuffers(nativeWidth, nativeHeight);
+		InitializeRenderingBuffers(nativeWidth, nativeHeight);
 	}
 
 	ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
+	ColourBuffer m_preDisplayBuffer;
+	ColourBuffer m_presentBuffer;
 	DepthBuffer m_sceneDepthBuffer;
 
 	IDXGISwapChain1* sm_swapChain = nullptr;
@@ -98,7 +100,12 @@ namespace DXGraphics
 	RootSignature m_presentRootSig;
 	GraphicsPSO m_presentPSO;
 
+	D3D12_BLEND_DESC alphaBlend;
+	D3D12_RASTERIZER_DESC rasterDesc;
+	D3D12_DEPTH_STENCIL_DESC depthStateDisabled;
+
 	void PreparePresent();
+	void InitializeCommonState();
 }
 
 void DXGraphics::Initialize()
@@ -111,7 +118,7 @@ void DXGraphics::Initialize()
 		debugController->EnableDebugLayer();
 	}
 #else
-	Debug::Log("Did not create Dx12 debug validation layer!", __FILENAME__, __LINE__);
+	Debug::Log("Did not create Dx12 debug validation layer", __FILENAME__, __LINE__);
 #endif
 	
 	IDXGIFactory4* factory;
@@ -140,6 +147,8 @@ void DXGraphics::Initialize()
 
 	m_displayWidth = OdeumEngine::Get().GetWindow().GetWidth();
 	m_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
+	s_ultraWide = OdeumEngine::Get().GetWindow().GetUltraWide();
+	m_displayWidth = s_ultraWide ? m_displayWidth * ultraWideRatio : m_displayWidth;
 
 	m_commandManager.Initialize(m_device);
 
@@ -172,8 +181,38 @@ void DXGraphics::Initialize()
 	tempDisplayPlane[1]->Release();
 	tempDisplayPlane[2]->Release();
 
-	m_preDisplayBuffer.Create(L"Pre display buffer", m_displayWidth, m_displayHeight, 1, swapChainFormat);
-	m_sceneDepthBuffer.Create(L"Scene depth buffer", m_displayWidth, m_displayHeight, DXGI_FORMAT_D32_FLOAT);
+	InitializeCommonState();
+
+	m_presentRootSig.Reset(1, 0);
+	m_presentRootSig[0].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 1, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_presentRootSig.Finalize(L"Present");
+
+	m_presentPSO.SetRootSignature(m_presentRootSig);
+	m_presentPSO.SetRasterizerState(rasterDesc);
+	m_presentPSO.SetBlendState(alphaBlend);
+	m_presentPSO.SetDepthStencilState(depthStateDisabled);
+	m_presentPSO.SetSampleMask(0xFFFFFFFF);
+	m_presentPSO.SetInputLayout(0, nullptr);
+	m_presentPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	m_presentPSO.CompileVertexShader(L"Engine/Shaders/ScreenQuad.hlsl", "main", "vs_5_0");
+	m_presentPSO.CompilePixelShader(L"Engine/Shaders/Present.hlsl", "main", "ps_5_0");
+	m_presentPSO.SetRenderTargetFormat(swapChainFormat, DXGI_FORMAT_UNKNOWN);
+	m_presentPSO.Finalize();
+
+	InitializeRenderingBuffers(m_displayWidth, m_displayHeight);
+}
+
+void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_)
+{
+	GraphicsContext& initBuffers = GraphicsContext::RequestContext();
+
+	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
+	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
+
+	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
+
+	initBuffers.Finish();
 }
 
 void DXGraphics::Resize(uint32_t width_, uint32_t height_)
@@ -209,6 +248,7 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 			Debug::Error("Could not retrieve swap chain buffer " + i, __FILENAME__, __LINE__);
 		
 		m_displayPlane[i].CreateFromSwapChain(L"Primary swap chain buffer", tempDisplayPlane[i]);
+		m_displayPlane[i].SetClearColour(Colour(1.0f, 0.33f, 0.67f));
 	}
 
 	tempDisplayPlane[0]->Release();
@@ -225,26 +265,26 @@ void DXGraphics::PreparePresent()
 {
 	GraphicsContext& context = GraphicsContext::RequestContext(L"Present");
 
-	m_displayPlane[m_currentBuffer].SetClearColour(Colour(1.0f, 1.0f, 1.0f));
+	context.TransitionResource(m_presentBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-
-	context.ClearColor(m_displayPlane[m_currentBuffer]);
+	context.SetRootSignature(m_presentRootSig);
+	context.SetDynamicDescriptor(0, 0, m_presentBuffer.GetSRV());
 
 	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	/*D3D12_CPU_DESCRIPTOR_HANDLE rtvs[] =
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvs[] =
 	{
 		m_displayPlane[m_currentBuffer].GetRTV()
-	};*/
+	};
 
-	//context.SetRenderTargets(_countof(rtvs), rtvs);
-
-	context.SetRenderTarget(m_displayPlane[m_currentBuffer].GetRTV());
-
+	context.SetPipelineState(m_presentPSO);
+	context.SetRenderTargets(_countof(rtvs), rtvs);
 	context.SetViewportAndScissor(0, 0, m_displayWidth, m_displayHeight);
 
-	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_PRESENT, true);
+	context.Draw(3);
+
+	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 
 	context.Finish();
 }
@@ -267,6 +307,36 @@ void DXGraphics::Present()
 	SetNativeResolution();
 }
 
+void DXGraphics::InitializeCommonState()
+{
+	alphaBlend = {};
+	alphaBlend.IndependentBlendEnable = FALSE;
+	alphaBlend.RenderTarget[0].BlendEnable = FALSE;
+	alphaBlend.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	alphaBlend.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	alphaBlend.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	alphaBlend.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	alphaBlend.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+	alphaBlend.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	depthStateDisabled;
+	depthStateDisabled.DepthEnable = FALSE;
+	depthStateDisabled.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthStateDisabled.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	depthStateDisabled.StencilEnable = FALSE;
+	depthStateDisabled.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+	depthStateDisabled.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+	depthStateDisabled.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	depthStateDisabled.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+	depthStateDisabled.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+	depthStateDisabled.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+	depthStateDisabled.BackFace = depthStateDisabled.FrontFace;
+
+	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+}
+
 void DXGraphics::Shutdown()
 {
 	m_commandManager.IdleGPU();
@@ -282,6 +352,7 @@ void DXGraphics::Shutdown()
 		m_displayPlane[i].Destroy();
 
 	m_preDisplayBuffer.Destroy();
+	m_presentBuffer.Destroy();
 	m_sceneDepthBuffer.Destroy();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;

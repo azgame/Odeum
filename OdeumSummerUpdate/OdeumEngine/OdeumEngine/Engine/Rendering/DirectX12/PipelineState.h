@@ -56,6 +56,8 @@ public:
 
     void SetVertexShader(const void* binary_, size_t size_) { m_psoDesc.VS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }
     void SetPixelShader(const void* binary_, size_t size_) { m_psoDesc.PS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }
+    void CompileVertexShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_);
+    void CompilePixelShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_);
     void SetGeometryShader(const void* binary_, size_t size_) { m_psoDesc.GS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }
     void SetHullShader(const void* binary_, size_t size_) { m_psoDesc.HS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }
     void SetDomainShader(const void* binary_, size_t size_) { m_psoDesc.DS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }

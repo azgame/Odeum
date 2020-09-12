@@ -177,7 +177,7 @@ void CommandContext::InitializeBuffer(D3DResource& dest_, const void* pData_, si
     CommandContext& context = CommandContext::RequestContext();
 
     AllocatedBuffer buffer = context.ReserveBufferMemory(numBytes_);
-    memcpy(buffer.CpuAddress, pData_, (numBytes_ + 15) / 16);
+    memcpy(buffer.CpuAddress, pData_, numBytes_);
 
     context.TransitionResource(dest_, D3D12_RESOURCE_STATE_COPY_DEST, true);
     context.m_commandList->CopyBufferRegion(dest_.GetResource(), offset_, buffer.buffer.GetResource(), 0, numBytes_);

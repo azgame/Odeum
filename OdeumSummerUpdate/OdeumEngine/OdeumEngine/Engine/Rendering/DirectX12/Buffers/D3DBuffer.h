@@ -42,6 +42,13 @@ public:
 
 protected:
 
+	D3DBuffer() : m_bufferSize(0), m_eCount(0), m_eSize(0)
+	{
+		m_resourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		m_uav.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+		m_srv.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+	}
+
 	D3D12_RESOURCE_DESC CreateBufferDescription();
 	virtual void CreateDerivedView() = 0;
 

@@ -1,10 +1,11 @@
 #include "PipelineState.h"
 
 #include "RootSignature.h"
-
 #include "D3DCore.h"
 
-using namespace DXGraphics;
+#ifdef _MSC_VER
+#pragma comment(lib, "d3dcompiler") // Automatically link with d3dcompiler.lib as we are using D3DCompile() below.
+#endif
 
 void PSO::Destroy()
 {
@@ -86,6 +87,26 @@ void GraphicsPSO::SetPrimitiveRestart(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE indexBu
 	m_psoDesc.IBStripCutValue = indexBufferProps_;
 }
 
+void GraphicsPSO::CompileVertexShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_)
+{
+	ID3DBlob* vertexShader;
+
+	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL)))
+		Debug::Error("Could not create vertex shader", __FILENAME__, __LINE__);
+
+	m_psoDesc.VS = { reinterpret_cast<UINT8*>(vertexShader->GetBufferPointer()), vertexShader->GetBufferSize() };
+}
+
+void GraphicsPSO::CompilePixelShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_)
+{
+	ID3DBlob* pixelShader;
+
+	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL)))
+		Debug::Error("Could not create pixel shader", __FILENAME__, __LINE__);
+
+	m_psoDesc.PS = { reinterpret_cast<UINT8*>(pixelShader->GetBufferPointer()), pixelShader->GetBufferSize() };
+}
+
 void GraphicsPSO::Finalize()
 {
 	m_psoDesc.pRootSignature = m_rootSignature->GetRootSignature();
@@ -93,6 +114,6 @@ void GraphicsPSO::Finalize()
 
 	m_psoDesc.InputLayout.pInputElementDescs = m_inputLayouts.get();
 
-	if (FAILED(m_device->CreateGraphicsPipelineState(&m_psoDesc, IID_PPV_ARGS(&m_pso))))
+	if (FAILED(DXGraphics::m_device->CreateGraphicsPipelineState(&m_psoDesc, IID_PPV_ARGS(&m_pso))))
 		Debug::FatalError("Graphics PSO could not be created!", __FILENAME__, __LINE__);
 }

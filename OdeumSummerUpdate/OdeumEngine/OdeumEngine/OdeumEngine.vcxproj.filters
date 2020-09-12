@@ -102,6 +102,12 @@
     <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\TestRender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -245,5 +251,20 @@
     <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\TestRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Engine\Shaders\PixelShader.hlsl" />
+    <FxCompile Include="Engine\Shaders\Present.hlsl" />
+    <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Shaders\PresentRS.hlsli" />
   </ItemGroup>
 </Project>
