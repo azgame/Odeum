@@ -27,8 +27,10 @@ public:
 	inline Quaternion(const DirectX::XMVECTOR& axis_, const float& angle_) { vec = DirectX::XMQuaternionRotationAxis(axis_, angle_); }
 	// creates a rotation matrix based on the pitch, yaw, and roll
 	inline Quaternion(float pitch_, float yaw_, float roll_) { vec = DirectX::XMQuaternionRotationRollPitchYaw(pitch_, yaw_, roll_); }
+	inline explicit Quaternion(const DirectX::XMMATRIX& matrix_) { vec = DirectX::XMQuaternionRotationMatrix(matrix_); }
 	inline explicit Quaternion(DirectX::FXMVECTOR vec_) { vec = vec_; }
-		
+	inline explicit Quaternion(EIdentityTag) { vec = DirectX::XMQuaternionIdentity(); }
+
 	inline operator DirectX::XMVECTOR() const { return vec; }
 
 	// Operator Overloads

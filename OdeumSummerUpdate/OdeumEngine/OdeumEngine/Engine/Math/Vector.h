@@ -17,6 +17,7 @@
 //
 
 #include "../Rendering/DirectX12/DXIncludes.h"
+#include <intrin.h>
 
 // made Scalar inside of Vector for ease of access but I might move Scalar to its own class if we end up using it more
 class Scalar {
@@ -48,6 +49,90 @@ inline Scalar operator- (float s1_, Scalar s2_) { return Scalar(s1_) - s2_; }
 inline Scalar operator* (float s1_, Scalar s2_) { return Scalar(s1_) * s2_; }
 inline Scalar operator/ (float s1_, Scalar s2_) { return Scalar(s1_) / s2_; }
 
+// Other miscellaneous functions - might want to move this to a separate header file
+inline DirectX::XMVECTOR SplatZero() { return DirectX::XMVectorZero(); }
+
+#if !defined(_XM_NO_INTRINSICS_) && defined(_XM_SSE_INTRINSICS_)
+inline DirectX::XMVECTOR SplatOne(DirectX::XMVECTOR zero_ = SplatZero())
+{
+	__m128i AllBits = _mm_castps_si128(_mm_cmpeq_ps(zero_, zero_));
+	return _mm_castsi128_ps(_mm_slli_epi32(_mm_srli_epi32(AllBits, 25), 23));    // return 0x3F800000
+	//return _mm_cvtepi32_ps(_mm_srli_epi32(SetAllBits(zero), 31));                // return (float)1;  (alternate method)
+}
+
+#if defined(_XM_SSE_INTRINSICS_)
+	inline DirectX::XMVECTOR CreateXUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_insert_ps(one_, one_, 0x0E);
+	}
+	inline DirectX::XMVECTOR CreateYUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_insert_ps(one_, one_, 0x0D);
+	}
+	inline DirectX::XMVECTOR CreateZUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_insert_ps(one_, one_, 0x0B);
+	}
+	inline DirectX::XMVECTOR CreateWUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_insert_ps(one_, one_, 0x07);
+	}
+	inline DirectX::XMVECTOR SetWToZero(DirectX::FXMVECTOR vec_)
+	{
+		return _mm_insert_ps(vec_, vec_, 0x08);
+	}
+	inline DirectX::XMVECTOR SetWToOne(DirectX::FXMVECTOR vec_)
+	{
+		return _mm_blend_ps(vec_, SplatOne(), 0x8);
+	}
+#else
+	inline DirectX::XMVECTOR CreateXUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(one_), 12));
+	}
+	inline DirectX::XMVECTOR CreateYUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		DirectX::XMVECTOR unitx = CreateXUnitVector(one_);
+		return _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(one_), 4));
+	}
+	inline DirectX::XMVECTOR CreateZUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		DirectX::XMVECTOR unitx = CreateXUnitVector(one_);
+		return _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(one_), 8));
+	}
+	inline DirectX::XMVECTOR CreateWUnitVector(DirectX::XMVECTOR one_ = SplatOne())
+	{
+		return _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(one_), 12));
+	}
+	inline DirectX::XMVECTOR SetWToZero(DirectX::FXMVECTOR vec_)
+	{
+		__m128i MaskOffW = _mm_srli_si128(_mm_castps_si128(_mm_cmpeq_ps(vec_, vec_)), 4);
+		return _mm_and_ps(vec_, _mm_castsi128_ps(MaskOffW));
+	}
+	inline DirectX::XMVECTOR SetWToOne(DirectX::FXMVECTOR vec_)
+	{
+		return _mm_movelh_ps(vec_, _mm_unpackhi_ps(vec_, SplatOne()));
+	}
+#endif
+
+#else
+	inline DirectX::XMVECTOR SplatOne() { return DirectX::XMVectorSplatOne(); }
+	inline DirectX::XMVECTOR CreateXUnitVector() { return DirectX::g_XMIdentityR0; }
+	inline DirectX::XMVECTOR CreateYUnitVector() { return DirectX::g_XMIdentityR1; }
+	inline DirectX::XMVECTOR CreateZUnitVector() { return DirectX::g_XMIdentityR2; }
+	inline DirectX::XMVECTOR CreateWUnitVector() { return DirectX::g_XMIdentityR3; }
+	inline DirectX::XMVECTOR SetWToZero(DirectX::FXMVECTOR vec_) { return DirectX::XMVectorAndInt(vec_, DirectX::g_XMMask3); }
+	inline DirectX::XMVECTOR SetWToOne(DirectX::FXMVECTOR vec_) { return DirectX::XMVectorSelect(DirectX::g_XMIdentityR3, vec_, DirectX::g_XMMask3); }
+#endif
+
+	enum EZeroTag { kZero, kOrigin };
+	enum EZeroTag { kZero, kOrigin };
+	enum EIdentityTag { kOne, kIdentity };
+	enum EXUnitVector { kXUnitVector };
+	enum EYUnitVector { kYUnitVector };
+	enum EZUnitVector { kZUnitVector };
+	enum EWUnitVector { kWUnitVector };
+
 
 
 
@@ -55,10 +140,18 @@ class Vector3 {
 public:
 	inline Vector3() { vec = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); }
 	inline Vector3(float x_, float y_, float z_) { vec = DirectX::XMVectorSet(x_, y_, z_, z_); }
-	inline Vector3(const DirectX::XMFLOAT3& v_) { vec = XMLoadFloat3(&v_); }
+	inline Vector3(const DirectX::XMFLOAT3& v_) { vec = DirectX::XMLoadFloat3(&v_); }
 	inline Vector3(const DirectX::XMVECTOR& v_) { vec = v_; }
 	inline Vector3(Scalar s) { vec = s.GetVec(); }
-
+	inline explicit Vector3(Vector4 v);
+	// vv that line and the other constructor that uses const DirectX::XMFLOAT3& as a parameter take the same argument error
+	//inline explicit Vector3(DirectX::FXMVECTOR vec_) { vec = vec_; }
+	inline explicit Vector3(EZeroTag) { vec = SplatZero(); }
+	inline explicit Vector3(EIdentityTag) { vec = SplatOne(); }
+	inline explicit Vector3(EXUnitVector) { vec = CreateXUnitVector(); }
+	inline explicit Vector3(EYUnitVector) { vec = CreateYUnitVector(); }
+	inline explicit Vector3(EZUnitVector) { vec = CreateZUnitVector(); }
+	
 	inline operator DirectX::XMVECTOR() const { return vec; }
 
 	// Getters and setters
@@ -100,9 +193,18 @@ public:
 	inline Vector4() { vec = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); }
 	inline Vector4(float x_, float y_, float z_, float w_) { vec = DirectX::XMVectorSet(x_, y_, z_, w_); }
 	inline Vector4(Vector3 vec_, float w_) { vec = DirectX::XMVectorSetW(vec_.GetVec(), w_); }
-	//inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
+	inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
 	inline Vector4(const DirectX::XMVECTOR& v_) { vec = v_; }
 	inline Vector4(Scalar& s_) { vec = s_.GetVec(); }
+	inline explicit Vector4(Vector3 xyz_) { vec = SetWToOne(xyz_); }
+	// vv that line and the other constructor that uses const DirectX::XMVECTOR& as a parameter take the same argument error
+	//inline explicit Vector4(DirectX::FXMVECTOR vec_) { vec = vec_; }
+	inline explicit Vector4(EZeroTag) { vec = SplatZero(); }
+	inline explicit Vector4(EIdentityTag) { vec = SplatOne(); }
+	inline explicit Vector4(EXUnitVector) { vec = CreateXUnitVector(); }
+	inline explicit Vector4(EYUnitVector) { vec = CreateYUnitVector(); }
+	inline explicit Vector4(EZUnitVector) { vec = CreateZUnitVector(); }
+	inline explicit Vector4(EWUnitVector) { vec = CreateWUnitVector(); }
 
 	inline operator DirectX::XMVECTOR() const { return vec; }
 	
