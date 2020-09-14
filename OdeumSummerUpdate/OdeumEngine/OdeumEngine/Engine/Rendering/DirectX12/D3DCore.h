@@ -2,7 +2,7 @@
 #define D3DCORE_H
 
 #include "DXIncludes.h"
-
+#include "../Common/GraphicsCore.h"
 #include "DescriptorAllocator.h"
 
 class CommandListManager;
@@ -15,19 +15,10 @@ class DepthBuffer;
 namespace DXGraphics
 {
 	void Initialize();
-	void InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_);
+	// void InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_);
 	void Resize(uint32_t width_, uint32_t height_);
 	void Shutdown();
 	void Present();
-
-	extern uint32_t m_displayWidth;
-	extern uint32_t m_displayHeight;
-
-	extern UINT m_currentBuffer;
-
-	uint64_t GetFrameCount();
-	float GetFrameTime();
-	float GetFrameRate();
 
 	extern ID3D12Device* m_device;
 	extern CommandListManager m_commandManager;
@@ -43,12 +34,6 @@ namespace DXGraphics
 	extern ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
 	extern ColourBuffer m_presentBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
-
-	enum ResolutionOptions { k720p, k900p, k1080p, k1440p, k1800p, k2160p };
-
-	extern bool s_enableVSync;
-	extern ResolutionOptions m_targetResolution;
-	extern bool s_ultraWide;
 
 	extern D3D12_BLEND_DESC alphaBlend;
 	extern D3D12_RASTERIZER_DESC rasterDesc;

@@ -8,7 +8,7 @@
 
 #include "../../Core/OdeumEngine.h"
 
-
+using namespace Graphics;
 
 namespace DXGraphics
 {
@@ -24,26 +24,14 @@ namespace DXGraphics
 		D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
 	};
 
-	float s_frameTime = 0.0f;
-	uint64_t s_frameIndex = 0;
-	int64_t s_frameStartTick = 0;
-	bool s_ultraWide = false;
 	float ultraWideRatio = 1.34375f;
 
 	uint32_t m_nativeWidth = 0;
 	uint32_t m_nativeHeight = 0;
-	uint32_t m_displayWidth = 0;
-	uint32_t m_displayHeight = 0;
-
-	bool s_enableVSync = false;
-
-	ResolutionOptions m_targetResolution = k900p;
 
 	D3D_FEATURE_LEVEL g_D3DFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	DXGI_FORMAT swapChainFormat = DXGI_FORMAT_R10G10B10A2_UNORM;
-
-	UINT m_currentBuffer = 0;
 	
 	void SetNativeResolution()
 	{
@@ -51,7 +39,7 @@ namespace DXGraphics
 
 		float ultraWideExpansion = s_ultraWide ? ultraWideRatio : 1.0f;
 
-		switch (ResolutionOptions((int)m_targetResolution))
+		switch (ResolutionOptions((int)s_targetResolution))
 		{
 		default:
 		case k720p:
@@ -106,6 +94,7 @@ namespace DXGraphics
 
 	void PreparePresent();
 	void InitializeCommonState();
+	void InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_);
 }
 
 void DXGraphics::Initialize()
@@ -145,16 +134,16 @@ void DXGraphics::Initialize()
 		}
 	}
 
-	m_displayWidth = OdeumEngine::Get().GetWindow().GetWidth();
-	m_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
+	s_displayWidth = OdeumEngine::Get().GetWindow().GetWidth();
+	s_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
 	s_ultraWide = OdeumEngine::Get().GetWindow().GetUltraWide();
-	m_displayWidth = s_ultraWide ? m_displayWidth * ultraWideRatio : m_displayWidth;
+	s_displayWidth = s_ultraWide ? s_displayWidth * ultraWideRatio : s_displayWidth;
 
 	m_commandManager.Initialize(m_device);
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-	swapChainDesc.Width = m_displayWidth;
-	swapChainDesc.Height = m_displayHeight;
+	swapChainDesc.Width = s_displayWidth;
+	swapChainDesc.Height = s_displayHeight;
 	swapChainDesc.Format = swapChainFormat;
 	swapChainDesc.Scaling = DXGI_SCALING_NONE;
 	swapChainDesc.SampleDesc.Quality = 0;
@@ -199,7 +188,7 @@ void DXGraphics::Initialize()
 	m_presentPSO.SetRenderTargetFormat(swapChainFormat, DXGI_FORMAT_UNKNOWN);
 	m_presentPSO.Finalize();
 
-	InitializeRenderingBuffers(m_displayWidth, m_displayHeight);
+	InitializeRenderingBuffers(s_displayWidth, s_displayHeight);
 }
 
 void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_)
@@ -222,13 +211,13 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 	if (width_ == 0 || height_ == 0)
 		return;
 
-	if (width_ == m_displayWidth && height_ == m_displayHeight)
+	if (width_ == s_displayWidth && height_ == s_displayHeight)
 		return;
 
 	m_commandManager.IdleGPU();
 
-	m_displayWidth = width_;
-	m_displayHeight = height_;
+	s_displayWidth = width_;
+	s_displayHeight = height_;
 
 	m_preDisplayBuffer.Create(L"Pre display buffer", width_, height_, 1, swapChainFormat);
 
@@ -255,7 +244,7 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 	tempDisplayPlane[1]->Release();
 	tempDisplayPlane[2]->Release();
 
-	m_currentBuffer = 0;
+	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
 
 	// ResizeDisplayDependentBuffers(m_nativeWidth, m_nativeHeight);
@@ -266,7 +255,7 @@ void DXGraphics::PreparePresent()
 	GraphicsContext& context = GraphicsContext::RequestContext(L"Present");
 
 	context.TransitionResource(m_presentBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
+	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	context.SetRootSignature(m_presentRootSig);
 	context.SetDynamicDescriptor(0, 0, m_presentBuffer.GetSRV());
@@ -275,16 +264,16 @@ void DXGraphics::PreparePresent()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvs[] =
 	{
-		m_displayPlane[m_currentBuffer].GetRTV()
+		m_displayPlane[s_currentBuffer].GetRTV()
 	};
 
 	context.SetPipelineState(m_presentPSO);
 	context.SetRenderTargets(_countof(rtvs), rtvs);
-	context.SetViewportAndScissor(0, 0, m_displayWidth, m_displayHeight);
+	context.SetViewportAndScissor(0, 0, s_displayWidth, s_displayHeight);
 
 	context.Draw(3);
 
-	context.TransitionResource(m_displayPlane[m_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
+	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 
 	context.Finish();
 }
@@ -293,17 +282,18 @@ void DXGraphics::Present()
 {
 	PreparePresent();
 
-	m_currentBuffer = (m_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
-
-	UINT presentInterval = s_enableVSync ? min(4, (int)round(s_frameTime * 100.0f)) : 0;
+	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	uint32_t frameTime = GetFrameTime();
+	UINT presentInterval = s_enableVSync ? min(4, (int)round(frameTime * 100.0f)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
 	if (s_enableVSync)
-		s_frameTime = 100.0f;
+		frameTime = 100.0f;
 	else
-		s_frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
+		frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
 
+	SetFrameTime(frameTime);
 	SetNativeResolution();
 }
 
@@ -356,19 +346,4 @@ void DXGraphics::Shutdown()
 	m_sceneDepthBuffer.Destroy();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
-}
-
-uint64_t DXGraphics::GetFrameCount()
-{
-	return s_frameIndex;
-}
-
-float DXGraphics::GetFrameTime()
-{
-	return s_frameTime;
-}
-
-float DXGraphics::GetFrameRate()
-{
-	return s_frameTime == 0.0f ? 0.0f : 1.0f / s_frameTime;
 }

@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\Vector.h" />
+    <ClInclude Include="Engine\Rendering\Common\GraphicsCore.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\BufferAllocator.h" />
     <ClInclude Include="Engine\Events\ApplicationEvent.h" />
     <ClInclude Include="Engine\Events\KeyEvent.h" />

@@ -33,6 +33,12 @@ void OdeumEngine::Run()
 
 		testCase.Render();
 
+		//for (auto system : m_systemStack)
+			//system->HandleEvent()
+
+		for (auto system : m_systemStack)
+			system->Update(m_engineTimer.GetDeltaTime());
+
 		DXGraphics::Present();
 	}
 }
