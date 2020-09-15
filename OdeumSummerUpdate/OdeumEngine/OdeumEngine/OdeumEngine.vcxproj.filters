@@ -275,5 +275,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shaders\PresentRS.hlsli" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
