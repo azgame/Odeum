@@ -1,7 +1,7 @@
-﻿  D3DCore.cpp
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\Common\GraphicsCore.h(17,80): warning C4091: 'extern ': ignored on left of 'Graphics::ResolutionOptions' when no variable is declared
+﻿  compilation object save succeeded; see C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\PixelShader.cso
+  TestRender.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\Common\GraphicsCore.h(20,80): warning C4091: 'extern ': ignored on left of 'Graphics::ResolutionOptions' when no variable is declared
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(268,23): warning C4018: '<': signed/unsigned mismatch
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(394,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(395,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(139,19): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

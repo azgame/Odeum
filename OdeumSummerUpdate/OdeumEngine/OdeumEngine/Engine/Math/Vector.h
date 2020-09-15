@@ -126,7 +126,6 @@ inline DirectX::XMVECTOR SplatOne(DirectX::XMVECTOR zero_ = SplatZero())
 #endif
 
 	enum EZeroTag { kZero, kOrigin };
-	enum EZeroTag { kZero, kOrigin };
 	enum EIdentityTag { kOne, kIdentity };
 	enum EXUnitVector { kXUnitVector };
 	enum EYUnitVector { kYUnitVector };
@@ -143,7 +142,7 @@ public:
 	inline Vector3(const DirectX::XMFLOAT3& v_) { vec = DirectX::XMLoadFloat3(&v_); }
 	inline Vector3(const DirectX::XMVECTOR& v_) { vec = v_; }
 	inline Vector3(Scalar s) { vec = s.GetVec(); }
-	inline explicit Vector3(Vector4 v);
+	// inline explicit Vector3(Vector4 v);
 	// vv that line and the other constructor that uses const DirectX::XMFLOAT3& as a parameter take the same argument error
 	//inline explicit Vector3(DirectX::FXMVECTOR vec_) { vec = vec_; }
 	inline explicit Vector3(EZeroTag) { vec = SplatZero(); }

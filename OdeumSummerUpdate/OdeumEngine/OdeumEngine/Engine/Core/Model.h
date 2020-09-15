@@ -7,8 +7,9 @@
 
 struct Vertex
 {
-	Vertex(float x, float y, float z) { position = DirectX::XMFLOAT3(x, y, z); }
+	Vertex(DirectX::XMFLOAT3 pos_, DirectX::XMFLOAT3 normal_) { position = pos_; normal = normal_; }
 	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
 };
 
 class Model

@@ -183,6 +183,7 @@
     <ClCompile Include="Engine\Core\TestRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Math\DXMath.h" />
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\Vector.h" />
