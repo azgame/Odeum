@@ -8,15 +8,18 @@ TestRender::TestRender()
 {
 	m_model = Model();
 	m_camera = Camera();
+
+	m_eventFrameLimit = 16;
+	m_eventQueue.reserve(m_eventFrameLimit);
+	m_bufferHead = 0;
+	m_bufferTail = 0;
 }
 
 TestRender::~TestRender()
 {
-	m_rootSig.Destroy();
-	m_colourPSO.Destroy();
 }
 
-void TestRender::Initialize()
+void TestRender::Attach()
 {
 	m_rootSig.Reset(1, 0);
 	m_rootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
@@ -113,8 +116,25 @@ void TestRender::Initialize()
 	m_camera.SetZRange(0.1f, 10000.0f);
 }
 
-void TestRender::Render()
+void TestRender::Detach()
 {
+	m_rootSig.Destroy();
+	m_colourPSO.Destroy();
+}
+
+void TestRender::Update(float deltaTime_)
+{
+	int limit = 0;
+	for (int i = m_bufferHead; i != m_bufferTail; i = (i + 1) % m_eventFrameLimit)
+	{
+		if (limit == m_eventFrameLimit)
+			break;
+
+		// Handle events
+
+		limit++;
+	}
+
 	m_camera.UpdateCamera();
 
 	struct VSConstants
@@ -139,10 +159,10 @@ void TestRender::Render()
 	graphics.SetVertexBuffer(0, m_model.m_vertexBuffer.VertexBufferView());
 
 	graphics.SetPipelineState(m_colourPSO);
-	
+
 	graphics.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV(), DXGraphics::m_sceneDepthBuffer.GetDSV());
 	graphics.SetViewportAndScissor(m_mainViewport, m_mainScissor);
-	
+
 	Model::Mesh& mesh = *m_model.m_mesh;
 	uint32_t vertexStride = m_model.m_vertexStride;
 
@@ -153,4 +173,18 @@ void TestRender::Render()
 	graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 
 	graphics.Finish();
+}
+
+void TestRender::UIRender()
+{
+}
+
+void TestRender::HandleEvent(Event& event_)
+{
+	if ((m_bufferTail + 1) % m_eventFrameLimit == m_bufferHead)
+		return;
+
+	m_eventQueue[m_bufferTail] = event_;
+
+	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
 }

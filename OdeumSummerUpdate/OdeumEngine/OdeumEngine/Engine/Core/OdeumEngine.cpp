@@ -22,6 +22,18 @@ void OdeumEngine::AddSystem(CoreSystem* system_)
 	system_->Attach();
 }
 
+void OdeumEngine::OnEvent(Event& e)
+{
+	EventDispatcher dispatcher(e);
+
+	for (auto system : m_systemStack)
+	{
+		if (e.handled)
+			break;
+		system->HandleEvent(e);
+	}
+}
+
 void OdeumEngine::Run()
 {
 	m_isRunning = true;
@@ -29,15 +41,14 @@ void OdeumEngine::Run()
 	while (m_isRunning)
 	{
 		m_engineTimer.UpdateFrameTicks();
+		float timeStep = m_engineTimer.GetDeltaTime();
 		m_window->Update();
-
-		testCase.Render();
 
 		//for (auto system : m_systemStack)
 			//system->HandleEvent()
 
 		for (auto system : m_systemStack)
-			system->Update(m_engineTimer.GetDeltaTime());
+			system->Update(timeStep);
 
 		DXGraphics::Present();
 	}
@@ -56,7 +67,9 @@ bool OdeumEngine::Initialize()
 
 	DXGraphics::Initialize();
 
-	testCase.Initialize();
+	CoreSystem* testRender = new TestRender();
+	m_systemStack.Push(testRender);
+	testRender->Attach();
 
 	return true;
 }

@@ -9,6 +9,7 @@
 
 #include "GameInterface.h"
 #include "Scene.h"
+#include "../Events/Event.h"
 
 #include "TestRender.h"
 
@@ -27,6 +28,7 @@ public:
 
 	void AddSystem(CoreSystem* system_);
 
+	void OnEvent(Event& e);
 	void Run();
 	bool Initialize();
 	void Uninitialize();

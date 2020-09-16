@@ -6,7 +6,7 @@
 #include "Buffers/D3DBuffer.h"
 #include <queue>
 
-// Individually allocated buffer
+// Individually allocated buffer for cpu use
 class AllocatedBuffer
 {
 public:

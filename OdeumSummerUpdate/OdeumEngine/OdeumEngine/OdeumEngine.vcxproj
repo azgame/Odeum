@@ -170,7 +170,7 @@
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
-    <ClCompile Include="Engine\Core\Model.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -225,7 +225,7 @@
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
-    <ClInclude Include="Engine\Core\Model.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />

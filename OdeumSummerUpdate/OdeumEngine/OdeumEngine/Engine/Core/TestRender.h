@@ -3,26 +3,30 @@
 
 #include "../Rendering/DirectX12/D3DCore.h"
 #include "../Rendering/DirectX12/DXCommandContext.h"
-#include "Model.h"
+#include "../Rendering/DirectX12/Model.h"
 #include "Camera.h"
+#include "CoreSystem.h"
 
-class TestRender
+class TestRender : public CoreSystem
 {
 public:
 
 	TestRender();
 	~TestRender();
 
-	void Initialize();
-	void Render();
+	void Attach() override;
+	void Detach() override;
+	void Update(float deltaTime_) override;
+	void UIRender() override;
+	void HandleEvent(Event& event_) override;
 
 private:
 
 	// Core
 	Camera m_camera;
-	Model m_model;
-
+	
 	// DX
+	Model m_model;
 	RootSignature m_rootSig;
 	GraphicsPSO m_colourPSO;
 	D3D12_VIEWPORT m_mainViewport;

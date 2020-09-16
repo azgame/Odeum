@@ -75,6 +75,9 @@ private:
 	std::shared_ptr<const D3D12_INPUT_ELEMENT_DESC> m_inputLayouts;
 };
 
-// class ComputePSO
+class ComputePSO : public PSO
+{
+
+};
 
 #endif

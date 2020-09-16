@@ -105,10 +105,10 @@
     <ClCompile Include="Engine\Core\TestRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Model.cpp">
+    <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp">
+    <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -257,13 +257,13 @@
     <ClInclude Include="Engine\Core\TestRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Rendering\Common\GraphicsCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\DXMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\DirectX12\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
