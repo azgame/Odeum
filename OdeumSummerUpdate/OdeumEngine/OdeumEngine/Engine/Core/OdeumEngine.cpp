@@ -60,7 +60,6 @@ void OdeumEngine::Run()
 
 bool OdeumEngine::Initialize()
 {	
-
 	m_window->Initialize(1600, 900, false, false);
 	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
 	
