@@ -41,6 +41,7 @@
 #include <stdlib.h>
 
 #include <memory>
+#include <thread>
 #include <mutex>
 
 #include <vector>

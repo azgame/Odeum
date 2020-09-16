@@ -3,6 +3,10 @@
 
 #include "Event.h"
 
+#include "../Core/KeyCodes.h"
+
+using namespace Key;
+
 // still have to add input! (KeyCode)
 class KeyEvent : public Event
 {
@@ -57,7 +61,7 @@ public:
 
 	std::string ToString() const override
 	{
-		std::stringstream sss;
+		std::stringstream ss;
 		ss << "KeyTypedEvent: " << keyCode;
 		return ss.str();
 	}

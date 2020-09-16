@@ -155,9 +155,6 @@
     <ClInclude Include="Engine\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\KeyCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -264,6 +261,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\KeyCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\MouseCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

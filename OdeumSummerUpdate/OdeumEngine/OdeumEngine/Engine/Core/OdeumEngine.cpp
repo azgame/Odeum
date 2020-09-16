@@ -9,8 +9,13 @@ OdeumEngine::OdeumEngine()
 {
 	sm_instance = this;
 
+	m_currentScene = 0;
+	m_isRunning = true;
+
 	Debug::DebugInit();
 	Debug::SetSeverity(MessageType::TYPE_INFO);
+
+	m_window = new Window();
 }
 
 OdeumEngine::~OdeumEngine()
@@ -25,6 +30,10 @@ void OdeumEngine::AddSystem(CoreSystem* system_)
 
 void OdeumEngine::OnEvent(Event& e)
 {
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OdeumEngine::Close));
+	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OdeumEngine::Resize));
+
 	for (auto system : m_systemStack)
 	{
 		if (e.handled)
@@ -35,8 +44,6 @@ void OdeumEngine::OnEvent(Event& e)
 
 void OdeumEngine::Run()
 {
-	m_isRunning = true;
-
 	while (m_isRunning)
 	{
 		m_engineTimer.UpdateFrameTicks();
@@ -53,17 +60,15 @@ void OdeumEngine::Run()
 
 bool OdeumEngine::Initialize()
 {	
-	m_window = new Window();
+
+	m_window->Initialize(1600, 900, false, false);
+	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
 	
 	m_engineTimer.Initialize();
 
-	m_window->InitializeWindow();
-
-	std::function<void()> fcnPtr = std::bind(&OdeumEngine::Close, this);
-	m_window->SetCloseEvent(fcnPtr);
-
 	DXGraphics::Initialize();
 
+	// Test
 	CoreSystem* testRender = new TestRender();
 	m_systemStack.Push(testRender);
 	testRender->Attach();
@@ -77,7 +82,14 @@ void OdeumEngine::Uninitialize()
 	SAFE_DELETE(m_window);
 }
 
-void OdeumEngine::Close()
+bool OdeumEngine::Close(WindowCloseEvent& closeEvent)
 {
 	m_isRunning = false;
+	return true;
+}
+
+bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
+{
+	DXGraphics::Resize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
+	return true;
 }

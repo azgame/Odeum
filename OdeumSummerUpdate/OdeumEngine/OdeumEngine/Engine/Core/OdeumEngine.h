@@ -13,6 +13,11 @@
 
 #include "TestRender.h"
 
+#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
+class WindowCloseEvent;
+class WindowResizeEvent;
+
 class OdeumEngine
 {
 public:
@@ -32,13 +37,15 @@ public:
 	void Run();
 	bool Initialize();
 	void Uninitialize();
-	void Close();
+
+	bool Close(WindowCloseEvent& closeEvent);
+	bool Resize(WindowResizeEvent& resizeEvent);
 
 private:
 	Window* m_window;
 	Timer m_engineTimer;
-	bool m_isRunning;
 
+	bool m_isRunning;
 	uint32_t m_currentScene;
 
 	SystemStack m_systemStack;

@@ -3,6 +3,10 @@
 
 #include "Event.h"
 
+#include "../Core/MouseCodes.h"
+
+using namespace Mouse;
+
 // still have to add input! (MouseCode)
 class MouseMovedEvent : public Event
 {
@@ -79,6 +83,7 @@ public:
 
 class MouseButtonReleasedEvent : public MouseButtonEvent
 {
+public:
 	MouseButtonReleasedEvent(const MouseCode button_) : MouseButtonEvent(button) {}
 
 	std::string ToString() const override

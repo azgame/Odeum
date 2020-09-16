@@ -3,6 +3,10 @@
 
 #include "../../pch.h"
 
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+
 #include "../Events/Event.h"
 #include <functional>
 
@@ -10,42 +14,38 @@ class Window
 {
 public:
 
+	void Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide);
 	void Update();
-	LRESULT MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
-	void SetWindowPosition(int x_, int y_);
-	void SetWindowSize(int w_, int h_);
-	void ToggleFullscreen();
-
-	void InitializeWindow();
 	void UninitializeWindow();
 
-	void SetCloseEvent(std::function<void()> func_);
-	void Close();
+	void SetEventCallback(const std::function<void(Event&)> callback) { m_data.eventCallback = callback; }
 
-	HWND GetHWND() { return m_hwnd; }
-	const HWND GetHWND() const { return m_hwnd; }
+	HWND GetHWND() { return glfwGetWin32Window(m_window); }
+	const HWND GetHWND() const { return glfwGetWin32Window(m_window); }
 
-	int GetWidth() { return m_screenWidth; }
-	int GetHeight() { return m_screenHeight; }
-	int GetXPos() { return m_xPos; }
-	int GetYPos() { return m_yPos; }
-	bool GetUltraWide() { return m_ultraWideEnabled; }
+	void* GetNativeWindow() { return m_window; }
+
+	int GetWidth() { return m_data.width; }
+	int GetHeight() { return m_data.height; }
+	bool isUltraWide() { return m_data.ultraWide; }
+	bool isVSync() { return m_data.vSync; }
 
 private:
 
-	int						m_screenWidth, m_screenHeight, m_xPos, m_yPos;
-	bool					m_ultraWideEnabled;
+	GLFWwindow*				m_window;
 	bool					isRunning, FULL_SCREEN;
-	std::function<void()>	closeFunc;
+	
+	struct WindowData
+	{
+		std::string title;
+		uint32_t width, height;
+		bool vSync, ultraWide;
 
-	LPCWSTR					m_applicationName;
-	HINSTANCE				m_hInstance;
-	HWND					m_hwnd;
+		std::function<void(Event&)> eventCallback;
+	};
 
-	LONG HWNDStyle = 0;
-	LONG HWNDStyleEx = 0;
-	WINDOWPLACEMENT wpc;
+	WindowData m_data;
 };
 
 #endif

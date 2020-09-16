@@ -26,9 +26,9 @@ public:
 	{
 		m_vertexBuffer.Destroy();
 		m_indexBuffer.Destroy();
-		delete[] m_mesh;
-		delete[] m_pVertexData;
-		delete[] m_pIndexData;
+		delete m_mesh;
+		m_pVertexData = nullptr;
+		m_pIndexData = nullptr;
 	}
 
 	void Load(Vertex* pvData_, uint32_t vSize_, uint32_t vStride_, uint16_t* piData_, uint32_t iSize_);

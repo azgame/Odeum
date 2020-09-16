@@ -183,6 +183,8 @@
     <ClCompile Include="Engine\Core\TestRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\KeyCodes.h" />
+    <ClInclude Include="Engine\Core\MouseCodes.h" />
     <ClInclude Include="Engine\Math\DXMath.h" />
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
@@ -202,7 +204,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\DXIncludes.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.h" />
     <ClInclude Include="Engine\Core\Input.h" />
-    <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\DescriptorAllocator.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DCore.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderAPI.h" />
