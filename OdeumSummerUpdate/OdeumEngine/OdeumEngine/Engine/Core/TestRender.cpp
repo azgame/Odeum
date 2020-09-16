@@ -10,7 +10,7 @@ TestRender::TestRender()
 	m_camera = Camera();
 
 	m_eventFrameLimit = 16;
-	m_eventQueue.reserve(m_eventFrameLimit);
+	m_eventQueue.resize(m_eventFrameLimit);
 	m_bufferHead = 0;
 	m_bufferTail = 0;
 }
@@ -124,15 +124,11 @@ void TestRender::Detach()
 
 void TestRender::Update(float deltaTime_)
 {
-	int limit = 0;
-	for (int i = m_bufferHead; i != m_bufferTail; i = (i + 1) % m_eventFrameLimit)
+	while (m_bufferHead != m_bufferTail)
 	{
-		if (limit == m_eventFrameLimit)
-			break;
+		// Handle events here
 
-		// Handle events
-
-		limit++;
+		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
 	}
 
 	m_camera.UpdateCamera();
@@ -179,12 +175,12 @@ void TestRender::UIRender()
 {
 }
 
-void TestRender::HandleEvent(Event& event_)
+void TestRender::HandleEvent(Event& event_) // Queue events
 {
 	if ((m_bufferTail + 1) % m_eventFrameLimit == m_bufferHead)
 		return;
 
-	m_eventQueue[m_bufferTail] = event_;
+	m_eventQueue[m_bufferTail] = &event_;
 
 	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
 }

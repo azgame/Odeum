@@ -3,6 +3,8 @@
 
 #include "../../pch.h"
 
+#include <functional>
+
 enum class EventType : uint8_t
 {
 	None = 0,
@@ -24,7 +26,8 @@ enum EventCategory : uint8_t
 
 // macro so we don't have to retype this in every derived event, thanks cherno
 #define EVENT_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
-																virtual EventType GetEventType() const override { return GetStaticType(); }
+														virtual EventType GetEventType() const override { return GetStaticType(); } \
+														virtual const char* GetName() const override { return #type; }
 
 // same here
 #define EVENT_CATEGORY(category) virtual uint32_t GetCategoryFlags() const override { return category; }

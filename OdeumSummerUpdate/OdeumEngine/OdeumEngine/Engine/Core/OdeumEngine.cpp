@@ -1,6 +1,7 @@
 #include "OdeumEngine.h"
 
 #include "../Rendering/DirectX12/D3DCore.h"
+#include "../Events/ApplicationEvent.h"
 
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
@@ -24,8 +25,6 @@ void OdeumEngine::AddSystem(CoreSystem* system_)
 
 void OdeumEngine::OnEvent(Event& e)
 {
-	EventDispatcher dispatcher(e);
-
 	for (auto system : m_systemStack)
 	{
 		if (e.handled)
@@ -42,10 +41,8 @@ void OdeumEngine::Run()
 	{
 		m_engineTimer.UpdateFrameTicks();
 		float timeStep = m_engineTimer.GetDeltaTime();
-		m_window->Update();
 
-		//for (auto system : m_systemStack)
-			//system->HandleEvent()
+		m_window->Update();
 
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
