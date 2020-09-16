@@ -7,6 +7,7 @@ enum class EventType : uint8_t
 {
 	None = 0,
 	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+	AppTick, AppUpdate, AppRender,
 	KeyPressed, KeyReleased, KeyTyped,
 	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 };
@@ -36,7 +37,9 @@ public:
 	bool handled = false;
 
 	virtual EventType GetEventType() const = 0;
+	virtual const char* GetName() const = 0;
 	virtual uint32_t GetCategoryFlags() const = 0;
+	virtual std::string ToString() const { return GetName(); }
 
 	bool isInCategory(EventCategory category_)
 	{
