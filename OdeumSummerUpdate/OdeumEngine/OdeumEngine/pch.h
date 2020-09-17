@@ -8,33 +8,6 @@
 // Windows
 #include <Windows.h>
 
-// #define VULKAN_SUPPORT // Shouldn't do this
-
-#ifndef VULKAN_SUPPORT
-
-	//// DirectX
-	//#include <initguid.h>
-	//#include <d3d12.h>
-	//#include "Engine/Utilities/d3dx12.h" // Helper that provides a couple useful wrappers (CDXD12- prefaced)
-	//#include <d3d11_4.h>
-	//#include <dxgi1_6.h>
-	//#include <dwrite_3.h>
-	//#include <d3dcompiler.h>
-	//#include <DirectXMath.h>
-
-#else
-
-	////Vulkan
-	//#define GLFW_INCLUDE_VULKAN
-	//#include <GLFW/glfw3.h>
-
-	//#define GLM_FORCE_RADIANS
-	//#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-	//#include <glm/vec4.hpp>
-	//#include <glm/mat4x4.hpp>
-
-#endif
-
 // C/C++ Libraries
 #include <cstdarg>
 #include <stdio.h>
@@ -68,6 +41,10 @@
 #undef ASSERT
 #endif
 
+#ifdef min
+#undef min
+#endif
+
 #ifdef RELEASE
 	#define ASSERT(expression,...) (void)(expression)
 #else //--Debug
@@ -79,12 +56,6 @@
 	}
 
 #endif
-
-// Move to utilities file
-//std::wstring MakeWString(const std::string & string_)
-//{
-//	return std::wstring(string_.begin(), string_.end());
-//}
 
 template <typename T> bool isAligned(T value_, size_t alignment_)
 {

@@ -101,16 +101,6 @@ void TestRender::Attach()
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
 
-	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
-	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
-	m_mainViewport.MinDepth = 0.0f;
-	m_mainViewport.MaxDepth = 1.0f;
-
-	m_mainScissor.left = 0;
-	m_mainScissor.top = 0;
-	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
-	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
-
 	Vector3 eye = Vector3(2.0f, 1.0f, 5.0f);
 	m_camera.SetEyeAtUp(eye, Vector3(kZero), Vector3(kYUnitVector));
 	m_camera.SetZRange(0.1f, 10000.0f);
@@ -124,6 +114,16 @@ void TestRender::Detach()
 
 void TestRender::Update(float deltaTime_)
 {
+	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
+	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
+	m_mainViewport.MinDepth = 0.0f;
+	m_mainViewport.MaxDepth = 1.0f;
+
+	m_mainScissor.left = 0;
+	m_mainScissor.top = 0;
+	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
+	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
+
 	while (m_bufferHead != m_bufferTail)
 	{
 		// Handle events here

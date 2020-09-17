@@ -102,7 +102,7 @@ void ByteAddressedBuffer::CreateDerivedView()
 
 	if (m_srv.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_srv = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateShaderResourceView(m_resource, &srvDesc, m_srv);
+	DXGraphics::m_device->CreateShaderResourceView(m_resource.Get(), &srvDesc, m_srv);
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -112,7 +112,7 @@ void ByteAddressedBuffer::CreateDerivedView()
 
 	if (m_uav.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_uav = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateUnorderedAccessView(m_resource, nullptr, &uavDesc, m_uav);
+	DXGraphics::m_device->CreateUnorderedAccessView(m_resource.Get(), nullptr, &uavDesc, m_uav);
 }
 
 // Create views for srv and uav
@@ -128,7 +128,7 @@ void StructuredBuffer::CreateDerivedView()
 
 	if (m_srv.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_srv = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateShaderResourceView(m_resource, &srvDesc, m_srv);
+	DXGraphics::m_device->CreateShaderResourceView(m_resource.Get(), &srvDesc, m_srv);
 
 	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -142,7 +142,7 @@ void StructuredBuffer::CreateDerivedView()
 
 	if (m_uav.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 		m_uav = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	DXGraphics::m_device->CreateUnorderedAccessView(m_resource, m_counterBuffer.GetResource(), &uavDesc, m_uav);
+	DXGraphics::m_device->CreateUnorderedAccessView(m_resource.Get(), m_counterBuffer.GetResource(), &uavDesc, m_uav);
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterSRV(CommandContext& context_)

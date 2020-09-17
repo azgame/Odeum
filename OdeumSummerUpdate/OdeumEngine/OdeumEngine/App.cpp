@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	app->Uninitialize();
 	SAFE_DELETE(app);
 
-	_CrtDumpMemoryLeaks();
+	// _CrtDumpMemoryLeaks();
 
 	return 0;
 }

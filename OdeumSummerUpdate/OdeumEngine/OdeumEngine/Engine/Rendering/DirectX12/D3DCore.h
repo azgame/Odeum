@@ -2,7 +2,7 @@
 #define D3DCORE_H
 
 #include "DXIncludes.h"
-#include "../Common/GraphicsCore.h"
+
 #include "DescriptorAllocator.h"
 
 class CommandListManager;

@@ -49,19 +49,18 @@ void OdeumEngine::Run()
 		m_engineTimer.UpdateFrameTicks();
 		float timeStep = m_engineTimer.GetDeltaTime();
 
-		m_window->Update();
-
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
 
-		DXGraphics::Present();
+		m_window->Update();
+		//DXGraphics::Present();
 	}
 }
 
 bool OdeumEngine::Initialize()
 {	
-	m_window->Initialize(1600, 900, false, false);
 	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
+	m_window->Initialize(1600, 900, false, false);
 	
 	m_engineTimer.Initialize();
 
@@ -79,6 +78,8 @@ void OdeumEngine::Uninitialize()
 {
 	m_window->UninitializeWindow();
 	SAFE_DELETE(m_window);
+
+ 	DXGraphics::Shutdown();
 }
 
 bool OdeumEngine::Close(WindowCloseEvent& closeEvent)

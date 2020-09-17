@@ -65,9 +65,11 @@ protected:
     void CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_, uint32_t arraySize_, uint32_t numMips_ = 1);
 
     Colour m_clearColour;
-    D3D12_CPU_DESCRIPTOR_HANDLE m_srvHandle;
-    D3D12_CPU_DESCRIPTOR_HANDLE m_rtvHandle;
-    D3D12_CPU_DESCRIPTOR_HANDLE m_uavHandle[12];
+
+    // Can render to rtv and get that data as an srv
+    D3D12_CPU_DESCRIPTOR_HANDLE m_srvHandle; // handle to shader resource buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE m_rtvHandle; // handle to renderable buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE m_uavHandle[12]; // mip slices
     uint32_t m_numMipMaps;
     uint32_t m_fragmentCount;
     uint32_t m_sampleCount;

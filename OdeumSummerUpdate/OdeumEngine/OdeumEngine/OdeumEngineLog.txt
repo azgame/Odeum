@@ -1,0 +1,1 @@
+[WARNING]: Swap chain has not been initialized in: D3DCore.cpp on line: 219 at: Thu Sep 17 18:23:13 2020

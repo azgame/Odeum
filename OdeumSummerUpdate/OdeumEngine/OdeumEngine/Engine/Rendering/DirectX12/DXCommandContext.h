@@ -93,7 +93,7 @@ public:
         return reinterpret_cast<GraphicsContext&>(*this);
     }
 
-    AllocatedBuffer ReserveBufferMemory(size_t byteSize_)
+    BufferEntry ReserveBufferMemory(size_t byteSize_)
     {
         return m_CpuBufferAllocator.Allocate(byteSize_);
     }
@@ -372,7 +372,7 @@ inline void GraphicsContext::SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUA
 inline void GraphicsContext::SetDynamicConstantBufferView(UINT rootIndex_, size_t bufferSize_, const void* cBufferData_)
 {
     ASSERT(cBufferData_ != nullptr && isAligned(cBufferData_, 16));
-    AllocatedBuffer constantBuffer = m_CpuBufferAllocator.Allocate(bufferSize_);
+    BufferEntry constantBuffer = m_CpuBufferAllocator.Allocate(bufferSize_);
     memcpy(constantBuffer.CpuAddress, cBufferData_, bufferSize_);
     m_commandList->SetGraphicsRootConstantBufferView(rootIndex_, constantBuffer.GpuAddress);
 }
@@ -383,7 +383,7 @@ inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t v
     size_t bufferSize = numVerts_ * vertStride_;
     ALIGN(bufferSize, 16);
 
-    AllocatedBuffer vertexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
+    BufferEntry vertexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
 
     memcpy(vertexBuffer.CpuAddress, vertexBufferData_, bufferSize);
 
@@ -401,7 +401,7 @@ inline void GraphicsContext::SetDynamicIB(size_t indexCount_, const uint16_t* in
     size_t bufferSize = indexCount_ * sizeof(uint16_t);
     ALIGN(bufferSize, 16);
 
-    AllocatedBuffer indexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
+    BufferEntry indexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
 
     memcpy(indexBuffer.CpuAddress, indexBufferData_, bufferSize);
 
@@ -416,7 +416,7 @@ inline void GraphicsContext::SetDynamicIB(size_t indexCount_, const uint16_t* in
 inline void GraphicsContext::SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, const void* srvBufferData_)
 {
     ASSERT(srvBufferData_ != nullptr && isAligned(srvBufferData_, 16));
-    AllocatedBuffer buffer = m_CpuBufferAllocator.Allocate(bufferSize_);
+    BufferEntry buffer = m_CpuBufferAllocator.Allocate(bufferSize_);
     ALIGN(bufferSize_, 16);
     memcpy(buffer.CpuAddress, srvBufferData_, bufferSize_);
     m_commandList->SetGraphicsRootShaderResourceView(rootIndex_, buffer.GpuAddress);

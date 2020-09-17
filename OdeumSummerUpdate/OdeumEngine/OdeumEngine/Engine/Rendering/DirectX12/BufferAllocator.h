@@ -7,10 +7,10 @@
 #include <queue>
 
 // Individually allocated buffer for cpu use
-class AllocatedBuffer
+class BufferEntry
 {
 public:
-	AllocatedBuffer(D3DResource& resource_, size_t offset_, size_t size_) :
+	BufferEntry(D3DResource& resource_, size_t offset_, size_t size_) :
 		buffer(resource_), offset(offset_), size(size_) {}
 
 	D3DResource& buffer;
@@ -73,10 +73,10 @@ enum
 };
 
 // Manager that manages a pool of available buffer pages and retired buffer pages, discarding retired ones when needed
-class BufferPageManager
+class BufferLedger
 {
 public:
-	BufferPageManager();
+	BufferLedger();
 	BufferPage* RequestPage();
 	BufferPage* CreateNewPage(size_t size_ = 0);
 
@@ -102,13 +102,13 @@ class BufferAllocator
 {
 public:
 
-	BufferAllocator(BufferAllocatorType type_) : m_allocationType(type_), m_pageSize(0), m_offset(~(size_t)0), m_page(nullptr)
+	BufferAllocator(BufferAllocatorType type_) : m_allocationType(type_), m_pageSize(0), m_offset(~(size_t)0), m_bookmark(nullptr)
 	{
 		ASSERT(type_ > -1 && type_ < numAllocatorTypes, "Invalid buffer allocator type");
 		m_pageSize = (type_ == gpuExclusive ? gpuAllocatorPageSize : cpuAllocatorPageSize);
 	}
 
-	AllocatedBuffer Allocate(size_t byteSize_, size_t alignment = 256);
+	BufferEntry Allocate(size_t byteSize_, size_t alignment = 256);
 
 	void CleanupUsedPages(uint64_t fenceID_);
 	static void DestroyAllPages()
@@ -119,12 +119,12 @@ public:
 
 private:
 
-	static BufferPageManager sm_pageManager[2]; // one cpu visible, one gpu visible, accessible across all buffer allocators
+	static BufferLedger sm_pageManager[2]; // one cpu visible, one gpu visible, accessible across all buffer allocators
 
 	BufferAllocatorType m_allocationType;
 	size_t m_pageSize;
 	size_t m_offset;
-	BufferPage* m_page;
+	BufferPage* m_bookmark;
 	std::vector<BufferPage*> m_retiredPages;
 };
 

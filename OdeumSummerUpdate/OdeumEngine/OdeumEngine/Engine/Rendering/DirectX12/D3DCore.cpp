@@ -7,6 +7,9 @@
 #include "Buffers/DepthBuffer.h"
 
 #include "../../Core/OdeumEngine.h"
+#include "../Common/GraphicsCore.h"
+
+#include <algorithm>
 
 using namespace Graphics;
 
@@ -156,19 +159,14 @@ void DXGraphics::Initialize()
 	if (FAILED(factory->CreateSwapChainForHwnd(m_commandManager.GetCommandQueue(), OdeumEngine::Get().GetWindow().GetHWND(),
 		&swapChainDesc, nullptr, nullptr, &sm_swapChain)))
 		Debug::FatalError("Could not create swap chain!", __FILENAME__, __LINE__);
-
-	ID3D12Resource* tempDisplayPlane[3];
 	
 	for (uint32_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
-		if (FAILED(sm_swapChain->GetBuffer(i, IID_PPV_ARGS(&tempDisplayPlane[i]))))
+		Microsoft::WRL::ComPtr<ID3D12Resource> tempDisplayPlane;
+		if (FAILED(sm_swapChain->GetBuffer(i, IID_PPV_ARGS(&tempDisplayPlane))))
 			Debug::Error("Could not retrieve swap chain buffer " + i, __FILENAME__, __LINE__);
-		m_displayPlane[i].CreateFromSwapChain(L"Primary swap chain buffer", tempDisplayPlane[i]);
+		m_displayPlane[i].CreateFromSwapChain(L"Primary swap chain buffer", tempDisplayPlane.Detach());
 	}
-
-	tempDisplayPlane[0]->Release();
-	tempDisplayPlane[1]->Release();
-	tempDisplayPlane[2]->Release();
 
 	InitializeCommonState();
 
@@ -216,7 +214,11 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 
 void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 {
-	ASSERT(sm_swapChain != nullptr, "Swap chain has not been initialized");
+	if (sm_swapChain == nullptr)
+	{
+		Debug::Warning("Swap chain has not been initialized", __FILENAME__, __LINE__);
+		return;
+	}
 
 	if (width_ == 0 || height_ == 0)
 		return;
@@ -239,20 +241,16 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 	if (FAILED(sm_swapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, width_, height_, swapChainFormat, 0)))
 		Debug::Error("Could not resize buffers!", __FILENAME__, __LINE__);
 
-	ID3D12Resource* tempDisplayPlane[3];
-
 	for (uint32_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
-		if (FAILED(sm_swapChain->GetBuffer(i, IID_PPV_ARGS(&tempDisplayPlane[i]))))
+		Microsoft::WRL::ComPtr<ID3D12Resource> tempDisplayPlane;
+
+		if (FAILED(sm_swapChain->GetBuffer(i, IID_PPV_ARGS(&tempDisplayPlane))))
 			Debug::Error("Could not retrieve swap chain buffer " + i, __FILENAME__, __LINE__);
 		
-		m_displayPlane[i].CreateFromSwapChain(L"Primary swap chain buffer", tempDisplayPlane[i]);
+		m_displayPlane[i].CreateFromSwapChain(L"Primary swap chain buffer", tempDisplayPlane.Detach());
 		m_displayPlane[i].SetClearColour(Colour(1.0f, 0.33f, 0.67f));
 	}
-
-	tempDisplayPlane[0]->Release();
-	tempDisplayPlane[1]->Release();
-	tempDisplayPlane[2]->Release();
 
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
@@ -294,7 +292,7 @@ void DXGraphics::Present()
 
 	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 	uint32_t frameTime = GetFrameTime();
-	UINT presentInterval = s_enableVSync ? min(4, (int)round(frameTime * 100.0f)) : 0;
+	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * 100.0f)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
@@ -343,12 +341,12 @@ void DXGraphics::Shutdown()
 
 	DescriptorAllocator::DestroyHeaps();
 
-	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-		m_displayPlane[i].Destroy();
+	//for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+	//	m_displayPlane[i].Destroy();
 
-	m_preDisplayBuffer.Destroy();
-	m_presentBuffer.Destroy();
-	m_sceneDepthBuffer.Destroy();
+	//m_preDisplayBuffer.Destroy();
+	//m_presentBuffer.Destroy();
+	//m_sceneDepthBuffer.Destroy();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
 }

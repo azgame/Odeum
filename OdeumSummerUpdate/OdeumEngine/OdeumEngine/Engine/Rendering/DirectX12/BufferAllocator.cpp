@@ -2,18 +2,18 @@
 
 #include "DXCommandContext.h"
 
-BufferAllocatorType BufferPageManager::sm_initType = gpuExclusive;
+BufferAllocatorType BufferLedger::sm_initType = gpuExclusive;
 
-BufferPageManager::BufferPageManager()
+BufferLedger::BufferLedger()
 {
 	m_allocationType = sm_initType;
 	sm_initType = (BufferAllocatorType)(sm_initType + 1);
 	ASSERT(sm_initType <= numAllocatorTypes);
 }
 
-BufferPageManager BufferAllocator::sm_pageManager[2];
+BufferLedger BufferAllocator::sm_pageManager[2];
 
-BufferPage* BufferPageManager::RequestPage()
+BufferPage* BufferLedger::RequestPage()
 {
 	std::lock_guard<std::mutex> LockGuard(m_mutex);
 
@@ -39,7 +39,7 @@ BufferPage* BufferPageManager::RequestPage()
 	return page;
 }
 
-BufferPage* BufferPageManager::CreateNewPage(size_t size_)
+BufferPage* BufferLedger::CreateNewPage(size_t size_)
 {
     D3D12_HEAP_PROPERTIES heapProps;
     heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -89,34 +89,34 @@ BufferPage* BufferPageManager::CreateNewPage(size_t size_)
     return new BufferPage(buffer, defaultUsage);
 }
 
-void BufferPageManager::RecyclePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_)
+void BufferLedger::RecyclePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_)
 {
 	std::lock_guard<std::mutex> LockGuard(m_mutex);
 	for (auto page : pages_)
 		m_retiredPages.push(std::make_pair(fenceID_, page));
 }
 
-AllocatedBuffer BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
+BufferEntry BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
 {
 	ALIGN(byteSize_, alignment_);
     ALIGN(m_offset, alignment_);
 
     if (m_offset + byteSize_ > m_pageSize)
     {
-        ASSERT(m_page != nullptr, "Buffer page is null!");
-        m_retiredPages.push_back(m_page);
-        m_page = nullptr;
+        ASSERT(m_bookmark != nullptr, "Buffer page is null!");
+        m_retiredPages.push_back(m_bookmark);
+        m_bookmark = nullptr;
     }
 
-    if (m_page == nullptr)
+    if (m_bookmark == nullptr)
     {
-        m_page = sm_pageManager[m_allocationType].RequestPage();
+        m_bookmark = sm_pageManager[m_allocationType].RequestPage();
         m_offset = 0;
     }
 
-    AllocatedBuffer returnBuffer(*m_page, m_offset, byteSize_);
-    returnBuffer.CpuAddress = (uint8_t*)m_page->m_CpuVirtualAddress + m_offset;
-    returnBuffer.GpuAddress = m_page->m_GpuVirtualAddress + m_offset;
+    BufferEntry returnBuffer(*m_bookmark, m_offset, byteSize_);
+    returnBuffer.CpuAddress = (uint8_t*)m_bookmark->m_CpuVirtualAddress + m_offset;
+    returnBuffer.GpuAddress = m_bookmark->m_GpuVirtualAddress + m_offset;
 
     m_offset += byteSize_;
 
@@ -125,11 +125,11 @@ AllocatedBuffer BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
 
 void BufferAllocator::CleanupUsedPages(uint64_t fenceID_)
 {
-    if (m_page == nullptr)
+    if (m_bookmark == nullptr)
         return;
 
-    m_retiredPages.push_back(m_page);
-    m_page = nullptr;
+    m_retiredPages.push_back(m_bookmark);
+    m_bookmark = nullptr;
     m_offset = 0;
 
     sm_pageManager[m_allocationType].RecyclePages(fenceID_, m_retiredPages);

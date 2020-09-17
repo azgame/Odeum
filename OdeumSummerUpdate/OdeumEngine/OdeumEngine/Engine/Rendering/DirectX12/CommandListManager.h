@@ -3,7 +3,7 @@
 
 #include "DXIncludes.h"
 #include <stdint.h>
-#include "CommandAllocatorPool.h"
+#include "CommandAllocatorManager.h"
 
 class CommandQueue
 {
@@ -37,7 +37,7 @@ private:
 
 	ID3D12CommandQueue* m_commandQueue;
 	const D3D12_COMMAND_LIST_TYPE m_type;
-	CommandAllocatorPool m_allocatorPool;
+	CommandAllocatorManager m_allocatorPool;
 	std::mutex m_fenceMutex;
 	std::mutex m_eventMutex;
 

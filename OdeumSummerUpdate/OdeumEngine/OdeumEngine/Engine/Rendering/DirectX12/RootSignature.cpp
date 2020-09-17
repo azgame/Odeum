@@ -7,7 +7,10 @@ using namespace DXGraphics;
 
 void RootSignature::Destroy()
 {
-	m_rootSignature->Release();
+	if (m_rootSignature)
+		m_rootSignature->Release();
+
+	m_rootSignature = nullptr;
 }
 
 void RootSignature::Reset(UINT numRootParams_, UINT numStaticSamplers)
@@ -114,4 +117,7 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 	m_rootSignature->SetName(name_.c_str());
 
 	m_finalized = true;
+
+	if (pResult) pResult->Release(); pResult = nullptr;
+	if (pError) pError->Release(); pError = nullptr;
 }

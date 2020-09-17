@@ -165,7 +165,7 @@ void CommandContext::InitializeTexture(D3DResource& dest_, UINT numSubresources_
 
     CommandContext& context = CommandContext::RequestContext();
 
-    AllocatedBuffer buffer = context.ReserveBufferMemory(uploadBufferSize);
+    BufferEntry buffer = context.ReserveBufferMemory(uploadBufferSize);
     UpdateSubresources(context.m_commandList, dest_.GetResource(), buffer.buffer.GetResource(), 0, 0, numSubresources_, subResource_);
     context.TransitionResource(dest_, D3D12_RESOURCE_STATE_GENERIC_READ);
 
@@ -176,7 +176,7 @@ void CommandContext::InitializeBuffer(D3DResource& dest_, const void* pData_, si
 {
     CommandContext& context = CommandContext::RequestContext();
 
-    AllocatedBuffer buffer = context.ReserveBufferMemory(numBytes_);
+    BufferEntry buffer = context.ReserveBufferMemory(numBytes_);
     memcpy(buffer.CpuAddress, pData_, numBytes_);
 
     context.TransitionResource(dest_, D3D12_RESOURCE_STATE_COPY_DEST, true);
@@ -231,7 +231,7 @@ void CommandContext::InitializeTextureArraySlice(D3DResource& dest_, UINT sliceI
 void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_)
 {
     ASSERT(pData_ != nullptr && isAligned(pData_, 16));
-    AllocatedBuffer tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
+    BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
     memcpy(tempSpace.CpuAddress, pData_, (numBytes_ + 15) / 16);
     CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
 }
