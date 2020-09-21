@@ -7,6 +7,7 @@
 #include "Buffers/DepthBuffer.h"
 
 #include "../../Core/OdeumEngine.h"
+
 #include "../Common/GraphicsCore.h"
 
 #include <algorithm>
@@ -203,11 +204,10 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 {
 	GraphicsContext& initBuffers = GraphicsContext::RequestContext();
 
+	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
 	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
-
-	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 
 	initBuffers.Finish();
 }
@@ -252,6 +252,9 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 		m_displayPlane[i].SetClearColour(Colour(1.0f, 0.33f, 0.67f));
 	}
 
+	/*m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);*/
+
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
 
@@ -263,27 +266,22 @@ void DXGraphics::PreparePresent()
 	GraphicsContext& context = GraphicsContext::RequestContext(L"Present");
 
 	context.TransitionResource(m_presentBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET);
-
+	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	
 	context.SetRootSignature(m_presentRootSig);
 	context.SetDynamicDescriptor(0, 0, m_presentBuffer.GetSRV());
 
 	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvs[] =
-	{
-		m_displayPlane[s_currentBuffer].GetRTV()
-	};
-
 	context.SetPipelineState(m_presentPSO);
-	context.SetRenderTargets(_countof(rtvs), rtvs);
+	context.SetRenderTargets(1, &m_displayPlane[s_currentBuffer].GetRTV());
 	context.SetViewportAndScissor(0, 0, s_displayWidth, s_displayHeight);
 
 	context.Draw(3);
 
 	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 
-	context.Finish();
+	context.Finish(true);
 }
 
 void DXGraphics::Present()
@@ -291,12 +289,12 @@ void DXGraphics::Present()
 	PreparePresent();
 
 	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
-	uint32_t frameTime = GetFrameTime();
+	double frameTime = GetFrameTime();
 	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * 100.0f)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
-	if (s_enableVSync) frameTime = 100.0f;
+	if (s_enableVSync) frameTime = 1 / 100.0f;
 	else frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
 
 	SetFrameTime(frameTime);

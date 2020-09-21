@@ -9,125 +9,7 @@
 
 #include "../Rendering/DirectX12/D3DCore.h"
 
-//void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide)
-//{
-//	m_data.width = width;
-//	m_data.height = height;
-//	m_data.vSync = vSync;
-//	m_data.ultraWide = ultraWide;
-//
-//	ASSERT(glfwInit(), "Could not initialize GLFW");
-//
-//	glfwWindowHint(GLFW_NO_API, GLFW_TRUE);
-//	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-//
-//	m_window = glfwCreateWindow(width, height, "Odeum Engine", nullptr, nullptr);
-//
-//	glfwSetWindowUserPointer(m_window, &m_data);
-//
-//	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//		data.width = width;
-//		data.height = height;
-//
-//		WindowResizeEvent resizeEvent(width, height);
-//		data.eventCallback(resizeEvent);
-//	});
-//
-//	glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//		WindowCloseEvent event;
-//		data.eventCallback(event);
-//	});
-//
-//	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//
-//		switch (action)
-//		{
-//			case GLFW_PRESS:
-//			{
-//				KeyPressedEvent event((KeyCode)key, 0);
-//				data.eventCallback(event);
-//				break;
-//			}
-//			case GLFW_RELEASE:
-//			{
-//				KeyReleasedEvent event((KeyCode)key);
-//				data.eventCallback(event);
-//				break;
-//			}
-//			case GLFW_REPEAT:
-//			{
-//				KeyPressedEvent event((KeyCode)key, 1);
-//				data.eventCallback(event);
-//				break;
-//			}
-//		}
-//	});
-//
-//	glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//
-//		KeyTypedEvent event((KeyCode)keycode);
-//		data.eventCallback(event);
-//	});
-//
-//	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//
-//		switch (action)
-//		{
-//			case GLFW_PRESS:
-//			{
-//				MouseButtonPressedEvent event((MouseCode)button);
-//				data.eventCallback(event);
-//				break;
-//			}
-//			case GLFW_RELEASE:
-//			{
-//				MouseButtonReleasedEvent event((MouseCode)button);
-//				data.eventCallback(event);
-//				break;
-//			}
-//		}
-//	});
-//
-//	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//
-//		MouseScrolledEvent event((float)xOffset, (float)yOffset);
-//		data.eventCallback(event);
-//	});
-//
-//	glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
-//	{
-//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-//
-//		MouseMovedEvent event((float)xPos, (float)yPos);
-//		data.eventCallback(event);
-//	});
-//}
-//
-//void Window::Update()
-//{
-//	glfwPollEvents();
-//}
-//
-//void Window::UninitializeWindow()
-//{
-//	glfwDestroyWindow(m_window);
-//	glfwTerminate();
-//}
-
-
-// Previous Win32 window setup if we ever need it
+// Win32 Window setup
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 static Window* WindowHandle = 0;
@@ -179,9 +61,6 @@ void Window::Update()
 		m_data.eventCallback(resize);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
-	case WM_PAINT:
-		DXGraphics::Present();
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	default:
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
@@ -302,6 +181,125 @@ void Window::UninitializeWindow()
 
 	WindowHandle = NULL;
 }
+
+// GLFW Window setup
+
+//void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide)
+//{
+//	m_data.width = width;
+//	m_data.height = height;
+//	m_data.vSync = vSync;
+//	m_data.ultraWide = ultraWide;
+//
+//	ASSERT(glfwInit(), "Could not initialize GLFW");
+//
+//	glfwWindowHint(GLFW_NO_API, GLFW_TRUE);
+//	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+//
+//	m_window = glfwCreateWindow(width, height, "Odeum Engine", nullptr, nullptr);
+//
+//	glfwSetWindowUserPointer(m_window, &m_data);
+//
+//	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//		data.width = width;
+//		data.height = height;
+//
+//		WindowResizeEvent resizeEvent(width, height);
+//		data.eventCallback(resizeEvent);
+//	});
+//
+//	glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//		WindowCloseEvent event;
+//		data.eventCallback(event);
+//	});
+//
+//	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//
+//		switch (action)
+//		{
+//			case GLFW_PRESS:
+//			{
+//				KeyPressedEvent event((KeyCode)key, 0);
+//				data.eventCallback(event);
+//				break;
+//			}
+//			case GLFW_RELEASE:
+//			{
+//				KeyReleasedEvent event((KeyCode)key);
+//				data.eventCallback(event);
+//				break;
+//			}
+//			case GLFW_REPEAT:
+//			{
+//				KeyPressedEvent event((KeyCode)key, 1);
+//				data.eventCallback(event);
+//				break;
+//			}
+//		}
+//	});
+//
+//	glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//
+//		KeyTypedEvent event((KeyCode)keycode);
+//		data.eventCallback(event);
+//	});
+//
+//	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//
+//		switch (action)
+//		{
+//			case GLFW_PRESS:
+//			{
+//				MouseButtonPressedEvent event((MouseCode)button);
+//				data.eventCallback(event);
+//				break;
+//			}
+//			case GLFW_RELEASE:
+//			{
+//				MouseButtonReleasedEvent event((MouseCode)button);
+//				data.eventCallback(event);
+//				break;
+//			}
+//		}
+//	});
+//
+//	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//
+//		MouseScrolledEvent event((float)xOffset, (float)yOffset);
+//		data.eventCallback(event);
+//	});
+//
+//	glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
+//	{
+//		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+//
+//		MouseMovedEvent event((float)xPos, (float)yPos);
+//		data.eventCallback(event);
+//	});
+//}
+//
+//void Window::Update()
+//{
+//	glfwPollEvents();
+//}
+//
+//void Window::UninitializeWindow()
+//{
+//	glfwDestroyWindow(m_window);
+//	glfwTerminate();
+//}
 
 //void Window::ToggleFullscreen()
 //{

@@ -22,11 +22,6 @@ public:
 
 private:
 
-	// Core
-	Camera m_camera;
-	
-	// DX
-	Model m_model;
 	RootSignature m_rootSig;
 	GraphicsPSO m_colourPSO;
 	D3D12_VIEWPORT m_mainViewport;

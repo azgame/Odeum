@@ -381,7 +381,7 @@ inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t v
 {
     ASSERT(vertexBufferData_ != nullptr && isAligned(vertexBufferData_, 16));
     size_t bufferSize = numVerts_ * vertStride_;
-    ALIGN(bufferSize, 16);
+    bufferSize = Align(bufferSize, 16);
 
     BufferEntry vertexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
 
@@ -399,7 +399,7 @@ inline void GraphicsContext::SetDynamicIB(size_t indexCount_, const uint16_t* in
 {
     ASSERT(indexBufferData_ != nullptr && isAligned(indexBufferData_, 16));
     size_t bufferSize = indexCount_ * sizeof(uint16_t);
-    ALIGN(bufferSize, 16);
+    bufferSize = Align(bufferSize, 16);
 
     BufferEntry indexBuffer = m_CpuBufferAllocator.Allocate(bufferSize);
 
@@ -417,7 +417,7 @@ inline void GraphicsContext::SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, 
 {
     ASSERT(srvBufferData_ != nullptr && isAligned(srvBufferData_, 16));
     BufferEntry buffer = m_CpuBufferAllocator.Allocate(bufferSize_);
-    ALIGN(bufferSize_, 16);
+    bufferSize_ = Align(bufferSize_, 16);
     memcpy(buffer.CpuAddress, srvBufferData_, bufferSize_);
     m_commandList->SetGraphicsRootShaderResourceView(rootIndex_, buffer.GpuAddress);
 }

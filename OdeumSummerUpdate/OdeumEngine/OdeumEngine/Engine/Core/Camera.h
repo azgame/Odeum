@@ -12,7 +12,7 @@ public:
 	
 	void SetEyeAtUp(Vector3 eye_, Vector3 at_, Vector3 up_);
 	void SetPosition(Vector3 position_);
-	void SetLookDirection(Vector3 forward_, Vector3 up_);
+	void SetLookDirection(Vector3 forward_, Vector3 up_ = Vector3(kYUnitVector));
 	void SetRotation(Quaternion rotation_);
 
 	void UpdateCamera();

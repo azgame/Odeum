@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Game/Game1.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -10,6 +11,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	OdeumEngine* app;
 	app = new OdeumEngine();
+	app->SetGameInterface(new Game1);
 	ASSERT(app != nullptr, "App is null!");
 
 	if (app->Initialize())
@@ -18,7 +20,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	app->Uninitialize();
 	SAFE_DELETE(app);
 
-	// _CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 
 	return 0;
 }

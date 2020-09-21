@@ -14,6 +14,9 @@ public:
 	virtual void Update(const float deltaTime_);
 	virtual void Render();
 
+private:
+	GameObject* object;
+	GameObject* plane;
 };
 
 #endif

@@ -16,6 +16,8 @@ OdeumEngine::OdeumEngine()
 	Debug::SetSeverity(MessageType::TYPE_INFO);
 
 	m_window = new Window();
+
+	m_camera = Camera();
 }
 
 OdeumEngine::~OdeumEngine()
@@ -49,11 +51,16 @@ void OdeumEngine::Run()
 		m_engineTimer.UpdateFrameTicks();
 		float timeStep = m_engineTimer.GetDeltaTime();
 
+		m_gameInterface->Update(timeStep);
+
+		m_camera.UpdateCamera();
+
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
 
-		m_window->Update();
-		//DXGraphics::Present();
+		m_window->Update(); // Draw
+
+		DXGraphics::Present();
 	}
 }
 
@@ -66,10 +73,13 @@ bool OdeumEngine::Initialize()
 
 	DXGraphics::Initialize();
 
+	if (!m_gameInterface->Initialize())
+		Debug::Error("Could not initialize game scene", __FILENAME__, __LINE__);
+	m_currentScene = 1;
+	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
+
 	// Test
-	CoreSystem* testRender = new TestRender();
-	m_systemStack.Push(testRender);
-	testRender->Attach();
+	m_systemStack.Push(new TestRender());
 
 	return true;
 }

@@ -27,7 +27,7 @@ public:
 
 	BufferPage(ID3D12Resource* resource_, D3D12_RESOURCE_STATES usage_) : D3DResource()
 	{
-		m_resource = resource_;
+		m_resource.Attach(resource_);
 		m_usageState = usage_;
 		m_GpuVirtualAddress = m_resource->GetGPUVirtualAddress();
 		m_resource->Map(0, nullptr, &m_CpuVirtualAddress);

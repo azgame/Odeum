@@ -1,21 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-// Many of these functions were adapted from the DirectX graphics samples github repo.
-
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the MIT License (MIT).
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-// Developed by Minigraph
-//
-// Author:  James Stanard 
-//
-
 #include "Quaternion.h"
 // Represents a 3x3 matrix while occuping a 4x4 memory footprint.  The unused row and column are undefined but implicitly
 // (0, 0, 0, 1).  Constructing a Matrix4 will make those values explicit.
@@ -27,8 +12,8 @@ public:
 	inline Matrix3() {}
 	inline Matrix3(Vector3 x_, Vector3 y_, Vector3 z_) { mat[0] = x_; mat[1] = y_; mat[2] = z_; }
 	inline Matrix3(const Matrix3& m_) { mat[0] = m_.mat[0]; mat[1] = m_.mat[1]; mat[2] = m_.mat[2]; }
-	inline Matrix3(Quaternion q_) { *this = Matrix3(DirectX::XMMatrixRotationQuaternion(q_)); }
-	inline explicit Matrix3(const DirectX::XMMATRIX m_) { mat[0] = Vector3(m_.r[0]); mat[1] = Vector3(m_.r[1]); mat[2] = Vector3(m_.r[2]); }
+	inline Matrix3(Quaternion q_) { *this = Matrix3(XMMatrixRotationQuaternion(q_)); }
+	inline explicit Matrix3(const XMMATRIX m_) { mat[0] = Vector3(m_.r[0]); mat[1] = Vector3(m_.r[1]); mat[2] = Vector3(m_.r[2]); }
 	inline explicit Matrix3(EIdentityTag) { mat[0] = Vector3(kXUnitVector); mat[1] = Vector3(kYUnitVector); mat[2] = Vector3(kZUnitVector); }
 	inline explicit Matrix3(EZeroTag) { mat[0] = mat[1] = mat[2] = Vector3(kZero); }
 	
@@ -42,17 +27,17 @@ public:
 	inline Vector3 GetY() const { return mat[1]; }
 	inline Vector3 GetZ() const { return mat[2]; }
 
-	static inline Matrix3 MakeXRotation(float angle_) { return Matrix3(DirectX::XMMatrixRotationX(angle_)); }
-	static inline Matrix3 MakeYRotation(float angle_) { return Matrix3(DirectX::XMMatrixRotationY(angle_)); }
-	static inline Matrix3 MakeZRotation(float angle_) { return Matrix3(DirectX::XMMatrixRotationZ(angle_)); }
-	static inline Matrix3 MakeScale(float scale_) { return Matrix3(DirectX::XMMatrixScaling(scale_, scale_, scale_)); }
-	static inline Matrix3 MakeScale(float sx_, float sy_, float sz_) { return Matrix3(DirectX::XMMatrixScaling(sx_, sy_, sz_)); }
-	static inline Matrix3 MakeScale(Vector3 scale_) { return Matrix3(DirectX::XMMatrixScalingFromVector(scale_)); }
+	static inline Matrix3 MakeXRotation(float angle_) { return Matrix3(XMMatrixRotationX(angle_)); }
+	static inline Matrix3 MakeYRotation(float angle_) { return Matrix3(XMMatrixRotationY(angle_)); }
+	static inline Matrix3 MakeZRotation(float angle_) { return Matrix3(XMMatrixRotationZ(angle_)); }
+	static inline Matrix3 MakeScale(float scale_) { return Matrix3(XMMatrixScaling(scale_, scale_, scale_)); }
+	static inline Matrix3 MakeScale(float sx_, float sy_, float sz_) { return Matrix3(XMMatrixScaling(sx_, sy_, sz_)); }
+	static inline Matrix3 MakeScale(Vector3 scale_) { return Matrix3(XMMatrixScalingFromVector(scale_)); }
 
-	inline operator DirectX::XMMATRIX() const { return (const DirectX::XMMATRIX&)mat; }
+	inline operator XMMATRIX() const { return (const XMMATRIX&)mat; }
 
 	// Operator Overloading
-	inline Vector3 operator* (Vector3 vec_) const { return Vector3(DirectX::XMVector3TransformNormal(vec_, *this)); }
+	inline Vector3 operator* (Vector3 vec_) const { return Vector3(XMVector3TransformNormal(vec_, *this)); }
 	inline Matrix3 operator* (const Matrix3& mat_) const { return Matrix3(*this * mat_.GetX(), *this * mat_.GetY(), *this * mat_.GetZ()); }
 
 private:
@@ -87,17 +72,17 @@ public:
 	// need these from transform
 	//inline Matrix4(const AffineTransform& xform_) { *this = Matrix4(xform_.GetBasis(), xform_.GetTranslation()); }
 	//inline Matrix4(const OrthogonalTransform& xform_) { *this = Matrix4(Matrix3(xform_.GetRotation()), xform_.GetTranslation()); }
-	inline explicit Matrix4(const DirectX::XMMATRIX& mat_) { mat = mat_; }
-	inline explicit Matrix4(EIdentityTag) { mat = DirectX::XMMatrixIdentity(); }
-	inline explicit Matrix4(EZeroTag) { mat.r[0] = mat.r[1] = mat.r[2] = mat.r[3] = SplatZero(); }
+	inline explicit Matrix4(const XMMATRIX& mat_) { mat = mat_; }
+	inline explicit Matrix4(EIdentityTag) { mat = XMMatrixIdentity(); }
+	inline explicit Matrix4(EZeroTag) { mat.r[0] = mat.r[1] = mat.r[2] = mat.r[3] = XMVectorZero(); }
 
 	inline const Matrix3& Get3x3() const { return (const Matrix3&)*this; }
 
 	// Getters
-	inline Vector4 GetX() const { return Vector4(mat.r[0]); }
-	inline Vector4 GetY() const { return Vector4(mat.r[1]); }
-	inline Vector4 GetZ() const { return Vector4(mat.r[2]); }
-	inline Vector4 GetW() const { return Vector4(mat.r[3]); }
+	inline Vector4 GetX() { return Vector4(mat.r[0]); }
+	inline Vector4 GetY() { return Vector4(mat.r[1]); }
+	inline Vector4 GetZ() { return Vector4(mat.r[2]); }
+	inline Vector4 GetW() { return Vector4(mat.r[3]); }
 
 	// Setters
 	inline void SetX(Vector4 x_) { mat.r[0] = x_; }
@@ -105,18 +90,18 @@ public:
 	inline void SetZ(Vector4 z_) { mat.r[2] = z_; }
 	inline void SetW(Vector4 w_) { mat.r[3] = w_; }
 
-	inline operator DirectX::XMMATRIX() const { return mat; }
+	inline operator XMMATRIX() const { return mat; }
 
 	// Operator Overloading
-	inline Vector4 operator* (Vector3 vec_) const { return Vector4(DirectX::XMVector3Transform(vec_, mat)); }
-	inline Vector4 operator* (Vector4 vec_) const { return Vector4(DirectX::XMVector4Transform(vec_, mat)); }
-	inline Matrix4 operator* (const Matrix4& mat_) const { return Matrix4(DirectX::XMMatrixMultiply(mat_, mat)); }
+	inline Vector4 operator* (Vector3 vec_) const { return Vector4(XMVector3Transform(vec_, mat)); }
+	inline Vector4 operator* (Vector4 vec_) const { return Vector4(XMVector4Transform(vec_, mat)); }
+	inline Matrix4 operator* (const Matrix4& mat_) const { return Matrix4(XMMatrixMultiply(mat_, mat)); }
 
-	static inline Matrix4 MakeScale(float scale_) { return Matrix4(DirectX::XMMatrixScaling(scale_, scale_, scale_)); }
-	static inline Matrix4 MakeScale(Vector3 scale_) { return Matrix4(DirectX::XMMatrixScalingFromVector(scale_)); }
+	static inline Matrix4 MakeScale(float scale_) { return Matrix4(XMMatrixScaling(scale_, scale_, scale_)); }
+	static inline Matrix4 MakeScale(Vector3 scale_) { return Matrix4(XMMatrixScalingFromVector(scale_)); }
 
 private:
-	DirectX::XMMATRIX mat;
+	XMMATRIX mat;
 };
 
 #endif

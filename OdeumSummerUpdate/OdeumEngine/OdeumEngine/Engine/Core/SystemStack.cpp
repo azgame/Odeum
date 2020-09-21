@@ -13,6 +13,8 @@ void SystemStack::Push(CoreSystem* system_)
 {
 	m_systems.emplace(m_systems.begin() + m_systemIndex, system_);
 	m_systemIndex++;
+
+	system_->Attach();
 }
 
 void SystemStack::Pop(CoreSystem* system_)

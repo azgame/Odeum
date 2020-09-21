@@ -11,7 +11,7 @@ Game1::~Game1()
 
 bool Game1::Initialize()
 {
-	ASSERT(OdeumEngine::Get().GetCurrentScene() != 0, "Engine's default scene is not 0");
+	ASSERT(OdeumEngine::Get().GetCurrentScene() == 0, "Engine's default scene is not 0");
 
 	m_currentScene = new StartScene();
 	m_currentSceneNum = 0;

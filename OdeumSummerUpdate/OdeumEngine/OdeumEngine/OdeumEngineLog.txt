@@ -1,1 +1,3 @@
-[WARNING]: Swap chain has not been initialized in: D3DCore.cpp on line: 219 at: Thu Sep 17 18:23:13 2020
+[WARNING]: Swap chain has not been initialized in: D3DCore.cpp on line: 219 at: Sun Sep 20 22:32:36 2020
+[INFO]: Creating Start Scene in: StartScene.cpp on line: 15 at: Sun Sep 20 22:32:36 2020
+[INFO]: Creating Game Scene in: GameScene.cpp on line: 16 at: Sun Sep 20 22:32:36 2020

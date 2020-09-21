@@ -1,4 +1,44 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (OdeumWin32.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  App.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(98,2): warning C4065: switch statement contains 'default' but no 'case' labels
+  CollisionHandler.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Math\CollisionHandler.cpp(41,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Math\CollisionHandler.cpp(41,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Debug.cpp
+  Camera.cpp
+  CollisionDetection.cpp
+  TextureHandler.cpp
+  DeviceResources.cpp
+  Input.cpp
+  Mesh.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Mesh.cpp(83,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Mesh.cpp(93,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Mesh.cpp(96,50): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Mesh.cpp(97,48): warning C4244: '=': conversion from 'UINT64' to 'int', possible loss of data
+  OdeumEngine.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+  GameObject.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+  GameScene.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+  Game1.cpp
+  Model.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Model.cpp(49,36): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  LoadOBJModel.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\LoadOBJModel.cpp(96,30): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\LoadOBJModel.cpp(140,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\LoadOBJModel.cpp(187,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  OctSpatialPartition.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.cpp(116,28): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.cpp(263,10): warning C4834: discarding return value of function with 'nodiscard' attribute
+  pch.cpp
   Renderer.cpp
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(103,77): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(173,81): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
@@ -11,6 +51,14 @@ C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(4
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(583,51): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(1008,71): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\Renderer.cpp(997,10): warning C4101: 'result': unreferenced local variable
+  Timer.cpp
+  StartScene.cpp
+  Generating Code...
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\App.cpp(240): warning C4715: 'WndProc': not all control paths return a value
+  Compiling...
+  SceneGraph.cpp
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(24,1): warning C4099: 'OctNode': type name first seen using 'class' now seen using 'struct'
+C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Core\OctSpatialPartition.h(23): message : see declaration of 'OctNode'
   ShaderHandler.cpp
 C:\Users\aidan\Documents\Odeum\Odeum\OdeumEngine\Engine\Rendering\ShaderHandler.cpp(35,10): warning C4101: 'result': unreferenced local variable
   Generating Code...

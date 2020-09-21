@@ -43,7 +43,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::CreateCBV(uint32_t offset_, uint32_t size
 	if (offset_ + size_ > m_bufferSize)
 		Debug::Error("Attempted allocation of descriptor failed!", __FILENAME__, __LINE__);
 
-	ALIGN(size_, 16);
+	size_ = Align(size_, 16);
 
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
 	cbvDesc.BufferLocation = offset_;

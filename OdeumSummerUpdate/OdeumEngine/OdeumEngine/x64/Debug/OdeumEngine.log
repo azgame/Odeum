@@ -1,16 +1,69 @@
-﻿  TestRender.cpp
+﻿  App.cpp
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  Input.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  OdeumEngine.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  TestRender.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\TestRender.cpp(106,21): warning C4018: '<': signed/unsigned mismatch
+  BufferAllocator.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  D3DBuffer.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\pch.h(67,1): warning C4267: 'return': conversion from 'size_t' to 'T', possible loss of data
+          with
+          [
+              T=uint32_t
+          ]
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\Buffers\D3DBuffer.cpp(46): message : see reference to function template instantiation 'T Align<uint32_t>(T,size_t)' being compiled
+          with
+          [
+              T=uint32_t
+          ]
   D3DCore.cpp
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
 C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\Common\GraphicsCore.h(20,80): warning C4091: 'extern ': ignored on left of 'Graphics::ResolutionOptions' when no variable is declared
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(143,19): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(294,21): warning C4244: 'initializing': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(299,33): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(300,61): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(302,15): warning C4244: 'argument': conversion from 'uint32_t' to 'float', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(144,19): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\D3DCore.cpp(300,15): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  DXCommandContext.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  DynamicDescriptorHeap.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  VKCore.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\Common\GraphicsCore.h(20,80): warning C4091: 'extern ': ignored on left of 'Graphics::ResolutionOptions' when no variable is declared
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  Game1.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  GameScene.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  StartScene.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
   Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

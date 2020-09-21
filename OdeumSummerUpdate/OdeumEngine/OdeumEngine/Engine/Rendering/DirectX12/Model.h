@@ -4,12 +4,14 @@
 #include "DXIncludes.h"
 #include "Buffers/D3DBuffer.h"
 #include "../../Math/DXMath.h"
+#include "Shapes.h"
 
-struct Vertex
+enum ShapeTypes
 {
-	Vertex(DirectX::XMFLOAT3 pos_, DirectX::XMFLOAT3 normal_) { position = pos_; normal = normal_; }
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 normal;
+	NoShape = 0,
+	CubeShape,
+
+	NumShapes
 };
 
 class Model
@@ -24,8 +26,6 @@ public:
 
 	~Model()
 	{
-		/*m_vertexBuffer.Destroy();
-		m_indexBuffer.Destroy();*/
 		delete m_mesh;
 		m_pVertexData = nullptr;
 		m_pIndexData = nullptr;
@@ -33,7 +33,7 @@ public:
 
 	// static const uint8_t 
 
-	void Load(Vertex* pvData_, uint32_t vSize_, uint32_t vStride_, uint16_t* piData_, uint32_t iSize_);
+	void Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_);
 
 	static const unsigned short maxFilePath = 128;
 
@@ -64,6 +64,8 @@ public:
 		float shininess;
 		float specularStrength;
 	};
+
+	Mesh& GetMesh(int index);
 
 	ModelInfo* m_details;
 	Mesh* m_mesh;
