@@ -34,6 +34,8 @@
 // #define ALIGN(_alignment, _val) _alignment = (((_val + _alignment - 1) / _alignment) * _alignment);
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
+#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
 #define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull
 

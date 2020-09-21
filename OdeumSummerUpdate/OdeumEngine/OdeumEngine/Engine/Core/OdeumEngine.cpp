@@ -2,6 +2,9 @@
 
 #include "../Rendering/DirectX12/D3DCore.h"
 #include "../Events/ApplicationEvent.h"
+#include "../Events/KeyEvent.h"
+
+#include "TestRender.h"
 
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
@@ -16,7 +19,6 @@ OdeumEngine::OdeumEngine()
 	Debug::SetSeverity(MessageType::TYPE_INFO);
 
 	m_window = new Window();
-
 	m_camera = Camera();
 }
 
@@ -35,6 +37,8 @@ void OdeumEngine::OnEvent(Event& e)
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OdeumEngine::Close));
 	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OdeumEngine::Resize));
+	dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
+	dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
 
 	for (auto system : m_systemStack)
 	{
@@ -102,4 +106,9 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 {
 	DXGraphics::Resize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
 	return true;
+}
+
+bool OdeumEngine::KeyboardInput(KeyEvent& keyEvent)
+{
+	return Input::Get().Update(keyEvent);
 }

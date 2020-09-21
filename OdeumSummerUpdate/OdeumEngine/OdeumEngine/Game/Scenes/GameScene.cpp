@@ -24,6 +24,9 @@ void GameScene::Update(const float deltaTime_)
 
 	Vector3 look = OdeumEngine::Get().GetCamera().LookAt();
 	OdeumEngine::Get().GetCamera().SetLookDirection(look + Vector3(0.005f, 0.0f, 0.0f));
+
+	if (Input::Get().isKeyPressed(Key::KeyCode::A))
+		Debug::Info("Key A pressed in game scene", __FILENAME__, __LINE__);
 }
 
 void GameScene::Render()

@@ -4,11 +4,6 @@
 #include "../Events/KeyEvent.h"
 #include "../Events/MouseEvent.h"
 
-#include "KeyCodes.h"
-#include "MouseCodes.h"
-
-#include "../Rendering/DirectX12/D3DCore.h"
-
 // Win32 Window setup
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -59,6 +54,18 @@ void Window::Update()
 		m_data.width = (int)LOWORD(lparam);
 		m_data.height = (int)HIWORD(lparam);
 		m_data.eventCallback(resize);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	case WM_KEYDOWN:
+	{
+		KeyPressedEvent key = KeyPressedEvent(static_cast<KeyCode>(wparam), 1); // change 1 later
+		m_data.eventCallback(key);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	case WM_KEYUP:
+	{
+		KeyReleasedEvent key = KeyReleasedEvent(static_cast<KeyCode>(wparam));
+		m_data.eventCallback(key);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
 	default:

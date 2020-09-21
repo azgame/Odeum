@@ -3,23 +3,19 @@
 
 #include "../../pch.h"
 
-#include "Window.h"
-#include "Timer.h"
-#include "SystemStack.h"
-
 #include "GameInterface.h"
 #include "Scene.h"
-#include "../Events/Event.h"
-#include "GameObject.h"
-#include "../Rendering/DirectX12/SceneGraph.h"
+#include "Window.h"
+#include "Timer.h"
 #include "Camera.h"
-
-#include "TestRender.h"
-
-#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#include "SystemStack.h"
+#include "GameObject.h"
+#include "Input.h"
+#include "../Events/Event.h"
 
 class WindowCloseEvent;
 class WindowResizeEvent;
+class KeyEvent;
 
 class OdeumEngine
 {
@@ -46,22 +42,19 @@ public:
 
 	bool Close(WindowCloseEvent& closeEvent);
 	bool Resize(WindowResizeEvent& resizeEvent);
+	bool KeyboardInput(KeyEvent& keyEvent);
 
 private:
-	Window* m_window;
-	Timer m_engineTimer;
-	Camera m_camera;
+	GameInterface*			m_gameInterface;
+	Window*					m_window;
+	Timer					m_engineTimer;
+	Camera					m_camera;
+	SystemStack				m_systemStack;
 
-	bool m_isRunning;
-	uint32_t m_currentScene;
+	bool					m_isRunning;
+	uint32_t				m_currentScene;
 
-	GameInterface* m_gameInterface;
-
-	SystemStack m_systemStack;
-
-	TestRender testCase;
-
-	static OdeumEngine* sm_instance;
+	static OdeumEngine*		sm_instance;
 };
 
 #endif

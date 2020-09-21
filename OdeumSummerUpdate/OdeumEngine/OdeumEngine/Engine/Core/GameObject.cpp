@@ -15,7 +15,6 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape)
 	}
 	else // load from file
 	{
-
 	}
 
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -28,6 +27,10 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape)
 }
 
 GameObject::~GameObject()
+{
+}
+
+void GameObject::Update()
 {
 }
 

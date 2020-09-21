@@ -3,9 +3,9 @@
 
 #include "../../pch.h"
 
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
+//#define GLFW_EXPOSE_NATIVE_WIN32
+//#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3native.h>
 
 #include "../Events/Event.h"
 #include <functional>
@@ -25,8 +25,8 @@ public:
 	HWND GetHWND() { return m_hwnd; }
 	const HWND GetHWND() const { return m_hwnd; }
 
-	HWND GetglfwHWND() { return glfwGetWin32Window(m_window); }
-	const HWND GetglfwHWND() const { return glfwGetWin32Window(m_window); }
+	//HWND GetglfwHWND() { return glfwGetWin32Window(m_window); }
+	//const HWND GetglfwHWND() const { return glfwGetWin32Window(m_window); }
 
 	int GetWidth() { return m_data.width; }
 	int GetHeight() { return m_data.height; }
@@ -35,7 +35,7 @@ public:
 
 private:
 
-	GLFWwindow*				m_window;
+	//GLFWwindow*				m_window;
 	bool					isRunning, FULL_SCREEN;
 	
 	struct WindowData
