@@ -1,2 +1,6 @@
-﻿  GameScene.cpp
+﻿  TestRender.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(266,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(392,36): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Rendering\DirectX12\DXCommandContext.h(393,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\TestRender.cpp(107,21): warning C4018: '<': signed/unsigned mismatch
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe

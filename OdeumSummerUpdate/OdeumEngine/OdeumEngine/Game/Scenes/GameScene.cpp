@@ -2,9 +2,12 @@
 
 GameScene::GameScene() : Scene()
 {
-	object = new GameObject("empty", ShapeTypes::CubeShape);
-	plane = new GameObject("empty", ShapeTypes::CubeShape);
-	plane->SetScale(Vector4(3.0f, 0.2f, 3.0f, 1.0f));
+	object = new GameObject("empty", ShapeTypes::CubeShape, Colour(1.0f, 0.2f, 0.6f, 1.0f));
+	object->SetPosition(Vector4(0.0f, 0.0f, 3.0f, 1.0f));
+
+	plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
+	plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
+	plane->SetPosition(Vector4(0.0f, -5.0f, 0.0f, 1.0f));
 }
 
 GameScene::~GameScene()

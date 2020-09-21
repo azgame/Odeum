@@ -2,14 +2,15 @@
 
 #include "../Rendering/DirectX12/SceneGraph.h"
 
-GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape)
+GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour colour)
 {
 	if (preDefinedShape != ShapeTypes::NoShape)
 	{
 		switch (preDefinedShape)
 		{
 		case ShapeTypes::CubeShape:
-			Cube cube;
+			Cube cube = Cube();
+			cube.SetColour(colour);
 			m_model.Load(&cube.GetVertices(), cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), cube.NumIndices());
 		}
 	}

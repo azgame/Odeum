@@ -3,11 +3,12 @@
 
 #include "../../pch.h"
 #include "../Rendering/DirectX12/Model.h"
+#include "../Rendering/DirectX12/Colour.h"
 
 class GameObject
 {
 public:
-	GameObject(std::string fileName, ShapeTypes preDefinedShape = ShapeTypes::NoShape);
+	GameObject(std::string fileName, ShapeTypes preDefinedShape = ShapeTypes::NoShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f)); // temp
 	~GameObject();
 
 	void Update();

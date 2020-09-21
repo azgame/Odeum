@@ -177,17 +177,14 @@ void DXGraphics::Initialize()
 
 	m_presentPSO.SetRootSignature(m_presentRootSig);
 	m_presentPSO.SetRasterizerState(rasterDesc);
+	rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
+
 	m_presentPSO.SetBlendState(alphaBlend);
 
-	depthReadWrite.DepthEnable = FALSE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-
 	m_presentPSO.SetDepthStencilState(depthReadWrite);
-
 	depthReadWrite.DepthEnable = TRUE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);
@@ -312,9 +309,9 @@ void DXGraphics::InitializeCommonState()
 	alphaBlend.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-	depthReadWrite.DepthEnable = TRUE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+	depthReadWrite.DepthEnable = FALSE;
+	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 	depthReadWrite.StencilEnable = FALSE;
 	depthReadWrite.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 	depthReadWrite.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;

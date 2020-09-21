@@ -31,7 +31,8 @@ void TestRender::Attach()
 
 	D3D12_INPUT_ELEMENT_DESC verts[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "COLOUR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 
 	m_colourPSO.SetRootSignature(m_rootSig);
@@ -67,7 +68,7 @@ void TestRender::Update(float deltaTime_)
 	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
 	m_mainViewport.MinDepth = 0.0f;
-	m_mainViewport.MaxDepth = 1.0f;
+	m_mainViewport.MaxDepth = -1.0f;
 
 	m_mainScissor.left = 0;
 	m_mainScissor.top = 0;

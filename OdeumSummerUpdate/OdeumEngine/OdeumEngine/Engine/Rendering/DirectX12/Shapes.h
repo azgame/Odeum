@@ -4,13 +4,15 @@
 #include "../../../pch.h"
 #include "DXIncludes.h"
 #include "../../Math/DXMath.h"
+#include "Colour.h"
 
 using namespace DirectX;
 
 struct Vertex
 {
-	Vertex(XMFLOAT3 pos_) { position = pos_; }
+	Vertex(XMFLOAT3 pos_, XMFLOAT4 colour_) { position = pos_; colour = colour_; }
 	XMFLOAT3 position;
+	XMFLOAT4 colour;
 };
 
 class Shape
@@ -20,6 +22,7 @@ public:
 	virtual uint16_t& GetIndices() = 0;
 	virtual size_t NumVertices() = 0;
 	virtual size_t NumIndices() = 0;
+	virtual void SetColour(Colour& colour) = 0;
 
 protected:
 	std::vector<Vertex> vertices;
@@ -50,38 +53,44 @@ public:
 		return indices.size();
 	}
 
+	void SetColour(Colour& colour) override
+	{
+		for (int i = 0; i < vertices.size(); i++)
+			vertices[i].colour = XMFLOAT4(colour.GetPtr());
+	}
+
 	Cube()
 	{
 		vertices = {
-			{ XMFLOAT3(-1.0f, 1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{ XMFLOAT3(-1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 
-			{ XMFLOAT3(-1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, -1.0f, 1.0f)},
-			{ XMFLOAT3(-1.0f, -1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 
-			{ XMFLOAT3(-1.0f, -1.0f, 1.0f)},
-			{ XMFLOAT3(-1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(-1.0f, 1.0f, -1.0f)},
-			{ XMFLOAT3(-1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 
-			{ XMFLOAT3(1.0f, -1.0f, 1.0f)},
-			{ XMFLOAT3(1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 
-			{ XMFLOAT3(-1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, -1.0f, -1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, -1.0f)},
-			{ XMFLOAT3(-1.0f, 1.0f, -1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 
-			{ XMFLOAT3(-1.0f, -1.0f, 1.0f)},
-			{ XMFLOAT3(1.0f, -1.0f, 1.0f)},
-			{ XMFLOAT3(1.0f, 1.0f, 1.0f)},
-			{ XMFLOAT3(-1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+			{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
 		};
 
 		indices = {
