@@ -7,7 +7,6 @@
 
 using namespace Key;
 
-// still have to add input! (KeyCode)
 class KeyEvent : public Event
 {
 public:

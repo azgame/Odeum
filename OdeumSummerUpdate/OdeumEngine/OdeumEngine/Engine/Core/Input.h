@@ -2,15 +2,26 @@
 #define INPUT_H
 
 #include "../../pch.h"
+#include "Window.h"
 
 class Input {
 
 public:
 	
-	static bool IsKeyPressed();
-	static bool IsMouseButtonPressed();
-	static float GetMouseX();
-	static float GetMouseY();
+	// KeyPress
+	// gotta setup callback (in core engine)
+	// glfwSetKeyCallback(window, KeyCallBack);
+	void KeyCallback(GLFWwindow* window_, int key_, int scancode_, int action_, int mods_);
+
+	// Mouse Cursor
+	// gotta setup callback (in core engine)
+	// glfwSetCursorPosCallback(window, CursorPositionCallback);
+	void CursorPositionCallback(GLFWwindow* window_, double xpos_, double ypos_);
+
+	// Mouse Button
+	// gotta setup callback (in core engine)
+	// glfwSetMouseButtonCallback(window, MouseButtonCallback);
+	void MouseButtonCallback(GLFWwindow* window_, int button_, int action_, int mods_);
 };
 
 #endif

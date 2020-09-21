@@ -7,7 +7,6 @@
 
 using namespace Mouse;
 
-// still have to add input! (MouseCode)
 class MouseMovedEvent : public Event
 {
 public:
