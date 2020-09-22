@@ -99,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Include;C:\GameDev\glm-0.9.9.8;C:\GameDev\glfw-3.3.2.bin.WIN64\include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>Default</LanguageStandard>
@@ -107,8 +107,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x64);C:\GameDev\glfw-3.3.2.bin.WIN64\lib-vc2019;C:\GameDev\VulkanSDK\1.2.148.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -178,8 +178,6 @@
     <ClCompile Include="Engine\Rendering\DirectX12\RootSignature.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.cpp" />
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
     <ClCompile Include="Engine\Core\TestRender.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
   </ItemGroup>
@@ -220,7 +218,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\PipelineState.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Shapes.h" />
     <ClInclude Include="Engine\Rendering\stb_image.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
@@ -235,8 +232,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.h" />
     <ClInclude Include="Engine\Core\SystemStack.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
     <ClInclude Include="Engine\Core\TestRender.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
   </ItemGroup>

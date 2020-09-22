@@ -1,5 +1,6 @@
 ﻿  App.cpp
-  Game1.cpp
-  GameScene.cpp
+  GameObject.cpp
+C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\OdeumEngine\Engine\Core\GameObject.cpp(14,111): warning C4267: 'argument': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SceneGraph.cpp
   Generating Code...
   OdeumEngine.vcxproj -> C:\Users\aidan\Documents\Odeum\OdeumSummerUpdate\OdeumEngine\x64\Debug\OdeumEngine.exe
