@@ -5,6 +5,8 @@
 #include "../Rendering/DirectX12/Model.h"
 #include "../Rendering/DirectX12/Colour.h"
 
+#include "Component.h"
+
 class GameObject
 {
 public:
@@ -13,8 +15,11 @@ public:
 
 	void Update();
 
-	template<typename... Ts>
+	template<typename T>
 	void AddComponent();
+
+	template<typename... Ts>
+	void AddComponents();
 
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
@@ -37,13 +42,24 @@ private:
 	Vector4 m_rotation;
 	Vector4 m_scale;
 
+	void CreateAttachedComponent(Component** attachedComponent);
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
 };
 
-template<typename ...Ts>
-inline void GameObject::AddComponent()
+template<typename T>
+inline void GameObject::AddComponent<T>()
 {
+	// Verify T is of type Component
+	// Verify type of T is not already an attached component
+	// Allocate T and register to systems as necessary
+	// Attach T
+}
 
+template<typename ...Ts>
+inline void GameObject::AddComponents()
+{
+	Debug::Warning("Parameter packed multiple component attachment not supported yet", __FILENAME__, __LINE__);
+	throw std::runtime_error("Parameter packed multiple component attachment not supported yet");
 }
 
 #endif

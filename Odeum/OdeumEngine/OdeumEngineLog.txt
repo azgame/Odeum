@@ -1,3 +1,0 @@
-[INFO]: Creating Start Scene in: StartScene.cpp on line: 16
-[INFO]: Creating Game Scene in: GameScene.cpp on line: 29
-[ERROR]: Could not create pixelshader in: ShaderHandler.cpp on line: 166

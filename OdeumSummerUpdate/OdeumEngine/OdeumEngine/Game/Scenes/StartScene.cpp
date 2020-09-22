@@ -5,7 +5,6 @@ StartScene::StartScene() : Scene()
 {
 }
 
-
 StartScene::~StartScene()
 {
 }
