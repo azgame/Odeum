@@ -13,6 +13,9 @@ public:
 
 	void Update();
 
+	template<typename... Ts>
+	void AddComponent();
+
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
 
@@ -36,5 +39,11 @@ private:
 
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
 };
+
+template<typename ...Ts>
+inline void GameObject::AddComponent()
+{
+
+}
 
 #endif

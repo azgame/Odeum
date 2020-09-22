@@ -184,6 +184,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />
     <ClInclude Include="Engine\Math\DXMath.h" />

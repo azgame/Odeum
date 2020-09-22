@@ -17,6 +17,7 @@ public:
 private:
 	GameObject* object;
 	GameObject* plane;
+	GameObject* newObject;
 };
 
 #endif

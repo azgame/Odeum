@@ -32,7 +32,7 @@ public:
 			keyStates.clear();
 		}
 
-		std::map<KeyCode, bool> keyStates;
+		std::map<KeyCode, bool> keyStates; // TODO Aidan: too large, change this later
 	};
 
 	static InputState sm_keyPressed;

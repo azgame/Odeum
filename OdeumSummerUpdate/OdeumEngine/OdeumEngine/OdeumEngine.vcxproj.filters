@@ -278,6 +278,9 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Shapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
