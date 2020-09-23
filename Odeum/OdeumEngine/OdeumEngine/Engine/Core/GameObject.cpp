@@ -69,13 +69,13 @@ void GameObject::SetScale(Vector4 scale)
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 }
 
-void GameObject::CreateAttachedComponent(Component* attachedComponent)
+void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 {
 	// perform any necessary setup (eg. if component is of type Graphics, register with renderer)
-	m_components.push_back(attachedComponent);
+	m_components.push_back(pAttachedComponent);
 
 	// Attach T
-	attachedComponent->OnAttach(this);
+	pAttachedComponent->OnAttach(this);
 }
 
 void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale)

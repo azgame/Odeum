@@ -98,8 +98,8 @@ void BufferLedger::RecyclePages(uint64_t fenceID_, const std::vector<BufferPage*
 
 BufferEntry BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
 {
-	byteSize_ = Align(byteSize_, alignment_);
-    m_offset = Align(m_offset, alignment_);
+	byteSize_ = Utility::Align(byteSize_, alignment_);
+    m_offset = Utility::Align(m_offset, alignment_);
 
     if (m_offset + byteSize_ > m_pageSize)
     {

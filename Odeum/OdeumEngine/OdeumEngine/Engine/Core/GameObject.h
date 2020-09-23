@@ -47,7 +47,7 @@ protected:
 	Vector4 m_rotation;
 	Vector4 m_scale;
 
-	void CreateAttachedComponent(Component* attachedComponent);
+	void CreateAttachedComponent(Component* pAttachedComponent);
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
 };
 

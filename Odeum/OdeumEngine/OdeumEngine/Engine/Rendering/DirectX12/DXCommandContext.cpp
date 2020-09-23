@@ -230,7 +230,7 @@ void CommandContext::InitializeTextureArraySlice(D3DResource& dest_, UINT sliceI
 
 void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_)
 {
-    ASSERT(pData_ != nullptr && isAligned(pData_, 16));
+    ASSERT(pData_ != nullptr && Utility::isAligned(pData_, 16));
     BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
     memcpy(tempSpace.CpuAddress, pData_, (numBytes_ + 15) / 16);
     CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);

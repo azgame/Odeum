@@ -8,6 +8,14 @@
 
 using namespace DirectX;
 
+enum ShapeTypes
+{
+	NoShape = 0,
+	CubeShape,
+
+	NumShapes
+};
+
 struct Vertex
 {
 	Vertex(XMFLOAT3 pos_, XMFLOAT4 colour_) { position = pos_; colour = colour_; }

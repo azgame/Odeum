@@ -26,6 +26,8 @@
 
 // Engine
 #include "Engine/Core/Debug.h"
+#include "Engine/Core/Utility.h"
+#include "Engine/Math/MathUtility.h"
 
 #define NAME_D3D_RESOURCES 1
 #define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }
@@ -58,15 +60,5 @@
 	}
 
 #endif
-
-template <typename T> bool isAligned(T value_, size_t alignment_)
-{
-	return 0 == ((size_t)value_ & (alignment_ - 1));
-}
-
-template <typename T> T Align(T value_, size_t alignment_)
-{
-	return ((value_ + alignment_ - 1) / alignment_) * alignment_;
-}
 
 #endif

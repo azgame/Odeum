@@ -185,6 +185,8 @@
     <ClCompile Include="Game\GameObjects\PrefabTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Utility.h" />
+    <ClInclude Include="Engine\Math\MathUtility.h" />
     <ClInclude Include="Game\Components\ComponentTest.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />

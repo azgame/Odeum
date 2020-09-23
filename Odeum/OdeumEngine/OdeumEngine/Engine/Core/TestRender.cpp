@@ -104,13 +104,13 @@ void TestRender::Update(float deltaTime_)
 		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
 		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
 
-		for (int i = 0; i < object->GetModel().m_details->meshCount; i++)
+		for (int i = 0; i < object->GetModel().m_pDetails[0].meshCount; i++)
 		{
 			Model::Mesh& mesh = object->GetModel().GetMesh(i);
 			uint32_t vertexStride = object->GetModel().m_vertexStride;
 			uint32_t indexCount = mesh.indexCount;
-			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint16_t);
-			uint32_t baseVertex = mesh.vertexDataByteOffset / vertexStride;
+			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint32_t);
+			uint32_t baseVertex = mesh.vertexDataByteOffset / sizeof(Vertex);
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 		}	

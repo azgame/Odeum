@@ -37,7 +37,7 @@ void Game1::BuildScene()
 	delete m_currentScene;
 	m_currentScene = nullptr;
 
-	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to -1");
+	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to a negative number!");
 
 	switch (OdeumEngine::Get().GetCurrentScene())
 	{
