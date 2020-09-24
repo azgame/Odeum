@@ -2,7 +2,7 @@
 #define TESTRENDER_H
 
 #include "../Rendering/DirectX12/D3DCore.h"
-#include "../Rendering/DirectX12/DXCommandContext.h"
+#include "../Rendering/DirectX12/CommandContext.h"
 #include "../Rendering/DirectX12/Model.h"
 #include "Camera.h"
 #include "CoreSystem.h"

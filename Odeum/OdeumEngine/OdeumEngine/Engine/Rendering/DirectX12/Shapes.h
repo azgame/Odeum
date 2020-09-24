@@ -1,9 +1,7 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
-#include "../../../pch.h"
-#include "DXIncludes.h"
-#include "../../Math/DXMath.h"
+#include "D3DIncludes.h"
 #include "Colour.h"
 
 using namespace DirectX;

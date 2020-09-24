@@ -1,7 +1,7 @@
 #ifndef D3DRESOURCE_H
 #define D3DRESOURCE_H
 
-#include "../DXIncludes.h"
+#include "../D3DIncludes.h"
 
 class GraphicsContext;
 

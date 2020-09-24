@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "../Math/DXMath.h"
+#include "../Math/D3DMath.h"
 
 // Base camera can be derived into a Camera (read: viewing camera) and a Shadow Camera
 class BaseCamera

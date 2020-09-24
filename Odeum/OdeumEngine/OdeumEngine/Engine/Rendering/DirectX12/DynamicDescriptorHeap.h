@@ -16,7 +16,7 @@
 #ifndef DYNAMICDESCRIPTORHEAP_H
 #define DYNAMICDESCRIPTORHEAP_H
 
-#include "DXIncludes.h"
+#include "D3DIncludes.h"
 
 #include "DescriptorAllocator.h"
 #include "RootSignature.h"

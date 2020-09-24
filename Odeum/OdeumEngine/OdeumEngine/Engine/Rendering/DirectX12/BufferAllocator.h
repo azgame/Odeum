@@ -1,7 +1,7 @@
 #ifndef BUFFERALLOCATOR_H
 #define BUFFERALLOCATOR_H
 
-#include "DXIncludes.h"
+#include "D3DIncludes.h"
 
 #include "Buffers/D3DBuffer.h"
 #include <queue>

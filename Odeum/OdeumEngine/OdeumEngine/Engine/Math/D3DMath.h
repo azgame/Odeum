@@ -1,5 +1,5 @@
-#ifndef DXMATH_H
-#define DXMATH_H
+#ifndef D3DMATH_H
+#define D3DMATH_H
 
 #include "Vector.h"
 #include "Matrix.h"

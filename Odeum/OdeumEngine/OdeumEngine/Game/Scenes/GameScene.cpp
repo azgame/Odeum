@@ -12,12 +12,6 @@ GameScene::GameScene() : Scene()
 	plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
 
 	newObject = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.2f, 0.9f, 0.7f, 1.0f));
-	newObject->AddComponent<ComponentTest>();
-	
-	newObject->Update(0.0167f);
-
-	PrefabTest* test = new PrefabTest();
-	test->Update(0.0167f);
 }
 
 GameScene::~GameScene()

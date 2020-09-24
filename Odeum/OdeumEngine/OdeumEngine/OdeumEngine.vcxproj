@@ -156,7 +156,6 @@
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\CameraController.cpp" />
-    <ClCompile Include="Engine\Rendering\DirectX12\CommandAllocatorManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandListManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\DescriptorAllocator.cpp" />
@@ -165,7 +164,7 @@
     <ClCompile Include="Engine\Core\Debug.cpp" />
     <ClCompile Include="Engine\Core\Timer.cpp" />
     <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
-    <ClCompile Include="Engine\Rendering\DirectX12\DXCommandContext.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
@@ -191,7 +190,7 @@
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />
-    <ClInclude Include="Engine\Math\DXMath.h" />
+    <ClInclude Include="Engine\Math\D3DMath.h" />
     <ClInclude Include="Engine\Math\Matrix.h" />
     <ClInclude Include="Engine\Math\Quaternion.h" />
     <ClInclude Include="Engine\Math\Vector.h" />
@@ -205,9 +204,8 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\CameraController.h" />
-    <ClInclude Include="Engine\Rendering\DirectX12\CommandAllocatorManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandListManager.h" />
-    <ClInclude Include="Engine\Rendering\DirectX12\DXIncludes.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DIncludes.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.h" />
     <ClInclude Include="Engine\Core\Input.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\DescriptorAllocator.h" />
@@ -227,7 +225,7 @@
     <ClInclude Include="Engine\Utilities\d3dx12.h" />
     <ClInclude Include="Engine\Events\Event.h" />
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
-    <ClInclude Include="Engine\Rendering\DirectX12\DXCommandContext.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />

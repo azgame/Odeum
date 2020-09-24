@@ -12,7 +12,7 @@ public:
 	virtual void OnDetach() = 0;
 	virtual void Update(float deltaTime) = 0;
 protected:
-	GameObject* m_parent;
+	GameObject* m_gameObject;
 };
 
 #endif

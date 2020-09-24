@@ -1,6 +1,6 @@
 #include "D3DCore.h"
 
-#include "DXCommandContext.h"
+#include "CommandContext.h"
 #include "CommandListManager.h"
 
 #include "Buffers/ColourBuffer.h"

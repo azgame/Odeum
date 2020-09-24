@@ -1,8 +1,6 @@
 #ifndef D3DBUFFER_H
 #define D3DBUFFER_H
 
-#include "../DXIncludes.h"
-
 #include "D3DResource.h"
 
 class CommandContext;

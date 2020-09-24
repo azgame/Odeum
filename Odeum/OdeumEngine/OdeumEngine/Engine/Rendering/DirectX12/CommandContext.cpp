@@ -1,4 +1,4 @@
-#include "DXCommandContext.h"
+#include "CommandContext.h"
 
 #include "Buffers/ColourBuffer.h"
 #include "Buffers/DepthBuffer.h"

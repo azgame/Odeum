@@ -1,10 +1,10 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "DXIncludes.h"
+#include "D3DIncludes.h"
 #include "Buffers/D3DBuffer.h"
-#include "../../Math/DXMath.h"
 #include "Shapes.h"
+#include "../../Math/D3DMath.h"
 
 
 class Model
@@ -19,7 +19,6 @@ public:
 
 	~Model()
 	{
-		SAFE_DELETE(m_pDetails);
 		SAFE_DELETE(m_pMesh);
 		SAFE_DELETE(m_pVertexData);
 		SAFE_DELETE(m_pIndexData);
@@ -27,6 +26,7 @@ public:
 		SAFE_DELETE(m_srvs);
 	}
 
+	void Load(std::string fileName);
 	void Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_);
 
 	static const unsigned short maxFilePath = 128;
@@ -80,7 +80,7 @@ public:
 
 	Mesh& GetMesh(int index);
 
-	ModelInfo* m_pDetails;
+	ModelInfo m_details;
 	Mesh* m_pMesh;
 	Vertex* m_pVertexData; // temp vertex storage for upload
 	uint16_t* m_pIndexData; // temp index storage for upload

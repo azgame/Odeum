@@ -1,15 +1,15 @@
-#ifndef DXCOMMANDCONTEXT_H
-#define DXCOMMANDCONTEXT_H
+#ifndef COMMANDCONTEXT_H
+#define COMMANDCONTEXT_H
 
-#include "DXIncludes.h"
+#include "D3DIncludes.h"
 #include "CommandListManager.h"
-#include "Colour.h"
 #include "PipelineState.h"
 #include "RootSignature.h"
 #include "Buffers/D3DBuffer.h"
 #include "DynamicDescriptorHeap.h"
 #include "BufferAllocator.h"
 #include "D3DCore.h"
+#include "Colour.h"
 #include <queue>
 
 class ColourBuffer;

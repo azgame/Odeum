@@ -1,7 +1,7 @@
 #include "D3DBuffer.h"
 
 #include "../D3DCore.h"
-#include "../DXCommandContext.h"
+#include "../CommandContext.h"
 
 using namespace DXGraphics;
 

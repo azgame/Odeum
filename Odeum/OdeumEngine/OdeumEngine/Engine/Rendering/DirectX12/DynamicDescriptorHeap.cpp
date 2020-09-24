@@ -1,6 +1,6 @@
 #include "DynamicDescriptorHeap.h"
 
-#include "DXCommandContext.h"
+#include "CommandContext.h"
 
 // Comments by Aidan Zizys, 08-20-2020
 

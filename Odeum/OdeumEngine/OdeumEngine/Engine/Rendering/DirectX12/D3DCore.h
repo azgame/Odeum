@@ -1,7 +1,7 @@
 #ifndef D3DCORE_H
 #define D3DCORE_H
 
-#include "DXIncludes.h"
+#include "D3DIncludes.h"
 
 #include "DescriptorAllocator.h"
 

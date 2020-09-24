@@ -1,6 +1,6 @@
 #include "BufferAllocator.h"
 
-#include "DXCommandContext.h"
+#include "CommandContext.h"
 
 BufferAllocatorType BufferLedger::sm_initType = gpuExclusive;
 
