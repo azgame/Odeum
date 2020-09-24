@@ -4,7 +4,6 @@
 
 using namespace DXGraphics;
 
-
 void RootSignature::Destroy()
 {
 	if (m_rootSignature)

@@ -99,7 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>Default</LanguageStandard>
@@ -107,8 +107,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Lib;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -148,6 +148,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
     <ClCompile Include="Game\Components\ComponentTest.cpp" />
     <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
@@ -186,6 +188,9 @@
   <ItemGroup>
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\Math\MathUtility.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
     <ClInclude Include="Game\Components\ComponentTest.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />

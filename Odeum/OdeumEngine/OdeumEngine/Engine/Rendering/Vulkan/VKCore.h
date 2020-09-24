@@ -1,7 +1,7 @@
 #ifndef VKCORE_H
 #define VKCORE_H
 
-#include "VKIncludes.h"
+#include "VkIncludes.h"
 #include "../Common/GraphicsCore.h"
 
 namespace VKGraphics

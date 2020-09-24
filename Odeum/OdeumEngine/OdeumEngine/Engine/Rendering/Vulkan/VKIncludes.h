@@ -4,8 +4,9 @@
 #include "../../../pch.h"
 
 //Vulkan
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#define WIN32_INCLUDE_VULKAN
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_win32.h>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

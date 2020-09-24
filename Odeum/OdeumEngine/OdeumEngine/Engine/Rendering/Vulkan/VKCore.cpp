@@ -1,4 +1,4 @@
-#include "VKCore.h"
+#include "VkCore.h"
 
 #include "../../Core/OdeumEngine.h"
 
@@ -211,11 +211,12 @@ bool VKGraphics::CheckValidationLayerSupport()
 
 std::vector<const char*> VKGraphics::GetRequiredExtensions()
 {
-	uint32_t glfwExtensionCount = 0;
-	const char** glfwExtensions;
-	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+	std::vector<const char*> extensions;
 
-	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+	extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+#if defined(WIN32_LEAN_AND_MEAN)
+	extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+#endif
 
 	if (enableValidationLayers)
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
