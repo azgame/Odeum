@@ -13,6 +13,7 @@ class DepthBuffer;
 
 #define SWAP_CHAIN_BUFFER_COUNT 3
 
+// Global dx rendering state
 namespace DXGraphics
 {
 	void Initialize();

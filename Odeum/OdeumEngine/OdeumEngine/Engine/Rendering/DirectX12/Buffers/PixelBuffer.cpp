@@ -38,7 +38,7 @@ void PixelBuffer::ConnectToResource(ID3D12Device* device_, const std::wstring& n
     m_resource = resource_;
     m_usageState = state_;
 
-    m_width = desc.Width;
+    m_width = (uint32_t)desc.Width;
     m_height = desc.Height;
     m_depth = desc.DepthOrArraySize;
     m_format = desc.Format;

@@ -9,6 +9,13 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
 
+	FILE* fp;
+
+	AllocConsole();
+	freopen_s(&fp, "CONIN$", "r", stdin);
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONOUT$", "w", stderr);
+
 	OdeumEngine* app;
 	app = new OdeumEngine();
 	app->SetGameInterface(new Game1);
@@ -19,7 +26,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	app->Uninitialize();
 	SAFE_DELETE(app);
-
 	// _CrtDumpMemoryLeaks();
 
 	return 0;

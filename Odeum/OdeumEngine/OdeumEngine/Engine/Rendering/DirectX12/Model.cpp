@@ -42,6 +42,47 @@ void Model::Load(std::string fileName)
 	m_pMaterials = new Material[m_details.materialCount];
 	memset(m_pMaterials, 0, sizeof(Material) * m_details.materialCount);
 
+	for (uint32_t mIndex = 0; mIndex < scene->mNumMaterials; mIndex++)
+	{
+		const aiMaterial* sourceMat = scene->mMaterials[mIndex];
+		Material* destMat = m_pMaterials + mIndex;
+
+		aiColor3D diffuse(1.0f, 1.0f, 1.0f);
+		aiColor3D specular(1.0f, 1.0f, 1.0f);
+		aiColor3D ambient(1.0f, 1.0f, 1.0f);
+		aiColor3D emissive(1.0f, 1.0f, 1.0f);
+		aiColor3D transparent(1.0f, 1.0f, 1.0f);
+		float opacity = 1.0f;
+		float shininess = 1.0f;
+		float specularStrength = 1.0f;
+
+		sourceMat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+		sourceMat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+		sourceMat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+		sourceMat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
+		sourceMat->Get(AI_MATKEY_COLOR_TRANSPARENT, transparent);
+		sourceMat->Get(AI_MATKEY_OPACITY, opacity);
+		sourceMat->Get(AI_MATKEY_SHININESS, shininess);
+		sourceMat->Get(AI_MATKEY_SHININESS_STRENGTH, specularStrength);
+
+		destMat->diffuse = Vector3(diffuse.r, diffuse.g, diffuse.b);
+		destMat->specular = Vector3(specular.r, specular.g, specular.b);
+		destMat->ambient = Vector3(ambient.r, ambient.g, ambient.b);
+		destMat->emissive = Vector3(emissive.r, emissive.g, emissive.b);
+		destMat->transparent = Vector3(transparent.r, transparent.g, transparent.b);
+		destMat->opacity = opacity;
+		destMat->shininess = shininess;
+		destMat->specularStrength = specularStrength;
+	}
+
+	m_details.meshCount = scene->mNumMeshes;
+	m_pMesh = new Mesh[m_details.meshCount];
+	memset(m_pMesh, 0, sizeof(Mesh) * m_details.meshCount);
+
+	for (uint32_t mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
+	{
+
+	}
 }
 
 void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_)

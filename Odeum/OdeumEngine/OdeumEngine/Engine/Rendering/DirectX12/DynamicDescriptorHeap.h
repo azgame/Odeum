@@ -1,4 +1,3 @@
-//
 // Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
 // THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
@@ -9,9 +8,7 @@
 // Developed by Minigraph
 //
 // Author:  James Stanard 
-//
-// Need this here more than any other spot. This more than the other code is taken directly from microsoft.
-// For future, build something like this myself. For now, comment and explain code, show deep understanding of what is going on
+
 
 #ifndef DYNAMICDESCRIPTORHEAP_H
 #define DYNAMICDESCRIPTORHEAP_H

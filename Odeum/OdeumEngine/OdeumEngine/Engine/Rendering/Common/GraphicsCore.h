@@ -17,7 +17,7 @@ namespace Graphics
 	void SetFrameTime(float frameTime);
 	float GetFrameRate();
 
-	extern enum ResolutionOptions { k720p, k900p, k1080p, k1440p, k1800p, k2160p };
+	enum ResolutionOptions { k720p, k900p, k1080p, k1440p, k1800p, k2160p };
 
 	extern bool s_enableVSync;
 	extern ResolutionOptions s_targetResolution;

@@ -1,6 +1,8 @@
 #include "Debug.h"
 #include <chrono>
 #include <cstdarg>
+#include <iostream>
+
 
 MessageType Debug::m_currentSev = MessageType::TYPE_NONE;
 std::string Debug::m_outputName = "";
@@ -69,7 +71,9 @@ void Debug::Log(const MessageType type_, const std::string & message_, const std
 		char mtime[100];
 		ctime_s(mtime, sizeof(mtime), &timenow);
 
-		out << message_ << " in: " << fileName_ << " on line: " << line_ << " at: " << mtime;
+		std::string output = message_ + " in: " + fileName_ + " on line: " + std::to_string(line_);
+		out << output << " at: " << mtime;
+		std::cout << output << std::endl;
 		out.flush();
 		out.close();
 	}
