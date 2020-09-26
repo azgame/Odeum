@@ -1,6 +1,11 @@
 #include "KinimaticMovement.h"
 void KinimaticMovement::Update(float deltaTime)
 {
-	Debug::Info("Kini update",__FILENAME__, __LINE__);
+	object->SetPosition(object->GetPosition() + Vector4(0.01f, 0.0f, 0.0f, 0.0f));
 	// Component does stuff
+	
+}
+void KinimaticMovement::OnAttach(GameObject* parent) 
+{
+	object = parent;
 }

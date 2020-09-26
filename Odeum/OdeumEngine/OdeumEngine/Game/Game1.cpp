@@ -46,6 +46,7 @@ void Game1::BuildScene()
 		break;
 	case 2:
 		m_currentScene = new RobScene();
+		break;
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;
