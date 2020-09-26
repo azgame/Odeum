@@ -7,9 +7,12 @@
 class KinimaticMovement : public Component
 {
 public:
-	void OnAttach(GameObject* parent) override {}
+	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
 	void Update(float deltaTime) override;
+	GameObject* object;
+	GameObject* target;
+
 };
 
 #endif
