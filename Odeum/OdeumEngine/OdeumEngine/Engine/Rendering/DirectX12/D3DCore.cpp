@@ -141,7 +141,7 @@ void DXGraphics::Initialize()
 	s_displayWidth = OdeumEngine::Get().GetWindow().GetWidth();
 	s_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
 	s_ultraWide = OdeumEngine::Get().GetWindow().isUltraWide();
-	s_displayWidth = s_ultraWide ? s_displayWidth * ultraWideRatio : s_displayWidth;
+	s_displayWidth = s_ultraWide ? (uint32_t)((float)s_displayWidth * ultraWideRatio) : s_displayWidth;
 
 	m_commandManager.Initialize(m_device);
 
@@ -294,7 +294,7 @@ void DXGraphics::Present()
 	if (s_enableVSync) frameTime = 1 / 100.0f;
 	else frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
 
-	SetFrameTime(frameTime);
+	SetFrameTime((float)frameTime);
 }
 
 void DXGraphics::InitializeCommonState()

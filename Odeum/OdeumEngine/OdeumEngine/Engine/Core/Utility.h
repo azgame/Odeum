@@ -10,7 +10,7 @@ namespace Utility
 
 	template <typename T> T Align(T value_, size_t alignment_)
 	{
-		return ((value_ + alignment_ - 1) / alignment_) * alignment_;
+		return (T)(((value_ + alignment_ - 1) / alignment_) * alignment_);
 	}
 }
 

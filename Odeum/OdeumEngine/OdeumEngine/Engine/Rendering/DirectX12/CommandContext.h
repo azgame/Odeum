@@ -263,7 +263,7 @@ inline void CommandContext::SetDescriptorHeaps(UINT heapCount_, D3D12_DESCRIPTOR
 {
     bool updatedHeaps = false;
 
-    for (int i = 0; i < heapCount_; i++)
+    for (UINT i = 0; i < heapCount_; i++)
     {
         if (m_currentDescHeaps[type_[i]] != heapPtrs_[i])
         {
@@ -389,8 +389,8 @@ inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t v
 
     D3D12_VERTEX_BUFFER_VIEW vbView;
     vbView.BufferLocation = vertexBuffer.GpuAddress;
-    vbView.SizeInBytes = bufferSize;
-    vbView.StrideInBytes = vertStride_;
+    vbView.SizeInBytes = (UINT)bufferSize;
+    vbView.StrideInBytes = (UINT)vertStride_;
 
     m_commandList->IASetVertexBuffers(slot_, 1, &vbView);
 }

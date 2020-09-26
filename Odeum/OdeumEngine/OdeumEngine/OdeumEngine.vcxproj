@@ -101,7 +101,8 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>

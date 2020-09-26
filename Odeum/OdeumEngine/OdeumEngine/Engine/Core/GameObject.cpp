@@ -13,7 +13,7 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour 
 		case ShapeTypes::CubeShape:
 			Cube cube = Cube();
 			cube.SetColour(colour);
-			m_model.Load(&cube.GetVertices(), cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), cube.NumIndices());
+			m_model.Load(&cube.GetVertices(), (uint32_t)cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), (uint32_t)cube.NumIndices());
 		}
 	}
 	else // load from file

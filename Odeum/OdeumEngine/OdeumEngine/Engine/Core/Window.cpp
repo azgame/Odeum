@@ -75,11 +75,7 @@ void Window::Update()
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
-	switch (umessage)
-	{
-	default:
-		return WindowHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-	}
+	return WindowHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 }
 
 void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide)

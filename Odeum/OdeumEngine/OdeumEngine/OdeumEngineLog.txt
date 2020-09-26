@@ -1,3 +1,47 @@
-[WARNING]: Swap chain has not been initialized in: D3DCore.cpp on line: 216 at: Thu Sep 24 11:40:10 2020
-[INFO]: Creating Start Scene in: StartScene.cpp on line: 14 at: Thu Sep 24 11:40:12 2020
-[INFO]: Creating Game Scene in: GameScene.cpp on line: 23 at: Thu Sep 24 11:40:12 2020
+[WARNING]: Swap chain has not been initialized in: D3DCore.cpp on line: 216 at: Sat Sep 26 12:15:30 2020
+[INFO]: Creating Start Scene in: StartScene.cpp on line: 14 at: Sat Sep 26 12:15:30 2020
+[INFO]: Creating Game Scene in: GameScene.cpp on line: 23 at: Sat Sep 26 12:15:30 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:31 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
+[INFO]: Key A pressed in game scene in: GameScene.cpp on line: 36 at: Sat Sep 26 12:15:32 2020
