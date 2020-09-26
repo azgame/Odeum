@@ -120,6 +120,9 @@
     <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Components\KinimaticMovement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -297,6 +300,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\KinimaticMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
