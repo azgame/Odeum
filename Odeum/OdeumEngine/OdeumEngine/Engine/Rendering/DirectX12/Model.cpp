@@ -81,8 +81,54 @@ void Model::Load(std::string fileName)
 
 	for (uint32_t mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{
+		const aiMesh* sourceMesh = scene->mMeshes[mIndex];
+		Mesh* destMesh = m_pMesh + mIndex;
 
+		ASSERT(sourceMesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
+
+		destMesh->materialIndex = sourceMesh->mMaterialIndex;
+
+		destMesh->attributes[attrib_Position].offset = destMesh->vertexStride;
+		destMesh->attributes[attrib_Position].normalized = 0;
+		destMesh->attributes[attrib_Position].components = 3;
+		destMesh->attributes[attrib_Position].format = 4;
+		destMesh->vertexStride += sizeof(float) * 3;
+
+		destMesh->attributes[attrib_TexCoord].offset = destMesh->vertexStride;
+		destMesh->attributes[attrib_TexCoord].normalized = 0;
+		destMesh->attributes[attrib_TexCoord].components = 2;
+		destMesh->attributes[attrib_TexCoord].format = 4;
+		destMesh->vertexStride += sizeof(float) * 2;
+
+		destMesh->attributes[attrib_Normal].offset = destMesh->vertexStride;
+		destMesh->attributes[attrib_Normal].normalized = 0;
+		destMesh->attributes[attrib_Normal].components = 3;
+		destMesh->attributes[attrib_Normal].format = 4;
+		destMesh->vertexStride += sizeof(float) * 3;
+
+		destMesh->attributes[attrib_Tangent].offset = destMesh->vertexStride;
+		destMesh->attributes[attrib_Tangent].normalized = 0;
+		destMesh->attributes[attrib_Tangent].components = 3;
+		destMesh->attributes[attrib_Tangent].format = 4;
+		destMesh->vertexStride += sizeof(float) * 3;
+
+		destMesh->attributes[attrib_Bitangent].offset = destMesh->vertexStride;
+		destMesh->attributes[attrib_Bitangent].normalized = 0;
+		destMesh->attributes[attrib_Bitangent].components = 3;
+		destMesh->attributes[attrib_Bitangent].format = 4;
+		destMesh->vertexStride += sizeof(float) * 3;
+
+		destMesh->vertexDataByteOffset = m_details.vertexDataByteSize;
+		destMesh->vertexCount = sourceMesh->mNumVertices;
+
+		destMesh->indexDataByteOffset = m_details.indexDataByteSize;
+		destMesh->indexCount = sourceMesh->mNumFaces * 3;
+
+		m_details.vertexDataByteSize += destMesh->vertexStride * destMesh->vertexCount;
+		m_details.indexDataByteSize += sizeof(uint16_t) * destMesh->indexCount;
 	}
+
+
 }
 
 void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_)
