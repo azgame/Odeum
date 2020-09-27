@@ -22,6 +22,9 @@ public:
 	template<typename... Ts>
 	void AddComponents();
 
+	template<typename T>
+	T* GetComponent();
+
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
 
@@ -78,6 +81,17 @@ inline void GameObject::AddComponents()
 {
 	Debug::Warning("Parameter packed multiple component attachment not supported yet", __FILENAME__, __LINE__);
 	throw std::runtime_error("Parameter packed multiple component attachment not supported yet");
+}
+
+// Can lead to undefined behaviour with diamond inheritance structures. Please do not use diamond inheritance structures with components
+template<typename T>
+inline T* GameObject::GetComponent()
+{
+	for (auto c : m_components)
+		if (dynamic_cast<T*>(c))
+			return dynamic_cast<T*>(c);
+
+	return nullptr;
 }
 
 #endif
