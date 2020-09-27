@@ -12,7 +12,8 @@ public:
 	void Update(float deltaTime) override;
 	GameObject* object;
 	GameObject* target;
-
+	Vector4 GetSteering();
+	
 };
 
 #endif
