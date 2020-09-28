@@ -239,6 +239,8 @@ public:
 	inline void SetY(float y_) { vec = XMVectorSetY(vec, y_); }
 	inline void SetZ(float z_) { vec = XMVectorSetZ(vec, z_); }
 	inline void SetW(float w_) { vec = XMVectorSetW(vec, w_); }
+	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)+pow(XMVectorGetW(vec),2)); }
+	inline Vector3 Normalize() { return vec / sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
 
 	// Operator Overloads
 	inline Vector4 operator- () const { return Vector4(XMVectorNegate(vec)); }
