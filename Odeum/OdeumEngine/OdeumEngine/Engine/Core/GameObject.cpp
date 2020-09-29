@@ -69,6 +69,11 @@ void GameObject::SetScale(Vector4 scale)
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 }
 
+float GameObject::SetMass(float mass)
+{
+	m_mass = mass;
+}
+
 void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 {
 	// perform any necessary setup (eg. if component is of type Graphics, register with renderer)

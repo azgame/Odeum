@@ -32,10 +32,12 @@ public:
 	Vector4 GetVelocity() { return m_velocity; }
 	Vector4 GetRotation() { return m_rotation; }
 	Vector4 GetScale() { return m_scale; }
+	float GetMass() { return m_mass; }
 	
 	void SetPosition(Vector4 position);
 	void SetRotation(Vector4 rotation, float angle = 0.0f);
 	void SetScale(Vector4 scale);
+	float SetMass(float mass);
 
 protected:
 	Model m_model;
@@ -49,6 +51,8 @@ protected:
 	Vector4 m_velocity;
 	Vector4 m_rotation;
 	Vector4 m_scale;
+
+	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
