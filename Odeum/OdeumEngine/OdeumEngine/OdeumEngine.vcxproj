@@ -149,6 +149,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
     <ClCompile Include="Game\Components\ComponentTest.cpp" />
@@ -189,6 +195,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Utility.h" />
+    <ClInclude Include="Engine\ImGui\imconfig.h" />
+    <ClInclude Include="Engine\ImGui\imgui.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_dx12.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Engine\ImGui\imgui_internal.h" />
+    <ClInclude Include="Engine\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Engine\ImGui\imstb_truetype.h" />
     <ClInclude Include="Engine\Math\MathUtility.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />

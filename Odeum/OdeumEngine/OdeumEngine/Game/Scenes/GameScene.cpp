@@ -8,8 +8,9 @@ GameScene::GameScene() : Scene()
 	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
-	plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
-	plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
+	plane->SetPosition(Vector4(0.0f, -25.0f, 0.0f, 1.0f));
+	plane->SetScale(Vector4(10.0f, 0.1f, 10.0f, 1.0f));
+	
 
 	newObject = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.2f, 0.9f, 0.7f, 1.0f));
 }
@@ -21,6 +22,8 @@ GameScene::~GameScene()
 bool GameScene::Initialize()
 {
 	Debug::Info("Creating Game Scene", __FILENAME__, __LINE__);
+
+
 
 	return true;
 }

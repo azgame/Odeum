@@ -33,20 +33,20 @@ void BaseCamera::UpdateCamera()
 
 void Camera::UpdateProjectionMatrix()
 {
-	float y = 1.0f / std::tanf(m_fieldOfView * 0.5f);
-	float x = y * m_aspectRatio;
-
-	float q1, q2;
-
-	q1 = m_farPlane / (m_nearPlane - m_farPlane);
-	q2 = q1 * m_farPlane;
-
 	m_projectionMatrix = Matrix4(DirectX::XMMatrixPerspectiveFovLH(
 		m_fieldOfView,
 		m_aspectRatio,
 		m_nearPlane,
 		m_farPlane
 	));
+
+	//float y = 1.0f / std::tanf(m_fieldOfView * 0.5f);
+	//float x = y * m_aspectRatio;
+
+	//float q1, q2;
+
+	//q1 = m_farPlane / (m_nearPlane - m_farPlane);
+	//q2 = q1 * m_farPlane;
 
 	/*SetProjectionMatrix( Matrix4(
 		Vector4( x, 0.0f, 0.0f, 0.0f ),

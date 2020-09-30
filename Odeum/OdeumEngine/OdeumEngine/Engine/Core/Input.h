@@ -35,9 +35,10 @@ public:
 		std::map<KeyCode, bool> keyStates; // TODO Aidan: too large, change this later
 	};
 
+private:
+
 	static InputState sm_keyPressed;
 
-private:
 	static std::unique_ptr<Input> sm_input;
 };
 

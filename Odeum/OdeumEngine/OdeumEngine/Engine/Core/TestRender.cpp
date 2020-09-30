@@ -32,6 +32,10 @@ void TestRender::Attach()
 	D3D12_INPUT_ELEMENT_DESC verts[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{ "COLOUR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 
@@ -67,8 +71,8 @@ void TestRender::Update(float deltaTime_)
 
 	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
-	m_mainViewport.MinDepth = 0.0f;
-	m_mainViewport.MaxDepth = -1.0f;
+	m_mainViewport.MinDepth = -1.0f;
+	m_mainViewport.MaxDepth = 0.0f;
 
 	m_mainScissor.left = 0;
 	m_mainScissor.top = 0;
@@ -79,8 +83,10 @@ void TestRender::Update(float deltaTime_)
 	{
 		DirectX::XMMATRIX viewProj;
 		DirectX::XMMATRIX model;
+		DirectX::XMFLOAT3 viewerPos;
 	} vsConstants;
 	vsConstants.viewProj = OdeumEngine::Get().GetCamera().GetViewProjMatrix();
+	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
 

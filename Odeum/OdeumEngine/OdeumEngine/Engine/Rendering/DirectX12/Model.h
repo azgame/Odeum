@@ -6,24 +6,23 @@
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
 
+// Revert data to pointer arrays. Reasoning is that it allows you to send model as a single chunk down to the gpu 
+// rather than the fragmented meshes that make up an entire model, and does so in a single gpu call
 
 class Model
 {
 public:
 
 	Model() :
-		m_pMesh(nullptr),
-		m_pVertexData(nullptr),
-		m_pIndexData(nullptr),
 		m_vertexStride(0) {}
 
 	~Model()
 	{
-		SAFE_DELETE(m_pMesh);
-		SAFE_DELETE(m_pVertexData);
-		SAFE_DELETE(m_pIndexData);
-		SAFE_DELETE(m_pMaterials);
-		SAFE_DELETE(m_srvs);
+		m_meshes.clear();
+		m_vertexData.clear();
+		m_indexData.clear();
+		m_materials.clear();
+		m_srvs.clear();
 	}
 
 	void Load(std::string fileName);
@@ -81,12 +80,12 @@ public:
 	Mesh& GetMesh(int index);
 
 	ModelInfo m_details;
-	Mesh* m_pMesh;
-	Vertex* m_pVertexData; // temp vertex storage for upload
-	uint16_t* m_pIndexData; // temp index storage for upload
+	std::vector<Mesh> m_meshes;
+	std::vector<Vertex> m_vertexData; // temp vertex storage for upload
+	std::vector<uint16_t> m_indexData; // temp index storage for upload
 
-	Material* m_pMaterials;
-	D3D12_CPU_DESCRIPTOR_HANDLE* m_srvs; // materials/textures
+	std::vector<Material> m_materials;
+	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> m_srvs; // materials/textures
 
 	uint32_t m_vertexStride;
 	StructuredBuffer m_vertexBuffer;

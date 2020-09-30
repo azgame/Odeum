@@ -29,11 +29,15 @@
 #include "Engine/Core/Utility.h"
 #include "Engine/Math/MathUtility.h"
 
+// Imgui
+#include "Engine/ImGui/imgui.h"
+#include "Engine/ImGui/imgui_impl_win32.h"
+#include "Engine/ImGui/imgui_impl_dx12.h"
+
 #define NAME_D3D_RESOURCES 1
 #define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }
 #define SAFE_DELETE_ARRAY( x ) { if( x ) delete[] x; x = NULL; }
 
-// #define ALIGN(_alignment, _val) _alignment = (((_val + _alignment - 1) / _alignment) * _alignment);
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
 #define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
@@ -45,12 +49,23 @@
 #undef ASSERT
 #endif
 
+#ifdef LOG
+#undef LOG
+#endif
+
+#ifdef ERROR
+#undef ERROR
+#endif
+
 #ifdef min
 #undef min
 #endif
 
 #ifdef RELEASE
 	#define ASSERT(expression,...) (void)(expression)
+	#define LOG(...) (void)()
+	#define ERROR(...) (void)()
+	#define BREAKPOINT() (void)()	
 #else //--Debug
 
 	#define ASSERT(expression,...) \
@@ -58,6 +73,14 @@
 			Debug::AssertionError(3, __VA_ARGS__, __FILENAME__, __LINE__); \
 			__debugbreak(); \
 	}
+
+	#define LOG(...) \
+		Debug::Info(__VA_ARGS__, __FILENAME__, __LINE__);
+
+	#define ERROR(...) \
+		Debug::Error(__VA_ARGS__, __FILENAME__, __LINE__);
+
+	#define BREAKPOINT() __debugbreak();
 
 #endif
 

@@ -34,18 +34,17 @@ void Model::Load(std::string fileName)
 
 	if (scene == nullptr)
 	{
-		Debug::Error("Could not load model!", __FILENAME__, __LINE__);
+		ERROR("Could not load model!")
 		return;
 	}
 		
 	m_details.materialCount = scene->mNumMaterials;
-	m_pMaterials = new Material[m_details.materialCount];
-	memset(m_pMaterials, 0, sizeof(Material) * m_details.materialCount);
+	m_materials.reserve(m_details.materialCount);
 
-	for (uint32_t mIndex = 0; mIndex < scene->mNumMaterials; mIndex++)
+	for (unsigned int mIndex = 0; mIndex < scene->mNumMaterials; mIndex++)
 	{
 		const aiMaterial* sourceMat = scene->mMaterials[mIndex];
-		Material* destMat = m_pMaterials + mIndex;
+		Material& destMat = m_materials[mIndex];
 
 		aiColor3D diffuse(1.0f, 1.0f, 1.0f);
 		aiColor3D specular(1.0f, 1.0f, 1.0f);
@@ -65,67 +64,80 @@ void Model::Load(std::string fileName)
 		sourceMat->Get(AI_MATKEY_SHININESS, shininess);
 		sourceMat->Get(AI_MATKEY_SHININESS_STRENGTH, specularStrength);
 
-		destMat->diffuse = Vector3(diffuse.r, diffuse.g, diffuse.b);
-		destMat->specular = Vector3(specular.r, specular.g, specular.b);
-		destMat->ambient = Vector3(ambient.r, ambient.g, ambient.b);
-		destMat->emissive = Vector3(emissive.r, emissive.g, emissive.b);
-		destMat->transparent = Vector3(transparent.r, transparent.g, transparent.b);
-		destMat->opacity = opacity;
-		destMat->shininess = shininess;
-		destMat->specularStrength = specularStrength;
+		destMat.diffuse = Vector3(diffuse.r, diffuse.g, diffuse.b);
+		destMat.specular = Vector3(specular.r, specular.g, specular.b);
+		destMat.ambient = Vector3(ambient.r, ambient.g, ambient.b);
+		destMat.emissive = Vector3(emissive.r, emissive.g, emissive.b);
+		destMat.transparent = Vector3(transparent.r, transparent.g, transparent.b);
+		destMat.opacity = opacity;
+		destMat.shininess = shininess;
+		destMat.specularStrength = specularStrength;
 	}
 
 	m_details.meshCount = scene->mNumMeshes;
-	m_pMesh = new Mesh[m_details.meshCount];
-	memset(m_pMesh, 0, sizeof(Mesh) * m_details.meshCount);
+	m_meshes.reserve(m_details.meshCount);;
 
-	for (uint32_t mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
+	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{
 		const aiMesh* sourceMesh = scene->mMeshes[mIndex];
-		Mesh* destMesh = m_pMesh + mIndex;
+		Mesh& destMesh = m_meshes[mIndex];
 
 		ASSERT(sourceMesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
 
-		destMesh->materialIndex = sourceMesh->mMaterialIndex;
+		destMesh.materialIndex = sourceMesh->mMaterialIndex;
 
-		destMesh->attributes[attrib_Position].offset = destMesh->vertexStride;
-		destMesh->attributes[attrib_Position].normalized = 0;
-		destMesh->attributes[attrib_Position].components = 3;
-		destMesh->attributes[attrib_Position].format = 4;
-		destMesh->vertexStride += sizeof(float) * 3;
+		destMesh.attributes[attrib_Position].offset = destMesh.vertexStride;
+		destMesh.attributes[attrib_Position].normalized = 0;
+		destMesh.attributes[attrib_Position].components = 3;
+		destMesh.attributes[attrib_Position].format = 4;
+		destMesh.vertexStride += sizeof(float) * 3;
+				
+		destMesh.attributes[attrib_TexCoord].offset = destMesh.vertexStride;
+		destMesh.attributes[attrib_TexCoord].normalized = 0;
+		destMesh.attributes[attrib_TexCoord].components = 2;
+		destMesh.attributes[attrib_TexCoord].format = 4;
+		destMesh.vertexStride += sizeof(float) * 2;
+				
+		destMesh.attributes[attrib_Normal].offset = destMesh.vertexStride;
+		destMesh.attributes[attrib_Normal].normalized = 0;
+		destMesh.attributes[attrib_Normal].components = 3;
+		destMesh.attributes[attrib_Normal].format = 4;
+		destMesh.vertexStride += sizeof(float) * 3;
+				
+		destMesh.attributes[attrib_Tangent].offset = destMesh.vertexStride;
+		destMesh.attributes[attrib_Tangent].normalized = 0;
+		destMesh.attributes[attrib_Tangent].components = 3;
+		destMesh.attributes[attrib_Tangent].format = 4;
+		destMesh.vertexStride += sizeof(float) * 3;
+				
+		destMesh.attributes[attrib_Bitangent].offset = destMesh.vertexStride;
+		destMesh.attributes[attrib_Bitangent].normalized = 0;
+		destMesh.attributes[attrib_Bitangent].components = 3;
+		destMesh.attributes[attrib_Bitangent].format = 4;
+		destMesh.vertexStride += sizeof(float) * 3;
+				
+		destMesh.vertexDataByteOffset = m_details.vertexDataByteSize;
+		destMesh.vertexCount = sourceMesh->mNumVertices;
+				
+		destMesh.indexDataByteOffset = m_details.indexDataByteSize;
+		destMesh.indexCount = sourceMesh->mNumFaces * 3;
 
-		destMesh->attributes[attrib_TexCoord].offset = destMesh->vertexStride;
-		destMesh->attributes[attrib_TexCoord].normalized = 0;
-		destMesh->attributes[attrib_TexCoord].components = 2;
-		destMesh->attributes[attrib_TexCoord].format = 4;
-		destMesh->vertexStride += sizeof(float) * 2;
+		m_details.vertexDataByteSize += destMesh.vertexStride * destMesh.vertexCount;
+		m_details.indexDataByteSize += sizeof(uint16_t) * destMesh.indexCount;
+	}
 
-		destMesh->attributes[attrib_Normal].offset = destMesh->vertexStride;
-		destMesh->attributes[attrib_Normal].normalized = 0;
-		destMesh->attributes[attrib_Normal].components = 3;
-		destMesh->attributes[attrib_Normal].format = 4;
-		destMesh->vertexStride += sizeof(float) * 3;
+	m_vertexData.reserve(m_details.vertexDataByteSize / sizeof(Vertex));
+	m_indexData.reserve(m_details.indexDataByteSize / sizeof(uint16_t));
 
-		destMesh->attributes[attrib_Tangent].offset = destMesh->vertexStride;
-		destMesh->attributes[attrib_Tangent].normalized = 0;
-		destMesh->attributes[attrib_Tangent].components = 3;
-		destMesh->attributes[attrib_Tangent].format = 4;
-		destMesh->vertexStride += sizeof(float) * 3;
+	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
+	{
+		const aiMesh* sourceMesh = scene->mMeshes[mIndex];
+		Mesh& destMesh = m_meshes[mIndex];
 
-		destMesh->attributes[attrib_Bitangent].offset = destMesh->vertexStride;
-		destMesh->attributes[attrib_Bitangent].normalized = 0;
-		destMesh->attributes[attrib_Bitangent].components = 3;
-		destMesh->attributes[attrib_Bitangent].format = 4;
-		destMesh->vertexStride += sizeof(float) * 3;
-
-		destMesh->vertexDataByteOffset = m_details.vertexDataByteSize;
-		destMesh->vertexCount = sourceMesh->mNumVertices;
-
-		destMesh->indexDataByteOffset = m_details.indexDataByteSize;
-		destMesh->indexCount = sourceMesh->mNumFaces * 3;
-
-		m_details.vertexDataByteSize += destMesh->vertexStride * destMesh->vertexCount;
-		m_details.indexDataByteSize += sizeof(uint16_t) * destMesh->indexCount;
+		for (unsigned int v = 0; v < sourceMesh->mNumVertices; v++)
+		{
+			Vertex& vertex = m_vertexData[v];
+		}
 	}
 
 
@@ -139,21 +151,20 @@ void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint
 	m_details.indexDataByteSize = numIndices_ * sizeof(uint16_t);
 
 	m_vertexStride = vStride_;
-	m_pVertexData = pvData_;
-	m_pIndexData = piData_;
+	m_vertexData = std::vector<Vertex>(pvData_, pvData_ + numVertices_);
+	m_indexData = std::vector<uint16_t>(piData_, piData_ + numIndices_);
 
-	m_vertexBuffer.Create("Vertex buffer", numVertices_, m_vertexStride, m_pVertexData);
-	m_indexBuffer.Create("Index buffer", numIndices_, sizeof(uint16_t), m_pIndexData);
+	m_vertexBuffer.Create("Vertex buffer", numVertices_, m_vertexStride, m_vertexData.data());
+	m_indexBuffer.Create("Index buffer", numIndices_, sizeof(uint16_t), m_indexData.data());
 
-	m_pMesh = new Mesh();
-	Mesh& mesh = *m_pMesh;
-	mesh.indexCount = numIndices_;
-	mesh.indexDataByteOffset = 0;
-	mesh.vertexCount = numVertices_;
-	mesh.vertexDataByteOffset = 0;
+	m_meshes.push_back(Mesh());
+	m_meshes[0].indexCount = numIndices_;
+	m_meshes[0].indexDataByteOffset = 0;
+	m_meshes[0].vertexCount = numVertices_;
+	m_meshes[0].vertexDataByteOffset = 0;
 }
 
 Model::Mesh& Model::GetMesh(int index)
 {
-	return m_pMesh[index];
+	return m_meshes[index];
 }

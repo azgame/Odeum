@@ -185,6 +185,7 @@ void DXGraphics::Initialize()
 	depthReadWrite.DepthEnable = TRUE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+	// 
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);

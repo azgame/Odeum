@@ -163,6 +163,15 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 
 	// Hide the mouse cursor
 	ShowCursor(true);
+
+	// Imgui integration
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplWin32_Init(m_hwnd);
 }
 
 void Window::UninitializeWindow()
