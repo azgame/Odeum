@@ -6,12 +6,13 @@ RobScene::RobScene() : Scene()
 	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent <KinimaticMovement>();
 	newObject = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.2f, 0.9f, 0.7f, 1.0f));
-	newObject->SetPosition(Vector4(4.0f, 0.0f, 0.0f, 1.0f));
+	newObject->SetPosition(Vector4(4.0f, 0.0f, -5.0f, 1.0f));
 	plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
 	plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
 	plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
 	object->GetComponent<KinimaticMovement>()->target = newObject;
+	 teletime=500;
 }
 
 RobScene::~RobScene()
@@ -30,7 +31,16 @@ void RobScene::Update(const float deltaTime_)
 	
 	
 	object->Update(deltaTime_);
-	
+	 teletime -= 1;
+	 if (teletime < 0)
+	 {
+		 teletime = 500;
+		 int a=(rand() % 10)-6;
+		 int b=(rand() % 10)-6;
+		 newObject->SetPosition(Vector4(a, 0.0f, b, 1.0f));
+	 }
+
+		 
 	if (Input::Get().isKeyPressed(Key::KeyCode::A))
 	{
 	Debug::Info("Key A pressed in game scene", __FILENAME__, __LINE__);

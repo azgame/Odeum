@@ -16,6 +16,7 @@ public:
 	virtual void Render();
 
 private:
+	float teletime;
 	GameObject* object;
 	GameObject* plane;
 	GameObject* newObject;
