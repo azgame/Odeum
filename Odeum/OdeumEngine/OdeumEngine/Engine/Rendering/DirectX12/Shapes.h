@@ -16,7 +16,9 @@ enum ShapeTypes
 
 struct Vertex
 {
+	Vertex() {}
 	Vertex(XMFLOAT3 pos_, XMFLOAT4 colour_) { position = pos_; colour = colour_; }
+
 	XMFLOAT3 position;
 	XMFLOAT2 uvcoords;
 	XMFLOAT3 normal;

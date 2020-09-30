@@ -39,12 +39,13 @@ void Model::Load(std::string fileName)
 	}
 		
 	m_details.materialCount = scene->mNumMaterials;
-	m_materials.reserve(m_details.materialCount);
+	m_pMaterials = new Material[m_details.materialCount];
+	memset(m_pMaterials, 0, sizeof(Material) * m_details.materialCount);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMaterials; mIndex++)
 	{
 		const aiMaterial* sourceMat = scene->mMaterials[mIndex];
-		Material& destMat = m_materials[mIndex];
+		Material& destMat = m_pMaterials[mIndex];
 
 		aiColor3D diffuse(1.0f, 1.0f, 1.0f);
 		aiColor3D specular(1.0f, 1.0f, 1.0f);
@@ -75,12 +76,13 @@ void Model::Load(std::string fileName)
 	}
 
 	m_details.meshCount = scene->mNumMeshes;
-	m_meshes.reserve(m_details.meshCount);;
+	m_pMesh = new Mesh[m_details.meshCount];
+	memset(m_pMesh, 0, sizeof(Vertex) * m_details.meshCount);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{
 		const aiMesh* sourceMesh = scene->mMeshes[mIndex];
-		Mesh& destMesh = m_meshes[mIndex];
+		Mesh& destMesh = m_pMesh[mIndex];
 
 		ASSERT(sourceMesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
 
@@ -126,17 +128,68 @@ void Model::Load(std::string fileName)
 		m_details.indexDataByteSize += sizeof(uint16_t) * destMesh.indexCount;
 	}
 
-	m_vertexData.reserve(m_details.vertexDataByteSize / sizeof(Vertex));
-	m_indexData.reserve(m_details.indexDataByteSize / sizeof(uint16_t));
+	m_pVertexData = new Vertex[m_details.vertexDataByteSize];
+	m_pIndexData = new uint16_t[m_details.indexDataByteSize];
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{
 		const aiMesh* sourceMesh = scene->mMeshes[mIndex];
-		Mesh& destMesh = m_meshes[mIndex];
+		Mesh& destMesh = m_pMesh[mIndex];
 
 		for (unsigned int v = 0; v < sourceMesh->mNumVertices; v++)
 		{
-			Vertex& vertex = m_vertexData[v];
+			Vertex& vertex = m_pVertexData[v];
+
+			if (sourceMesh->mVertices)
+			{
+				vertex.position = DirectX::XMFLOAT3(sourceMesh->mVertices[v].x, sourceMesh->mVertices[v].y, sourceMesh->mVertices[v].z);
+			}
+			else
+			{
+				ASSERT(false, "No position, wtf?");
+			}
+
+			if (sourceMesh->mTextureCoords[0])
+			{
+				vertex.uvcoords = DirectX::XMFLOAT2(sourceMesh->mTextureCoords[0][v].x, sourceMesh->mTextureCoords[0][v].y);
+			}
+			else
+			{
+				vertex.uvcoords = DirectX::XMFLOAT2(0.0f, 0.0f);
+			}
+
+			if (sourceMesh->mNormals)
+			{
+				vertex.normal = DirectX::XMFLOAT3(sourceMesh->mNormals[v].x, sourceMesh->mNormals[v].y, sourceMesh->mNormals[v].z);
+			}
+			else
+			{
+				ASSERT(false, "Assimp is supposed to generate normals, so if there are none its a problem");
+			}
+
+			if (sourceMesh->mTangents)
+			{
+				vertex.tangent = DirectX::XMFLOAT3(sourceMesh->mTangents[v].x, sourceMesh->mTangents[v].y, sourceMesh->mTangents[v].z);
+			}
+			else
+			{
+				vertex.tangent = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+			}
+
+			if (sourceMesh->mBitangents)
+			{
+				vertex.bitangent = DirectX::XMFLOAT3(sourceMesh->mBitangents[v].x, sourceMesh->mBitangents[v].y, sourceMesh->mBitangents[v].z);
+			}
+			else
+			{
+				vertex.bitangent = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+			}
+		}
+
+		for (unsigned int fIndex = 0; fIndex < sourceMesh->mNumFaces; fIndex++)
+		{
+			ASSERT(sourceMesh->mFaces[fIndex].mNumIndices == 3, "Must be triangle indicies");
+
 		}
 	}
 
@@ -151,20 +204,20 @@ void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint
 	m_details.indexDataByteSize = numIndices_ * sizeof(uint16_t);
 
 	m_vertexStride = vStride_;
-	m_vertexData = std::vector<Vertex>(pvData_, pvData_ + numVertices_);
-	m_indexData = std::vector<uint16_t>(piData_, piData_ + numIndices_);
+	m_pVertexData = pvData_;
+	m_pIndexData = piData_;
 
-	m_vertexBuffer.Create("Vertex buffer", numVertices_, m_vertexStride, m_vertexData.data());
-	m_indexBuffer.Create("Index buffer", numIndices_, sizeof(uint16_t), m_indexData.data());
+	m_vertexBuffer.Create("Vertex buffer", numVertices_, m_vertexStride, m_pVertexData);
+	m_indexBuffer.Create("Index buffer", numIndices_, sizeof(uint16_t), m_pIndexData);
 
-	m_meshes.push_back(Mesh());
-	m_meshes[0].indexCount = numIndices_;
-	m_meshes[0].indexDataByteOffset = 0;
-	m_meshes[0].vertexCount = numVertices_;
-	m_meshes[0].vertexDataByteOffset = 0;
+	m_pMesh = new Mesh();
+	m_pMesh[0].indexCount = numIndices_;
+	m_pMesh[0].indexDataByteOffset = 0;
+	m_pMesh[0].vertexCount = numVertices_;
+	m_pMesh[0].vertexDataByteOffset = 0;
 }
 
 Model::Mesh& Model::GetMesh(int index)
 {
-	return m_meshes[index];
+	return m_pMesh[index];
 }

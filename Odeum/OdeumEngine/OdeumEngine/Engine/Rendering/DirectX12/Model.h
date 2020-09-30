@@ -14,14 +14,18 @@ class Model
 public:
 
 	Model() :
+		m_pMesh(nullptr),
+		m_pMaterials(nullptr),
+		m_pVertexData(nullptr),
+		m_pIndexData(nullptr),
 		m_vertexStride(0) {}
 
 	~Model()
 	{
-		m_meshes.clear();
-		m_vertexData.clear();
-		m_indexData.clear();
-		m_materials.clear();
+		SAFE_DELETE(m_pMesh);
+		SAFE_DELETE(m_pMaterials);
+		SAFE_DELETE(m_pVertexData);
+		SAFE_DELETE(m_pIndexData);
 		m_srvs.clear();
 	}
 
@@ -50,14 +54,18 @@ public:
 		uint32_t materialCount;
 		uint32_t vertexDataByteSize;
 		uint32_t indexDataByteSize;
+		uint32_t vertexCount;
+		uint32_t indexCount;
 	};
 
 	struct Mesh
 	{
 		uint32_t indexCount;
 		uint32_t indexDataByteOffset;
+		uint32_t indexOffset;
 		uint32_t vertexCount;
 		uint32_t vertexDataByteOffset;
+		uint32_t vertexOffset;
 		uint32_t vertexStride;
 
 		uint32_t materialIndex;
@@ -79,15 +87,15 @@ public:
 
 	Mesh& GetMesh(int index);
 
-	ModelInfo m_details;
-	std::vector<Mesh> m_meshes;
-	std::vector<Vertex> m_vertexData; // temp vertex storage for upload
-	std::vector<uint16_t> m_indexData; // temp index storage for upload
+	ModelInfo		m_details;
+	Mesh*			m_pMesh;
+	Vertex*			m_pVertexData; // temp vertex storage for upload
+	uint16_t*		m_pIndexData; // temp index storage for upload
+	Material*		m_pMaterials;
 
-	std::vector<Material> m_materials;
+	uint32_t		m_vertexStride;
+
 	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> m_srvs; // materials/textures
-
-	uint32_t m_vertexStride;
 	StructuredBuffer m_vertexBuffer;
 	ByteAddressedBuffer m_indexBuffer;
 
