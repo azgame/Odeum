@@ -31,3 +31,18 @@ void SimplePhysics::SetMass(float mass)
 {
 	m_mass = mass;
 }
+
+void SimplePhysics::SetPosition(Vector3 position)
+{
+	m_position = position;
+}
+
+void SimplePhysics::SetVelocity(Vector3 velocity)
+{
+	m_velocity = velocity;
+}
+
+void SimplePhysics::SetAcceleration(Vector3 acceleration)
+{
+	m_acceleration = acceleration;
+}
