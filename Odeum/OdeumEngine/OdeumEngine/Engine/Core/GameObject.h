@@ -37,7 +37,7 @@ public:
 	void SetPosition(Vector4 position);
 	void SetRotation(Vector4 rotation, float angle = 0.0f);
 	void SetScale(Vector4 scale);
-	float SetMass(float mass);
+	void SetMass(float mass);
 
 protected:
 	Model m_model;

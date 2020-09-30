@@ -69,7 +69,7 @@ void GameObject::SetScale(Vector4 scale)
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 }
 
-float GameObject::SetMass(float mass)
+void GameObject::SetMass(float mass)
 {
 	m_mass = mass;
 }
