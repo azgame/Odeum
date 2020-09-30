@@ -1,6 +1,6 @@
 #include "SimplePhysics.h"
 
-void SimplePhysics::OnAttach(GameObject* parent) 
+void SimplePhysics::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
 	m_mass = 1.0f;
