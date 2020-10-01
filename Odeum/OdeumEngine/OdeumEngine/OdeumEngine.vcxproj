@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
@@ -192,8 +193,10 @@
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\GameObjects\PrefabTest.cpp" />
+    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ImGui\imgui.h" />
@@ -262,6 +265,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\GameObjects\PrefabTest.h" />
+    <ClInclude Include="Game\Components\SimplePhysics.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
