@@ -57,6 +57,13 @@ void GameObject::SetPosition(Vector4 position)
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 }
 
+// this is mostly for testing purpose, will probably get rid of later
+void GameObject::SetVelocity(Vector4 velocity)
+{
+	m_velocity = velocity;
+	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
+}
+
 void GameObject::SetRotation(Vector4 rotation, float angle)
 {
 	m_rotation = rotation;

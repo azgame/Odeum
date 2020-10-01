@@ -1,37 +1,69 @@
 #include "SimplePhysics.h"
 
-void SimplePhysics::OnAttach(GameObject* parent) 
+void SimplePhysics::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
-	m_mass = 1.0f;
 }
 
 // update position based on acceleration and velocity
 void SimplePhysics::Update(float deltaTime)
 {
 	// update velocity
-	m_velocity += m_acceleration * deltaTime;
+	m_gameObject->SetVelocity(m_gameObject->GetVelocity() + (Vector4)(totalAcceleration * deltaTime));
 	// update position
-	m_position += m_velocity * deltaTime + m_acceleration * 0.5f * deltaTime * deltaTime;
+	m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(m_gameObject->GetVelocity() * deltaTime + totalAcceleration * 0.5f * deltaTime * deltaTime));
 }
 
 // translate the position
-void SimplePhysics::Transform(Vector3 translate)
+void SimplePhysics::Transform(Vector4 translate)
 {
 	m_gameObject->SetPosition(m_gameObject->GetPosition() + translate);
 }
 
 // apply a force on the object
-void SimplePhysics::ApplyForce(Vector3 force)
+void SimplePhysics::ApplyForce(Vector4 force)
 {
-	m_acceleration = force / m_mass;
+	Vector4 acceleration;
+	if (m_gameObject->GetMass() > 0)
+	{
+		acceleration = force / m_gameObject->GetMass();
+	}
+
+	// update total forces
+	totalForce += force;
+	totalAcceleration += acceleration;
 }
 
+// Getters
+
+float SimplePhysics::GetMass()
+{
+	return m_gameObject->GetMass();
+}
+
+Vector4 SimplePhysics::GetPosition()
+{
+	return m_gameObject->GetPosition();
+
+}
+
+Vector4 SimplePhysics::GetVelocity()
+{
+	return m_gameObject->GetVelocity();
+}
+
+// Setters
 void SimplePhysics::SetMass(float mass)
 {
-	m_mass = mass;
+	m_gameObject->SetMass(mass);
 }
 
+void SimplePhysics::SetPosition(Vector4 position)
+{
+	m_gameObject->SetPosition(position);
+}
+
+<<<<<<< HEAD
 void SimplePhysics::SetVelocity(Vector3 velocity)
 {
 	m_velocity = velocity;
@@ -39,4 +71,9 @@ void SimplePhysics::SetVelocity(Vector3 velocity)
 Vector3 SimplePhysics::GetVelocity()
 {
 	return m_velocity;
+=======
+void SimplePhysics::SetVelocity(Vector4 velocity)
+{
+	m_gameObject->SetVelocity(velocity);
+>>>>>>> master
 }
