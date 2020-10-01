@@ -31,3 +31,12 @@ void SimplePhysics::SetMass(float mass)
 {
 	m_mass = mass;
 }
+
+void SimplePhysics::SetVelocity(Vector3 velocity)
+{
+	m_velocity = velocity;
+}
+Vector3 SimplePhysics::GetVelocity()
+{
+	return m_velocity;
+}

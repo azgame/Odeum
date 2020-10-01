@@ -5,6 +5,7 @@
 
 class SimplePhysics : public Component
 {
+public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
@@ -14,7 +15,8 @@ class SimplePhysics : public Component
 	void Transform(Vector3 translate);
 	void ApplyForce(Vector3 force);
 	void SetMass(float mass);
-
+	void SetVelocity(Vector3 velocity);
+	Vector3 GetVelocity();
 	// not sure which we want to keep in the physics component or the game object (ie. pos, vel, acc)
 private:
 	Vector3 m_acceleration;
