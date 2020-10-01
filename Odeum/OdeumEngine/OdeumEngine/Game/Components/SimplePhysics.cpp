@@ -24,7 +24,10 @@ void SimplePhysics::Transform(Vector4 translate)
 void SimplePhysics::ApplyForce(Vector4 force)
 {
 	Vector4 acceleration;
-	acceleration = force / m_gameObject->GetMass();
+	if (m_gameObject->GetMass() > 0)
+	{
+		acceleration = force / m_gameObject->GetMass();
+	}
 
 	// update total forces
 	totalForce += force;

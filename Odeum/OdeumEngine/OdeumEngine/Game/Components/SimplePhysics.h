@@ -6,6 +6,7 @@
 
 class SimplePhysics : public Component
 {
+public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
