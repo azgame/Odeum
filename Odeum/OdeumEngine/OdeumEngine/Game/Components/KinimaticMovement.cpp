@@ -7,7 +7,10 @@ void KinimaticMovement::Update(float deltaTime)
 	{
 		Debug::Info("target aquired", __FILENAME__, __LINE__);
 		Vector4 temp = GetSteering();
+		
+	
 		object->SetPosition(object->GetPosition() + temp);
+		physicsComp->ApplyForce(Vector3(temp.GetX(), temp.GetY(), temp.GetZ()));
 	}
 }
 void KinimaticMovement::OnAttach(GameObject* parent)
@@ -17,6 +20,8 @@ void KinimaticMovement::OnAttach(GameObject* parent)
 	{
 		maxSpeed = 0.01;
 	}
+    physicsComp=	object->GetComponent<SimplePhysics>();
+	
 }
 Vector4 KinimaticMovement::GetSteering()
 {

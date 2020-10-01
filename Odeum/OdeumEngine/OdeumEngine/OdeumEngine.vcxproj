@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
+    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="Game\GameObjects\PrefabTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\DynamicMovement.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ImGui\imgui.h" />
@@ -248,6 +251,7 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
+    <ClInclude Include="Game\Components\SimplePhysics.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />

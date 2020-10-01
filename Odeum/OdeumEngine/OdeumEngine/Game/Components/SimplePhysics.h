@@ -1,26 +1,44 @@
 #ifndef SIMPLEPHYSICS_H
 #define SIMPLEPHYSICS_H
 
+#include "../../pch.h"
 #include "../../Engine/Core/Component.h"
 
 class SimplePhysics : public Component
 {
+public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
 	void Update(float deltaTime) override;
 
 	// other functions
-	void Transform(Vector3 translate);
-	void ApplyForce(Vector3 force);
-	void SetMass(float mass);
+	void Transform(Vector4 translate);
+	void ApplyForce(Vector4 force);
 
+	// Getters
+	float GetMass();
+	Vector4 GetPosition();
+	Vector4 GetVelocity();
+	//Vector4 GetAcceleration();
+
+	// Setters
+	void SetMass(float mass);
+<<<<<<< HEAD
+	void SetVelocity(Vector3 velocity);
+	Vector3 GetVelocity();
 	// not sure which we want to keep in the physics component or the game object (ie. pos, vel, acc)
+=======
+	void SetPosition(Vector4 position);
+	void SetVelocity(Vector4 velocity);
+	//void SetAcceleration(Vector3 acceleration);
+
+>>>>>>> master
 private:
-	Vector3 m_acceleration;
-	Vector3 m_velocity;
-	Vector3 m_position;
-	float m_mass;
+	// options for now
+	Vector4 totalForce;
+	Vector4 totalAcceleration;
+
 };
 #endif
 
