@@ -76,7 +76,7 @@ inline void GameObject::AddComponent()
 		if (!exists)
 			CreateAttachedComponent(component);
 		else
-			delete component;
+			SAFE_DELETE(component);
 	}
 }
 

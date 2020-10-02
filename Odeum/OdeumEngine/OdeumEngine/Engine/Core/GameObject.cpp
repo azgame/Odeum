@@ -11,13 +11,19 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour 
 		switch (preDefinedShape)
 		{
 		case ShapeTypes::CubeShape:
+		{
 			Cube cube = Cube();
-			cube.SetColour(colour);
+			//cube.SetColour(colour);
 			m_model.Load(&cube.GetVertices(), (uint32_t)cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), (uint32_t)cube.NumIndices());
+			break;
+		}
+		default:
+			break;
 		}
 	}
 	else // load from file
 	{
+		m_model.Load(fileName);
 	}
 
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -83,11 +89,10 @@ void GameObject::SetMass(float mass)
 
 void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 {
-	// perform any necessary setup (eg. if component is of type Graphics, register with renderer)
-	m_components.push_back(pAttachedComponent);
-
 	// Attach T
-	pAttachedComponent->OnAttach(this);
+	pAttachedComponent->OnAttach(this); // On attach allows implementations to define how they register to systems.  
+											// eg. A component which inherits from GraphicsComponent will register with the scene graph
+	m_components.push_back(pAttachedComponent);
 }
 
 void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale)

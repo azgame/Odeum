@@ -24,10 +24,15 @@ public:
 
 	// Setters
 	void SetMass(float mass);
+
+	void SetVelocity(Vector3 velocity);
+	//Vector3 GetVelocity();
+	// not sure which we want to keep in the physics component or the game object (ie. pos, vel, acc)
+
 	void SetPosition(Vector4 position);
 	void SetVelocity(Vector4 velocity);
-	void SetAcceleration(Vector4 acceleration);
 	//void SetAcceleration(Vector3 acceleration);
+
 
 private:
 	// options for now
