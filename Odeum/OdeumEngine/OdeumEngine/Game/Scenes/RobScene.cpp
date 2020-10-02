@@ -6,17 +6,15 @@
 
 RobScene::RobScene() : Scene()
 {
-	object = new GameObject("Engine/Resources/Models/Cottage.obj");
-	
+	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
+	object = new GameObject("Engine/Resources/Models/Cube.obj");
 	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<SimplePhysics>();
 	object->AddComponent <DynamicMovement>();
 	object->AddComponent <KinimaticMovement>();
-	object = new GameObject("Engine/Resources/Models/Cottage.obj");
-	newObject->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
-	//plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
-	//plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
-	//plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
+	
+	
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
 	object->GetComponent<DynamicMovement>()->target = newObject;
 	//object->GetComponent<KinimaticMovement>()->target = newObject;

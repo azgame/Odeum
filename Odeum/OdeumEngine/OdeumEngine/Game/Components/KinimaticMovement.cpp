@@ -9,8 +9,10 @@ void KinimaticMovement::Update(float deltaTime)
 		Vector4 temp = GetSteering();
 		
 	    //sets position directly moving constantly 
-		if(!shouldFlee)
-		object->SetPosition(object->GetPosition() + temp);
+		if (!shouldFlee)
+		{
+			//object->SetPosition(object->GetPosition() + temp);
+		}
 		else
 		{
 			temp = temp * 3;
