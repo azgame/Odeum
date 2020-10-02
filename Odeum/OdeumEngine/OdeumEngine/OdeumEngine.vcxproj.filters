@@ -144,6 +144,9 @@
     <ClCompile Include="Game\Components\SimplePhysics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Components\DynamicMovement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -347,10 +350,17 @@
     <ClInclude Include="Engine\ImGui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\Components\SimplePhysics.h">
+=======
+    <ClInclude Include="Game\Components\SimplePhysics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\DynamicMovement.h">
+>>>>>>> 6a1182b53549644051324e38e14e4ebda359f948
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

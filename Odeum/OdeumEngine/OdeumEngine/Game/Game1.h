@@ -8,6 +8,7 @@
 #include "Scenes/GameScene.h"
 #include "Scenes/StartScene.h"
 #include "Scenes/RobScene.h"
+#include "Scenes/BenScene.h"
 
 class Game1 : public GameInterface
 {

@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\DynamicMovement.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ImGui\imgui.h" />

@@ -1,11 +1,11 @@
-#ifndef KinimaticMovement_H
-#define KinimaticMovement_H
+#ifndef DynamicMovement_H
+#define DynamicMovement_H
 
 
 
 #include "SimplePhysics.h"
 
-class KinimaticMovement : public Component
+class DynamicMovement : public Component
 {
 public:
 	void OnAttach(GameObject* parent) override;
@@ -13,7 +13,12 @@ public:
 	void Update(float deltaTime) override;
 	GameObject* object;
 	GameObject* target;
+	float maxAcceleration;
 	float maxSpeed;
+	float targetRadius;
+	float slowRadius;
+	float timeToTarget;
+	
 	Vector4 GetSteering();
 	SimplePhysics* physicsComp;
 };

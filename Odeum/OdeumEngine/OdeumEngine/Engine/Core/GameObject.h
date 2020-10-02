@@ -35,6 +35,7 @@ public:
 	float GetMass() { return m_mass; }
 	
 	void SetPosition(Vector4 position);
+	void SetVelocity(Vector4 position); // this is mostly for testing purpose, will probably get rid of later
 	void SetRotation(Vector4 rotation, float angle = 0.0f);
 	void SetScale(Vector4 scale);
 	void SetMass(float mass);
