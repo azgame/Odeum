@@ -76,7 +76,13 @@ inline void GameObject::AddComponent()
 	if (!exists)
 		CreateAttachedComponent(component);
 	else
+	{
 		SAFE_DELETE(component);
+		ERROR("Duplicate component attached");
+		throw std::runtime_error("Component of this type has already been attached, we do not support duplicates");
+	}
+
+	component = nullptr;
 }
 
 // Not supported yet!
@@ -84,7 +90,7 @@ template<typename ...Ts>
 inline void GameObject::AddComponents()
 {
 	Debug::Warning("Parameter packed multiple component attachment not supported yet", __FILENAME__, __LINE__);
-	throw std::runtime_error("Parameter packed multiple component attachment not supported yet");
+	throw std::runtime_error("Parameter packed multiple component attachment not supported yet"); // Throwing an error might be aggressive here
 }
 
 // Can lead to undefined behaviour with diamond inheritance structures. Please do not use diamond inheritance structures with components
