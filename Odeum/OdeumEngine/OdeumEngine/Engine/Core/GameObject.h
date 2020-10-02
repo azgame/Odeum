@@ -62,22 +62,21 @@ protected:
 template<typename T>
 inline void GameObject::AddComponent()
 {
-	// Verify T is of type Component
+	// Verify T is of type Component, if it is not, it should throw an error, so its likely that the following assert will never be reached, but just in case...
 	Component* component = new T();
 	
-	if (component)
-	{
-		// Verify type of T is not already an attached component
-		bool exists = false;
-		for (auto c : m_components)
-			if (dynamic_cast<T*>(c)) exists = true;
+	ASSERT(component != nullptr, "T must be of type Component!");
 
-		// Allocate T and register to systems as necessary
-		if (!exists)
-			CreateAttachedComponent(component);
-		else
-			SAFE_DELETE(component);
-	}
+	// Verify type of T is not already an attached component
+	bool exists = false;
+	for (auto c : m_components)
+		if (dynamic_cast<T*>(c)) exists = true;
+
+	// Allocate T and register to systems as necessary
+	if (!exists)
+		CreateAttachedComponent(component);
+	else
+		SAFE_DELETE(component);
 }
 
 // Not supported yet!
