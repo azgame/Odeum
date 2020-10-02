@@ -63,17 +63,11 @@ void SimplePhysics::SetPosition(Vector4 position)
 	m_gameObject->SetPosition(position);
 }
 
-<<<<<<< HEAD
-void SimplePhysics::SetVelocity(Vector3 velocity)
-{
-	m_velocity = velocity;
-}
-Vector3 SimplePhysics::GetVelocity()
-{
-	return m_velocity;
-=======
 void SimplePhysics::SetVelocity(Vector4 velocity)
 {
 	m_gameObject->SetVelocity(velocity);
->>>>>>> master
+}
+void SimplePhysics::SetAcceleration(Vector4 acceleration)
+{
+	totalAcceleration = acceleration;
 }

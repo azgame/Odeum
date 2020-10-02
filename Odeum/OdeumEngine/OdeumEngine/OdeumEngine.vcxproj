@@ -179,6 +179,7 @@
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Game\Components\SimplePhysics.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Game\Components\SimplePhysics.h" />
     <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
