@@ -67,11 +67,11 @@ namespace DXGraphics
 			nativeHeight = 1440;
 			break;
 		case k1800p:
-			nativeWidth = (int)((float)3200 * ultraWideExpansion);;
+			nativeWidth = (int)((float)3200 * ultraWideExpansion);
 			nativeHeight = 1800;
 			break;
 		case k2160p:
-			nativeWidth = (int)((float)3840 * ultraWideExpansion);;
+			nativeWidth = (int)((float)3840 * ultraWideExpansion);
 			nativeHeight = 2160;
 			break;
 		}

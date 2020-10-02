@@ -11,13 +11,19 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour 
 		switch (preDefinedShape)
 		{
 		case ShapeTypes::CubeShape:
+		{
 			Cube cube = Cube();
-			cube.SetColour(colour);
+			//cube.SetColour(colour);
 			m_model.Load(&cube.GetVertices(), (uint32_t)cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), (uint32_t)cube.NumIndices());
+			break;
+		}
+		default:
+			break;
 		}
 	}
 	else // load from file
 	{
+		m_model.Load(fileName);
 	}
 
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);

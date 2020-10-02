@@ -105,9 +105,6 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\GameObjects\PrefabTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Components\ComponentTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -139,6 +136,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Components\SimplePhysics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -290,9 +293,6 @@
     <ClInclude Include="Game\Scenes\RobScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\GameObjects\PrefabTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Components\ComponentTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -345,6 +345,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ImGui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\SimplePhysics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

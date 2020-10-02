@@ -3,7 +3,7 @@
 #include "../Rendering/DirectX12/D3DCore.h"
 #include "../Rendering/DirectX12/Buffers/ColourBuffer.h"
 #include "../Rendering/DirectX12/Buffers/DepthBuffer.h"
-
+#include "../Rendering/DirectX12/LightSource.h"
 #include "../Rendering/DirectX12/SceneGraph.h"
 
 #include "OdeumEngine.h"
@@ -22,8 +22,9 @@ TestRender::~TestRender()
 
 void TestRender::Attach()
 {
-	m_rootSig.Reset(1, 0);
+	m_rootSig.Reset(2, 0);
 	m_rootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_rootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
@@ -35,8 +36,7 @@ void TestRender::Attach()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-		{ "COLOUR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 
 	m_colourPSO.SetRootSignature(m_rootSig);
@@ -49,10 +49,6 @@ void TestRender::Attach()
 	m_colourPSO.CompileVertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
-
-	Vector3 eye = Vector3(0.0f, 3.0f, 10.0f);
-	OdeumEngine::Get().GetCamera().SetEyeAtUp(eye, Vector3(kZero), Vector3(kYUnitVector));
-	OdeumEngine::Get().GetCamera().SetZRange(0.1f, 10000.0f);
 }
 
 void TestRender::Detach()
@@ -88,6 +84,11 @@ void TestRender::Update(float deltaTime_)
 	vsConstants.viewProj = OdeumEngine::Get().GetCamera().GetViewProjMatrix();
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
 
+	LightData light;
+	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 2.0f, 5.0f));
+	light.radiusSq = 400.0f;
+	DirectX::XMStoreFloat3(&light.colour, Vector3(0.9f, 0.9f, 0.9f));
+
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
 
 	graphics.TransitionResource(DXGraphics::m_presentBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -99,8 +100,12 @@ void TestRender::Update(float deltaTime_)
 	graphics.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphics.SetPipelineState(m_colourPSO);
 
+	
+
 	graphics.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV(), DXGraphics::m_sceneDepthBuffer.GetDSV());
 	graphics.SetViewportAndScissor(m_mainViewport, m_mainScissor);
+
+	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
 
 	for (auto object : SceneGraph::Get()->GetGameObjects())
 	{

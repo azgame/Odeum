@@ -1,18 +1,10 @@
 #include "GameScene.h"
-#include "../GameObjects/PrefabTest.h"
-#include "../Components/ComponentTest.h"
 
 GameScene::GameScene() : Scene()
 {
-	object = new GameObject("empty", ShapeTypes::CubeShape, Colour(1.0f, 0.2f, 0.6f, 1.0f));
-	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	object = new GameObject("Engine/Resources/Models/Apple.obj");
 
-	plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
-	plane->SetPosition(Vector4(0.0f, -25.0f, 0.0f, 1.0f));
-	plane->SetScale(Vector4(10.0f, 0.1f, 10.0f, 1.0f));
-	
-
-	newObject = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.2f, 0.9f, 0.7f, 1.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
 }
 
 GameScene::~GameScene()
@@ -22,21 +14,15 @@ GameScene::~GameScene()
 bool GameScene::Initialize()
 {
 	Debug::Info("Creating Game Scene", __FILENAME__, __LINE__);
-
-
-
 	return true;
 }
 
 void GameScene::Update(const float deltaTime_)
 {
-	object->SetPosition(object->GetPosition() + Vector4(0.01f, 0.0f, 0.0f, 0.0f));
+	cameraController.UpdateMainCamera();
 
-	Vector3 look = OdeumEngine::Get().GetCamera().LookAt();
-	OdeumEngine::Get().GetCamera().SetLookDirection(look + Vector3(0.005f, 0.0f, 0.0f));
-
-	if (Input::Get().isKeyPressed(Key::KeyCode::A))
-		Debug::Info("Key A pressed in game scene", __FILENAME__, __LINE__);
+	angle += 0.005f;
+	object->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), angle);
 }
 
 void GameScene::Render()

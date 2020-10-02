@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
+#include "../../Engine/Core/CameraController.h"
 
 // Scene index 1
 class GameScene : public Scene
@@ -16,9 +17,9 @@ public:
 	virtual void Render();
 
 private:
+	CameraController cameraController;
 	GameObject* object;
-	GameObject* plane;
-	GameObject* newObject;
+	float angle;
 };
 
 #endif

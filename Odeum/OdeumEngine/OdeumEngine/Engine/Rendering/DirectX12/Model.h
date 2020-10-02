@@ -9,6 +9,14 @@
 // Revert data to pointer arrays. Reasoning is that it allows you to send model as a single chunk down to the gpu 
 // rather than the fragmented meshes that make up an entire model, and does so in a single gpu call
 
+class Texture
+{
+public:
+	unsigned int id;
+	std::string type;
+	std::string path;
+};
+
 class Model
 {
 public:
@@ -18,7 +26,7 @@ public:
 		m_pMaterials(nullptr),
 		m_pVertexData(nullptr),
 		m_pIndexData(nullptr),
-		m_vertexStride(0) {}
+		m_vertexStride(sizeof(Vertex)) {}
 
 	~Model()
 	{
@@ -83,6 +91,14 @@ public:
 		float opacity;
 		float shininess;
 		float specularStrength;
+
+		char name[128];
+		char diffuseTextureFile[128];
+		char specularTextureFile[128];
+		char emissiveTextureFile[128];
+		char normalTextureFile[128];
+		char lightmapTextureFile[128];
+		char reflectionTextureFile[128];
 	};
 
 	Mesh& GetMesh(int index);
