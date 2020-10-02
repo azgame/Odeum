@@ -82,7 +82,10 @@ float4 main(PS_INPUT input) : SV_Target0
     float3 specularColour = float3(1.0f, 0.0f, 0.4f);
     float gloss = 128.0f;
 
-    float3 colour = ApplyPointLight(diffuseColour, specularColour, gloss, input.normal, 
+    float3 colour = 0.0f;
+
+    colour += float3(0.15f, 0.0f, 0.0f);
+    colour += ApplyPointLight(diffuseColour, specularColour, gloss, input.normal, 
         input.viewDir, input.worldPos, lightPos, radiusSq, lightColour);
 	return float4(colour, 1.0f);
 }
