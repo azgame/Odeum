@@ -71,3 +71,7 @@ void SimplePhysics::SetVelocity(Vector4 velocity)
 {
 	m_gameObject->SetVelocity(velocity);
 }
+void SimplePhysics::SetAcceleration(Vector4 acceleration)
+{
+	totalAcceleration = acceleration;
+}
