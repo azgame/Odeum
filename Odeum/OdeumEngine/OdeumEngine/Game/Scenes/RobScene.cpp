@@ -1,24 +1,30 @@
 #include "RobScene.h"
 #include "../Components/KinimaticMovement.h"
+#include "../Components/DynamicMovement.h"
 
 #include "../Components/ComponentTest.h"
 
 RobScene::RobScene() : Scene()
 {
-	object = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.1f, 0.2f, 0.6f, 1.0f));
-	object->SetPosition(Vector4(0.0f, 2.0f, 0.0f, 1.0f));
+	object = new GameObject("Engine/Resources/Models/Cottage.obj");
+	
+	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<SimplePhysics>();
+	object->AddComponent <DynamicMovement>();
 	object->AddComponent <KinimaticMovement>();
-	newObject = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.2f, 0.9f, 0.7f, 1.0f));
+	object = new GameObject("Engine/Resources/Models/Cottage.obj");
 	newObject->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
-	plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
-	plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
-	plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
+	//plane = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.5f, 0.5f, 0.5f, 1.0f));
+	//plane->SetScale(Vector4(3.0f, 0.01f, 3.0f, 1.0f));
+	//plane->SetPosition(Vector4(0.0f, -1.0f, 1.0f, 1.0f));
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
-	object->GetComponent<KinimaticMovement>()->target = newObject;
+	object->GetComponent<DynamicMovement>()->target = newObject;
+	//object->GetComponent<KinimaticMovement>()->target = newObject;
+	object->GetComponent<SimplePhysics>()->SetMass(1);
+
 	
 	
-	 teletime=500;
+	 teletime=1500;
 }
 
 RobScene::~RobScene()
@@ -40,7 +46,7 @@ void RobScene::Update(const float deltaTime_)
 	 teletime -= 1;
 	 if (teletime < 0)
 	 {
-		 teletime = 500;
+		 teletime = 1500;
 		 int a=(rand() % 10)-6;
 		 int b=(rand() % 10)-6;
 		 newObject->SetPosition(Vector4(a, 0.0f, b, 1.0f));
@@ -49,9 +55,15 @@ void RobScene::Update(const float deltaTime_)
 		 
 	if (Input::Get().isKeyPressed(Key::KeyCode::A))
 	{
-	Debug::Info("Key A pressed in game scene", __FILENAME__, __LINE__);
+	
 	//object->SetPosition(object->GetPosition() + Vector4(1.01f, 0.0f, 0.0f, 0.0f));
-
+	object->GetComponent<KinimaticMovement>()->shouldFlee = true;
+	object->GetComponent<DynamicMovement>()->shouldFlee = true;
+	}
+	else
+	{
+		object->GetComponent<KinimaticMovement>()->shouldFlee = false;
+		object->GetComponent<DynamicMovement>()->shouldFlee = false;
 	}
 }
 
