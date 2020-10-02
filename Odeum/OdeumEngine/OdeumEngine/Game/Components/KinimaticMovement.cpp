@@ -10,7 +10,7 @@ void KinimaticMovement::Update(float deltaTime)
 		
 	
 		object->SetPosition(object->GetPosition() + temp);
-		physicsComp->ApplyForce(Vector3(temp.GetX(), temp.GetY(), temp.GetZ()));
+		physicsComp->ApplyForce(Vector4(temp.GetX(), temp.GetY(), temp.GetZ(), 1.0f));
 	}
 }
 void KinimaticMovement::OnAttach(GameObject* parent)

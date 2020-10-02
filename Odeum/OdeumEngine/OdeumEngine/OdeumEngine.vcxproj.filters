@@ -1,374 +1,130 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\OdeumEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\CameraController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\SystemStack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Scenes\GameScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Scenes\StartScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Game1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\CommandListManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\D3DCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\DescriptorAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\RootSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\TestRender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Scenes\RobScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Components\ComponentTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Components\KinimaticMovement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui_impl_dx12.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ImGui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Components\SimplePhysics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Components\DynamicMovement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Utilities\d3dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\dxc\dxcapi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\dxc\dxcapi.use.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\GameInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Events\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\CoreSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\OdeumEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\CameraController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Events\ApplicationEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Events\KeyEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Events\MouseEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\SystemStack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Scenes\GameScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Scenes\StartScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Game1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Matrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Quaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\BufferAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Colour.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\CommandListManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\D3DCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\DescriptorAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\PipelineState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\TestRender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\Common\GraphicsCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\KeyCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\MouseCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\Shapes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Scenes\RobScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Components\ComponentTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\MathUtility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\DirectX12\D3DIncludes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\D3DMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Components\KinimaticMovement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imgui_impl_dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imgui_impl_win32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ImGui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Components\SimplePhysics.h">
-=======
-    <ClInclude Include="Game\Components\SimplePhysics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Components\DynamicMovement.h">
->>>>>>> 6a1182b53549644051324e38e14e4ebda359f948
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl" />
     <FxCompile Include="Engine\Shaders\Present.hlsl" />
     <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
+    <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
+    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
+    <ClCompile Include="Game\Components\ComponentTest.cpp" />
+    <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
+    <ClCompile Include="Engine\Core\Input.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.cpp" />
+    <ClCompile Include="Engine\Core\Camera.cpp" />
+    <ClCompile Include="Engine\Core\CameraController.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandListManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\DescriptorAllocator.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\D3DCore.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.cpp" />
+    <ClCompile Include="Engine\Core\Debug.cpp" />
+    <ClCompile Include="Engine\Core\Timer.cpp" />
+    <ClCompile Include="Engine\Core\OdeumEngine.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
+    <ClCompile Include="Engine\Core\GameObject.cpp" />
+    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
+    <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\GameScene.cpp" />
+    <ClCompile Include="Game\Scenes\StartScene.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
+    <ClCompile Include="Game\Components\KinimaticMovement.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Engine\Core\Window.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\RootSignature.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.cpp" />
+    <ClCompile Include="Engine\Core\SystemStack.cpp" />
+    <ClCompile Include="Engine\Core\TestRender.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
+    <ClCompile Include="Game\Scenes\RobScene.cpp" />
+    <ClCompile Include="Game\Scenes\BenScene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\Components\DynamicMovement.h" />
+    <ClInclude Include="Engine\Core\Utility.h" />
+    <ClInclude Include="Engine\ImGui\imconfig.h" />
+    <ClInclude Include="Engine\ImGui\imgui.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_dx12.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Engine\ImGui\imgui_internal.h" />
+    <ClInclude Include="Engine\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Engine\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Engine\Math\MathUtility.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
+    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
+    <ClInclude Include="Game\Components\ComponentTest.h" />
+    <ClInclude Include="Engine\Core\Component.h" />
+    <ClInclude Include="Engine\Core\KeyCodes.h" />
+    <ClInclude Include="Engine\Core\MouseCodes.h" />
+    <ClInclude Include="Engine\Math\D3DMath.h" />
+    <ClInclude Include="Engine\Math\Matrix.h" />
+    <ClInclude Include="Engine\Math\Quaternion.h" />
+    <ClInclude Include="Engine\Math\Vector.h" />
+    <ClInclude Include="Engine\Rendering\Common\GraphicsCore.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\BufferAllocator.h" />
+    <ClInclude Include="Engine\Events\ApplicationEvent.h" />
+    <ClInclude Include="Engine\Events\KeyEvent.h" />
+    <ClInclude Include="Engine\Events\MouseEvent.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Colour.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ColourBuffer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\DepthBuffer.h" />
+    <ClInclude Include="Engine\Core\Camera.h" />
+    <ClInclude Include="Engine\Core\CameraController.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandListManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DIncludes.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DynamicDescriptorHeap.h" />
+    <ClInclude Include="Engine\Core\Input.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\DescriptorAllocator.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DCore.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DBuffer.h" />
+    <ClInclude Include="Engine\Core\CoreSystem.h" />
+    <ClInclude Include="Engine\Core\Debug.h" />
+    <ClInclude Include="Engine\Core\GameInterface.h" />
+    <ClInclude Include="Engine\Core\Scene.h" />
+    <ClInclude Include="Engine\Core\Timer.h" />
+    <ClInclude Include="Engine\dxc\dxcapi.h" />
+    <ClInclude Include="Engine\dxc\dxcapi.use.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\D3DResource.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\PipelineState.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Shapes.h" />
+    <ClInclude Include="Engine\Rendering\stb_image.h" />
+    <ClInclude Include="Engine\Utilities\d3dx12.h" />
+    <ClInclude Include="Engine\Events\Event.h" />
+    <ClInclude Include="Engine\Core\OdeumEngine.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
+    <ClInclude Include="Engine\Core\GameObject.h" />
+    <ClInclude Include="Game\Components\SimplePhysics.h" />
+    <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Game\Scenes\GameScene.h" />
+    <ClInclude Include="Game\Scenes\StartScene.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
+    <ClInclude Include="Game\Components\KinimaticMovement.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Engine\Core\Window.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\PixelBuffer.h" />
+    <ClInclude Include="Engine\Core\SystemStack.h" />
+    <ClInclude Include="Engine\Core\TestRender.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
+    <ClInclude Include="Game\Scenes\RobScene.h" />
+    <ClInclude Include="Game\Scenes\BenScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shaders\PresentRS.hlsli" />
