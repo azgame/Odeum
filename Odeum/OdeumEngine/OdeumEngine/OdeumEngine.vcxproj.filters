@@ -52,6 +52,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shaders\PresentRS.hlsli" />
