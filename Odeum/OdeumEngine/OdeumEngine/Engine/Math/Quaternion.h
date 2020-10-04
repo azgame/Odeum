@@ -19,6 +19,8 @@ public:
 
 	inline operator XMVECTOR() const { return vec; }
 
+	inline Vector4 GetVector4() const { return vec; }
+
 	// Operator Overloads
 	// creates the conjugate of the quaternion
 	inline Quaternion operator~ (void) const { return Quaternion(XMQuaternionConjugate(vec)); }

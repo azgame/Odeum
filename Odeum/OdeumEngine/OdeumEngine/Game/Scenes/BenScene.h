@@ -17,8 +17,9 @@ public:
 
 private:
 	GameObject* object;
-	GameObject* plane;
-	GameObject* newObject;
+	GameObject* object2;
+
+	float angle;
 };
 
 #endif
