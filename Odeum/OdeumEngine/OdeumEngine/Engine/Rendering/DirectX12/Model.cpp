@@ -89,32 +89,32 @@ void Model::Load(std::string fileName)
 
 		char* pRem = nullptr;
 
-		strncpy_s(destMat.diffuseTextureFile, "models/", 127);
+		strncpy_s(destMat.diffuseTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.diffuseTextureFile, texDiffusePath.C_Str(), 127);
 		pRem = strrchr(destMat.diffuseTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.specularTextureFile, "models/", 127);
+		strncpy_s(destMat.specularTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.specularTextureFile, texSpecularPath.C_Str(), 127);
 		pRem = strrchr(destMat.specularTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.emissiveTextureFile, "models/", 127);
+		strncpy_s(destMat.emissiveTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.emissiveTextureFile, texEmissivePath.C_Str(), 127);
 		pRem = strrchr(destMat.emissiveTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.normalTextureFile, "models/", 127);
+		strncpy_s(destMat.normalTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.normalTextureFile, texNormalPath.C_Str(), 127);
 		pRem = strrchr(destMat.normalTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.lightmapTextureFile, "models/", 127);
+		strncpy_s(destMat.lightmapTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.lightmapTextureFile, texLightmapPath.C_Str(), 127);
 		pRem = strrchr(destMat.lightmapTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.reflectionTextureFile, "models/", 127);
+		strncpy_s(destMat.reflectionTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.reflectionTextureFile, texReflectionPath.C_Str(), 127);
 		pRem = strrchr(destMat.reflectionTextureFile, '.');
 		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension

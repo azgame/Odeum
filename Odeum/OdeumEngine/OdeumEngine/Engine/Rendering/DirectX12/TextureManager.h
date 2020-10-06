@@ -4,6 +4,8 @@
 #include "D3DIncludes.h"
 #include "Buffers/D3DResource.h"
 
+#include <map>
+
 class Texture : public D3DResource
 {
 	friend class CommandContext;
@@ -23,8 +25,6 @@ public:
 	{
 		Create(width_, width_, height_, format_, initialData_);
 	}
-
-	void CreateFromMemory(const void* bufferEntry_, size_t fileSize_);
 
 	virtual void Destroy() override
 	{
@@ -49,7 +49,37 @@ public:
 	TextureManager& operator=(const TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&&) = delete;
 
+	void Initialize(std::string textureDirectory_) { sm_rootDirectory = textureDirectory_; }
+	void ShutDown() { sm_textureMap.clear(); }
+	Texture* LoadFromFile(std::string textureName_);
 
+	UINT BytesPerPixel(DXGI_FORMAT format);
+
+private:
+
+	struct FormattedRawTexture
+	{
+		UINT* formattedData;
+		int width = 0;
+		int height = 0;
+		int stride = 0;
+		int offset = 0;
+	};
+
+	TextureManager() {}
+	~TextureManager() { ShutDown(); }
+	static std::unique_ptr<TextureManager> m_instance;
+	friend std::default_delete<TextureManager>;
+
+	void FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format);
+	Texture* FindOrLoad(std::string textureName_);
+
+	size_t BitsPerPixel(DXGI_FORMAT format);
+	
+
+	std::map<std::string, std::unique_ptr<Texture>> sm_textureMap;
+	std::mutex sm_mutex;
+	std::string sm_rootDirectory;
 };
 
 #endif
