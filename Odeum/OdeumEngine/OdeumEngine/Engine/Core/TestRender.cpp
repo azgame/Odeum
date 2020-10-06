@@ -100,8 +100,6 @@ void TestRender::Update(float deltaTime_)
 	graphics.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphics.SetPipelineState(m_colourPSO);
 
-	
-
 	graphics.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV(), DXGraphics::m_sceneDepthBuffer.GetDSV());
 	graphics.SetViewportAndScissor(m_mainViewport, m_mainScissor);
 
@@ -120,7 +118,7 @@ void TestRender::Update(float deltaTime_)
 			Model::Mesh& mesh = object->GetModel().GetMesh(i);
 			uint32_t vertexStride = object->GetModel().m_vertexStride;
 			uint32_t indexCount = mesh.indexCount;
-			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint32_t);
+			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint16_t);
 			uint32_t baseVertex = mesh.vertexDataByteOffset / sizeof(Vertex);
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
