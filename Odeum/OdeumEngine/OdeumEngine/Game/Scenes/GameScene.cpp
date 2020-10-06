@@ -1,10 +1,14 @@
 #include "GameScene.h"
+#include "../Components/KinimaticMovement.h"
+#include "../Components/DynamicMovement.h"
+#include "../Components/ComponentTest.h"
 
 GameScene::GameScene() : Scene()
 {
 	object = new GameObject("Engine/Resources/Models/Apple.obj");
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
+	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
 }
 
 GameScene::~GameScene()
@@ -23,6 +27,8 @@ void GameScene::Update(const float deltaTime_)
 
 	angle += 0.0025f;
 	object->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), angle);
+
+	object->Update(deltaTime_);
 }
 
 void GameScene::Render()

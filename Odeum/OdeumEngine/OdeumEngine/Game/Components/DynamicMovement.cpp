@@ -22,6 +22,8 @@ void DynamicMovement::Update(float deltaTime)
 		
 			
 	}
+
+	std::cout << "Dynamic Movement" << std::endl;
 }
 Vector4 DynamicMovement::GetSteering()
 {

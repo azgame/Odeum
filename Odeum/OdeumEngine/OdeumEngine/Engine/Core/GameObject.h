@@ -40,6 +40,8 @@ public:
 	void SetMass(float mass);
 
 protected:
+
+	void AddComponent();
 	Model m_model;
 	Matrix4 m_modelMatrix;
 
@@ -84,12 +86,11 @@ inline void GameObject::AddComponent()
 	component = nullptr;
 }
 
-// Not supported yet!
 template<typename ...Ts>
 inline void GameObject::AddComponents()
 {
-	Debug::Warning("Parameter packed multiple component attachment not supported yet", __FILENAME__, __LINE__);
-	throw std::runtime_error("Parameter packed multiple component attachment not supported yet"); // Throwing an error might be aggressive here
+	int unpacking[] = { 0, (AddComponent<Ts>(), 0)... }; // pack expansion trick. function call is a side effect of the initializer list being initialized to 0s, but is used for all va args, so we accomplish add component for all without recursively calling it
+	(void)unpacking; // suppress unused variable warning
 }
 
 // Can lead to undefined behaviour with diamond inheritance structures. Please do not use diamond inheritance structures with components

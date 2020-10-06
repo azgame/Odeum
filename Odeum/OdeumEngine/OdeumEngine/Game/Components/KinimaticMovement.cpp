@@ -21,6 +21,8 @@ void KinimaticMovement::Update(float deltaTime)
 		
 		
 	}
+
+	std::cout << "Kinematic Movement" << std::endl;
 }
 void KinimaticMovement::OnAttach(GameObject* parent)
 {   //set default values and get our object's components
