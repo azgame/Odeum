@@ -1,15 +1,15 @@
-#ifndef BENSCENE_H
-#define BENSCENE_H
+#ifndef BENSCENE2_H
+#define BENSCENE2_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
 // Scene index 1
-class BenScene : public Scene
+class BenScene2 : public Scene
 {
 public:
-	BenScene();
-	virtual ~BenScene();
+	BenScene2();
+	virtual ~BenScene2();
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);

@@ -173,6 +173,9 @@ public:
 	
 	inline operator XMVECTOR() const { return vec; }
 
+	// Print
+	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ", " << GetZ() << ")"; }
+
 	// Getters and setters
 	inline XMVECTOR GetVec() { return vec; }
 	inline float GetX() const { return XMVectorGetX(vec); }
@@ -216,6 +219,7 @@ public:
 	inline Vector4(Vector3 vec_, float w_) { vec = XMVectorSetW(vec_.GetVec(), w_); }
 	inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
 	inline Vector4(const XMVECTOR& v_) { vec = v_; }
+	//inline Vector4(Quaternion q_) { vec = q_.GetVec(); }
 	// inline Vector4(Scalar& s_) { vec = s_.GetVec(); }
 	inline explicit Vector4(Vector3 xyz_) { vec = SetWToOne(xyz_); }
 	// vv that line and the other constructor that uses const XMVECTOR& as a parameter take the same argument error
@@ -228,6 +232,9 @@ public:
 	inline explicit Vector4(EWUnitVector) { vec = CreateWUnitVector(); }
 
 	inline operator XMVECTOR() const { return vec; }
+
+	// Print
+	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ", " << GetZ() << ", " << GetW() << ")"; }
 	
 	// Getters and Setters
 	inline XMVECTOR GetVec() { return vec; }
@@ -240,7 +247,7 @@ public:
 	inline void SetZ(float z_) { vec = XMVectorSetZ(vec, z_); }
 	inline void SetW(float w_) { vec = XMVectorSetW(vec, w_); }
 	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)+pow(XMVectorGetW(vec),2)); }
-	inline Vector3 Normalize() { return vec / sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
+	inline Vector4 Normalize() { return vec / sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
 
 	// Operator Overloads
 	inline Vector4 operator- () const { return Vector4(XMVectorNegate(vec)); }
