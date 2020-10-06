@@ -75,6 +75,11 @@ void SimplePhysics::SetVelocity(Vector3 velocity)
 {
 }
 
+void SimplePhysics::SetAcceleration(Vector4 acceleration)
+{
+	p_totalAcceleration = acceleration;
+}
+
 void SimplePhysics::SetPosition(Vector4 position)
 {
 	m_gameObject->SetPosition(position);
@@ -109,5 +114,3 @@ Vector4 SimplePhysics::UpdateOrientationQuaternion()
 	p_orientation += p_orientation * angVel * 0.5f;
 	return p_orientation.Normalize();
 }
-
->>>>>>> origin/bensaylissdev

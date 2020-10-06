@@ -21,7 +21,7 @@ void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	angle += 0.0005f;
+	angle += 0.0025f;
 	object->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), angle);
 }
 

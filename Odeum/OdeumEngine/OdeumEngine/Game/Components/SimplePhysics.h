@@ -19,6 +19,7 @@ public:
 	// Getters
 	float GetMass();
 	Vector4 GetPosition();
+	Vector4 GetVelocity() { return totalVelocity; }
 	//Vector4 GetAcceleration();
 
 	// Setters
