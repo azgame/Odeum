@@ -19,17 +19,17 @@ public:
 	// Getters
 	float GetMass();
 	Vector4 GetPosition();
-	Vector4 GetVelocity() { return totalVelocity; }
+	Vector4 GetVelocity();
+	Vector4 GetRotation();
 	//Vector4 GetAcceleration();
 
 	// Setters
 	void SetMass(float mass);
-
-	void SetVelocity(Vector3 velocity);
-	//Vector3 GetVelocity();
-	// not sure which we want to keep in the physics component or the game object (ie. pos, vel, acc)
-	void SetAcceleration(Vector4 acceleration );
 	void SetPosition(Vector4 position);
+	void SetVelocity(Vector4 velocity);
+	void SetRotation(Vector4 rotation);
+
+	//void SetAcceleration(Vector3 acceleration);
 
 	void AddAngularVelocity(Vector4 velocity, float angle);
 
@@ -46,13 +46,19 @@ private:
 	float p_angle;
 	float p_angleSpeed;
 
-	Vector4 totalVelocity;
+	Vector4 p_totalVelocity;
+	Vector4 p_position;
+	Vector4 p_rotation;
+	Vector4 p_scale;
+	float p_mass;
 
-	float speed;
+	float p_speed;
 	
 	// this is for physics assignment 1, will change everything to force after I think
 	// might want to move parts of this to MathUtility.h
 	Vector4 UpdateOrientationQuaternion();
+
+	void UpdateTransform();
 
 	// Cross product
 	inline Vector3 Cross(Vector3 v1, Vector3 v2)
