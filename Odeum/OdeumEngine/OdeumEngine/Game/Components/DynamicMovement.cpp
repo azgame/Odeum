@@ -8,8 +8,8 @@ void DynamicMovement::OnAttach(GameObject* parent)
 	 targetRadius=1.0f;
 	 slowRadius=10;
 	 timeToTarget=0.1;
-	
 }
+
 void DynamicMovement::Update(float deltaTime)
 {
 	//requires target to work
@@ -22,9 +22,8 @@ void DynamicMovement::Update(float deltaTime)
 		
 			
 	}
-
-	std::cout << "Dynamic Movement" << std::endl;
 }
+
 Vector4 DynamicMovement::GetSteering()
 {
 	Vector3 temp;
@@ -47,8 +46,6 @@ Vector4 DynamicMovement::GetSteering()
 	}
 	else
 	{
-	
-		
 		targetSpeed = maxSpeed * distance / slowRadius;
 	}
 	
@@ -63,6 +60,5 @@ Vector4 DynamicMovement::GetSteering()
 		temp = temp * maxAcceleration;
 	}
 
-
-		return Vector4(temp.GetX(),0.0f,temp.GetZ(), 0.0f);
+	return Vector4(temp.GetX(),0.0f,temp.GetZ(), 0.0f);
 }

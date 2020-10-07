@@ -85,9 +85,9 @@ void TestRender::Update(float deltaTime_)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 2.0f, 5.0f));
-	light.radiusSq = 400.0f;
-	DirectX::XMStoreFloat3(&light.colour, Vector3(0.9f, 0.9f, 0.9f));
+	DirectX::XMStoreFloat3(&light.position, Vector3(-5.0f, 2.0f, 5.0f));
+	light.radiusSq = 200.0f;
+	DirectX::XMStoreFloat3(&light.colour, Vector3(1.0f, 1.0f, 1.0f));
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
 

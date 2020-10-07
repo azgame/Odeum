@@ -79,8 +79,8 @@ float3 ApplyPointLight(
 float4 main(PS_INPUT input) : SV_Target0
 {
     float3 diffuseColour = float3(0.9f, 0.2f, 0.5f);
-    float3 specularColour = float3(1.0f, 0.0f, 0.4f);
-    float gloss = 128.0f;
+    float3 specularColour = float3(1.0f, 0.2f, 0.5f);
+    float gloss = 32.0f;
 
     float3 colour = 0.0f;
 

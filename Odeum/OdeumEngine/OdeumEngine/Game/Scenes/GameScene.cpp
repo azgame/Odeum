@@ -7,7 +7,7 @@ GameScene::GameScene() : Scene()
 {
 	object = new GameObject("Engine/Resources/Models/Apple.obj");
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 8.0f, 10.0f));
 	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
 }
 

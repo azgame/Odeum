@@ -3,10 +3,10 @@
 #include "../Components/SimplePhysics.h"
 BenScene2::BenScene2() : Scene()
 {
-	object = new GameObject("empty", ShapeTypes::CubeShape, Colour(0.1f, 0.2f, 0.6f, 1.0f));
+	object = new GameObject(ShapeTypes::CubeShape, Colour(0.1f, 0.2f, 0.6f, 1.0f));
 	object->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 1.0f));
 	
-	object2 = new GameObject("empty", ShapeTypes::CubeShape, Colour(1.0f, 0.7f, 0.6f, 1.0f));
+	object2 = new GameObject(ShapeTypes::CubeShape, Colour(1.0f, 0.7f, 0.6f, 1.0f));
 	object2->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 
 	angle = 0.0f;

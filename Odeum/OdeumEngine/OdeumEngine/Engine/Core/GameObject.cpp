@@ -4,27 +4,9 @@
 #include "Component.h"
 
 // Moving model loading to a graphics component
-GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour colour)
+GameObject::GameObject(std::string fileName)
 {
-	if (preDefinedShape != ShapeTypes::NoShape)
-	{
-		switch (preDefinedShape)
-		{
-		case ShapeTypes::CubeShape:
-		{
-			Cube cube = Cube();
-			//cube.SetColour(colour);
-			m_model.Load(&cube.GetVertices(), (uint32_t)cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), (uint32_t)cube.NumIndices());
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	else // load from file
-	{
-		m_model.Load(fileName);
-	}
+	m_model.Load(fileName);
 
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_rotation = Vector4(kYUnitVector);
@@ -33,6 +15,20 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour 
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 
 	SceneGraph::Get()->AddGameObject(this);
+}
+
+GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour)
+{
+	switch (preDefinedShape)
+	{
+	case ShapeTypes::CubeShape:
+	{
+		m_model.Load("Engine/Resources/Models/Cube.obj");
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 GameObject::~GameObject()

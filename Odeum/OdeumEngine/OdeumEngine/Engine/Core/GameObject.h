@@ -10,7 +10,8 @@ class Component;
 class GameObject
 {
 public:
-	GameObject(std::string fileName, ShapeTypes preDefinedShape = ShapeTypes::NoShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f)); // temp
+	GameObject(std::string fileName); // temp
+	GameObject(ShapeTypes preDefinedShape = ShapeTypes::NoShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
 	~GameObject();
 
 	void Initialize(std::string modelTextureLoadFile);
