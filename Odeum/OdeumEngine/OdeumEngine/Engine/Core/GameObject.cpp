@@ -48,7 +48,6 @@ void GameObject::Initialize(std::string modelTextureLoadFile)
 
 void GameObject::Update(float deltaTime)
 {
-
 	for (auto component : m_components)
 		component->Update(deltaTime);
 }

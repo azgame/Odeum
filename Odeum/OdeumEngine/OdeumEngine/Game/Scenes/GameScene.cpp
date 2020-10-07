@@ -9,6 +9,8 @@ GameScene::GameScene() : Scene()
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 8.0f, 10.0f));
 	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
+	object->RemoveComponent<KinimaticMovement>();
+	object->RemoveComponents<DynamicMovement, ComponentTest>();
 }
 
 GameScene::~GameScene()
@@ -25,8 +27,8 @@ void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	angle += 0.0025f;
-	object->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), angle);
+	angle += deltaTime_;
+	object->SetRotation(Vector4(kYUnitVector), angle);
 
 	object->Update(deltaTime_);
 }
