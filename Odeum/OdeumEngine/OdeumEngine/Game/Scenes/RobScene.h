@@ -18,7 +18,7 @@ public:
 private:
 	float teletime;
 	GameObject* object;
-	GameObject* plane;
+	
 	GameObject* newObject;
 };
 

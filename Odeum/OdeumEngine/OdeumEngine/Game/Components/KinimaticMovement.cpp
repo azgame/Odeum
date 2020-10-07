@@ -11,7 +11,7 @@ void KinimaticMovement::Update(float deltaTime)
 	    //sets position directly moving constantly 
 		if (!shouldFlee)
 		{
-			//object->SetPosition(object->GetPosition() + temp);
+			object->SetPosition(object->GetPosition() + temp);
 		}
 		else
 		{

@@ -2,6 +2,12 @@
 void DynamicMovement::OnAttach(GameObject* parent)
 {
 	object = parent;
+	//if (object->GetComponent<SimplePhysics>()){}
+	//else { object->AddComponent<SimplePhysics>(); Debug::Info("add comp", __FILENAME__, __LINE__);
+	//}
+	
+
+	
 	//change these values later these are placeholders, should be set depending on the object
 	 maxAcceleration=5;
 	 maxSpeed=5;
@@ -15,6 +21,7 @@ void DynamicMovement::Update(float deltaTime)
 	//requires target to work
 	if (target)
 	{
+		
 		if(!shouldFlee)
 		object->GetComponent<SimplePhysics>()->SetAcceleration(GetSteering());
 		else
