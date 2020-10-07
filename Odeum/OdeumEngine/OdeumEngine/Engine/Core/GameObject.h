@@ -55,6 +55,7 @@ protected:
 	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
+	friend class SimplePhysics;
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
 };
 
