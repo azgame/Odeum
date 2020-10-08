@@ -35,7 +35,7 @@ public:
 
 	~BufferPage()
 	{
-		UnMap(); // RAII
+		UnMap();
 	}
 
 	void Map()
@@ -84,6 +84,8 @@ public:
 
 	void Destroy() { m_pagePool.clear(); }
 
+	void RecycleLargePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_);
+
 private:
 
 	static BufferAllocatorType sm_initType;
@@ -91,6 +93,7 @@ private:
 	BufferAllocatorType m_allocationType;
 	std::vector<std::unique_ptr<BufferPage>> m_pagePool;
 	std::queue<std::pair<uint64_t, BufferPage*>> m_retiredPages;
+	std::queue<std::pair<uint64_t, BufferPage*>> m_deletionQueue;
 	std::queue<BufferPage*> m_availablePages;
 	std::mutex m_mutex;
 };
@@ -120,12 +123,14 @@ public:
 private:
 
 	static BufferLedger sm_pageManager[2]; // one cpu visible, one gpu visible, accessible across all buffer allocators
+	BufferEntry AllocateLargePage(size_t sizeInBytes);
 
 	BufferAllocatorType m_allocationType;
 	size_t m_pageSize;
 	size_t m_offset;
 	BufferPage* m_bookmark;
 	std::vector<BufferPage*> m_retiredPages;
+	std::vector<BufferPage*> m_largePages;
 };
 
 #endif

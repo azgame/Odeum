@@ -12,6 +12,7 @@ newmtl Apple_Body
 	Kd 0.8039 0.1647 0.7216
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
+	map_Kd Apple_Body.png
 
 newmtl Apple_Branch
 	Ns 10.0000
@@ -24,3 +25,4 @@ newmtl Apple_Branch
 	Kd 0.6039 0.5333 0.3804
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
+	map_Kd Apple_Branch.png

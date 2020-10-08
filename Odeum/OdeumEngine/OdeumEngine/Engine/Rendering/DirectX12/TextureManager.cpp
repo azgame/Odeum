@@ -57,6 +57,12 @@ void Texture::Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT f
     DXGraphics::m_device->CreateShaderResourceView(m_resource.Get(), nullptr, m_cpuDescHandle);
 }
 
+void Texture::SetToInvalidTexture()
+{
+    uint32_t MagentaPixel = 0x00FF00FF;
+    Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &MagentaPixel);
+}
+
 // Seperating initial loading call from possible find so that we can eventually decide when to put a texture into memory
 Texture* TextureManager::LoadFromFile(std::string textureName_)
 {
@@ -72,11 +78,11 @@ void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI
 
 	const UINT newStride = BytesPerPixel(format);
 	const UINT newSize = numPixels * newStride;
-	tex.formattedData = new UINT[newSize];
+	tex.formattedData = new UINT8[newSize];
 
 	for (UINT i = 0; i < numPixels; i++)
 	{
-		tex.formattedData[i * newStride] = pixels[i * oldStride];
+		tex.formattedData[i * newStride + 0] = pixels[i * oldStride + 0];
 		tex.formattedData[i * newStride + 1] = pixels[i * oldStride + 1];
 		tex.formattedData[i * newStride + 2] = pixels[i * oldStride + 2];
 		tex.formattedData[i * newStride + 3] = 0xFF;
@@ -101,9 +107,17 @@ Texture* TextureManager::FindOrLoad(std::string textureName_)
 
 	FormattedRawTexture result = {};
 	UINT8* initialData = stbi_load((sm_rootDirectory + textureName_).c_str(), &result.width, &result.height, &result.stride, STBI_default);
-	FormatTexture(result, initialData, DXGI_FORMAT_R8G8B8A8_UNORM);
-	newTexture->Create(result.width, result.height, DXGI_FORMAT_R8G8B8A8_UNORM, result.formattedData);
-
+	
+    if (initialData)
+    {
+        FormatTexture(result, initialData, DXGI_FORMAT_R8G8B8A8_UNORM);
+        newTexture->Create(result.width, result.height, DXGI_FORMAT_R8G8B8A8_UNORM, result.formattedData);
+    }
+    else
+    {
+        newTexture->SetToInvalidTexture();
+    }
+    
 	return newTexture;
 }
 
@@ -255,5 +269,5 @@ size_t TextureManager::BitsPerPixel(DXGI_FORMAT format)
 
 UINT TextureManager::BytesPerPixel(DXGI_FORMAT format)
 {
-    return (UINT)BitsPerPixel(format);
+    return (UINT)BitsPerPixel(format) / 8;
 }

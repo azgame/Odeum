@@ -10,6 +10,8 @@
 
 #include "../Common/GraphicsCore.h"
 
+#include "TextureManager.h"
+
 #include <algorithm>
 
 using namespace Graphics;
@@ -196,6 +198,8 @@ void DXGraphics::Initialize()
 	m_presentPSO.Finalize();
 
 	InitializeRenderingBuffers(s_displayWidth, s_displayHeight);
+
+	TextureManager::Get()->Initialize("Engine/Resources/Textures/");
 }
 
 void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_)

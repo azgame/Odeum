@@ -5,6 +5,7 @@
 #include "../Rendering/DirectX12/Buffers/DepthBuffer.h"
 #include "../Rendering/DirectX12/LightSource.h"
 #include "../Rendering/DirectX12/SceneGraph.h"
+#include "../Rendering/DirectX12/SamplerDesc.h"
 
 #include "OdeumEngine.h"
 
@@ -22,9 +23,13 @@ TestRender::~TestRender()
 
 void TestRender::Attach()
 {
-	m_rootSig.Reset(2, 0);
+	SamplerDesc defaultSampler;
+
+	m_rootSig.Reset(3, 1);
+	m_rootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_rootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_rootSig[2].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 1, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
@@ -85,8 +90,8 @@ void TestRender::Update(float deltaTime_)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-5.0f, 2.0f, 5.0f));
-	light.radiusSq = 200.0f;
+	DirectX::XMStoreFloat3(&light.position, Vector3(-20.0f, 20.0f, 20.0f));
+	light.radiusSq = 1000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(1.0f, 1.0f, 1.0f));
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
@@ -120,6 +125,8 @@ void TestRender::Update(float deltaTime_)
 			uint32_t indexCount = mesh.indexCount;
 			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint16_t);
 			uint32_t baseVertex = mesh.vertexDataByteOffset / sizeof(Vertex);
+
+			graphics.SetDynamicDescriptors(2, 0, 1, object->GetModel().GetSRVs(mesh.materialIndex));
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 		}	

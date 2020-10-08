@@ -16,6 +16,9 @@ struct PS_INPUT
 	float3 bitangent : Bitangent;
 };
 
+Texture2D<float3> texDiffuse : register(t0);
+SamplerState sampler0 : register(s0);
+
 void FresnelLighting(inout float3 specular, inout float3 diffuse, float3 lightDir, float3 halfVec)
 {
     float fresnel = pow(1.0 - saturate(dot(lightDir, halfVec)), 5.0);
@@ -78,13 +81,14 @@ float3 ApplyPointLight(
 
 float4 main(PS_INPUT input) : SV_Target0
 {
-    float3 diffuseColour = float3(0.9f, 0.2f, 0.5f);
-    float3 specularColour = float3(1.0f, 0.2f, 0.5f);
-    float gloss = 32.0f;
+    float3 diffuseColour = texDiffuse.Sample(sampler0, input.uv);
+    float3 specularColour = float3(0.3f, 0.3f, 0.3f);
+    float3 ambientColour = float3(0.1f, 0.1f, 0.1f);
+    float gloss = 16.0f;
 
     float3 colour = 0.0f;
 
-    colour += float3(0.15f, 0.0f, 0.0f);
+    colour += diffuseColour * ambientColour;
     colour += ApplyPointLight(diffuseColour, specularColour, gloss, input.normal, 
         input.viewDir, input.worldPos, lightPos, radiusSq, lightColour);
 	return float4(colour, 1.0f);

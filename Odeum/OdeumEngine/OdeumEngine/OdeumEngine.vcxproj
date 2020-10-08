@@ -197,6 +197,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\SamplerDesc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -272,6 +273,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
