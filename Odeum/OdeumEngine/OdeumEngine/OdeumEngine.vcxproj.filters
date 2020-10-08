@@ -54,7 +54,6 @@
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Game\Scenes\BenScene2.cpp" />
-    <ClCompile Include="Engine\Rendering\DirectX12\SamplerDesc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />

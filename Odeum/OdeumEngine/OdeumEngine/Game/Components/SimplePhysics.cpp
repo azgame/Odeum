@@ -62,7 +62,6 @@ float SimplePhysics::GetMass()
 Vector4 SimplePhysics::GetPosition()
 {
 	return m_gameObject->GetPosition();
-
 }
 
 // Setters

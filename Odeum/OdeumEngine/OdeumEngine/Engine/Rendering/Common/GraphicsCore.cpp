@@ -30,8 +30,6 @@ void Graphics::SetFrameTime(float frameTime)
 	s_frameTime = frameTime;
 }
 
-
-
 float Graphics::GetFrameRate()
 {
 	return s_frameTime == 0.0f ? 0.0f : 1.0f / s_frameTime;

@@ -16,6 +16,9 @@
 
 using namespace Graphics;
 
+// replace with getting refresh rate from monitor in initialization
+#define REFRESH_RATE 100.0f
+
 namespace DXGraphics
 {
 	ID3D12Device* m_device = nullptr;
@@ -254,13 +257,11 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 		m_displayPlane[i].SetClearColour(Colour(1.0f, 0.33f, 0.67f));
 	}
 
-	/*m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
-	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);*/
+	m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);
 
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
-
-	// ResizeDisplayDependentBuffers(m_nativeWidth, m_nativeHeight);
 }
 
 void DXGraphics::PreparePresent()
@@ -292,11 +293,11 @@ void DXGraphics::Present()
 
 	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 	double frameTime = GetFrameTime();
-	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * 100.0f)) : 0;
+	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * REFRESH_RATE)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
-	if (s_enableVSync) frameTime = 1 / 100.0f;
+	if (s_enableVSync) frameTime = 1.0 / REFRESH_RATE;
 	else frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
 
 	SetFrameTime((float)frameTime);
@@ -341,12 +342,12 @@ void DXGraphics::Shutdown()
 
 	DescriptorAllocator::DestroyHeaps();
 
-	//for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-	//	m_displayPlane[i].Destroy();
+	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+		m_displayPlane[i].Destroy();
 
-	//m_preDisplayBuffer.Destroy();
-	//m_presentBuffer.Destroy();
-	//m_sceneDepthBuffer.Destroy();
+	m_preDisplayBuffer.Destroy();
+	m_presentBuffer.Destroy();
+	m_sceneDepthBuffer.Destroy();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
 }

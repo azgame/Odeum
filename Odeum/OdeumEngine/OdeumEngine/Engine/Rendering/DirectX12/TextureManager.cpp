@@ -61,6 +61,7 @@ void Texture::SetToInvalidTexture()
 {
     uint32_t MagentaPixel = 0x00FF00FF;
     Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &MagentaPixel);
+    m_isValid = false;
 }
 
 // Seperating initial loading call from possible find so that we can eventually decide when to put a texture into memory
