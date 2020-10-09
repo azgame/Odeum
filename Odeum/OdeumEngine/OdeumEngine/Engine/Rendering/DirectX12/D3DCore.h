@@ -35,6 +35,7 @@ namespace DXGraphics
 
 	extern ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
 	extern ColourBuffer m_presentBuffer;
+	extern ColourBuffer m_overlayBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
 
 	extern D3D12_BLEND_DESC alphaBlend;

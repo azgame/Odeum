@@ -55,12 +55,17 @@ void TestRender::Attach()
 	m_colourPSO.CompileVertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
+
+	CreateUIResources();
+	InitializeUI();
 }
 
 void TestRender::Detach()
 {
 	m_rootSig.Destroy();
 	m_colourPSO.Destroy();
+
+	if (m_pHeap) m_pHeap->Release(); m_pHeap = NULL;
 }
 
 void TestRender::Update(float deltaTime_)
@@ -71,7 +76,7 @@ void TestRender::Update(float deltaTime_)
 		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
 	}
 
-	/*m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
+	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
 	m_mainViewport.MinDepth = -1.0f;
 	m_mainViewport.MaxDepth = 0.0f;
@@ -79,9 +84,9 @@ void TestRender::Update(float deltaTime_)
 	m_mainScissor.left = 0;
 	m_mainScissor.top = 0;
 	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
-	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();*/
+	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
 
-	m_mainViewport.Width = (float)OdeumEngine::Get().GetWindow().GetWidth();
+	/*m_mainViewport.Width = (float)OdeumEngine::Get().GetWindow().GetWidth();
 	m_mainViewport.Height = (float)OdeumEngine::Get().GetWindow().GetHeight();
 	m_mainViewport.MinDepth = -1.0f;
 	m_mainViewport.MaxDepth = 0.0f;
@@ -89,7 +94,7 @@ void TestRender::Update(float deltaTime_)
 	m_mainScissor.left = 0;
 	m_mainScissor.top = 0;
 	m_mainScissor.right = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainScissor.bottom = (float)OdeumEngine::Get().GetWindow().GetHeight();
+	m_mainScissor.bottom = (float)OdeumEngine::Get().GetWindow().GetHeight();*/
 
 	struct VSConstants
 	{
@@ -101,8 +106,8 @@ void TestRender::Update(float deltaTime_)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-2.0f, 5.0f, 10.0f));
-	light.radiusSq = 200.0f;
+	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 20.0f, 20.0f));
+	light.radiusSq = 4000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(0.3f, 0.3f, 0.3f));
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
@@ -148,6 +153,24 @@ void TestRender::Update(float deltaTime_)
 
 void TestRender::UIRender()
 {
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	bool showDemo = true;
+	ImGui::ShowDemoWindow(&showDemo);
+
+	GraphicsContext& uiContext = CommandContext::RequestContext(L"UI context").GetGraphicsContext();
+
+	//uiContext.TransitionResource(DXGraphics::m_overlayBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	//uiContext.ClearColor(DXGraphics::m_overlayBuffer);
+	uiContext.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV());
+	ID3D12GraphicsCommandList* cmdList = uiContext.GetCommandList();
+	cmdList->SetDescriptorHeaps(1, &m_pHeap);
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+
+	uiContext.Finish();
 }
 
 void TestRender::HandleEvent(Event& event_) // Queue events
@@ -158,4 +181,34 @@ void TestRender::HandleEvent(Event& event_) // Queue events
 	m_eventQueue[m_bufferTail] = &event_;
 
 	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
+}
+
+void TestRender::CreateUIResources()
+{
+	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	desc.NumDescriptors = 1;
+	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+	if (FAILED(DXGraphics::m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_pHeap))))
+	{
+		ERROR("Could not create desc heap for UI render!");
+		throw std::runtime_error("Could not create desc heap for UI render!");
+	}
+}
+
+void TestRender::InitializeUI()
+{
+	// Imgui integration
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplWin32_Init(OdeumEngine::Get().GetWindow().GetHWND());
+	ImGui_ImplDX12_Init(DXGraphics::m_device, SWAP_CHAIN_BUFFER_COUNT, DXGraphics::m_presentBuffer.GetFormat(),
+		m_pHeap, m_pHeap->GetCPUDescriptorHandleForHeapStart(), m_pHeap->GetGPUDescriptorHandleForHeapStart());
+
+
 }

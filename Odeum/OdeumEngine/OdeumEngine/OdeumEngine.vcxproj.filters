@@ -132,7 +132,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Shaders\PresentRS.hlsli" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

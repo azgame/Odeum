@@ -94,6 +94,7 @@ namespace DXGraphics
 	ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
 	ColourBuffer m_preDisplayBuffer;
 	ColourBuffer m_presentBuffer;
+	ColourBuffer m_overlayBuffer;
 	DepthBuffer m_sceneDepthBuffer;
 
 	IDXGISwapChain1* sm_swapChain = nullptr;
@@ -177,7 +178,7 @@ void DXGraphics::Initialize()
 	InitializeCommonState();
 
 	m_presentRootSig.Reset(1, 0);
-	m_presentRootSig[0].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 1, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_presentRootSig[0].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 2, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_presentRootSig.Finalize(L"Present");
 
 	m_presentPSO.SetRootSignature(m_presentRootSig);
@@ -190,7 +191,6 @@ void DXGraphics::Initialize()
 	depthReadWrite.DepthEnable = TRUE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	// 
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);
@@ -209,10 +209,12 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 {
 	GraphicsContext& initBuffers = GraphicsContext::RequestContext();
 
-	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
+	m_overlayBuffer.SetClearColour(Colour(1.0f, 1.0f, 1.0f, 0.0f));
+	m_overlayBuffer.Create(L"Overlay buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	initBuffers.Finish();
 }
@@ -259,6 +261,7 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
 	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);
+	m_overlayBuffer.Create(L"Overlay buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
@@ -269,10 +272,12 @@ void DXGraphics::PreparePresent()
 	GraphicsContext& context = GraphicsContext::RequestContext(L"Present");
 
 	context.TransitionResource(m_presentBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	context.TransitionResource(m_overlayBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	
 	context.SetRootSignature(m_presentRootSig);
 	context.SetDynamicDescriptor(0, 0, m_presentBuffer.GetSRV());
+	context.SetDynamicDescriptor(0, 1, m_overlayBuffer.GetSRV());
 
 	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -335,6 +340,10 @@ void DXGraphics::Shutdown()
 {
 	m_commandManager.IdleGPU();
 	sm_swapChain->SetFullscreenState(false, nullptr);
+
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	CommandContext::DestroyAllContexts();
 	m_commandManager.Uninitialize();
