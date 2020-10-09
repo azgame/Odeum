@@ -1,5 +1,6 @@
 #include "GraphicsCore.h"
 
+
 namespace Graphics
 {
 	uint32_t s_displayWidth = 0;

@@ -62,6 +62,8 @@ void OdeumEngine::Run()
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
 
+		m_gameInterface->Render();
+
 		for (auto system : m_systemStack)
 			system->UIRender();
 

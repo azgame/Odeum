@@ -13,7 +13,7 @@ public:
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
-	virtual void Render();
+	virtual void UIRender();
 
 private:
 	float teletime;

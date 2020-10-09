@@ -41,6 +41,9 @@ namespace DXGraphics
 	extern D3D12_BLEND_DESC alphaBlend;
 	extern D3D12_RASTERIZER_DESC rasterDesc;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+
+	float GetFrameRate();
+	float GetFrameTime();
 }
 
 #endif

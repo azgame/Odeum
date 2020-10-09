@@ -27,12 +27,16 @@ void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	angle += deltaTime_ * 0.1f;
+	angle += direction * (deltaTime_ * 0.1f);
 	object->SetRotation(Vector4(kYUnitVector), angle);
 
 	object->Update(deltaTime_);
 }
 
-void GameScene::Render()
+void GameScene::UIRender()
 {
+	ImGui::Begin("Game UI");
+	if (ImGui::Button("Change rotation direction"))
+		direction *= -1.0f;
+	ImGui::End();
 }

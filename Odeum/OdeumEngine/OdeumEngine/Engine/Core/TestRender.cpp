@@ -76,6 +76,10 @@ void TestRender::Update(float deltaTime_)
 		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
 	}
 
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	m_mainViewport.Width = (float)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainViewport.Height = (float)DXGraphics::m_presentBuffer.GetHeight();
 	m_mainViewport.MinDepth = -1.0f;
@@ -153,24 +157,22 @@ void TestRender::Update(float deltaTime_)
 
 void TestRender::UIRender()
 {
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	if (frameCounter == 5)
+	{
+		frameTime = DXGraphics::GetFrameTime();
+		frameRate = DXGraphics::GetFrameRate();
+	}
 
-	bool showDemo = true;
-	ImGui::ShowDemoWindow(&showDemo);
+	ImGui::Begin("Frame Profiling");
 
-	GraphicsContext& uiContext = CommandContext::RequestContext(L"UI context").GetGraphicsContext();
+	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
+	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
 
-	//uiContext.TransitionResource(DXGraphics::m_overlayBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-	//uiContext.ClearColor(DXGraphics::m_overlayBuffer);
-	uiContext.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV());
-	ID3D12GraphicsCommandList* cmdList = uiContext.GetCommandList();
-	cmdList->SetDescriptorHeaps(1, &m_pHeap);
-	ImGui::Render();
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+	ImGui::End();
 
-	uiContext.Finish();
+	frameCounter = (frameCounter + 1) % 6;
+
+	UIRenderD3DResources();
 }
 
 void TestRender::HandleEvent(Event& event_) // Queue events
@@ -209,6 +211,19 @@ void TestRender::InitializeUI()
 	ImGui_ImplWin32_Init(OdeumEngine::Get().GetWindow().GetHWND());
 	ImGui_ImplDX12_Init(DXGraphics::m_device, SWAP_CHAIN_BUFFER_COUNT, DXGraphics::m_presentBuffer.GetFormat(),
 		m_pHeap, m_pHeap->GetCPUDescriptorHandleForHeapStart(), m_pHeap->GetGPUDescriptorHandleForHeapStart());
+}
 
+void TestRender::UIRenderD3DResources()
+{
+	GraphicsContext& uiContext = CommandContext::RequestContext(L"UI context").GetGraphicsContext();
 
+	//uiContext.TransitionResource(DXGraphics::m_overlayBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	//uiContext.ClearColor(DXGraphics::m_overlayBuffer);
+	uiContext.SetRenderTarget(DXGraphics::m_presentBuffer.GetRTV());
+	ID3D12GraphicsCommandList* cmdList = uiContext.GetCommandList();
+	cmdList->SetDescriptorHeaps(1, &m_pHeap);
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+
+	uiContext.Finish();
 }

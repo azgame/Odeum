@@ -30,6 +30,7 @@ void Game1::Update(const float deltaTime_)
 
 void Game1::Render()
 {
+	m_currentScene->UIRender();
 }
 
 void Game1::BuildScene()

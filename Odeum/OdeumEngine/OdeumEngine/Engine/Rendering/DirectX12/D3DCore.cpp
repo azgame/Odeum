@@ -18,6 +18,7 @@ using namespace Graphics;
 
 // replace with getting refresh rate from monitor in initialization
 #define REFRESH_RATE 100.0f
+#define NUM_FRAMES_FOR_AVERAGES 120
 
 namespace DXGraphics
 {
@@ -105,6 +106,10 @@ namespace DXGraphics
 	D3D12_BLEND_DESC alphaBlend;
 	D3D12_RASTERIZER_DESC rasterDesc;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+
+	float frameTimeAverage = 0.0f;
+	float frameTimeTotal = 0.0f;
+	uint32_t frameCounter = 0;
 }
 
 void DXGraphics::Initialize()
@@ -297,15 +302,34 @@ void DXGraphics::Present()
 	PreparePresent();
 
 	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
-	double frameTime = GetFrameTime();
+	double frameTime = Graphics::GetFrameTime();
 	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * REFRESH_RATE)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
 	if (s_enableVSync) frameTime = 1.0 / REFRESH_RATE;
-	else frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
+	else frameTime = 1000.0f * OdeumEngine::Get().GetTimer().GetDeltaTime();
 
-	SetFrameTime((float)frameTime);
+	if (frameCounter == 0)
+	{
+		frameTimeAverage = frameTimeTotal / NUM_FRAMES_FOR_AVERAGES;
+		frameTimeTotal = 0.0f;
+	}
+
+	frameTimeTotal += frameTime;
+	frameCounter = (frameCounter + 1) % NUM_FRAMES_FOR_AVERAGES;
+
+	Graphics::SetFrameTime((float)frameTime);
+}
+
+float DXGraphics::GetFrameRate()
+{
+	return (1.0f / frameTimeAverage) * 1000.0f;
+}
+
+float DXGraphics::GetFrameTime()
+{
+	return frameTimeAverage;
 }
 
 void DXGraphics::InitializeCommonState()

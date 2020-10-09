@@ -30,6 +30,11 @@ private:
 
 	void CreateUIResources();
 	void InitializeUI();
+	void UIRenderD3DResources();
+
+	uint32_t frameCounter = 0;
+	float frameRate = 0.0f;
+	float frameTime = 0.0f;
 };
 
 #endif

@@ -20,6 +20,6 @@ void StartScene::Update(const float deltaTime_)
 	Debug::Info("updating Start Scene", __FILENAME__, __LINE__);
 }
 
-void StartScene::Render()
+void StartScene::UIRender()
 {
 }

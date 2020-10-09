@@ -41,7 +41,7 @@ void BenScene2::Update(const float deltaTime_)
 }
 
 
-void BenScene2::Render()
+void BenScene2::UIRender()
 {
 	// Don't add here, doesn't do anything
 	//Don't tell me what to Do
