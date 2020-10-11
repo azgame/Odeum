@@ -20,14 +20,15 @@ void SimplePhysics::Update(float deltaTime)
 {
 	
 	// update velocity
-	//totalVelocity += (Vector4)(p_totalAcceleration * deltaTime);
+	p_totalVelocity += (p_totalAcceleration * deltaTime);
+	p_position += p_totalVelocity * deltaTime +p_totalAcceleration*0.5f* deltaTime*deltaTime;
 
 	// ******* CURRENTLY A PROBLEM WITH SETTING POSITION AND ROTATION
 	//update position
-	p_position += p_totalVelocity * p_speed * deltaTime;
-	//m_gameObject->SetPosition(m_gameObject->GetPosition() + Vector4(p_totalVelocity * p_speed * deltaTime));
-	//m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(totalVelocity * deltaTime + p_totalAcceleration * 0.5f * deltaTime * deltaTime));
-	
+	//m_gameObject->SetVelocity(m_gameObject->GetVelocity() + (Vector4)(totalAcceleration * deltaTime));
+	//m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(m_gameObject->GetVelocity() * deltaTime + totalAcceleration * 0.5f * deltaTime * deltaTime));
+	// update velocity
+	// update position
 	p_rotation = p_orientation;
 	// update orientation
 	// this check just stops some math errors when there's no velocity set
@@ -37,7 +38,8 @@ void SimplePhysics::Update(float deltaTime)
 		p_orientation = UpdateOrientationQuaternion();
 		p_angle += p_angleSpeed;
 	}
-	UpdateTransform();
+	//UpdateTransform();
+	m_gameObject->SetPosition(p_position);
 }
 
 // translate the position
@@ -72,6 +74,10 @@ Vector4 SimplePhysics::GetPosition()
 	return p_position;
 
 }
+Vector4 SimplePhysics::GetVelocity()
+{
+	return p_totalVelocity;
+}
 
 // Setters
 void SimplePhysics::SetMass(float mass)
@@ -88,6 +94,10 @@ void SimplePhysics::SetPosition(Vector4 position)
 void SimplePhysics::SetVelocity(Vector4 velocity)
 {
 	p_totalVelocity = velocity;
+}
+void SimplePhysics::SetTotalAcceleration(Vector4 acceleration)
+{
+	p_totalAcceleration = acceleration;
 }
 
 void SimplePhysics::AddVelocity(Vector4 velocity)

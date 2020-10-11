@@ -34,7 +34,7 @@ public:
 	void AddAngularVelocity(Vector4 velocity, float angle);
 
 	void AddVelocity(Vector4 velocity);
-	
+	void SetTotalAcceleration(Vector4 acceleration);
 
 private:
 	// options for now

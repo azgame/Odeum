@@ -15,7 +15,7 @@ void KinimaticMovement::Update(float deltaTime)
 		}
 		else
 		{
-			temp = temp * 3;
+			temp = temp;
 			object->SetPosition(object->GetPosition() - temp);
 		}
 		

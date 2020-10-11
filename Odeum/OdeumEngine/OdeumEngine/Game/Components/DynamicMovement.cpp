@@ -23,9 +23,9 @@ void DynamicMovement::Update(float deltaTime)
 	{
 		
 		if(!shouldFlee)
-		object->GetComponent<SimplePhysics>()->SetAcceleration(GetSteering());
+		object->GetComponent<SimplePhysics>()->SetTotalAcceleration(GetSteering());
 		else
-		object->GetComponent<SimplePhysics>()->SetAcceleration(-GetSteering());
+		object->GetComponent<SimplePhysics>()->SetTotalAcceleration(-GetSteering());
 		
 			
 	}

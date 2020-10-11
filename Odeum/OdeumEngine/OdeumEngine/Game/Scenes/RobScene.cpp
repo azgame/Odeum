@@ -8,17 +8,19 @@ RobScene::RobScene() : Scene()
 {
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
 	newObject->SetPosition(Vector4(5.0f, 2.0f, 0.0f, 1.0f));
-	object = new GameObject("Engine/Resources/Models/Cube.obj");
+	object = new GameObject("Engine/Resources/Models/2nrtbod1out.obj");
 	object->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<SimplePhysics>();
 	object->AddComponent <DynamicMovement>();
 	//object->AddComponent <KinimaticMovement>();
+	object->GetComponent<SimplePhysics>()->SetMass(1.0f);
 	
+	//object->GetComponent<SimplePhysics>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 0.02f);
 	
 	//Debug::Info("Creating rob", __FILENAME__, __LINE__);
-	//object->GetComponent<DynamicMovement>()->target = newObject;
+	object->GetComponent<DynamicMovement>()->target = newObject;
 	//object->GetComponent<KinimaticMovement>()->target = newObject;
-	//object->GetComponent<SimplePhysics>()->SetMass(1);
+	
 
 	
 	
@@ -54,14 +56,14 @@ void RobScene::Update(const float deltaTime_)
 	if (Input::Get().isKeyPressed(Key::KeyCode::A))
 	{
 	
-	//object->SetPosition(object->GetPosition() + Vector4(1.01f, 0.0f, 0.0f, 0.0f));
+	object->SetPosition(object->GetPosition() + Vector4(1.01f, 0.0f, 0.0f, 0.0f));
 	//object->GetComponent<KinimaticMovement>()->shouldFlee = true;
-	object->GetComponent<DynamicMovement>()->shouldFlee = true;
+    object->GetComponent<DynamicMovement>()->shouldFlee = true;
 	}
 	else
 	{
 		//object->GetComponent<KinimaticMovement>()->shouldFlee = false;
-		//object->GetComponent<DynamicMovement>()->shouldFlee = false;
+		object->GetComponent<DynamicMovement>()->shouldFlee = false;
 	}
 }
 
