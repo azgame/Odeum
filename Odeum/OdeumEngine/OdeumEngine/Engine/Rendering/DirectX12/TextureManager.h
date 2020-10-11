@@ -15,10 +15,11 @@ public:
 	Texture(const std::string& fileName_) 
 	{
 		m_textureKey = fileName_;
-		m_cpuDescHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; 
+		m_cpuDescHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+		m_isValid = true;
 	}
 
-	Texture(const std::string& fileName_, D3D12_CPU_DESCRIPTOR_HANDLE handle) : m_cpuDescHandle(handle), m_textureKey(fileName_) {}
+	Texture(const std::string& fileName_, D3D12_CPU_DESCRIPTOR_HANDLE handle) : m_cpuDescHandle(handle), m_textureKey(fileName_), m_isValid(true) {}
 
 	void Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT format_, const void* initialData_);
 	void Create(size_t width_, size_t height_, DXGI_FORMAT format_, const void* initialData_)
@@ -34,8 +35,12 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_cpuDescHandle; }
 
+	void SetToInvalidTexture();
+	bool isValid() const { return m_isValid; }
+
 private:
 
+	bool m_isValid;
 	std::string m_textureKey;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_cpuDescHandle;
 };
@@ -59,7 +64,7 @@ private:
 
 	struct FormattedRawTexture
 	{
-		UINT* formattedData;
+		UINT8* formattedData;
 		int width = 0;
 		int height = 0;
 		int stride = 0;

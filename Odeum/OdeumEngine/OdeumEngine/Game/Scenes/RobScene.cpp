@@ -68,7 +68,7 @@ void RobScene::Update(const float deltaTime_)
 }
 
 
-void RobScene::Render()
+void RobScene::UIRender()
 {
 	// Don't add here, doesn't do anything
 	//Don't tell me what to Do

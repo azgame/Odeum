@@ -26,6 +26,15 @@ private:
 	GraphicsPSO m_colourPSO;
 	D3D12_VIEWPORT m_mainViewport;
 	D3D12_RECT m_mainScissor;
+	ID3D12DescriptorHeap* m_pHeap;
+
+	void CreateUIResources();
+	void InitializeUI();
+	void UIRenderD3DResources();
+
+	uint32_t frameCounter = 0;
+	float frameRate = 0.0f;
+	float frameTime = 0.0f;
 };
 
 #endif

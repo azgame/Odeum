@@ -22,8 +22,13 @@ void Window::Update()
 	}
 }
 
- LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+		return true;
+
 	switch (umsg)
 	{
 	case WM_DESTROY:
@@ -66,6 +71,10 @@ void Window::Update()
 	{
 		KeyReleasedEvent key = KeyReleasedEvent(static_cast<KeyCode>(wparam));
 		m_data.eventCallback(key);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	case WM_MOUSEFIRST:
+	{
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
 	default:
@@ -163,15 +172,6 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 
 	// Hide the mouse cursor
 	ShowCursor(true);
-
-	// Imgui integration
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-	ImGui::StyleColorsDark();
-
-	ImGui_ImplWin32_Init(m_hwnd);
 }
 
 void Window::UninitializeWindow()

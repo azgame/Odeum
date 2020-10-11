@@ -83,41 +83,41 @@ void Model::Load(std::string fileName)
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), texDiffusePath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), texSpecularPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_EMISSIVE, 0), texEmissivePath);
-		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_NORMALS, 0), texNormalPath);
+		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_HEIGHT, 0), texNormalPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_LIGHTMAP, 0), texLightmapPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_REFLECTION, 0), texReflectionPath);
 
 		char* pRem = nullptr;
 
-		strncpy_s(destMat.diffuseTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.diffuseTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.diffuseTextureFile, texDiffusePath.C_Str(), 127);
-		pRem = strrchr(destMat.diffuseTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.diffuseTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.specularTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.specularTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.specularTextureFile, texSpecularPath.C_Str(), 127);
-		pRem = strrchr(destMat.specularTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.specularTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.emissiveTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.emissiveTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.emissiveTextureFile, texEmissivePath.C_Str(), 127);
-		pRem = strrchr(destMat.emissiveTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.emissiveTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.normalTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.normalTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.normalTextureFile, texNormalPath.C_Str(), 127);
-		pRem = strrchr(destMat.normalTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.normalTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.lightmapTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.lightmapTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.lightmapTextureFile, texLightmapPath.C_Str(), 127);
-		pRem = strrchr(destMat.lightmapTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.lightmapTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
-		strncpy_s(destMat.reflectionTextureFile, "Engine/Resources/Textures/", 127);
+		//strncpy_s(destMat.reflectionTextureFile, "Engine/Resources/Textures/", 127);
 		strncat_s(destMat.reflectionTextureFile, texReflectionPath.C_Str(), 127);
-		pRem = strrchr(destMat.reflectionTextureFile, '.');
-		while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
+		//pRem = strrchr(destMat.reflectionTextureFile, '.');
+		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
 
 		aiString matName;
 		sourceMat->Get(AI_MATKEY_NAME, matName);
@@ -204,7 +204,7 @@ void Model::Load(std::string fileName)
 
 			if (sourceMesh->mTextureCoords[0])
 			{
-				vertex->uvcoords = DirectX::XMFLOAT2(sourceMesh->mTextureCoords[0][v].x, sourceMesh->mTextureCoords[0][v].y);
+				vertex->uvcoords = DirectX::XMFLOAT2(sourceMesh->mTextureCoords[0][v].x, 1.0f - sourceMesh->mTextureCoords[0][v].y);
 			}
 			else
 			{
@@ -255,6 +255,34 @@ void Model::Load(std::string fileName)
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
+
+	LoadTextures();
+}
+
+void Model::LoadTextures()
+{
+	m_srvs = new D3D12_CPU_DESCRIPTOR_HANDLE[m_details.materialCount * 6];
+	const Texture* matTextures[6] = {};
+
+	for (uint32_t mIndex = 0; mIndex < m_details.materialCount; mIndex++)
+	{
+		const Material& material = m_pMaterials[mIndex];
+
+		matTextures[0] = TextureManager::Get()->LoadFromFile(material.diffuseTextureFile);
+
+		matTextures[1] = TextureManager::Get()->LoadFromFile(material.specularTextureFile);
+		if (!matTextures[1]->isValid())
+			matTextures[1] = matTextures[0];
+
+		matTextures[3] = TextureManager::Get()->LoadFromFile(material.normalTextureFile);
+
+		m_srvs[mIndex * 6 + 0] = matTextures[0]->GetSRV();
+		m_srvs[mIndex * 6 + 1] = matTextures[1]->GetSRV();
+		m_srvs[mIndex * 6 + 2] = matTextures[0]->GetSRV();
+		m_srvs[mIndex * 6 + 3] = matTextures[3]->GetSRV();
+		/*m_srvs[mIndex * 6 + 4] = matTextures[4]->GetSRV();
+		m_srvs[mIndex * 6 + 5] = matTextures[5]->GetSRV();*/
+	}
 }
 
 void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_)
@@ -277,6 +305,7 @@ void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint
 	m_pMesh[0].vertexCount = numVertices_;
 	m_pMesh[0].vertexDataByteOffset = 0;
 }
+
 
 Model::Mesh& Model::GetMesh(int index)
 {

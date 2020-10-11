@@ -129,9 +129,9 @@
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Game\Scenes\BenScene2.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Shaders\PresentRS.hlsli" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

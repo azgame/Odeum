@@ -10,9 +10,15 @@
 
 #include "../Common/GraphicsCore.h"
 
+#include "TextureManager.h"
+
 #include <algorithm>
 
 using namespace Graphics;
+
+// replace with getting refresh rate from monitor in initialization
+#define REFRESH_RATE 100.0f
+#define NUM_FRAMES_FOR_AVERAGES 120
 
 namespace DXGraphics
 {
@@ -89,6 +95,7 @@ namespace DXGraphics
 	ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
 	ColourBuffer m_preDisplayBuffer;
 	ColourBuffer m_presentBuffer;
+	ColourBuffer m_overlayBuffer;
 	DepthBuffer m_sceneDepthBuffer;
 
 	IDXGISwapChain1* sm_swapChain = nullptr;
@@ -99,6 +106,10 @@ namespace DXGraphics
 	D3D12_BLEND_DESC alphaBlend;
 	D3D12_RASTERIZER_DESC rasterDesc;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+
+	float frameTimeAverage = 0.0f;
+	float frameTimeTotal = 0.0f;
+	uint32_t frameCounter = 0;
 }
 
 void DXGraphics::Initialize()
@@ -172,7 +183,7 @@ void DXGraphics::Initialize()
 	InitializeCommonState();
 
 	m_presentRootSig.Reset(1, 0);
-	m_presentRootSig[0].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 1, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_presentRootSig[0].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 2, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_presentRootSig.Finalize(L"Present");
 
 	m_presentPSO.SetRootSignature(m_presentRootSig);
@@ -185,7 +196,6 @@ void DXGraphics::Initialize()
 	depthReadWrite.DepthEnable = TRUE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	// 
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);
@@ -196,16 +206,20 @@ void DXGraphics::Initialize()
 	m_presentPSO.Finalize();
 
 	InitializeRenderingBuffers(s_displayWidth, s_displayHeight);
+
+	TextureManager::Get()->Initialize("Engine/Resources/Textures/");
 }
 
 void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_)
 {
 	GraphicsContext& initBuffers = GraphicsContext::RequestContext();
 
-	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
 	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
+	m_overlayBuffer.SetClearColour(Colour(1.0f, 1.0f, 1.0f, 0.0f));
+	m_overlayBuffer.Create(L"Overlay buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	initBuffers.Finish();
 }
@@ -250,13 +264,12 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 		m_displayPlane[i].SetClearColour(Colour(1.0f, 0.33f, 0.67f));
 	}
 
-	/*m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
-	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);*/
+	m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
+	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);
+	m_overlayBuffer.Create(L"Overlay buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
-
-	// ResizeDisplayDependentBuffers(m_nativeWidth, m_nativeHeight);
 }
 
 void DXGraphics::PreparePresent()
@@ -264,10 +277,12 @@ void DXGraphics::PreparePresent()
 	GraphicsContext& context = GraphicsContext::RequestContext(L"Present");
 
 	context.TransitionResource(m_presentBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	context.TransitionResource(m_overlayBuffer, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	context.TransitionResource(m_displayPlane[s_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	
 	context.SetRootSignature(m_presentRootSig);
 	context.SetDynamicDescriptor(0, 0, m_presentBuffer.GetSRV());
+	context.SetDynamicDescriptor(0, 1, m_overlayBuffer.GetSRV());
 
 	context.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -287,15 +302,34 @@ void DXGraphics::Present()
 	PreparePresent();
 
 	s_currentBuffer = (s_currentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
-	double frameTime = GetFrameTime();
-	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * 100.0f)) : 0;
+	double frameTime = Graphics::GetFrameTime();
+	UINT presentInterval = s_enableVSync ? std::min(4, (int)round(frameTime * REFRESH_RATE)) : 0;
 
 	sm_swapChain->Present(presentInterval, 0);
 
-	if (s_enableVSync) frameTime = 1 / 100.0f;
-	else frameTime = OdeumEngine::Get().GetTimer().GetDeltaTime();
+	if (s_enableVSync) frameTime = 1.0 / REFRESH_RATE;
+	else frameTime = 1000.0f * OdeumEngine::Get().GetTimer().GetDeltaTime();
 
-	SetFrameTime((float)frameTime);
+	if (frameCounter == 0)
+	{
+		frameTimeAverage = frameTimeTotal / NUM_FRAMES_FOR_AVERAGES;
+		frameTimeTotal = 0.0f;
+	}
+
+	frameTimeTotal += frameTime;
+	frameCounter = (frameCounter + 1) % NUM_FRAMES_FOR_AVERAGES;
+
+	Graphics::SetFrameTime((float)frameTime);
+}
+
+float DXGraphics::GetFrameRate()
+{
+	return (1.0f / frameTimeAverage) * 1000.0f;
+}
+
+float DXGraphics::GetFrameTime()
+{
+	return frameTimeAverage;
 }
 
 void DXGraphics::InitializeCommonState()
@@ -331,18 +365,22 @@ void DXGraphics::Shutdown()
 	m_commandManager.IdleGPU();
 	sm_swapChain->SetFullscreenState(false, nullptr);
 
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	CommandContext::DestroyAllContexts();
 	m_commandManager.Uninitialize();
 	sm_swapChain->Release();
 
 	DescriptorAllocator::DestroyHeaps();
 
-	//for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-	//	m_displayPlane[i].Destroy();
+	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+		m_displayPlane[i].Destroy();
 
-	//m_preDisplayBuffer.Destroy();
-	//m_presentBuffer.Destroy();
-	//m_sceneDepthBuffer.Destroy();
+	m_preDisplayBuffer.Destroy();
+	m_presentBuffer.Destroy();
+	m_sceneDepthBuffer.Destroy();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
 }

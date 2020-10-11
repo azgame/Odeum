@@ -10,7 +10,8 @@ class Component;
 class GameObject
 {
 public:
-	GameObject(std::string fileName, ShapeTypes preDefinedShape = ShapeTypes::NoShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f)); // temp
+	GameObject(std::string fileName);
+	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
 	~GameObject();
 
 	void Initialize(std::string modelTextureLoadFile);
@@ -24,6 +25,12 @@ public:
 
 	template<typename T>
 	T* GetComponent();
+
+	template<typename T>
+	void RemoveComponent();
+
+	template<typename... Ts>
+	void RemoveComponents();
 
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
@@ -40,6 +47,7 @@ public:
 	void SetMass(float mass);
 
 protected:
+
 	Model m_model;
 	Matrix4 m_modelMatrix;
 
@@ -85,15 +93,14 @@ inline void GameObject::AddComponent()
 	component = nullptr;
 }
 
-// Not supported yet!
 template<typename ...Ts>
 inline void GameObject::AddComponents()
 {
-	Debug::Warning("Parameter packed multiple component attachment not supported yet", __FILENAME__, __LINE__);
-	throw std::runtime_error("Parameter packed multiple component attachment not supported yet"); // Throwing an error might be aggressive here
+	int unpacking[] = { 0, (AddComponent<Ts>(), 0)... }; // pack expansion trick. function call is a side effect of the initializer list being initialized to 0s, but is used for all va args, so we accomplish add component for all without recursively calling it
+	(void)unpacking; // suppress unused variable warning
 }
 
-// Can lead to undefined behaviour with diamond inheritance structures. Please do not use diamond inheritance structures with components
+// Can lead to undefined behaviour in diamond inheritance structures. Left side classes pointing to most derived can be unsafely cast to Right side classes
 template<typename T>
 inline T* GameObject::GetComponent()
 {
@@ -102,6 +109,25 @@ inline T* GameObject::GetComponent()
 			return dynamic_cast<T*>(c);
 
 	return nullptr;
+}
+
+template<typename T>
+inline void GameObject::RemoveComponent()
+{
+	auto iter = m_components.begin();
+	for (iter; iter != m_components.end(); iter++)
+		if (dynamic_cast<T*>(*iter))
+			break;
+
+	if (iter != m_components.end())
+		m_components.erase(iter);
+}
+
+template<typename ...Ts>
+inline void GameObject::RemoveComponents()
+{
+	int unpacking[] = { 0, (RemoveComponent<Ts>(), 0)... }; // pack expansion trick. function call is a side effect of the initializer list being initialized to 0s, but is used for all va args, so we accomplish add component for all without recursively calling it
+	(void)unpacking; // suppress unused variable warning
 }
 
 #endif

@@ -272,6 +272,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
@@ -301,7 +302,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\Shaders\PresentRS.hlsli" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

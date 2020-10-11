@@ -5,17 +5,10 @@
 #include "Buffers/D3DBuffer.h"
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
+#include "TextureManager.h"
 
 // Revert data to pointer arrays. Reasoning is that it allows you to send model as a single chunk down to the gpu 
 // rather than the fragmented meshes that make up an entire model, and does so in a single gpu call
-
-class Texture
-{
-public:
-	unsigned int id;
-	std::string type;
-	std::string path;
-};
 
 class Model
 {
@@ -26,6 +19,7 @@ public:
 		m_pMaterials(nullptr),
 		m_pVertexData(nullptr),
 		m_pIndexData(nullptr),
+		m_srvs(nullptr),
 		m_vertexStride(sizeof(Vertex)) {}
 
 	~Model()
@@ -34,11 +28,12 @@ public:
 		SAFE_DELETE(m_pMaterials);
 		SAFE_DELETE(m_pVertexData);
 		SAFE_DELETE(m_pIndexData);
-		m_srvs.clear();
+		SAFE_DELETE(m_srvs);
 	}
 
 	void Load(std::string fileName);
 	void Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_);
+	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
 
@@ -111,7 +106,12 @@ public:
 
 	uint32_t		m_vertexStride;
 
-	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> m_srvs; // materials/textures
+	D3D12_CPU_DESCRIPTOR_HANDLE* GetSRVs(uint32_t mIndex) const
+	{
+		return m_srvs + mIndex * 6;
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE* m_srvs; // materials/textures
 	StructuredBuffer m_vertexBuffer;
 	ByteAddressedBuffer m_indexBuffer;
 

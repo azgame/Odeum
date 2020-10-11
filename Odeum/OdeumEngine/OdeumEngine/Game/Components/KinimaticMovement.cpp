@@ -1,7 +1,6 @@
 #include "KinimaticMovement.h"
 void KinimaticMovement::Update(float deltaTime)
 {
-	
 	//make sure we have a target or there will be errors
 	if (target)
 	{
@@ -22,6 +21,7 @@ void KinimaticMovement::Update(float deltaTime)
 		
 	}
 }
+
 void KinimaticMovement::OnAttach(GameObject* parent)
 {   //set default values and get our object's components
 	object = parent;
@@ -29,9 +29,8 @@ void KinimaticMovement::OnAttach(GameObject* parent)
 	{
 		maxSpeed = 0.01;
 	}
-   
-	
 }
+
 Vector4 KinimaticMovement::GetSteering()
 {
 	Vector3 velocity(0.0f, 0.0f, 0.0f);

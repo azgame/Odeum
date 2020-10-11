@@ -22,6 +22,7 @@ namespace Graphics
 	extern bool s_enableVSync;
 	extern ResolutionOptions s_targetResolution;
 	extern bool s_ultraWide;
+	extern uint32_t s_frameCounter;
 }
 
 #endif

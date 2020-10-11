@@ -1,4 +1,3 @@
-
 void main(
     in uint VertID : SV_VertexID,
     out float4 Pos : SV_Position,

@@ -1,10 +1,16 @@
 #include "GameScene.h"
+#include "../Components/KinimaticMovement.h"
+#include "../Components/DynamicMovement.h"
+#include "../Components/ComponentTest.h"
 
 GameScene::GameScene() : Scene()
 {
-	object = new GameObject("Engine/Resources/Models/Apple.obj");
+	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
+	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
+	object->RemoveComponent<KinimaticMovement>();
+	object->RemoveComponents<DynamicMovement, ComponentTest>();
 }
 
 GameScene::~GameScene()
@@ -21,10 +27,16 @@ void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	angle += 0.0025f;
-	object->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), angle);
+	angle += direction * (deltaTime_ * 0.1f);
+	object->SetRotation(Vector4(kYUnitVector), angle);
+
+	object->Update(deltaTime_);
 }
 
-void GameScene::Render()
+void GameScene::UIRender()
 {
+	ImGui::Begin("Game UI");
+	if (ImGui::Button("Change rotation direction"))
+		direction *= -1.0f;
+	ImGui::End();
 }
