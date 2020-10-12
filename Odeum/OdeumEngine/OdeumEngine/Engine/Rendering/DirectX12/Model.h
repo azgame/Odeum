@@ -96,6 +96,8 @@ public:
 	ByteAddressedBuffer m_indexBuffer;
 
 	Matrix4 m_modelMatrix;
+
+	void SetParent(GameObject* parent) { m_gameObject = parent; }
 	GameObject* m_gameObject;
 };
 
