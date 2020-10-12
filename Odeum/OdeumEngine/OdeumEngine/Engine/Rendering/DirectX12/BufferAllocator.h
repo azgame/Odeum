@@ -13,6 +13,11 @@ public:
 	BufferEntry(D3DResource& resource_, size_t offset_, size_t size_) :
 		buffer(resource_), offset(offset_), size(size_) {}
 
+	~BufferEntry()
+	{
+		CpuAddress = nullptr;
+	}
+
 	D3DResource& buffer;
 	size_t offset;
 	size_t size;

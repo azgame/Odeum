@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 #include "../Rendering/DirectX12/Model.h"
+#include "../Math/BoundingBox.h"
 #include "../Rendering/DirectX12/Colour.h"
 
 class Component;
@@ -34,6 +35,9 @@ public:
 
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
+	BoundingBox& GetBoundingBox() { return bbox; }
+	void SetBoundingBox(Vector3 min, Vector3 max) { bbox = BoundingBox(min, max, m_modelMatrix); }
+	void SetHit(bool hit) { isHit = hit; }
 
 	Vector4 GetPosition() { return m_position; }
 	Vector4 GetVelocity() { return m_velocity; }
@@ -50,6 +54,8 @@ protected:
 
 	Model m_model;
 	Matrix4 m_modelMatrix;
+	BoundingBox bbox;
+	bool isHit;
 
 	std::string fileName;
 

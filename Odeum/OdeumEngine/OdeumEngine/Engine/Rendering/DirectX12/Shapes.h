@@ -6,25 +6,23 @@
 
 using namespace DirectX;
 
-enum ShapeTypes
-{
-	NoShape = 0,
-	CubeShape,
-
-	NumShapes
-};
-
 struct Vertex
 {
 	Vertex() {}
-	//Vertex(XMFLOAT3 pos_) { position = pos_; colour = colour_; }
 
 	XMFLOAT3 position;
 	XMFLOAT2 uvcoords;
 	XMFLOAT3 normal;
 	XMFLOAT3 tangent;
 	XMFLOAT3 bitangent;
-	//XMFLOAT4 colour;
+};
+
+enum ShapeTypes
+{
+	NoShape = 0,
+	CubeShape,
+
+	NumShapes
 };
 
 class Shape

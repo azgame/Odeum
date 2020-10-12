@@ -77,7 +77,19 @@ private:
 
 class ComputePSO : public PSO
 {
+    friend class CommandContext;
 
+public:
+    ComputePSO();
+
+    void SetComputeShader(const void* binary_, size_t size_) { m_computeDesc.CS = CD3DX12_SHADER_BYTECODE(const_cast<void*>(binary_), size_); }
+    void SetComputeShader(const D3D12_SHADER_BYTECODE& binary_) { m_computeDesc.CS = binary_; }
+    void CompileComputeShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_);
+
+    void Finalize();
+
+private:
+    D3D12_COMPUTE_PIPELINE_STATE_DESC m_computeDesc;
 };
 
 #endif

@@ -4,14 +4,6 @@
 
 using namespace DXGraphics;
 
-void RootSignature::Destroy()
-{
-	if (m_rootSignature)
-		m_rootSignature->Release();
-
-	m_rootSignature = nullptr;
-}
-
 void RootSignature::Reset(UINT numRootParams_, UINT numStaticSamplers)
 {
 	if (numRootParams_ > 0)

@@ -54,6 +54,11 @@
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Game\Scenes\BenScene2.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
+    <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
+    <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -130,6 +135,13 @@
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
+    <ClInclude Include="Engine\Math\BoundingBox.h" />
+    <ClInclude Include="Engine\Math\Ray.h" />
+    <ClInclude Include="Engine\Math\CollisionDetection.h" />
+    <ClInclude Include="Engine\Math\CollisionHandler.h" />
+    <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

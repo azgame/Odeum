@@ -117,3 +117,30 @@ void GraphicsPSO::Finalize()
 	if (FAILED(DXGraphics::m_device->CreateGraphicsPipelineState(&m_psoDesc, IID_PPV_ARGS(&m_pso))))
 		Debug::FatalError("Graphics PSO could not be created!", __FILENAME__, __LINE__);
 }
+
+ComputePSO::ComputePSO()
+{
+	memset(&m_computeDesc, 0, sizeof(m_computeDesc));
+	m_computeDesc.NodeMask = 1;
+}
+
+void ComputePSO::CompileComputeShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_)
+{
+	ID3DBlob* computeShader;
+	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &computeShader, NULL)))
+		ERROR("Could not create compute shader");
+
+	m_computeDesc.CS = { reinterpret_cast<UINT8*>(computeShader->GetBufferPointer()), computeShader->GetBufferSize() };
+}
+
+void ComputePSO::Finalize()
+{
+	m_computeDesc.pRootSignature = m_rootSignature->GetRootSignature();
+	ASSERT(m_computeDesc.pRootSignature != nullptr, "Root Signature is null!");
+
+	if (FAILED(DXGraphics::m_device->CreateComputePipelineState(&m_computeDesc, IID_PPV_ARGS(&m_pso))))
+	{
+		Debug::FatalError("Could not create compute shader pipeline!", __FILENAME__, __LINE__);
+		throw std::runtime_error("Could not create compute shader pipeline!");
+	}
+}

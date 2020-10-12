@@ -7,8 +7,7 @@
 #include "../../Math/D3DMath.h"
 #include "TextureManager.h"
 
-// Revert data to pointer arrays. Reasoning is that it allows you to send model as a single chunk down to the gpu 
-// rather than the fragmented meshes that make up an entire model, and does so in a single gpu call
+class GameObject;
 
 class Model
 {
@@ -32,24 +31,9 @@ public:
 	}
 
 	void Load(std::string fileName);
-	void Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_);
 	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
-
-	static const uint8_t attrib_Position = 0;
-	static const uint8_t attrib_TexCoord = 1;
-	static const uint8_t attrib_Normal = 2;
-	static const uint8_t attrib_Tangent = 3;
-	static const uint8_t attrib_Bitangent = 4;
-
-	struct VAttributes
-	{
-		uint16_t offset;
-		uint16_t normalized;
-		uint16_t components;
-		uint16_t format;
-	};
 
 	struct ModelInfo
 	{
@@ -64,16 +48,12 @@ public:
 	struct Mesh
 	{
 		uint32_t indexCount;
-		uint32_t indexDataByteOffset;
 		uint32_t indexOffset;
 		uint32_t vertexCount;
-		uint32_t vertexDataByteOffset;
 		uint32_t vertexOffset;
 		uint32_t vertexStride;
 
 		uint32_t materialIndex;
-
-		VAttributes attributes[16];
 	};
 
 	struct Material
@@ -116,6 +96,7 @@ public:
 	ByteAddressedBuffer m_indexBuffer;
 
 	Matrix4 m_modelMatrix;
+	GameObject* m_gameObject;
 };
 
 #endif

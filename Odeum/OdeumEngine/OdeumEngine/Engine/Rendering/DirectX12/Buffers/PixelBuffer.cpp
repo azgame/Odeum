@@ -58,7 +58,7 @@ void PixelBuffer::CreateTextureResource(ID3D12Device* device_, const std::wstrin
         Debug::Error("Failed to create texture resource", __FILENAME__, __LINE__);
 
     m_usageState = D3D12_RESOURCE_STATE_COMMON;
-    m_vGpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
+    m_gpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 
     m_resource->SetName(name_.c_str());
 }

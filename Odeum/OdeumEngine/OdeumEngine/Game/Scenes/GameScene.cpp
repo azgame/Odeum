@@ -31,6 +31,10 @@ void GameScene::Update(const float deltaTime_)
 	object->SetRotation(Vector4(kYUnitVector), angle);
 
 	object->Update(deltaTime_);
+
+	// std::cout << "Mouse at [" << Input::Get().GetMouseX() << ", " << Input::Get().GetMouseY() << "]" << std::endl;
+	// if (Input::Get().isButtonClicked(MouseCode::ButtonLeft))
+		// std::cout << "Mouse clicked " << clickCount << " times!" << std::endl;
 }
 
 void GameScene::UIRender()
