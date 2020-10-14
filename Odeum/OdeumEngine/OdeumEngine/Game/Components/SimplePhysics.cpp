@@ -4,15 +4,11 @@ void SimplePhysics::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
 	p_angle = 0.0f;
+	p_orientation = m_gameObject->GetRotation();
 	p_angularVelocity = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
-	p_totalVelocity = Vector4();
-	p_speed = 2.0f;
+	totalVelocity = Vector4();
+	speed = 2.0f;
 
-	p_position = m_gameObject->GetPosition();
-	p_rotation = m_gameObject->GetRotation();
-	p_scale = m_gameObject->GetScale();
-	p_mass = m_gameObject->GetMass();
-	p_orientation = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
 }
 
 // update position based on acceleration and velocity
@@ -20,33 +16,27 @@ void SimplePhysics::Update(float deltaTime)
 {
 	
 	// update velocity
-	p_totalVelocity += (p_totalAcceleration * deltaTime);
-	p_position += p_totalVelocity * deltaTime +p_totalAcceleration*0.5f* deltaTime*deltaTime;
+	//totalVelocity += (Vector4)(p_totalAcceleration * deltaTime);
 
 	// ******* CURRENTLY A PROBLEM WITH SETTING POSITION AND ROTATION
 	//update position
-	//m_gameObject->SetVelocity(m_gameObject->GetVelocity() + (Vector4)(totalAcceleration * deltaTime));
-	//m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(m_gameObject->GetVelocity() * deltaTime + totalAcceleration * 0.5f * deltaTime * deltaTime));
-	// update velocity
-	// update position
-	p_rotation = p_orientation;
+	//m_gameObject->SetPosition(m_gameObject->GetPosition() + Vector4(totalVelocity * speed * deltaTime));
+	//m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(totalVelocity * deltaTime + p_totalAcceleration * 0.5f * deltaTime * deltaTime));
+	
+
 	// update orientation
 	// this check just stops some math errors when there's no velocity set
 	if (deltaTime > 0.0f) {
 		// change game object orientation
-		
-		p_orientation = UpdateOrientationQuaternion();
+		m_gameObject->SetRotation(m_gameObject->GetRotation() + UpdateOrientationQuaternion(), p_angle);
 		p_angle += p_angleSpeed;
 	}
-	//UpdateTransform();
-	m_gameObject->SetPosition(p_position);
 }
 
 // translate the position
 void SimplePhysics::Transform(Vector4 translate)
 {
-	p_position += translate;
-	UpdateTransform();
+	m_gameObject->SetPosition(m_gameObject->GetPosition() + translate);
 }
 
 // apply a force on the object
@@ -66,43 +56,37 @@ void SimplePhysics::ApplyForce(Vector4 force)
 // Getters
 float SimplePhysics::GetMass()
 {
-	return p_mass;
+	return m_gameObject->GetMass();
 }
 
 Vector4 SimplePhysics::GetPosition()
 {
-	return p_position;
-
-}
-Vector4 SimplePhysics::GetVelocity()
-{
-	return p_totalVelocity;
+	return m_gameObject->GetPosition();
 }
 
 // Setters
 void SimplePhysics::SetMass(float mass)
 {
-	p_mass = mass;
+	m_gameObject->SetMass(mass);
 }
 
-void SimplePhysics::SetPosition(Vector4 position)
+void SimplePhysics::SetVelocity(Vector3 velocity)
 {
-	p_position = position;
-	UpdateTransform();
 }
 
-void SimplePhysics::SetVelocity(Vector4 velocity)
-{
-	p_totalVelocity = velocity;
-}
-void SimplePhysics::SetTotalAcceleration(Vector4 acceleration)
+void SimplePhysics::SetAcceleration(Vector4 acceleration)
 {
 	p_totalAcceleration = acceleration;
 }
 
+void SimplePhysics::SetPosition(Vector4 position)
+{
+	m_gameObject->SetPosition(position);
+}
+
 void SimplePhysics::AddVelocity(Vector4 velocity)
 {
-	p_totalVelocity += velocity;
+	totalVelocity = velocity;
 }
 
 void SimplePhysics::AddAngularVelocity(Vector4 velocity, float angle)
@@ -115,21 +99,17 @@ void SimplePhysics::AddAngularVelocity(Vector4 velocity, float angle)
 Vector4 SimplePhysics::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
-	Vector3 axisOfRotation_ = Vector3(Cross(Vector3(p_totalVelocity), Vector3(p_angularVelocity)));
+	Vector3 axisOfRotation_ = Vector3(Cross(Vector3(totalVelocity), Vector3(p_angularVelocity)));
 	
 	// normalize
 	axisOfRotation_ = axisOfRotation_.Normalize();
 	
 	// calculate the magnitude of the angular velocity vector
-	Vector3 angularVelocity_ = Vector3(axisOfRotation_ * p_totalVelocity.Mag());
+	Vector3 angularVelocity_ = Vector3(axisOfRotation_ * totalVelocity.Mag());
 
-	//Quaternion angVel(Vector4(angularVelocity_, p_angle));
+	Quaternion angVel(angularVelocity_, p_angle);
 
 	// update the orientation
-	p_orientation = Vector4(angularVelocity_, p_angle);
+	p_orientation += p_orientation * angVel * 0.5f;
 	return p_orientation.Normalize();
-}
-
-void SimplePhysics::UpdateTransform() {
-	m_gameObject->UpdateTransform(p_position, p_angle, p_rotation, p_scale);
 }
