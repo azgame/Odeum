@@ -1,5 +1,10 @@
 #include "Game1.h"
 
+#include "Scenes/GameScene.h"
+#include "Scenes/StartScene.h"
+#include "Scenes/RobScene.h"
+#include "Scenes/BenScene.h"
+#include "Scenes/BenScene2.h"
 
 Game1::Game1() : GameInterface()
 {
