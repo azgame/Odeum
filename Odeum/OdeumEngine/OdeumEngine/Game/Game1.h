@@ -9,7 +9,6 @@
 #include "Scenes/StartScene.h"
 #include "Scenes/RobScene.h"
 #include "Scenes/BenScene.h"
-#include "Scenes/BenScene2.h"
 
 class Game1 : public GameInterface
 {

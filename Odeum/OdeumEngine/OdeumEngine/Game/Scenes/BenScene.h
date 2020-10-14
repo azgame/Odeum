@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
+#include "../../Engine/Core/CameraController.h"
 
 // Scene index 1
 class BenScene : public Scene
@@ -16,9 +17,11 @@ public:
 	virtual void UIRender();
 
 private:
+	CameraController cameraController;
 	GameObject* object;
 	GameObject* object2;
 	float angle;
+	float direction;
 };
 
 #endif
