@@ -6,6 +6,8 @@
 
 #include <map>
 
+class Colour;
+
 class Texture : public D3DResource
 {
 	friend class CommandContext;
@@ -14,12 +16,11 @@ public:
 
 	Texture(const std::string& fileName_) 
 	{
-		m_textureKey = fileName_;
 		m_cpuDescHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
 		m_isValid = true;
 	}
 
-	Texture(const std::string& fileName_, D3D12_CPU_DESCRIPTOR_HANDLE handle) : m_cpuDescHandle(handle), m_textureKey(fileName_), m_isValid(true) {}
+	Texture(const std::string& fileName_, D3D12_CPU_DESCRIPTOR_HANDLE handle) : m_cpuDescHandle(handle), m_isValid(true) {}
 
 	void Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT format_, const void* initialData_);
 	void Create(size_t width_, size_t height_, DXGI_FORMAT format_, const void* initialData_)
@@ -41,7 +42,6 @@ public:
 private:
 
 	bool m_isValid;
-	std::string m_textureKey;
 	D3D12_CPU_DESCRIPTOR_HANDLE m_cpuDescHandle;
 };
 
@@ -56,7 +56,9 @@ public:
 
 	void Initialize(std::string textureDirectory_) { sm_rootDirectory = textureDirectory_; }
 	void ShutDown() { sm_textureMap.clear(); }
+
 	Texture* LoadFromFile(std::string textureName_);
+	Texture* CreateAndStore(Colour colour_);
 
 	UINT BytesPerPixel(DXGI_FORMAT format);
 
@@ -81,7 +83,6 @@ private:
 
 	size_t BitsPerPixel(DXGI_FORMAT format);
 	
-
 	std::map<std::string, std::unique_ptr<Texture>> sm_textureMap;
 	std::mutex sm_mutex;
 	std::string sm_rootDirectory;

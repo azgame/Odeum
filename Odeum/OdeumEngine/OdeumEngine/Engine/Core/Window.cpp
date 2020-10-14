@@ -3,6 +3,7 @@
 #include "../Events/ApplicationEvent.h"
 #include "../Events/KeyEvent.h"
 #include "../Events/MouseEvent.h"
+#include "Input.h"
 
 // Win32 Window setup
 
@@ -64,17 +65,53 @@ LRESULT Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 	case WM_KEYDOWN:
 	{
 		KeyPressedEvent key = KeyPressedEvent(static_cast<KeyCode>(wparam), 1); // change 1 later
-		m_data.eventCallback(key);
+		Input::Get().KeyUpdate(key);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
 	case WM_KEYUP:
 	{
 		KeyReleasedEvent key = KeyReleasedEvent(static_cast<KeyCode>(wparam));
-		m_data.eventCallback(key);
+		Input::Get().KeyUpdate(key);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
-	case WM_MOUSEFIRST:
+	case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+	case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK:
+	case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
 	{
+		MouseButtonPressedEvent mouse = MouseButtonPressedEvent(ButtonLeft);
+		switch (umsg)
+		{
+		case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+			mouse = MouseButtonPressedEvent(ButtonLeft);
+			break;
+		case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK:
+			mouse = MouseButtonPressedEvent(ButtonRight);
+			break;
+		case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
+			mouse = MouseButtonPressedEvent(ButtonMiddle);
+			break;
+		} 
+		Input::Get().MouseUpdate(mouse);
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONUP:
+	{
+		MouseButtonReleasedEvent mouse = MouseButtonReleasedEvent(ButtonLeft);
+		switch (umsg)
+		{
+		case WM_LBUTTONUP:
+			mouse = MouseButtonReleasedEvent(ButtonLeft);
+			break;
+		case WM_RBUTTONUP:
+			mouse = MouseButtonReleasedEvent(ButtonRight);
+			break;
+		case WM_MBUTTONUP:
+			mouse = MouseButtonReleasedEvent(ButtonMiddle);
+			break;
+		}
+		Input::Get().MouseUpdate(mouse);
 		return DefWindowProc(hwnd, umsg, wparam, lparam);
 	}
 	default:
@@ -120,9 +157,6 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 	m_data.height = GetSystemMetrics(SM_CYSCREEN);
 	m_data.width = GetSystemMetrics(SM_CXSCREEN);
 
-	int m_xPos = 0;
-	int m_yPos = 0;
-
 	// Start full screen or windowed
 	FULL_SCREEN = false;
 
@@ -142,12 +176,12 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
 		// Set the position of the window to the top left corner
-		m_xPos = m_yPos = 0;
+		m_data.xPos = m_data.yPos = 0;
 
 		// Create the window with the screen settings and get the handle to it
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 			WS_POPUP,
-			m_xPos, m_yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
+			m_data.xPos, m_data.yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
 	}
 	else
 	{
@@ -156,13 +190,13 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 		m_data.ultraWide = (m_data.width / m_data.height == 21.0f / 9.0f);
 
 		// Place the window in the middle of the screen
-		m_xPos = (GetSystemMetrics(SM_CXSCREEN) - m_data.width) / 2;
-		m_yPos = (GetSystemMetrics(SM_CYSCREEN) - m_data.height) / 2;
+		m_data.xPos = (GetSystemMetrics(SM_CXSCREEN) - m_data.width) / 2;
+		m_data.yPos = (GetSystemMetrics(SM_CYSCREEN) - m_data.height) / 2;
 
 		// Create the window with the screen settings and get the handle to it
 		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
 			WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_THICKFRAME | WS_OVERLAPPEDWINDOW,
-			m_xPos, m_yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
+			m_data.xPos, m_data.yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
 	}
 
 	// Bring the window up on the screen and set it as main focus

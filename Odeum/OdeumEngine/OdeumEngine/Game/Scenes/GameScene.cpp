@@ -2,15 +2,19 @@
 #include "../Components/KinimaticMovement.h"
 #include "../Components/DynamicMovement.h"
 #include "../Components/ComponentTest.h"
+#include "../../Engine/Math/CollisionHandler.h"
 
-GameScene::GameScene() : Scene()
+GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+	object = new GameObject(CubeShape, Colour(1.0f, 1.0f, 1.0f, 1.0f));
+
+	GameObject* newObject = new GameObject(CubeShape, Colour(1.0f, 0.0f, 0.0f, 1.0f));
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
-	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
-	object->RemoveComponent<KinimaticMovement>();
-	object->RemoveComponents<DynamicMovement, ComponentTest>();
+
+	CollisionHandler::GetInstance()->Initialize(100.0f);
+	CollisionHandler::GetInstance()->AddObject(object);
+	CollisionHandler::GetInstance()->AddObject(newObject);
 }
 
 GameScene::~GameScene()
@@ -29,6 +33,8 @@ void GameScene::Update(const float deltaTime_)
 
 	angle += direction * (deltaTime_ * 0.1f);
 	object->SetRotation(Vector4(kYUnitVector), angle);
+
+	CollisionHandler::GetInstance()->MouseUpdate();
 
 	object->Update(deltaTime_);
 }

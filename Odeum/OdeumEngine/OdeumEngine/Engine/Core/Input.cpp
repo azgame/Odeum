@@ -2,28 +2,59 @@
 #include "OdeumEngine.h"
 
 std::unique_ptr<Input> Input::sm_input = nullptr;
-Input::InputState Input::sm_keyPressed = InputState();
+Input::InputState<KeyCode> Input::sm_keyPressed = InputState<KeyCode>();
+Input::InputState<MouseCode> Input::sm_mousePressed = InputState<MouseCode>();
+Vector2 Input::mousePos = Vector2(kZero);
 
 Input& Input::Get()
 {
 	if (sm_input == nullptr)
+	{
 		sm_input = std::unique_ptr<Input>();
+	}
 	return *sm_input.get();
 }
 
-bool Input::Update(KeyEvent& key)
+void Input::KeyUpdate(KeyEvent& key)
 {
 	if (key.GetEventType() == EventType::KeyPressed)
-		sm_keyPressed.keyStates[key.GetKeyCode()] = true;
+		sm_keyPressed.states[key.GetKeyCode()] = true;
 	else
-		sm_keyPressed.keyStates[key.GetKeyCode()] = false;
-
-	return true;
+		sm_keyPressed.states[key.GetKeyCode()] = false;
 }
 
 bool Input::isKeyPressed(KeyCode key)
 {
-	return sm_keyPressed.keyStates[key];
+	return sm_keyPressed.states[key];
+}
+
+void Input::MouseUpdate(MouseButtonEvent& mouse)
+{
+	if (mouse.GetEventType() == EventType::MouseButtonPressed)
+		sm_mousePressed.states[mouse.GetMouseButton()] = true;
+	else if (mouse.GetEventType() == EventType::MouseButtonReleased)
+		sm_mousePressed.states[mouse.GetMouseButton()] = false;
+}
+
+bool Input::isButtonClicked(MouseCode mouse)
+{
+	return sm_mousePressed.states[mouse];
+}
+
+float Input::GetMouseX()
+{
+	POINT point;
+	GetCursorPos(&point);
+	mousePos = Vector2((float)point.x - OdeumEngine::Get().GetWindow().GetXPos(), (float)point.y - OdeumEngine::Get().GetWindow().GetYPos());
+	return mousePos.GetX();
+}
+
+float Input::GetMouseY()
+{
+	POINT point;
+	GetCursorPos(&point);
+	mousePos = Vector2((float)point.x - OdeumEngine::Get().GetWindow().GetXPos(), (float)point.y - OdeumEngine::Get().GetWindow().GetYPos());
+	return mousePos.GetY();
 }
 
 // gotta setup callback (in core engine)

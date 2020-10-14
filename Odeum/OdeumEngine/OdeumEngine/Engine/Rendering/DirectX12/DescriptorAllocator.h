@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #ifndef DESCRIPTORALLOCATOR_H
 #define DESCRIPTORALLOCATOR_H
 
@@ -17,7 +28,6 @@ public:
 
 private:
 
-	// can be threaded
 	static ID3D12DescriptorHeap* GetNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_);
 	static const uint32_t kDescriptorsPerHeap = 256;
 	static std::vector<ID3D12DescriptorHeap*> m_descriptorHeapPool;
@@ -28,53 +38,6 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE m_currentHandle;
 	uint32_t m_descriptorSize;
 	uint32_t m_numFreeHandles;
-};
-
-class DescriptorHandle
-{
-public:
-    DescriptorHandle()
-    {
-        m_cpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
-        m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
-    }
-
-    DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle)
-        : m_cpuHandle(CpuHandle)
-    {
-        m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
-    }
-
-    DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE GpuHandle)
-        : m_cpuHandle(CpuHandle), m_gpuHandle(GpuHandle)
-    {
-    }
-
-    DescriptorHandle operator+ (int OffsetScaledByDescriptorSize) const
-    {
-        DescriptorHandle ret = *this;
-        ret += OffsetScaledByDescriptorSize;
-        return ret;
-    }
-
-    void operator += (int OffsetScaledByDescriptorSize)
-    {
-        if (m_cpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
-            m_cpuHandle.ptr += OffsetScaledByDescriptorSize;
-        if (m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
-            m_gpuHandle.ptr += OffsetScaledByDescriptorSize;
-    }
-
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const { return m_cpuHandle; }
-
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const { return m_gpuHandle; }
-
-    bool isNull() const { return m_cpuHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
-    bool isShaderVisible() const { return m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
-
-private:
-    D3D12_CPU_DESCRIPTOR_HANDLE m_cpuHandle;
-    D3D12_GPU_DESCRIPTOR_HANDLE m_gpuHandle;
 };
 
 #endif

@@ -24,6 +24,53 @@ class CommandContext;
 
 // TODO Aidan: Add compute
 
+class DescriptorHandle
+{
+public:
+	DescriptorHandle()
+	{
+		m_cpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+		m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+	}
+
+	DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle)
+		: m_cpuHandle(CpuHandle)
+	{
+		m_gpuHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+	}
+
+	DescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE CpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE GpuHandle)
+		: m_cpuHandle(CpuHandle), m_gpuHandle(GpuHandle)
+	{
+	}
+
+	DescriptorHandle operator+ (int OffsetScaledByDescriptorSize) const
+	{
+		DescriptorHandle ret = *this;
+		ret += OffsetScaledByDescriptorSize;
+		return ret;
+	}
+
+	void operator += (int OffsetScaledByDescriptorSize)
+	{
+		if (m_cpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+			m_cpuHandle.ptr += OffsetScaledByDescriptorSize;
+		if (m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+			m_gpuHandle.ptr += OffsetScaledByDescriptorSize;
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const { return m_cpuHandle; }
+
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const { return m_gpuHandle; }
+
+	bool isNull() const { return m_cpuHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
+	bool isShaderVisible() const { return m_gpuHandle.ptr != D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN; }
+
+private:
+	D3D12_CPU_DESCRIPTOR_HANDLE m_cpuHandle;
+	D3D12_GPU_DESCRIPTOR_HANDLE m_gpuHandle;
+};
+
 class DynamicDescriptorHeap
 {
 public:
@@ -80,9 +127,9 @@ private:
 	struct DescriptorTableCache
 	{
 		DescriptorTableCache() : assignedHandlesBitMap(0) {}
-		uint32_t assignedHandlesBitMap;
-		D3D12_CPU_DESCRIPTOR_HANDLE* tableStart;
-		uint32_t tableSize;
+		uint32_t assignedHandlesBitMap;							// in the space we take up, how many of our table params are assigned?
+		D3D12_CPU_DESCRIPTOR_HANDLE* tableStart;				
+		uint32_t tableSize;										
 	};
 
 	// Cache used to track descriptor table caches and their assignment
