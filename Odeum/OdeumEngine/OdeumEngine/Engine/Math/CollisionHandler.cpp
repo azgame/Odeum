@@ -40,13 +40,21 @@ void CollisionHandler::MouseUpdate()
 	float width = OdeumEngine::Get().GetWindow().GetWidth();
 	float height = OdeumEngine::Get().GetWindow().GetHeight();
 
-	Ray mouseRay = CollisionDetection::ScreenPosToWorldRay(Vector2(Input::Get().GetMouseX(), 
-		Input::Get().GetMouseY()), Vector2(width, height), 
+	Ray mouseRay = CollisionDetection::ScreenPosToWorldRay(Vector2(Input::Get().GetMouseX(),
+		Input::Get().GetMouseY()), Vector2(width, height),
 		OdeumEngine::Get().GetCamera());
 
+	RayQuery(mouseRay);
+}
+
+void CollisionHandler::RayQuery(Ray ray)
+{
+	
 	if (m_scenePartition == nullptr) return;
 	
-	GameObject* hitResult = m_scenePartition->GetCollision(mouseRay);
+	GameObject* hitResult = nullptr;
+	if (Input::Get().isButtonClicked(Button0))
+		hitResult = m_scenePartition->GetCollision(ray);
 
 	if (hitResult)
 		hitResult->SetHit(true);

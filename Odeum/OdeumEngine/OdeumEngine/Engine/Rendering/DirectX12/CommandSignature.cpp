@@ -45,7 +45,7 @@ void CommandSignature::Finalize(const RootSignature* rootSig)
 	D3D12_COMMAND_SIGNATURE_DESC desc;
 	desc.ByteStride = byteStride;
 	desc.NumArgumentDescs = m_numParams;
-	desc.pArgumentDescs = (const D3D12_INDIRECT_ARGUMENT_DESC*)m_paramArray.get();
+	desc.pArgumentDescs = (const D3D12_INDIRECT_ARGUMENT_DESC*)m_paramArray.data();
 	desc.NodeMask = 1;
 
 	Microsoft::WRL::ComPtr<ID3DBlob> result, error;

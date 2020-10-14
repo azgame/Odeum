@@ -4,6 +4,8 @@
 #include "../../../pch.h"
 #include "D3DIncludes.h"
 
+#define D3D12_INDIRECT_PARAMETER_NULL 0xFFFFFFFF
+
 class RootSignature;
 
 class IndirectParameter
@@ -14,12 +16,10 @@ public:
 	
 	IndirectParameter()
 	{
-		m_indirectParam.Type = (D3D12_INDIRECT_ARGUMENT_TYPE)0xFFFFFFFF;
+		m_indirectParam.Type = (D3D12_INDIRECT_ARGUMENT_TYPE)D3D12_INDIRECT_PARAMETER_NULL;
 	}
 
-	void TypeDraw() { m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW; }
-	void TypeDrawIndexed() { m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_DRAW_INDEXED; }
-	void TypeDrawDispatch() { m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_DISPATCH; }
+	void SetType(D3D12_INDIRECT_ARGUMENT_TYPE Type) { m_indirectParam.Type = Type; }
 
 	void SetAsVertexBufferView(UINT slot)
 	{
@@ -40,19 +40,19 @@ public:
 		m_indirectParam.Constant.DestOffsetIn32BitValues = destOffset;
 	}
 
-	void SetAsCBV(UINT rootIndex)
+	void SetAsConstantBufferView(UINT rootIndex)
 	{
 		m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT_BUFFER_VIEW;
 		m_indirectParam.ConstantBufferView.RootParameterIndex = rootIndex;
 	}
 
-	void SetAsSRV(UINT rootIndex)
+	void SetAsShaderResourceView(UINT rootIndex)
 	{
 		m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_SHADER_RESOURCE_VIEW;
 		m_indirectParam.ShaderResourceView.RootParameterIndex = rootIndex;
 	}
 
-	void SetAsUAV(UINT rootIndex)
+	void SetAsUnorderedAccessView(UINT rootIndex)
 	{
 		m_indirectParam.Type = D3D12_INDIRECT_ARGUMENT_TYPE_UNORDERED_ACCESS_VIEW;
 		m_indirectParam.UnorderedAccessView.RootParameterIndex = rootIndex;
@@ -77,15 +77,18 @@ public:
 	void Destroy()
 	{
 		m_commandSignature = nullptr;
-		m_paramArray = nullptr;
+		m_paramArray.clear();
 	}
 
 	void Reset(UINT numParams)
 	{
 		if (numParams > 0)
-			m_paramArray.reset(new IndirectParameter[numParams]);
+		{
+			m_paramArray.clear(); 
+			m_paramArray.reserve(numParams);
+		}
 		else
-			m_paramArray = nullptr;
+			m_paramArray.clear();
 		
 		m_numParams = numParams;
 	}
@@ -93,13 +96,13 @@ public:
 	IndirectParameter& operator[] (size_t index)
 	{
 		ASSERT(index < m_numParams, "Index out of range violation!");
-		return m_paramArray.get()[index];
+		return m_paramArray[index];
 	}
 
 	const IndirectParameter& operator[] (size_t index) const
 	{
 		ASSERT(index < m_numParams, "Index out of range violation!");
-		return m_paramArray.get()[index];
+		return m_paramArray[index];
 	}
 
 	void Finalize(const RootSignature* rootSig = nullptr);
@@ -110,7 +113,7 @@ protected:
 
 	bool m_finalized;
 	UINT m_numParams;
-	std::unique_ptr<IndirectParameter[]> m_paramArray;
+	std::vector<IndirectParameter> m_paramArray;
 	Microsoft::WRL::ComPtr<ID3D12CommandSignature> m_commandSignature;
 };
 

@@ -37,7 +37,12 @@ public:
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
 	BoundingBox& GetBoundingBox() { return bbox; }
 	void SetBoundingBox(Vector3 min, Vector3 max) { bbox = BoundingBox(min, max, m_modelMatrix); }
-	void SetHit(bool hit) { isHit = hit; }
+	void SetHit(bool hit) 
+	{ 
+		isHit = hit;
+		if (isHit)
+			std::cout << "Hit!" << std::endl;
+	}
 
 	Vector4 GetPosition() { return m_position; }
 	Vector4 GetVelocity() { return m_velocity; }

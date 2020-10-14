@@ -72,6 +72,7 @@ Texture* TextureManager::LoadFromFile(std::string textureName_)
 	return texture;
 }
 
+// NYI
 Texture* TextureManager::CreateAndStore(Colour colour_)
 {
     return new Texture("Empty");

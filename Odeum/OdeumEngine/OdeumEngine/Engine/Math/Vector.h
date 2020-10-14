@@ -129,6 +129,7 @@ public:
 	//Functions Added -Robert
 	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)); }
 	inline Vector3 Normalize(){return vec/ sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2));}
+	inline float Dot(Vector3 v) { return (GetX() * v.GetX()) + (GetY() * v.GetY()) + (GetZ() * v.GetZ()); }
 	// Operator overloads
 	inline Vector3 operator- () const { return Vector3(XMVectorNegate(vec)); }
 	inline Vector3 operator+ (Vector3 v2_) const { return Vector3(XMVectorAdd(vec, v2_.GetVec())); }

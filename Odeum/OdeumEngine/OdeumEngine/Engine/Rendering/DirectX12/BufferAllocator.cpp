@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "BufferAllocator.h"
 
 #include "CommandContext.h"
@@ -15,7 +26,7 @@ BufferLedger BufferAllocator::sm_pageManager[2];
 
 BufferPage* BufferLedger::RequestPage()
 {
-	std::lock_guard<std::mutex> LockGuard(m_mutex);
+	std::lock_guard<std::mutex> lg(m_mutex);
 
 	while (!m_retiredPages.empty() && DXGraphics::m_commandManager.IsFenceComplete(m_retiredPages.front().first))
 	{
@@ -106,10 +117,10 @@ void BufferLedger::RecycleLargePages(uint64_t fenceID_, const std::vector<Buffer
         m_deletionQueue.pop();
     }
 
-    for (auto iter = pages_.begin(); iter != pages_.end(); ++iter)
+    for (auto page = pages_.begin(); page != pages_.end(); ++page)
     {
-        (*iter)->UnMap();
-        m_deletionQueue.push(std::make_pair(fenceID_, *iter));
+        (*page)->UnMap();
+        m_deletionQueue.push(std::make_pair(fenceID_, *page));
     }
 }
 
@@ -143,7 +154,7 @@ BufferEntry BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
     return returnBuffer;
 }
 
-void BufferAllocator::CleanupUsedPages(uint64_t fenceID_)
+void BufferAllocator::RecyclePages(uint64_t fenceID_)
 {
     if (m_bookmark == nullptr)
         return;
