@@ -35,11 +35,15 @@ namespace DXGraphics
 
 	extern ColourBuffer m_displayPlane[SWAP_CHAIN_BUFFER_COUNT];
 	extern ColourBuffer m_presentBuffer;
+	extern ColourBuffer m_overlayBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
 
 	extern D3D12_BLEND_DESC alphaBlend;
 	extern D3D12_RASTERIZER_DESC rasterDesc;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+
+	float GetFrameRate();
+	float GetFrameTime();
 }
 
 #endif

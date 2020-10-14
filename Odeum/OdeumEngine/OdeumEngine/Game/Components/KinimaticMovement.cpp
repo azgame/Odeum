@@ -1,33 +1,48 @@
 #include "KinimaticMovement.h"
 void KinimaticMovement::Update(float deltaTime)
 {
-	//object->SetPosition(object->GetPosition() + Vector4(0.01f, 0.0f, 0.0f, 0.0f));
-	// Component does stuff
+	//make sure we have a target or there will be errors
 	if (target)
 	{
-		Debug::Info("target aquired", __FILENAME__, __LINE__);
+		
 		Vector4 temp = GetSteering();
-		object->SetPosition(object->GetPosition() + temp);
+		
+	    //sets position directly moving constantly 
+		if (!shouldFlee)
+		{
+			//object->SetPosition(object->GetPosition() + temp);
+		}
+		else
+		{
+			temp = temp * 3;
+			object->SetPosition(object->GetPosition() - temp);
+		}
+		
+		
 	}
 }
+
 void KinimaticMovement::OnAttach(GameObject* parent)
-{
+{   //set default values and get our object's components
 	object = parent;
 	if (maxSpeed < 0.01)
 	{
 		maxSpeed = 0.01;
 	}
 }
+
 Vector4 KinimaticMovement::GetSteering()
 {
 	Vector3 velocity(0.0f, 0.0f, 0.0f);
 	
 	float rotation;
+	//velocity=target position -object position
 	velocity.SetX(target->GetPosition().GetX() - object->GetPosition().GetX());
 	velocity.SetY(target->GetPosition().GetY() - object->GetPosition().GetY());
 	velocity.SetZ(target->GetPosition().GetZ() - object->GetPosition().GetZ());
 	velocity = velocity.Normalize();
 	velocity= velocity * maxSpeed;
+	//this deals with the rotation which will be implemented after
 	if (velocity.Mag() > 0)
 	{
 		rotation=atan2(-velocity.GetX(), velocity.GetZ());

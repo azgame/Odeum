@@ -4,21 +4,9 @@
 #include "Component.h"
 
 // Moving model loading to a graphics component
-GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour colour)
+GameObject::GameObject(std::string fileName)
 {
-	if (preDefinedShape != ShapeTypes::NoShape)
-	{
-		switch (preDefinedShape)
-		{
-		case ShapeTypes::CubeShape:
-			Cube cube = Cube();
-			cube.SetColour(colour);
-			m_model.Load(&cube.GetVertices(), (uint32_t)cube.NumVertices(), sizeof(Vertex), &cube.GetIndices(), (uint32_t)cube.NumIndices());
-		}
-	}
-	else // load from file
-	{
-	}
+	m_model.Load(fileName);
 
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_rotation = Vector4(kYUnitVector);
@@ -27,6 +15,20 @@ GameObject::GameObject(std::string fileName, ShapeTypes preDefinedShape, Colour 
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 
 	SceneGraph::Get()->AddGameObject(this);
+}
+
+GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour)
+{
+	switch (preDefinedShape)
+	{
+	case ShapeTypes::CubeShape:
+	{
+		m_model.Load("Engine/Resources/Models/Cube.obj");
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 GameObject::~GameObject()
@@ -46,7 +48,6 @@ void GameObject::Initialize(std::string modelTextureLoadFile)
 
 void GameObject::Update(float deltaTime)
 {
-
 	for (auto component : m_components)
 		component->Update(deltaTime);
 }
@@ -76,11 +77,10 @@ void GameObject::SetMass(float mass)
 
 void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 {
-	// perform any necessary setup (eg. if component is of type Graphics, register with renderer)
-	m_components.push_back(pAttachedComponent);
-
 	// Attach T
-	pAttachedComponent->OnAttach(this);
+	pAttachedComponent->OnAttach(this); // On attach allows implementations to define how they register to systems.  
+											// eg. A component which inherits from GraphicsComponent will register with the scene graph
+	m_components.push_back(pAttachedComponent);
 }
 
 void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale)

@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-// Scene index 1
+// Scene index 2
 class RobScene : public Scene
 {
 public:
@@ -13,9 +13,10 @@ public:
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
-	virtual void Render();
+	virtual void UIRender();
 
 private:
+	float teletime;
 	GameObject* object;
 	GameObject* plane;
 	GameObject* newObject;

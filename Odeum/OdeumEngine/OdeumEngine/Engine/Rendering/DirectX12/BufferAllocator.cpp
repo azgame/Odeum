@@ -96,10 +96,30 @@ void BufferLedger::RecyclePages(uint64_t fenceID_, const std::vector<BufferPage*
 		m_retiredPages.push(std::make_pair(fenceID_, page));
 }
 
+void BufferLedger::RecycleLargePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_)
+{
+    std::lock_guard<std::mutex> LockGuard(m_mutex);
+
+    while (!m_deletionQueue.empty() && DXGraphics::m_commandManager.IsFenceComplete(m_deletionQueue.front().first))
+    {
+        delete m_deletionQueue.front().second;
+        m_deletionQueue.pop();
+    }
+
+    for (auto iter = pages_.begin(); iter != pages_.end(); ++iter)
+    {
+        (*iter)->UnMap();
+        m_deletionQueue.push(std::make_pair(fenceID_, *iter));
+    }
+}
+
 BufferEntry BufferAllocator::Allocate(size_t byteSize_, size_t alignment_)
 {
 	byteSize_ = Utility::Align(byteSize_, alignment_);
     m_offset = Utility::Align(m_offset, alignment_);
+
+    if (byteSize_ > m_pageSize)
+        return AllocateLargePage(byteSize_);
 
     if (m_offset + byteSize_ > m_pageSize)
     {
@@ -134,4 +154,19 @@ void BufferAllocator::CleanupUsedPages(uint64_t fenceID_)
 
     sm_pageManager[m_allocationType].RecyclePages(fenceID_, m_retiredPages);
     m_retiredPages.clear();
+
+    sm_pageManager[m_allocationType].RecycleLargePages(fenceID_, m_largePages);
+    m_largePages.clear();
+}
+
+BufferEntry BufferAllocator::AllocateLargePage(size_t sizeInBytes)
+{
+    BufferPage* singleSheet = sm_pageManager[m_allocationType].CreateNewPage(sizeInBytes);
+    m_largePages.push_back(singleSheet);
+
+    BufferEntry ret(*singleSheet, 0, sizeInBytes);
+    ret.CpuAddress = singleSheet->m_CpuVirtualAddress;
+    ret.GpuAddress = singleSheet->m_GpuVirtualAddress;
+
+    return ret;
 }

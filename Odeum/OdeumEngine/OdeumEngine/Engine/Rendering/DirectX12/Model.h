@@ -5,6 +5,7 @@
 #include "Buffers/D3DBuffer.h"
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
+#include "TextureManager.h"
 
 // Revert data to pointer arrays. Reasoning is that it allows you to send model as a single chunk down to the gpu 
 // rather than the fragmented meshes that make up an entire model, and does so in a single gpu call
@@ -14,19 +15,25 @@ class Model
 public:
 
 	Model() :
-		m_vertexStride(0) {}
+		m_pMesh(nullptr),
+		m_pMaterials(nullptr),
+		m_pVertexData(nullptr),
+		m_pIndexData(nullptr),
+		m_srvs(nullptr),
+		m_vertexStride(sizeof(Vertex)) {}
 
 	~Model()
 	{
-		m_meshes.clear();
-		m_vertexData.clear();
-		m_indexData.clear();
-		m_materials.clear();
-		m_srvs.clear();
+		SAFE_DELETE(m_pMesh);
+		SAFE_DELETE(m_pMaterials);
+		SAFE_DELETE(m_pVertexData);
+		SAFE_DELETE(m_pIndexData);
+		SAFE_DELETE(m_srvs);
 	}
 
 	void Load(std::string fileName);
 	void Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_);
+	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
 
@@ -50,14 +57,18 @@ public:
 		uint32_t materialCount;
 		uint32_t vertexDataByteSize;
 		uint32_t indexDataByteSize;
+		uint32_t vertexCount;
+		uint32_t indexCount;
 	};
 
 	struct Mesh
 	{
 		uint32_t indexCount;
 		uint32_t indexDataByteOffset;
+		uint32_t indexOffset;
 		uint32_t vertexCount;
 		uint32_t vertexDataByteOffset;
+		uint32_t vertexOffset;
 		uint32_t vertexStride;
 
 		uint32_t materialIndex;
@@ -75,19 +86,32 @@ public:
 		float opacity;
 		float shininess;
 		float specularStrength;
+
+		char name[128];
+		char diffuseTextureFile[128];
+		char specularTextureFile[128];
+		char emissiveTextureFile[128];
+		char normalTextureFile[128];
+		char lightmapTextureFile[128];
+		char reflectionTextureFile[128];
 	};
 
 	Mesh& GetMesh(int index);
 
-	ModelInfo m_details;
-	std::vector<Mesh> m_meshes;
-	std::vector<Vertex> m_vertexData; // temp vertex storage for upload
-	std::vector<uint16_t> m_indexData; // temp index storage for upload
+	ModelInfo		m_details;
+	Mesh*			m_pMesh;
+	Vertex*			m_pVertexData; // temp vertex storage for upload
+	uint16_t*		m_pIndexData; // temp index storage for upload
+	Material*		m_pMaterials;
 
-	std::vector<Material> m_materials;
-	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> m_srvs; // materials/textures
+	uint32_t		m_vertexStride;
 
-	uint32_t m_vertexStride;
+	D3D12_CPU_DESCRIPTOR_HANDLE* GetSRVs(uint32_t mIndex) const
+	{
+		return m_srvs + mIndex * 6;
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE* m_srvs; // materials/textures
 	StructuredBuffer m_vertexBuffer;
 	ByteAddressedBuffer m_indexBuffer;
 

@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
+#include "../../Engine/Core/CameraController.h"
 
 // Scene index 1
 class GameScene : public Scene
@@ -13,12 +14,13 @@ public:
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
-	virtual void Render();
+	virtual void UIRender();
 
 private:
+	CameraController cameraController;
 	GameObject* object;
-	GameObject* plane;
-	GameObject* newObject;
+	float angle;
+	float direction = 1.0f;
 };
 
 #endif
