@@ -20,6 +20,14 @@ GameObject::GameObject(std::string fileName)
 
 GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour)
 {
+	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_rotation = Vector4(kYUnitVector);
+	m_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
+
+	m_model.SetParent(this);
+
 	switch (preDefinedShape)
 	{
 	case ShapeTypes::CubeShape:
@@ -30,6 +38,8 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour)
 	default:
 		break;
 	}
+
+	SceneGraph::Get()->AddGameObject(this);
 }
 
 GameObject::~GameObject()

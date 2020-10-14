@@ -144,11 +144,11 @@ void Model::Load(std::string fileName)
 			{
 				vertex->position = DirectX::XMFLOAT3(sourceMesh->mVertices[v].x, sourceMesh->mVertices[v].y, sourceMesh->mVertices[v].z);
 				if (vMin.GetX() > sourceMesh->mVertices[v].x) vMin.SetX(sourceMesh->mVertices[v].x);
-				if (vMin.GetX() > sourceMesh->mVertices[v].y) vMin.SetY(sourceMesh->mVertices[v].y);
-				if (vMin.GetX() > sourceMesh->mVertices[v].z) vMin.SetZ(sourceMesh->mVertices[v].z);
+				if (vMin.GetY() > sourceMesh->mVertices[v].y) vMin.SetY(sourceMesh->mVertices[v].y);
+				if (vMin.GetZ() > sourceMesh->mVertices[v].z) vMin.SetZ(sourceMesh->mVertices[v].z);
 				if (vMax.GetX() < sourceMesh->mVertices[v].x) vMax.SetX(sourceMesh->mVertices[v].x);
-				if (vMax.GetX() < sourceMesh->mVertices[v].y) vMax.SetY(sourceMesh->mVertices[v].y);
-				if (vMax.GetX() < sourceMesh->mVertices[v].z) vMax.SetZ(sourceMesh->mVertices[v].z);
+				if (vMax.GetY() < sourceMesh->mVertices[v].y) vMax.SetY(sourceMesh->mVertices[v].y);
+				if (vMax.GetZ() < sourceMesh->mVertices[v].z) vMax.SetZ(sourceMesh->mVertices[v].z);
 			}
 			else
 				ASSERT(false, "No position, wtf?");
