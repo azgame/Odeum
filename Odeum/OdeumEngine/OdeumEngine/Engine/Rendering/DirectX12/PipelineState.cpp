@@ -74,17 +74,13 @@ void GraphicsPSO::SetInputLayout(UINT numElements_, const D3D12_INPUT_ELEMENT_DE
 
 	if (numElements_ > 0)
 	{
-		D3D12_INPUT_ELEMENT_DESC* elements = (D3D12_INPUT_ELEMENT_DESC*)malloc(sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements_);
+		D3D12_INPUT_ELEMENT_DESC* elements = new D3D12_INPUT_ELEMENT_DESC[numElements_];
+		//D3D12_INPUT_ELEMENT_DESC* elements = (D3D12_INPUT_ELEMENT_DESC*)malloc(sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements_);
 		memcpy(elements, inputElementDescs_, sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements_);
 		m_inputLayouts.reset((const D3D12_INPUT_ELEMENT_DESC*)elements);
 	}
 	else
 		m_inputLayouts = nullptr;
-}
-
-void GraphicsPSO::SetPrimitiveRestart(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE indexBufferProps_)
-{
-	m_psoDesc.IBStripCutValue = indexBufferProps_;
 }
 
 void GraphicsPSO::CompileVertexShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_)

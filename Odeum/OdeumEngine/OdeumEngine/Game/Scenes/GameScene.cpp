@@ -2,15 +2,16 @@
 #include "../Components/KinimaticMovement.h"
 #include "../Components/DynamicMovement.h"
 #include "../Components/ComponentTest.h"
+#include "../../Engine/Math/CollisionHandler.h"
 
-GameScene::GameScene() : Scene()
+GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
 	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
-	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
-	object->RemoveComponent<KinimaticMovement>();
-	object->RemoveComponents<DynamicMovement, ComponentTest>();
+
+	CollisionHandler::GetInstance()->Initialize(1000.0f);
+	CollisionHandler::GetInstance()->AddObject(object);
 }
 
 GameScene::~GameScene()
@@ -30,11 +31,9 @@ void GameScene::Update(const float deltaTime_)
 	angle += direction * (deltaTime_ * 0.1f);
 	object->SetRotation(Vector4(kYUnitVector), angle);
 
-	object->Update(deltaTime_);
+	CollisionHandler::GetInstance()->MouseUpdate();
 
-	// std::cout << "Mouse at [" << Input::Get().GetMouseX() << ", " << Input::Get().GetMouseY() << "]" << std::endl;
-	// if (Input::Get().isButtonClicked(MouseCode::ButtonLeft))
-		// std::cout << "Mouse clicked " << clickCount << " times!" << std::endl;
+	object->Update(deltaTime_);
 }
 
 void GameScene::UIRender()

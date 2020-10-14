@@ -86,6 +86,6 @@ void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 
 void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale)
 {
-	m_modelMatrix = Matrix4(DirectX::XMMatrixTranslationFromVector(position.GetVec()) * DirectX::XMMatrixRotationAxis(rotation.GetVec(), angle) * DirectX::XMMatrixScalingFromVector(scale.GetVec()));	
+	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * DirectX::XMMatrixRotationAxis(rotation.GetVec(), angle) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 	bbox.transform = m_modelMatrix;
 }

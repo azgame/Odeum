@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "CommandContext.h"
 
 #include "Buffers/ColourBuffer.h"
@@ -68,7 +79,7 @@ CommandContext::~CommandContext()
 
 void CommandContext::DestroyAllContexts()
 {
-    BufferAllocator::DestroyAllPages();
+    BufferAllocator::Destroy();
     DynamicDescriptorHeap::Destroy();
     DXGraphics::m_contextManager.DestroyAllContexts();
 }
@@ -122,8 +133,8 @@ uint64_t CommandContext::Finish(bool waitForCompletion_)
     queue.DiscardAllocator(fenceValue, m_currentAllocator);
     m_currentAllocator = nullptr;
 
-    m_CpuBufferAllocator.CleanupUsedPages(fenceValue);
-    m_GpuBufferAllocator.CleanupUsedPages(fenceValue);
+    m_CpuBufferAllocator.RecyclePages(fenceValue);
+    m_GpuBufferAllocator.RecyclePages(fenceValue);
     m_dynamicViewDescHeap.CleanupUsedHeaps(fenceValue);
     m_dynamicSamplerDescHeap.CleanupUsedHeaps(fenceValue);
 

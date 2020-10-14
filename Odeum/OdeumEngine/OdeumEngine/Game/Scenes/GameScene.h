@@ -20,7 +20,7 @@ private:
 	CameraController cameraController;
 	GameObject* object;
 	float angle;
-	float direction = 1.0f;
+	float direction;
 };
 
 #endif

@@ -19,6 +19,8 @@ TestRender::TestRender()
 
 TestRender::~TestRender()
 {
+	m_colourPSO.Destroy();
+	m_rootSig.Destroy();
 }
 
 void TestRender::Attach()

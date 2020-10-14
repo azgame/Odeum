@@ -43,8 +43,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 xAxis(box.transform.GetX());
 
-	float e = 0.0f;// = delta.Dot(xAxis);
-	float f = 0.0f;// = xAxis.Dot(ray.direction);
+	float e = delta.Dot(xAxis);
+	float f = xAxis.Dot(ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
@@ -72,8 +72,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 yAxis(box.transform.GetY());
 
-	//e = delta.Dot(yAxis);
-	//f = yAxis.Dot(ray.direction);
+	e = delta.Dot(yAxis);
+	f = yAxis.Dot(ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
@@ -101,8 +101,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 zAxis(box.transform.GetZ());
 
-	//e = delta.Dot(zAxis);
-	//f = zAxis.Dot(ray.direction);
+	e = delta.Dot(zAxis);
+	f = zAxis.Dot(ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
