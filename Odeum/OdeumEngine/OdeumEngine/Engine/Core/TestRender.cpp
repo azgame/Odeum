@@ -143,8 +143,8 @@ void TestRender::Update(float deltaTime_)
 			Model::Mesh& mesh = object->GetModel().GetMesh(i);
 			uint32_t vertexStride = object->GetModel().m_vertexStride;
 			uint32_t indexCount = mesh.indexCount;
-			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint16_t);
-			uint32_t baseVertex = mesh.vertexDataByteOffset / sizeof(Vertex);
+			uint32_t startIndex = mesh.indexOffset;
+			uint32_t baseVertex = mesh.vertexOffset;
 
 			graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
 

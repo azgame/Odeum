@@ -80,9 +80,9 @@ private:
 	struct DescriptorTableCache
 	{
 		DescriptorTableCache() : assignedHandlesBitMap(0) {}
-		uint32_t assignedHandlesBitMap;
-		D3D12_CPU_DESCRIPTOR_HANDLE* tableStart;
-		uint32_t tableSize;
+		uint32_t assignedHandlesBitMap;							// in the space we take up, how many of our table params are assigned?
+		D3D12_CPU_DESCRIPTOR_HANDLE* tableStart;				// where we exist
+		uint32_t tableSize;										// how big are we?
 	};
 
 	// Cache used to track descriptor table caches and their assignment

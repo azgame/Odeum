@@ -30,6 +30,8 @@ public:
 
 	int GetWidth() { return m_data.width; }
 	int GetHeight() { return m_data.height; }
+	int GetXPos() { return m_data.xPos; }
+	int GetYPos() { return m_data.yPos; }
 	bool isUltraWide() { return m_data.ultraWide; }
 	bool isVSync() { return m_data.vSync; }
 
@@ -42,6 +44,7 @@ private:
 	{
 		std::string title;
 		uint32_t width, height;
+		uint32_t xPos, yPos;
 		bool vSync, ultraWide;
 
 		std::function<void(Event&)> eventCallback;

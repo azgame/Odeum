@@ -6,13 +6,14 @@
 // Moving model loading to a graphics component
 GameObject::GameObject(std::string fileName)
 {
-	m_model.Load(fileName);
-
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_rotation = Vector4(kYUnitVector);
 	m_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
+
+	m_model.SetParent(this);
+	m_model.Load(fileName);
 
 	SceneGraph::Get()->AddGameObject(this);
 }
@@ -86,4 +87,5 @@ void GameObject::CreateAttachedComponent(Component* pAttachedComponent)
 void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale)
 {
 	m_modelMatrix = Matrix4(DirectX::XMMatrixTranslationFromVector(position.GetVec()) * DirectX::XMMatrixRotationAxis(rotation.GetVec(), angle) * DirectX::XMMatrixScalingFromVector(scale.GetVec()));	
+	bbox.transform = m_modelMatrix;
 }

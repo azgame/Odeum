@@ -16,7 +16,7 @@ public:
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_uav; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_srv; }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetRootCBV() const { return m_vGpuAddress; }
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetRootCBV() const { return m_gpuAddress; }
 
 	D3D12_CPU_DESCRIPTOR_HANDLE CreateCBV(uint32_t offset_, uint32_t size_) const;
 

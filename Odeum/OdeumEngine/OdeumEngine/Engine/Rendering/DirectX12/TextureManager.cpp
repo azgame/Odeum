@@ -5,6 +5,7 @@
 
 #include "D3DCore.h"
 #include "CommandContext.h"
+#include "Colour.h"
 
 std::unique_ptr<TextureManager> TextureManager::m_instance = nullptr;
 
@@ -71,6 +72,11 @@ Texture* TextureManager::LoadFromFile(std::string textureName_)
 	return texture;
 }
 
+Texture* TextureManager::CreateAndStore(Colour colour_)
+{
+    return new Texture("Empty");
+}
+
 void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format)
 {
 	const UINT numPixels = tex.width * tex.height;
@@ -119,6 +125,7 @@ Texture* TextureManager::FindOrLoad(std::string textureName_)
         newTexture->SetToInvalidTexture();
     }
     
+    SAFE_DELETE(initialData);
 	return newTexture;
 }
 

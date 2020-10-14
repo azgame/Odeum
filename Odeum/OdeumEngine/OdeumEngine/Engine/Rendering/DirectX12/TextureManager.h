@@ -6,6 +6,8 @@
 
 #include <map>
 
+class Colour;
+
 class Texture : public D3DResource
 {
 	friend class CommandContext;
@@ -56,7 +58,9 @@ public:
 
 	void Initialize(std::string textureDirectory_) { sm_rootDirectory = textureDirectory_; }
 	void ShutDown() { sm_textureMap.clear(); }
+
 	Texture* LoadFromFile(std::string textureName_);
+	Texture* CreateAndStore(Colour colour_);
 
 	UINT BytesPerPixel(DXGI_FORMAT format);
 
@@ -81,7 +85,6 @@ private:
 
 	size_t BitsPerPixel(DXGI_FORMAT format);
 	
-
 	std::map<std::string, std::unique_ptr<Texture>> sm_textureMap;
 	std::mutex sm_mutex;
 	std::string sm_rootDirectory;

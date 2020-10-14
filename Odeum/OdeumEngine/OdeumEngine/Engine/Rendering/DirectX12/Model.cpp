@@ -4,6 +4,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "../../Core/GameObject.h"
+
 void Model::Load(std::string fileName)
 {
 	Assimp::Importer importer;
@@ -74,12 +76,14 @@ void Model::Load(std::string fileName)
 		destMat.shininess = shininess;
 		destMat.specularStrength = specularStrength;
 
+		aiString matName;
 		aiString texDiffusePath;
 		aiString texSpecularPath;
 		aiString texEmissivePath;
 		aiString texNormalPath;
 		aiString texLightmapPath;
 		aiString texReflectionPath;
+		sourceMat->Get(AI_MATKEY_NAME, matName);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), texDiffusePath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), texSpecularPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_EMISSIVE, 0), texEmissivePath);
@@ -87,41 +91,13 @@ void Model::Load(std::string fileName)
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_LIGHTMAP, 0), texLightmapPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_REFLECTION, 0), texReflectionPath);
 
-		char* pRem = nullptr;
-
-		//strncpy_s(destMat.diffuseTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.diffuseTextureFile, texDiffusePath.C_Str(), 127);
-		//pRem = strrchr(destMat.diffuseTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		//strncpy_s(destMat.specularTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.specularTextureFile, texSpecularPath.C_Str(), 127);
-		//pRem = strrchr(destMat.specularTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		//strncpy_s(destMat.emissiveTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.emissiveTextureFile, texEmissivePath.C_Str(), 127);
-		//pRem = strrchr(destMat.emissiveTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		//strncpy_s(destMat.normalTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.normalTextureFile, texNormalPath.C_Str(), 127);
-		//pRem = strrchr(destMat.normalTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		//strncpy_s(destMat.lightmapTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.lightmapTextureFile, texLightmapPath.C_Str(), 127);
-		//pRem = strrchr(destMat.lightmapTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		//strncpy_s(destMat.reflectionTextureFile, "Engine/Resources/Textures/", 127);
-		strncat_s(destMat.reflectionTextureFile, texReflectionPath.C_Str(), 127);
-		//pRem = strrchr(destMat.reflectionTextureFile, '.');
-		//while (pRem != nullptr && *pRem != 0) *(pRem++) = 0; // remove extension
-
-		aiString matName;
-		sourceMat->Get(AI_MATKEY_NAME, matName);
 		strncpy_s(destMat.name, matName.C_Str(), 127);
+		strncpy_s(destMat.diffuseTextureFile, texDiffusePath.C_Str(), 127);
+		strncpy_s(destMat.specularTextureFile, texSpecularPath.C_Str(), 127);
+		strncpy_s(destMat.emissiveTextureFile, texEmissivePath.C_Str(), 127);
+		strncpy_s(destMat.normalTextureFile, texNormalPath.C_Str(), 127);
+		strncpy_s(destMat.lightmapTextureFile, texLightmapPath.C_Str(), 127);
+		strncpy_s(destMat.reflectionTextureFile, texReflectionPath.C_Str(), 127);
 	}
 
 	m_details.meshCount = scene->mNumMeshes;
@@ -136,42 +112,11 @@ void Model::Load(std::string fileName)
 		ASSERT(sourceMesh->mPrimitiveTypes == aiPrimitiveType_TRIANGLE);
 
 		destMesh.materialIndex = sourceMesh->mMaterialIndex;
-
-		destMesh.attributes[attrib_Position].offset = destMesh.vertexStride;
-		destMesh.attributes[attrib_Position].normalized = 0;
-		destMesh.attributes[attrib_Position].components = 3;
-		destMesh.attributes[attrib_Position].format = 4;
-		destMesh.vertexStride += sizeof(float) * 3;
+		destMesh.vertexStride = sizeof(float) * 14; // pos(3); uv(2); norm(3); tangent(3); bitangent(3);
 				
-		destMesh.attributes[attrib_TexCoord].offset = destMesh.vertexStride;
-		destMesh.attributes[attrib_TexCoord].normalized = 0;
-		destMesh.attributes[attrib_TexCoord].components = 2;
-		destMesh.attributes[attrib_TexCoord].format = 4;
-		destMesh.vertexStride += sizeof(float) * 2;
-				
-		destMesh.attributes[attrib_Normal].offset = destMesh.vertexStride;
-		destMesh.attributes[attrib_Normal].normalized = 0;
-		destMesh.attributes[attrib_Normal].components = 3;
-		destMesh.attributes[attrib_Normal].format = 4;
-		destMesh.vertexStride += sizeof(float) * 3;
-				
-		destMesh.attributes[attrib_Tangent].offset = destMesh.vertexStride;
-		destMesh.attributes[attrib_Tangent].normalized = 0;
-		destMesh.attributes[attrib_Tangent].components = 3;
-		destMesh.attributes[attrib_Tangent].format = 4;
-		destMesh.vertexStride += sizeof(float) * 3;
-				
-		destMesh.attributes[attrib_Bitangent].offset = destMesh.vertexStride;
-		destMesh.attributes[attrib_Bitangent].normalized = 0;
-		destMesh.attributes[attrib_Bitangent].components = 3;
-		destMesh.attributes[attrib_Bitangent].format = 4;
-		destMesh.vertexStride += sizeof(float) * 3;
-				
-		destMesh.vertexDataByteOffset = m_details.vertexDataByteSize;
 		destMesh.vertexOffset = m_details.vertexCount;
 		destMesh.vertexCount = sourceMesh->mNumVertices;
 				
-		destMesh.indexDataByteOffset = m_details.indexDataByteSize;
 		destMesh.indexOffset = m_details.indexCount;
 		destMesh.indexCount = sourceMesh->mNumFaces * 3;
 
@@ -183,6 +128,8 @@ void Model::Load(std::string fileName)
 
 	m_pVertexData = new Vertex[m_details.vertexCount];
 	m_pIndexData = new uint16_t[m_details.indexCount];
+
+	Vector3 vMin(kZero), vMax(kZero);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{
@@ -196,47 +143,35 @@ void Model::Load(std::string fileName)
 			if (sourceMesh->mVertices)
 			{
 				vertex->position = DirectX::XMFLOAT3(sourceMesh->mVertices[v].x, sourceMesh->mVertices[v].y, sourceMesh->mVertices[v].z);
+				if (vMin.GetX() > sourceMesh->mVertices[v].x) vMin.SetX(sourceMesh->mVertices[v].x);
+				if (vMin.GetX() > sourceMesh->mVertices[v].y) vMin.SetY(sourceMesh->mVertices[v].y);
+				if (vMin.GetX() > sourceMesh->mVertices[v].z) vMin.SetZ(sourceMesh->mVertices[v].z);
+				if (vMax.GetX() < sourceMesh->mVertices[v].x) vMax.SetX(sourceMesh->mVertices[v].x);
+				if (vMax.GetX() < sourceMesh->mVertices[v].y) vMax.SetY(sourceMesh->mVertices[v].y);
+				if (vMax.GetX() < sourceMesh->mVertices[v].z) vMax.SetZ(sourceMesh->mVertices[v].z);
 			}
 			else
-			{
 				ASSERT(false, "No position, wtf?");
-			}
 
 			if (sourceMesh->mTextureCoords[0])
-			{
 				vertex->uvcoords = DirectX::XMFLOAT2(sourceMesh->mTextureCoords[0][v].x, 1.0f - sourceMesh->mTextureCoords[0][v].y);
-			}
 			else
-			{
 				vertex->uvcoords = DirectX::XMFLOAT2(0.0f, 0.0f);
-			}
 
 			if (sourceMesh->mNormals)
-			{
 				vertex->normal = DirectX::XMFLOAT3(sourceMesh->mNormals[v].x, sourceMesh->mNormals[v].y, sourceMesh->mNormals[v].z);
-			}
 			else
-			{
 				ASSERT(false, "Assimp is supposed to generate normals, so if there are none its a problem");
-			}
 
 			if (sourceMesh->mTangents)
-			{
 				vertex->tangent = DirectX::XMFLOAT3(sourceMesh->mTangents[v].x, sourceMesh->mTangents[v].y, sourceMesh->mTangents[v].z);
-			}
 			else
-			{
 				vertex->tangent = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-			}
 
 			if (sourceMesh->mBitangents)
-			{
 				vertex->bitangent = DirectX::XMFLOAT3(sourceMesh->mBitangents[v].x, sourceMesh->mBitangents[v].y, sourceMesh->mBitangents[v].z);
-			}
 			else
-			{
 				vertex->bitangent = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-			}
 
 			vertex++;
 		}
@@ -257,6 +192,8 @@ void Model::Load(std::string fileName)
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
 
 	LoadTextures();
+
+	m_gameObject->SetBoundingBox(vMin, vMax);
 }
 
 void Model::LoadTextures()
@@ -284,28 +221,6 @@ void Model::LoadTextures()
 		m_srvs[mIndex * 6 + 5] = matTextures[5]->GetSRV();*/
 	}
 }
-
-void Model::Load(Vertex* pvData_, uint32_t numVertices_, uint32_t vStride_, uint16_t* piData_, uint32_t numIndices_)
-{
-	m_details = ModelInfo();
-	m_details.meshCount = 1;
-	m_details.vertexDataByteSize = numVertices_ * m_vertexStride;
-	m_details.indexDataByteSize = numIndices_ * sizeof(uint16_t);
-
-	m_vertexStride = vStride_;
-	m_pVertexData = pvData_;
-	m_pIndexData = piData_;
-
-	m_vertexBuffer.Create("Vertex buffer", numVertices_, m_vertexStride, m_pVertexData);
-	m_indexBuffer.Create("Index buffer", numIndices_, sizeof(uint16_t), m_pIndexData);
-
-	m_pMesh = new Mesh();
-	m_pMesh[0].indexCount = numIndices_;
-	m_pMesh[0].indexDataByteOffset = 0;
-	m_pMesh[0].vertexCount = numVertices_;
-	m_pMesh[0].vertexDataByteOffset = 0;
-}
-
 
 Model::Mesh& Model::GetMesh(int index)
 {

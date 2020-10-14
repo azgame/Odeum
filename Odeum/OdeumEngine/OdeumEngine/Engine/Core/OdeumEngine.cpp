@@ -37,8 +37,6 @@ void OdeumEngine::OnEvent(Event& e)
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OdeumEngine::Close));
 	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OdeumEngine::Resize));
-	dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
-	dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
 
 	for (auto system : m_systemStack)
 	{
@@ -112,11 +110,6 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 {
 	DXGraphics::Resize(resizeEvent.GetWidth(), resizeEvent.GetHeight());
 	return true;
-}
-
-bool OdeumEngine::KeyboardInput(KeyEvent& keyEvent)
-{
-	return Input::Get().Update(keyEvent);
 }
 
 int OdeumEngine::GetSceneIndex(std::string fileName)
