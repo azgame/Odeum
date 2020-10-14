@@ -154,7 +154,6 @@
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Game\Components\DynamicMovement.cpp" />
-    <ClCompile Include="Game\Scenes\BenScene2.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
@@ -183,7 +182,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
-    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
@@ -202,6 +201,7 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
+    <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Math\BoundingBox.h" />
@@ -211,7 +211,6 @@
     <ClInclude Include="Engine\Math\Ray.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Game\Components\DynamicMovement.h" />
-    <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
@@ -267,7 +266,7 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
-    <ClInclude Include="Game\Components\SimplePhysics.h" />
+    <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
@@ -285,6 +284,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
+    <ClInclude Include="Engine\Math\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">

@@ -98,6 +98,7 @@ public:
 	inline Matrix4 operator* (const Matrix4& mat_) const { return Matrix4(XMMatrixMultiply(mat_, mat)); }
 
 	static inline Matrix4 MakeScale(float scale_) { return Matrix4(XMMatrixScaling(scale_, scale_, scale_)); }
+	static inline Matrix4 MakeScale(float scaleX_, float scaleY_, float scaleZ_) { return Matrix4(XMMatrixScaling(scaleX_, scaleY_, scaleZ_)); }
 	static inline Matrix4 MakeScale(Vector3 scale_) { return Matrix4(XMMatrixScalingFromVector(scale_)); }
 
 private:
