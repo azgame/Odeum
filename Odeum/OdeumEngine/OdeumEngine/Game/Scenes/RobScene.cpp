@@ -7,8 +7,8 @@
 RobScene::RobScene() : Scene()
 {
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
-	newObject->SetPosition(Vector4(5.0f, 2.0f, 0.0f, 1.0f));
-	object = new GameObject("Engine/Resources/Models/2nrtbod1out.obj");
+	newObject->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	object = new GameObject("Engine/Resources/Models/Cube.obj");
 	object->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<SimplePhysics>();
 	object->AddComponent <DynamicMovement>();
@@ -49,7 +49,7 @@ void RobScene::Update(const float deltaTime_)
 		 teletime = 1500;
 		 int a=(rand() % 10)-6;
 		 int b=(rand() % 10)-6;
-		 newObject->SetPosition(Vector4(a, 0.0f, b, 1.0f));
+		// newObject->SetPosition(Vector4(a, 0.0f, b, 1.0f));
 	 }
 
 		 

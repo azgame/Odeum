@@ -11,9 +11,9 @@ void DynamicMovement::OnAttach(GameObject* parent)
 	//change these values later these are placeholders, should be set depending on the object
 	 maxAcceleration=5;
 	 maxSpeed=5;
-	 targetRadius=1.0f;
-	 slowRadius=10;
-	 timeToTarget=0.1;
+	 targetRadius=3.0f;
+	 slowRadius=6;
+	 timeToTarget=0.1f;
 }
 
 void DynamicMovement::Update(float deltaTime)
@@ -22,29 +22,46 @@ void DynamicMovement::Update(float deltaTime)
 	if (target)
 	{
 		
-		if(!shouldFlee)
+		
 		object->GetComponent<SimplePhysics>()->SetTotalAcceleration(GetSteering());
-		else
-		object->GetComponent<SimplePhysics>()->SetTotalAcceleration(-GetSteering());
+
 		
 			
 	}
 }
-
+void DynamicMovement::SetAll(float maxAcceleration_, float maxSpeed_, float targetRadius_, float slowRadius_, float timeToTarget_)
+{
+	maxAcceleration = maxAcceleration_; maxSpeed = maxSpeed_; targetRadius = targetRadius_; slowRadius = slowRadius_; timeToTarget = targetRadius_;
+}
 Vector4 DynamicMovement::GetSteering()
 {
 	Vector3 temp;
 	Vector3 direction;
 	//direction=target position-object position
-	direction.SetX(target->GetPosition().GetX() - object->GetPosition().GetX());
-	direction.SetY(target->GetPosition().GetY() - object->GetPosition().GetY());
-	direction.SetZ(target->GetPosition().GetZ() - object->GetPosition().GetZ());
+	if (!shouldFlee)
+	{
+		direction.SetX(target->GetPosition().GetX() - object->GetPosition().GetX());
+		direction.SetY(target->GetPosition().GetY() - object->GetPosition().GetY());
+		direction.SetZ(target->GetPosition().GetZ() - object->GetPosition().GetZ());
+	}
+	else
+	{
+		direction.SetX(object->GetPosition().GetX() - target->GetPosition().GetX());
+		direction.SetY(object->GetPosition().GetY() - target->GetPosition().GetY());
+		direction.SetZ(object->GetPosition().GetZ() - target->GetPosition().GetZ());
+	}
 	float distance = direction.Mag();
+	
 	float targetSpeed;
 	//stop acclerating when in range
-	if (distance < targetRadius)
+	if (distance < targetRadius&&!shouldFlee)
 	{
-		return Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+		
+			object->GetComponent<SimplePhysics>()->SetVelocity(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+			return(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+		
+	
+		
 	}
 	//if not in the slow range go full force otherwise slow down
 	if (distance > slowRadius)

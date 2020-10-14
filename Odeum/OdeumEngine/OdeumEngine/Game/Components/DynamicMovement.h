@@ -11,6 +11,7 @@ public:
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
 	void Update(float deltaTime) override;
+	void SetAll(float maxAcceleration_, float maxSpeed_, float targetRadius_, float slowRadius_, float timeToTarget_);
 	GameObject* object;
 	//target is the gameobject we move towards or away from
 	GameObject* target;
