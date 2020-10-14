@@ -27,13 +27,12 @@ public:
 
 	virtual ~D3DResource()
 	{
-		Destroy();
 	}
 
 	virtual void Destroy()
 	{
 		m_gpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
-		m_resource.Reset();
+		if (m_resource) m_resource.Reset();
 	}
 
 	ID3D12Resource* operator->() { return m_resource.Get(); }
