@@ -31,7 +31,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	// AudioTest
 	object->AddComponent<AudioSource>();
 	object->GetComponent<AudioSource>()->Initialize("AUDIO_TEST");
-	object->GetComponent<AudioSource>()->PlaySound();
+	//object->GetComponent<AudioSource>()->PlaySound();
 }
 
 BenScene::~BenScene()
