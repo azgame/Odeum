@@ -9,23 +9,22 @@ bool AudioHandler::Initialize(Vector3 position, Vector3 velocity, Vector3 forwar
 {
 	// create the fmod system
 	FMOD::System_Create(&system);
-	// not sure if this should be numChannels
-	
+
+	// get number of drivers
 	if (system->getNumDrivers(&numOfChannels) != FMOD_OK) 
 	{
 		Debug::Error("Error getting number of audio drivers.", "AudioHandler.cpp", __LINE__);
 		return false;
 	}
-
 	
-	std::string s = "../Resources/Audio/";
-
+	// initialize fmod system - 3D by default, also DirectX is also left-handed woo!
 	if (system->init(MAX_AUDIO_CHANNELS, FMOD_INIT_NORMAL, nullptr) != FMOD_OK)
 	{
 		Debug::Error("Error initializing sound system.", "AudioHandler.cpp", __LINE__);
 		return false;
 	}
 
+	// set listener attributes
 	if (system->set3DListenerAttributes(0, &MakeFMODVector(position), &MakeFMODVector(velocity), &MakeFMODVector(forward), &MakeFMODVector(up)) != FMOD_OK)
 	{
 		Debug::Error("Error setting 3D Listener Attributes.", "AudioHandler.cpp", __LINE__);
@@ -134,6 +133,7 @@ bool AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool
 		mode |= FMOD_CREATECOMPRESSEDSAMPLE;
 	}
 
+	// create fmod sound
 	FMOD::Sound* sound;
 	sound = nullptr;
 
@@ -149,7 +149,8 @@ bool AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool
 		Debug::Error("Error creating the sound", "AudioHandler.cpp", __LINE__);
 		return false;
 	}
-
+	
+	// add to map
 	soundMap.insert({ soundName, sound });
 	return true;
 }
@@ -163,6 +164,7 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 		Debug::Info(soundName + " was not found. Creating the sound with default parameters now.", "AudioHandler.cpp", __LINE__);
 		if (!LoadSound(soundName))
 		{
+			// end the function -- this memory errors when trying to play from the soundMap when it doesn't have the soundName in there
 			return -1;
 		}
 	}
@@ -173,33 +175,41 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 
 	if (system->playSound(soundMap.at(soundName), nullptr, true, &channel) != FMOD_OK)
 	{
-		Debug::Error(soundName + " could not be played.", "AudioHandler.cpp", __LINE__);
+		Debug::Error(soundName + " could not be played", "AudioHandler.cpp", __LINE__);
 
 	}
 
 	FMOD_MODE* mode;
 	mode = new FMOD_MODE(FMOD_3D);
-	// not 100% if FMOD_DEFAULT is the correct parameter
+	// I feel like there is a better way for me to do this without having to create a mode pointer
 	if (soundMap.at(soundName)->getMode(mode) == FMOD_OK)
 	{
-		channel->set3DAttributes(&MakeFMODVector(position), &MakeFMODVector(velocity));
+		// if the channel was not created successfully
+		if (channel->set3DAttributes(&MakeFMODVector(position), &MakeFMODVector(velocity)) != FMOD_OK)
+		{
+			channel->stop();
+			Debug::Error("Channel was not created successfully", "AudioHandler.cpp", __LINE__);
+			return -1;
+		}
 	} 
 	else {
 		Debug::Info(soundName + " was not found. Creating the sound with default parameters now.", "AudioHandler.cpp", __LINE__);
 	}
 
-	channel->setVolume(volume);
-
-	// if the channel was not created successfully
-	if (channel == nullptr)
+	// set volume of the channel
+	if (channel->setVolume(volume) != FMOD_OK)
 	{
-		channel->stop();
-		Debug::Error("Channel was not created successfully.", "AudioHandler.cpp", __LINE__);
+		Debug::Error("Error while setting the volume of the channel", "AudioHandler.cpp", __LINE__);
 		return -1;
 	}
 
+
 	// play the sound
-	channel->setPaused(false);
+	if (channel->setPaused(false) != FMOD_OK)
+	{
+		Debug::Error("Error while unpausing the channel", "AudioHandler.cpp", __LINE__);
+		return -1;
+	}
 
 	// add channel to map
 	channelID = numOfChannels;
@@ -209,6 +219,7 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 	return channelID;
 }
 
+// update 3D attributes of specific channel
 void AudioHandler::UpdateChannel(int channelNum, Vector3 position = Vector3(), Vector3 velocity = Vector3())
 {
 	for (auto c : channelMap)
@@ -221,6 +232,7 @@ void AudioHandler::UpdateChannel(int channelNum, Vector3 position = Vector3(), V
 	Debug::Info("Channel " + channelNum + (std::string)" doesn't exist.", "AudioHandler.cpp", __LINE__);
 }
 
+// check to see if specific channel is playing
 bool AudioHandler::IsPlaying(int channelNum)
 {
 	for (auto c : channelMap)
