@@ -59,6 +59,8 @@
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
+    <ClCompile Include="Engine\Core\AudioHandler.cpp" />
+    <ClCompile Include="Game\Components\AudioSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -142,6 +144,8 @@
     <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Components\Rigidbody.h" />
+    <ClInclude Include="Engine\Core\AudioHandler.h" />
+    <ClInclude Include="Game\Components\AudioSource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

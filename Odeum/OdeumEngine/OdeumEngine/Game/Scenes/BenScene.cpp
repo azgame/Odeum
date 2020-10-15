@@ -4,13 +4,20 @@
 #include "../Components/ComponentTest.h"
 #include "../Components/Rigidbody.h"
 #include "../../Engine/Math/CollisionHandler.h"
+#include "../Engine/Core/AudioHandler.h"
+#include "../Components/AudioSource.h"
 
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {
+	// should pass in the camera pos
+	AudioHandler::GetInstance()->Initialize();
+	
 	object = new GameObject(CubeShape, Colour(1.0f, 1.0f, 1.0f, 1.0f));
 	object2 = new GameObject(CubeShape, Colour(0.1f, 0.3f, 0.4f, 1.0f));
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
+
+	//Physics Test
 
 	object->AddComponent<Rigidbody>();
 	object->GetComponent<Rigidbody>()->SetPosition(Vector4(10.0f, 0.0f, 0.0f, 0.0f));
@@ -21,6 +28,11 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	object2->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.0f, 0.0f, 0.0f, 0.0f));
 	object2->GetComponent<Rigidbody>()->AddVelocity(Vector4(1.0f, 0.0f, 0.0f, 0.0f));
 	object2->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 0.002f);
+
+	// AudioTest
+	object->AddComponent<AudioSource>();
+	object->GetComponent<AudioSource>()->Initialize("AUDIO_TEST");
+	object->GetComponent<AudioSource>()->PlaySound();
 }
 
 BenScene::~BenScene()

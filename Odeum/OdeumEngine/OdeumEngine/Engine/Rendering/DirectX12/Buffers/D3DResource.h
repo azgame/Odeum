@@ -27,7 +27,6 @@ public:
 
 	virtual ~D3DResource()
 	{
-		Destroy();
 	}
 
 	virtual void Destroy()
