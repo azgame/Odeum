@@ -56,7 +56,7 @@ void BenScene::Update(const float deltaTime_)
 
 	if (Input::Get().isKeyPressed(Key::KeyCode::A)) {
 		Debug::Info("PLAY SOUND!", "BenScene.cpp", __LINE__);
-		//object->GetComponent<AudioSource>()->PlaySound();
+		object->GetComponent<AudioSource>()->PlaySound();
 	}
 }
 
