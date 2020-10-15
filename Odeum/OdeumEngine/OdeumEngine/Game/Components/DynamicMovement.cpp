@@ -2,9 +2,9 @@
 void DynamicMovement::OnAttach(GameObject* parent)
 {
 	object = parent;
-	//if (object->GetComponent<SimplePhysics>()){}
-	//else { object->AddComponent<SimplePhysics>(); Debug::Info("add comp", __FILENAME__, __LINE__);
-	//}
+	if (object->GetComponent<Rigidbody>()){}
+	else { object->AddComponent<Rigidbody>(); }
+	
 	
 
 	
@@ -23,7 +23,7 @@ void DynamicMovement::Update(float deltaTime)
 	{
 		
 		
-		object->GetComponent<SimplePhysics>()->SetTotalAcceleration(GetSteering());
+		object->GetComponent<Rigidbody>()->SetAcceleration(GetSteering());
 
 		
 			
@@ -57,7 +57,7 @@ Vector4 DynamicMovement::GetSteering()
 	if (distance < targetRadius&&!shouldFlee)
 	{
 		
-			object->GetComponent<SimplePhysics>()->SetVelocity(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+			object->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
 			return(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
 		
 	
@@ -75,7 +75,7 @@ Vector4 DynamicMovement::GetSteering()
 	
 	direction=direction.Normalize();
 	direction=direction * targetSpeed;
-	temp = direction - object->GetComponent<SimplePhysics>()->GetVelocity();
+	temp = direction - object->GetComponent<Rigidbody>()->GetVelocity();
 	temp = temp / timeToTarget;
 	// Clip acceleration if too high
 	if (temp.Mag() > maxAcceleration)

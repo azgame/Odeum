@@ -7,13 +7,13 @@
 RobScene::RobScene() : Scene()
 {
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
-	newObject->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 	object = new GameObject("Engine/Resources/Models/Cube.obj");
-	object->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
-	object->AddComponent<SimplePhysics>();
+	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	object->AddComponent<Rigidbody>();
 	object->AddComponent <DynamicMovement>();
 	//object->AddComponent <KinimaticMovement>();
-	object->GetComponent<SimplePhysics>()->SetMass(1.0f);
+	object->GetComponent<Rigidbody>()->SetMass(1.0f);
 	
 	//object->GetComponent<SimplePhysics>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 0.02f);
 	
