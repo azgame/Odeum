@@ -16,8 +16,13 @@ public:
 
 	Texture(const std::string& fileName_) 
 	{
-		m_cpuDescHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+		m_cpuDescHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 		m_isValid = true;
+	}
+
+	~Texture()
+	{
+		m_cpuDescHandle.ptr = 0;
 	}
 
 	Texture(const std::string& fileName_, D3D12_CPU_DESCRIPTOR_HANDLE handle) : m_cpuDescHandle(handle), m_isValid(true) {}
@@ -55,12 +60,16 @@ public:
 	TextureManager& operator=(TextureManager&&) = delete;
 
 	void Initialize(std::string textureDirectory_) { sm_rootDirectory = textureDirectory_; }
-	void ShutDown() { sm_textureMap.clear(); }
+	void ShutDown() 
+	{
+		sm_textureMap.clear(); 
+	}
 
 	Texture* LoadFromFile(std::string textureName_);
 	Texture* CreateAndStore(Colour colour_);
 
 	UINT BytesPerPixel(DXGI_FORMAT format);
+	Texture* GetInvalidTexture();
 
 private:
 

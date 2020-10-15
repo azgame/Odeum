@@ -112,7 +112,7 @@ public:
 
 	void Destroy()
 	{
-		m_rootSignature = nullptr;
+		if (m_rootSignature) m_rootSignature->Release();  m_rootSignature = nullptr;
 	}
 
 	void Reset(UINT numRootParams_, UINT numStaticSamplers = 0);
@@ -134,7 +134,7 @@ public:
 		return m_parameterArray.get()[index_];
 	}
 
-	ID3D12RootSignature* GetRootSignature() const { return m_rootSignature.Get(); }
+	ID3D12RootSignature* GetRootSignature() const { return m_rootSignature; }
 
 protected:
 
@@ -147,7 +147,7 @@ protected:
 	uint32_t m_descriptorTableSize[16];
 	std::unique_ptr<RootParameter[]> m_parameterArray;
 	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> m_samplerArray;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
+	ID3D12RootSignature* m_rootSignature;
 };
 
 #endif

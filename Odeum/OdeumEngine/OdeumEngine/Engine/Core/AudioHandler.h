@@ -28,8 +28,7 @@ public:
 
 private:
 	friend class AudioSource;
-	AudioHandler();
-	~AudioHandler();
+	AudioHandler() {}
 
 	static std::unique_ptr<AudioHandler> audioHandlerInstance;
 	friend std::default_delete<AudioHandler>;

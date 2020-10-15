@@ -102,7 +102,7 @@ void Model::Load(std::string fileName)
 
 	m_details.meshCount = scene->mNumMeshes;
 	m_pMesh = new Mesh[m_details.meshCount];
-	memset(m_pMesh, 0, sizeof(Vertex) * m_details.meshCount);
+	memset(m_pMesh, 0, sizeof(Mesh) * m_details.meshCount);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
 	{

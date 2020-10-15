@@ -1,5 +1,5 @@
 #include "BenScene.h"
-#include "../Components/KinimaticMovement.h"
+#include "../Components/KinematicMovement.h"
 #include "../Components/DynamicMovement.h"
 #include "../Components/ComponentTest.h"
 #include "../Components/Rigidbody.h"
@@ -18,7 +18,6 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
 
 	//Physics Test
-
 	object->AddComponent<Rigidbody>();
 	object->GetComponent<Rigidbody>()->SetPosition(Vector4(10.0f, 0.0f, 0.0f, 0.0f));
 	object->GetComponent<Rigidbody>()->AddVelocity(Vector4(-1.0f, 0.0f, 0.0f, 0.0f));

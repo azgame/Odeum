@@ -142,7 +142,7 @@ void DXGraphics::Initialize()
 		if (desc.Flags && DXGI_ADAPTER_FLAG_SOFTWARE)
 			continue;
 
-		if (desc.DedicatedVideoMemory > maxSize && SUCCEEDED(D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device))))
+		if (desc.DedicatedVideoMemory > maxSize && SUCCEEDED(D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_device))))
 		{
 			adapter->GetDesc1(&desc);
 			maxSize = desc.DedicatedVideoMemory;
@@ -153,6 +153,7 @@ void DXGraphics::Initialize()
 	s_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
 	s_ultraWide = OdeumEngine::Get().GetWindow().isUltraWide();
 	s_displayWidth = s_ultraWide ? (uint32_t)((float)s_displayWidth * ultraWideRatio) : s_displayWidth;
+	s_enableVSync = true;
 
 	m_commandManager.Initialize(m_device);
 
@@ -228,7 +229,6 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 {
 	if (sm_swapChain == nullptr)
 	{
-		Debug::Warning("Swap chain has not been initialized", __FILENAME__, __LINE__);
 		return;
 	}
 
@@ -307,7 +307,7 @@ void DXGraphics::Present()
 
 	sm_swapChain->Present(presentInterval, 0);
 
-	if (s_enableVSync) frameTime = 1.0 / REFRESH_RATE;
+	if (s_enableVSync) frameTime = 1000.0f * (1.0 / REFRESH_RATE);
 	else frameTime = 1000.0f * OdeumEngine::Get().GetTimer().GetDeltaTime();
 
 	if (frameCounter == 0)

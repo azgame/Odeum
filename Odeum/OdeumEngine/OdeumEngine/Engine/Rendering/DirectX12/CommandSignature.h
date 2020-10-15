@@ -77,18 +77,17 @@ public:
 	void Destroy()
 	{
 		m_commandSignature = nullptr;
-		m_paramArray.clear();
+		m_paramArray = nullptr;
 	}
 
 	void Reset(UINT numParams)
 	{
 		if (numParams > 0)
 		{
-			m_paramArray.clear(); 
-			m_paramArray.reserve(numParams);
+			m_paramArray.reset(new IndirectParameter[numParams]);
 		}
 		else
-			m_paramArray.clear();
+			m_paramArray = nullptr;
 		
 		m_numParams = numParams;
 	}
@@ -96,13 +95,13 @@ public:
 	IndirectParameter& operator[] (size_t index)
 	{
 		ASSERT(index < m_numParams, "Index out of range violation!");
-		return m_paramArray[index];
+		return m_paramArray.get()[index];
 	}
 
 	const IndirectParameter& operator[] (size_t index) const
 	{
 		ASSERT(index < m_numParams, "Index out of range violation!");
-		return m_paramArray[index];
+		return m_paramArray.get()[index];
 	}
 
 	void Finalize(const RootSignature* rootSig = nullptr);
@@ -113,7 +112,7 @@ protected:
 
 	bool m_finalized;
 	UINT m_numParams;
-	std::vector<IndirectParameter> m_paramArray;
+	std::unique_ptr<IndirectParameter[]> m_paramArray;
 	Microsoft::WRL::ComPtr<ID3D12CommandSignature> m_commandSignature;
 };
 

@@ -18,6 +18,8 @@ TextureManager* TextureManager::Get()
 
 void Texture::Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT format_, const void* initialData_)
 {
+    Destroy();
+
     m_usageState = D3D12_RESOURCE_STATE_COPY_DEST;
 
     D3D12_RESOURCE_DESC desc = {};
@@ -40,7 +42,7 @@ void Texture::Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT f
     heapProps.VisibleNodeMask = 1;
 
     if (FAILED(DXGraphics::m_device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE,
-        &desc, m_usageState, nullptr, IID_PPV_ARGS(m_resource.ReleaseAndGetAddressOf()))))
+        &desc, m_usageState, nullptr, IID_PPV_ARGS(&m_resource))))
     {
         ERROR("Could not create texture resource!");
         ASSERT(false, "Texture creation failed!");
@@ -53,15 +55,14 @@ void Texture::Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT f
 
     CommandContext::InitializeTexture(*this, 1, &subresource);
 
-    if (m_cpuDescHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
+    if (m_cpuDescHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_NULL)
         m_cpuDescHandle = DXGraphics::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     DXGraphics::m_device->CreateShaderResourceView(m_resource.Get(), nullptr, m_cpuDescHandle);
 }
 
 void Texture::SetToInvalidTexture()
 {
-    uint32_t MagentaPixel = 0x00FF00FF;
-    Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &MagentaPixel);
+    m_cpuDescHandle = TextureManager::Get()->GetInvalidTexture()->GetSRV();
     m_isValid = false;
 }
 
@@ -126,8 +127,29 @@ Texture* TextureManager::FindOrLoad(std::string textureName_)
         newTexture->SetToInvalidTexture();
     }
     
-    SAFE_DELETE(initialData);
+    //SAFE_DELETE(initialData);
 	return newTexture;
+}
+
+Texture* TextureManager::GetInvalidTexture()
+{
+    Texture* invalid;
+
+    auto iter = sm_textureMap.find("Invalid");
+    if (iter != sm_textureMap.end())
+    {
+        invalid = iter->second.get();
+        return invalid;
+    }
+    else
+    {
+        invalid = new Texture("Invalid");
+        sm_textureMap["Invalid"].reset(invalid);
+    }
+
+    uint32_t MagentaPixel = 0x00FF00FF;
+    invalid->Create(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &MagentaPixel);
+    return invalid;
 }
 
 size_t TextureManager::BitsPerPixel(DXGI_FORMAT format)
@@ -280,3 +302,5 @@ UINT TextureManager::BytesPerPixel(DXGI_FORMAT format)
 {
     return (UINT)BitsPerPixel(format) / 8;
 }
+
+

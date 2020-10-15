@@ -38,3 +38,8 @@ bool AudioSource::IsPlaying()
 {
 	return AudioHandler::GetInstance()->IsPlaying(as_channelID);
 }
+
+void AudioSource::Update(float deltaTime)
+{
+
+}

@@ -5,7 +5,6 @@
 #include "Scenes/RobScene.h"
 #include "Scenes/BenScene.h"
 
-
 Game1::Game1() : GameInterface()
 {
 }

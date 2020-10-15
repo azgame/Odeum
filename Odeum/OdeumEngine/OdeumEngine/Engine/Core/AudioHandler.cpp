@@ -1,8 +1,8 @@
 #include "AudioHandler.h"
 
-AudioHandler::AudioHandler()
-{
-}
+std::unique_ptr<AudioHandler> AudioHandler::audioHandlerInstance = nullptr;
+std::map<std::string, FMOD::Sound*> AudioHandler::soundMap;
+std::map<int, FMOD::Channel*> AudioHandler::channelMap;
 
 // 
 bool AudioHandler::Initialize(Vector3 position, Vector3 velocity, Vector3 forward, Vector3 up)
