@@ -10,26 +10,23 @@ bool AudioHandler::Initialize(Vector3 position, Vector3 velocity, Vector3 forwar
 	// create the fmod system
 	FMOD::System_Create(&system);
 	// not sure if this should be numChannels
-	if (system->getNumDrivers(&numOfChannels) == 0) 
+	
+	if (system->getNumDrivers(&numOfChannels) != FMOD_OK) 
 	{
 		Debug::Error("Error getting number of audio drivers.", "AudioHandler.cpp", __LINE__);
 		return false;
 	}
 
-	system->init(MAX_AUDIO_CHANNELS, FMOD_INIT_NORMAL, nullptr);
+	
+	std::string s = "../Resources/Audio/";
 
-	if (system == nullptr)
+	if (system->init(MAX_AUDIO_CHANNELS, FMOD_INIT_NORMAL, nullptr) != FMOD_OK)
 	{
 		Debug::Error("Error initializing sound system.", "AudioHandler.cpp", __LINE__);
 		return false;
 	}
 
-	system->set3DListenerAttributes(0,
-									&MakeFMODVector(position), 
-									&MakeFMODVector(velocity), 
-									&MakeFMODVector(forward), 
-									&MakeFMODVector(up));
-	if (system == nullptr)
+	if (system->set3DListenerAttributes(0, &MakeFMODVector(position), &MakeFMODVector(velocity), &MakeFMODVector(forward), &MakeFMODVector(up)) != FMOD_OK)
 	{
 		Debug::Error("Error setting 3D Listener Attributes.", "AudioHandler.cpp", __LINE__);
 		return false;
@@ -97,13 +94,13 @@ FMOD::Sound* AudioHandler::GetSound(std::string soundName)
 	return nullptr;
 }
 
-void AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool isLong)
+bool AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool isLong)
 {
 	// check to see if the sound already exists
 	if (GetSound(soundName) != nullptr)
 	{
 		Debug::Info(soundName + " already exists.", "AudioHandler.cpp", __LINE__);
-		return;
+		return true;
 	}
 
 	FMOD_MODE mode;
@@ -130,28 +127,32 @@ void AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool
 
 	if (isLong)
 	{
-		mode |= FMOD_CREATECOMPRESSEDSAMPLE;
+		mode |= FMOD_CREATESTREAM;
 	}
 	else
 	{
-		mode |= FMOD_CREATESTREAM;
+		mode |= FMOD_CREATECOMPRESSEDSAMPLE;
 	}
 
 	FMOD::Sound* sound;
 	sound = nullptr;
 
 	// soundName should be replaced with the sound directory + soundName
-	system->createSound(soundName.c_str(), mode, 0, &sound);
-
 	// if the sound was created successfully add it to the soundMap
-	if (sound == nullptr)
+	std::string s = "../Resources/Audio/" + soundName;
+	FMOD_RESULT r;
+	//r = system->createSound(s.c_str(), mode, nullptr, &sound);
+	// ^^ r = FMOD_ERR_FILE_NOTFOUND
+
+	if (system->createSound(s.c_str(), mode, nullptr, &sound) != FMOD_OK)
 	{
-		sound->release();
-		Debug::Error("Error creating the sound.", "AudioHandler.cpp", __LINE__);
-		return;
+		//sound->release();
+		Debug::Error("Error creating the sound", "AudioHandler.cpp", __LINE__);
+		return false;
 	}
 
 	soundMap.insert({ soundName, sound });
+	return true;
 }
 
 // don't think these defaults are really necessary as all audio will be played through an AudioSource->PlaySound()
@@ -161,19 +162,31 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 	int channelID = -1;
 	if (GetSound(soundName) == nullptr) {
 		Debug::Info(soundName + " was not found. Creating the sound with default parameters now.", "AudioHandler.cpp", __LINE__);
-		LoadSound(soundName);
+		if (!LoadSound(soundName))
+		{
+			return -1;
+		}
 	}
 
 	// create a channel for the audio
 	FMOD::Channel* channel;
 	channel = nullptr;
 
-	system->playSound(soundMap.at(soundName), nullptr, true, &channel);
+	if (system->playSound(soundMap.at(soundName), nullptr, true, &channel) != FMOD_OK)
+	{
+		Debug::Error(soundName + " could not be played.", "AudioHandler.cpp", __LINE__);
 
+	}
+
+	FMOD_MODE* mode;
+	mode = new FMOD_MODE(FMOD_3D);
 	// not 100% if FMOD_DEFAULT is the correct parameter
-	if (soundMap.at(soundName)->getMode(FMOD_DEFAULT) == FMOD_3D)
+	if (soundMap.at(soundName)->getMode(mode) == FMOD_OK)
 	{
 		channel->set3DAttributes(&MakeFMODVector(position), &MakeFMODVector(velocity));
+	} 
+	else {
+		Debug::Info(soundName + " was not found. Creating the sound with default parameters now.", "AudioHandler.cpp", __LINE__);
 	}
 
 	channel->setVolume(volume);

@@ -7,6 +7,7 @@
 #include "../Engine/Core/AudioHandler.h"
 #include "../Components/AudioSource.h"
 
+
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {
 	// should pass in the camera pos
@@ -30,12 +31,13 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	// AudioTest
 	object->AddComponent<AudioSource>();
-	object->GetComponent<AudioSource>()->Initialize("AUDIO_TEST");
+	object->GetComponent<AudioSource>()->Initialize("TestCoin.wav", false, true, false, 1.0f);
 	object->GetComponent<AudioSource>()->PlaySound();
 }
 
 BenScene::~BenScene()
 {
+	AudioHandler::GetInstance()->OnDestroy();
 }
 
 bool BenScene::Initialize()
@@ -51,6 +53,11 @@ void BenScene::Update(const float deltaTime_)
 	CollisionHandler::GetInstance()->MouseUpdate();
 	object->Update(deltaTime_);
 	object2->Update(deltaTime_);
+
+	if (Input::Get().isKeyPressed(Key::KeyCode::A)) {
+		Debug::Info("PLAY SOUND!", "BenScene.cpp", __LINE__);
+		//object->GetComponent<AudioSource>()->PlaySound();
+	}
 }
 
 void BenScene::UIRender()

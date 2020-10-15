@@ -150,4 +150,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Engine\Resources\Audio\TestCoin.wav" />
+  </ItemGroup>
 </Project>
