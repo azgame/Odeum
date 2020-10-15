@@ -107,7 +107,7 @@ private:
 
 	static const uint32_t numDescriptorsPerHeap = 1024;
 	static std::mutex sm_mutex;
-	static std::vector<ID3D12DescriptorHeap*> sm_descriptorHeapPool[2];
+	static std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> sm_descriptorHeapPool[2];
 	static std::queue<std::pair<uint64_t, ID3D12DescriptorHeap*>> sm_retiredDescriptorHeaps[2];
 	static std::queue<ID3D12DescriptorHeap*> sm_availableDescriptorHeaps[2];
 

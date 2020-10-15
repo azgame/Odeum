@@ -67,7 +67,7 @@ void TestRender::Detach()
 	m_rootSig.Destroy();
 	m_colourPSO.Destroy();
 
-	if (m_pHeap) m_pHeap->Release(); m_pHeap = NULL;
+	if (m_pHeap) m_pHeap->Release();
 }
 
 void TestRender::Update(float deltaTime_)

@@ -30,7 +30,7 @@ private:
 
 	static ID3D12DescriptorHeap* GetNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type_);
 	static const uint32_t kDescriptorsPerHeap = 256;
-	static std::vector<ID3D12DescriptorHeap*> m_descriptorHeapPool;
+	static std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> m_descriptorHeapPool;
 	static std::mutex m_allocatorMutex;
 
 	ID3D12DescriptorHeap* m_currentHeap;

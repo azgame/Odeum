@@ -9,7 +9,7 @@
 
 void PSO::Destroy()
 {
-	m_rootSignature = nullptr;
+	// m_rootSignature = nullptr;
 }
 
 GraphicsPSO::GraphicsPSO()

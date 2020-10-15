@@ -125,5 +125,6 @@ int OdeumEngine::GetSceneIndex(std::string fileName)
 		}
 	}
 
+	sceneFile.close();
 	return sceneNum;
 }

@@ -103,8 +103,8 @@ BufferPage* BufferLedger::CreateNewPage(size_t size_)
 void BufferLedger::RecyclePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_)
 {
 	std::lock_guard<std::mutex> LockGuard(m_mutex);
-	for (auto page : pages_)
-		m_retiredPages.push(std::make_pair(fenceID_, page));
+	for (auto iter = pages_.begin(); iter != pages_.end(); iter++)
+		m_retiredPages.push(std::make_pair(fenceID_, *iter));
 }
 
 void BufferLedger::RecycleLargePages(uint64_t fenceID_, const std::vector<BufferPage*>& pages_)

@@ -26,10 +26,8 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 	heapProps.CreationNodeMask = 1;
 	heapProps.VisibleNodeMask = 1;
 
-	if (FAILED(
-		DXGraphics::m_device->CreateCommittedResource(
-			&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_resource)))
-	)	
+	if (FAILED(DXGraphics::m_device->CreateCommittedResource(
+			&heapProps, D3D12_HEAP_FLAG_NONE, &rDesc, m_usageState, nullptr, IID_PPV_ARGS(&m_resource))))	
 		Debug::Error("Could not create buffer", __FILENAME__, __LINE__);
 
 	m_gpuAddress = m_resource->GetGPUVirtualAddress();

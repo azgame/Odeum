@@ -94,8 +94,8 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 		}
 	}
 
-	Microsoft::WRL::ComPtr<ID3DBlob> pResult;
-	Microsoft::WRL::ComPtr<ID3DBlob> pError;
+	ID3DBlob* pResult;
+	ID3DBlob* pError;
 
 	if (FAILED(D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1,
 		&pResult, &pError)))
@@ -108,4 +108,6 @@ void RootSignature::Finalize(const std::wstring& name_, D3D12_ROOT_SIGNATURE_FLA
 	m_rootSignature->SetName(name_.c_str());
 
 	m_finalized = true;
+
+	pResult = nullptr; pError = nullptr;
 }
