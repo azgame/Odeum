@@ -74,12 +74,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\GameDev\Audio\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\GameDev\Audio\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,8 +110,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Lib;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies);fmod_vc.lib;fmodL_vc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Lib;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories);C:\GameDev\Audio\lib</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -145,16 +147,19 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>;C:\GameDev\Audio\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);fmod_vc.lib;fmodL_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Components\AudioSource.cpp" />
+    <ClCompile Include="Engine\Core\AudioHandler.cpp" />
     <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Game\Components\DynamicMovement.cpp" />
-    <ClCompile Include="Game\Scenes\BenScene2.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
@@ -183,7 +188,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
-    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
@@ -202,8 +207,11 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
+    <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\AudioSource.h" />
+    <ClInclude Include="Engine\Core\AudioHandler.h" />
     <ClInclude Include="Engine\Math\BoundingBox.h" />
     <ClInclude Include="Engine\Math\CollisionDetection.h" />
     <ClInclude Include="Engine\Math\CollisionHandler.h" />
@@ -211,7 +219,6 @@
     <ClInclude Include="Engine\Math\Ray.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Game\Components\DynamicMovement.h" />
-    <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
@@ -267,7 +274,7 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
-    <ClInclude Include="Game\Components\SimplePhysics.h" />
+    <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
@@ -285,6 +292,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
+    <ClInclude Include="Engine\Math\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">

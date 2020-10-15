@@ -56,9 +56,6 @@ void Game1::BuildScene()
 	case 3:
 		m_currentScene = new BenScene();
 		break;
-	case 4:
-		m_currentScene = new BenScene2();
-		break;
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;

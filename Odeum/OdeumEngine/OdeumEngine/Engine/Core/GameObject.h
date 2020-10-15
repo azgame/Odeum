@@ -4,6 +4,7 @@
 #include "../../pch.h"
 #include "../Rendering/DirectX12/Model.h"
 #include "../Math/BoundingBox.h"
+#include "../Math/Transform.h"
 #include "../Rendering/DirectX12/Colour.h"
 
 class Component;
@@ -74,7 +75,12 @@ protected:
 	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
+	friend class Rigidbody;
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
+	void UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale);
+	
+	// Matrix math -- THIS WILL BE MOVED
+	Matrix4 GetRotationMatrix(Quaternion quat);
 };
 
 template<typename T>

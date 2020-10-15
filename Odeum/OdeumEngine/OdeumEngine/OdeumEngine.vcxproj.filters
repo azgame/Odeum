@@ -36,7 +36,6 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
-    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
@@ -53,12 +52,15 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
-    <ClCompile Include="Game\Scenes\BenScene2.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
+    <ClCompile Include="Engine\Math\Transform.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody.cpp" />
+    <ClCompile Include="Engine\Core\AudioHandler.cpp" />
+    <ClCompile Include="Game\Components\AudioSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -116,7 +118,6 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
-    <ClInclude Include="Game\Components\SimplePhysics.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
@@ -133,7 +134,6 @@
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
-    <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
@@ -142,6 +142,10 @@
     <ClInclude Include="Engine\Math\CollisionDetection.h" />
     <ClInclude Include="Engine\Math\CollisionHandler.h" />
     <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
+    <ClInclude Include="Engine\Math\Transform.h" />
+    <ClInclude Include="Game\Components\Rigidbody.h" />
+    <ClInclude Include="Engine\Core\AudioHandler.h" />
+    <ClInclude Include="Game\Components\AudioSource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
