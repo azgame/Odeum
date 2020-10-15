@@ -3,8 +3,6 @@
 #include "../Components/DynamicMovement.h"
 #include "../Components/Rigidbody.h"
 
-#include "../Components/ComponentTest.h"
-
 RobScene::RobScene() : Scene()
 {
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");

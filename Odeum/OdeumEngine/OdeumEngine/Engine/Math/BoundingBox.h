@@ -37,7 +37,7 @@ struct BoundingBox
 private:
 	Vector3 GetTransformedPoint(Vector3 Point, Matrix4 Transform)
 	{
-		Vector3 v(transform.GetW());
+		Vector3 v(transform.GetX().GetW(), transform.GetY().GetW(), transform.GetZ().GetW());
 		return v + Point;
 	}
 };

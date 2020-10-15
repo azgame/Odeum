@@ -191,7 +191,7 @@ public:
 	inline Vector4 operator* (Vector4 v2_) const { return Vector4(XMVectorMultiply(vec, v2_.GetVec())); }
 	inline Vector4 operator* (float s_) const { return vec * s_; }
 	inline Vector4 operator/ (Vector4 v2_) const { return Vector4(XMVectorDivide(vec, v2_.GetVec())); }
-	inline Vector4 operator/ (float s_) const { return vec / s_; }
+	inline Vector4 operator/ (float s_) const { return Vector4(GetX() / s_, GetY() / s_, GetZ() / s_, GetW() / s_); }
 
 	inline Vector4& operator += (Vector4 v_) { *this = *this + v_; return *this; }
 	inline Vector4& operator -= (Vector4 v_) { *this = *this - v_; return *this; }

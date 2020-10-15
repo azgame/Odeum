@@ -42,7 +42,7 @@ private:
 
 	// private methods
 	FMOD_VECTOR MakeFMODVector(Vector3 vec);
-	void LoadSound(std::string soundName, bool isLoop = false, bool is3D = false, bool isLong = false);
+	bool LoadSound(std::string soundName, bool isLoop = false, bool is3D = false, bool isLong = false);
 	FMOD::Sound* GetSound(std::string soundName);
 	int PlaySound(std::string soundName, Vector3 position, Vector3 velocity, float volume);
 	void UpdateChannel(int channelNum, Vector3 position, Vector3 velocity);

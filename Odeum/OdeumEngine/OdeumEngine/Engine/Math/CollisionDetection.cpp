@@ -19,13 +19,13 @@ Ray CollisionDetection::ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenS
 		((ScreenSize.GetY() - MouseCoords.GetY()) / ScreenSize.GetY() - 0.5f) * 2.0f, // DirectX screen grows downward, need to flip y values
 		0.0f, 1.0f);
 
-	Matrix4 inverse = Matrix4(DirectX::XMMatrixInverse(nullptr, camera.GetViewMatrix() * camera.GetProjMatrix()));
+	Matrix4 inverse = Matrix4(DirectX::XMMatrixInverse(nullptr, camera.GetViewProjMatrix()));
 
 	Vector4 raystart_World = inverse * raystart_NDC;
-	raystart_World /= raystart_World.GetW();
+	raystart_World = raystart_World / raystart_World.GetW();
 
 	Vector4 rayend_World = inverse * rayend_NDC;
-	rayend_World /= rayend_World.GetW();
+	rayend_World = rayend_World / rayend_World.GetW();
 
 	Vector4 raydir_World = (rayend_World - raystart_World).Normalize();
 

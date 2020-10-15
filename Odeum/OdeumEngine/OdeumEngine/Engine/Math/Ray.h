@@ -2,6 +2,7 @@
 #define RAY_H
 
 #include "BoundingBox.h"
+#include "CollisionDetection.h"
 
 struct Ray
 {
@@ -28,7 +29,7 @@ struct Ray
 	{
 		t = -1.0f;
 
-		return true;
+		return CollisionDetection::RayOBBIntersection(*this, box);
 	}
 };
 
