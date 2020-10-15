@@ -17,7 +17,6 @@
     <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
-    <ClCompile Include="Game\Components\ComponentTest.cpp" />
     <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
@@ -77,7 +76,6 @@
     <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
-    <ClInclude Include="Game\Components\ComponentTest.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />

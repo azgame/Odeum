@@ -153,7 +153,7 @@ void DXGraphics::Initialize()
 	s_displayHeight = OdeumEngine::Get().GetWindow().GetHeight();
 	s_ultraWide = OdeumEngine::Get().GetWindow().isUltraWide();
 	s_displayWidth = s_ultraWide ? (uint32_t)((float)s_displayWidth * ultraWideRatio) : s_displayWidth;
-	s_enableVSync = true;
+	s_enableVSync = false;
 
 	m_commandManager.Initialize(m_device);
 

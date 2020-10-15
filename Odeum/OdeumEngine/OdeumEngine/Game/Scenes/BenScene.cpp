@@ -1,7 +1,6 @@
 #include "BenScene.h"
 #include "../Components/KinematicMovement.h"
 #include "../Components/DynamicMovement.h"
-#include "../Components/ComponentTest.h"
 #include "../Components/Rigidbody.h"
 #include "../../Engine/Math/CollisionHandler.h"
 #include "../Engine/Core/AudioHandler.h"
@@ -33,6 +32,11 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	object->AddComponent<AudioSource>();
 	object->GetComponent<AudioSource>()->Initialize("TestCoin.wav", false, true, false, 1.0f);
 	object->GetComponent<AudioSource>()->PlaySound();
+
+	CollisionHandler::GetInstance()->Initialize(1000.0f);
+
+	CollisionHandler::GetInstance()->AddObject(object);
+	CollisionHandler::GetInstance()->AddObject(object2);
 }
 
 BenScene::~BenScene()
@@ -50,9 +54,11 @@ void BenScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	CollisionHandler::GetInstance()->MouseUpdate();
 	object->Update(deltaTime_);
 	object2->Update(deltaTime_);
+
+	CollisionHandler::GetInstance()->Update();
+	CollisionHandler::GetInstance()->MouseUpdate();
 
 	if (Input::Get().isKeyPressed(Key::KeyCode::A)) {
 		Debug::Info("PLAY SOUND!", "BenScene.cpp", __LINE__);

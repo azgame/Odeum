@@ -155,6 +155,7 @@ void OctSpatialPartition::Uninitialize()
 
 void OctSpatialPartition::AddObject(GameObject* go_)
 {
+	ASSERT(root != nullptr, "Spatial partition has not been initialized and you're trying to add objects to it.");
 	AddObjectToCell(root, go_);
 }
 
