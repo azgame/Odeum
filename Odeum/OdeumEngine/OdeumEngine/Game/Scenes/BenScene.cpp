@@ -1,5 +1,5 @@
 #include "BenScene.h"
-#include "../Components/KinimaticMovement.h"
+#include "../Components/KinematicMovement.h"
 #include "../Components/DynamicMovement.h"
 #include "../Components/ComponentTest.h"
 #include "../Components/Rigidbody.h"

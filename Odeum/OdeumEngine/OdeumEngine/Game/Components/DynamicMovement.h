@@ -1,9 +1,7 @@
 #ifndef DynamicMovement_H
 #define DynamicMovement_H
 
-
-
-#include "SimplePhysics.h"
+#include "Rigidbody.h"
 
 class DynamicMovement : public Component
 {
@@ -25,7 +23,7 @@ public:
 	//causes the object to flee from the target instead
 	bool shouldFlee;
 	Vector4 GetSteering();
-	SimplePhysics* physicsComp;
+	Rigidbody* physicsComp;
 };
 
 #endif

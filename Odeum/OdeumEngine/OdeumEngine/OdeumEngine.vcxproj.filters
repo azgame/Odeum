@@ -40,7 +40,6 @@
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
-    <ClCompile Include="Game\Components\KinimaticMovement.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Engine\Core\Window.cpp" />
@@ -61,6 +60,7 @@
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
+    <ClCompile Include="Game\Components\KinematicMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -122,7 +122,6 @@
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
-    <ClInclude Include="Game\Components\KinimaticMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
@@ -146,6 +145,7 @@
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Engine\Core\AudioHandler.h" />
     <ClInclude Include="Game\Components\AudioSource.h" />
+    <ClInclude Include="Game\Components\KinematicMovement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

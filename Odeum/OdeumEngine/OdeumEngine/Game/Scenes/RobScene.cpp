@@ -1,6 +1,7 @@
 #include "RobScene.h"
-#include "../Components/KinimaticMovement.h"
+#include "../Components/KinematicMovement.h"
 #include "../Components/DynamicMovement.h"
+#include "../Components/Rigidbody.h"
 
 #include "../Components/ComponentTest.h"
 
@@ -10,19 +11,19 @@ RobScene::RobScene() : Scene()
 	object = new GameObject("Engine/Resources/Models/Cube.obj");
 	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
-	object->AddComponent<SimplePhysics>();
+	object->AddComponent<Rigidbody>();
 	object->AddComponent <DynamicMovement>();
-	object->AddComponent <KinimaticMovement>();
+	object->AddComponent <KinematicMovement>();
 	
 	
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
 	object->GetComponent<DynamicMovement>()->target = newObject;
 	//object->GetComponent<KinimaticMovement>()->target = newObject;
-	object->GetComponent<SimplePhysics>()->SetMass(1);
+	object->GetComponent<Rigidbody>()->SetMass(1);
 
 	
 	
-	 teletime=1500;
+	teletime=1500;
 }
 
 RobScene::~RobScene()
@@ -55,12 +56,12 @@ void RobScene::Update(const float deltaTime_)
 	{
 	
 	//object->SetPosition(object->GetPosition() + Vector4(1.01f, 0.0f, 0.0f, 0.0f));
-	object->GetComponent<KinimaticMovement>()->shouldFlee = true;
+	object->GetComponent<KinematicMovement>()->shouldFlee = true;
 	object->GetComponent<DynamicMovement>()->shouldFlee = true;
 	}
 	else
 	{
-		object->GetComponent<KinimaticMovement>()->shouldFlee = false;
+		object->GetComponent<KinematicMovement>()->shouldFlee = false;
 		object->GetComponent<DynamicMovement>()->shouldFlee = false;
 	}
 }

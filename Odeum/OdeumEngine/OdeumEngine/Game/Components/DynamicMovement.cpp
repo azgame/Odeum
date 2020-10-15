@@ -16,9 +16,9 @@ void DynamicMovement::Update(float deltaTime)
 	if (target)
 	{
 		if(!shouldFlee)
-		object->GetComponent<SimplePhysics>()->SetAcceleration(GetSteering());
+		object->GetComponent<Rigidbody>()->SetAcceleration(GetSteering());
 		else
-		object->GetComponent<SimplePhysics>()->SetAcceleration(-GetSteering());
+		object->GetComponent<Rigidbody>()->SetAcceleration(-GetSteering());
 		
 			
 	}
@@ -51,7 +51,7 @@ Vector4 DynamicMovement::GetSteering()
 	
 	direction=direction.Normalize();
 	direction=direction * targetSpeed;
-	temp = direction - object->GetComponent<SimplePhysics>()->GetVelocity();
+	temp = direction - object->GetComponent<Rigidbody>()->GetVelocity();
 	temp = temp / timeToTarget;
 	// Clip acceleration if too high
 	if (temp.Mag() > maxAcceleration)
