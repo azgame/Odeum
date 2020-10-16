@@ -41,8 +41,6 @@ public:
 	void SetHit(bool hit) 
 	{ 
 		isHit = hit;
-		if (isHit)
-			std::cout << "GameObject hit at: " << m_position.ToString() << std::endl;
 	}
 
 	Vector4 GetPosition() { return m_position; }

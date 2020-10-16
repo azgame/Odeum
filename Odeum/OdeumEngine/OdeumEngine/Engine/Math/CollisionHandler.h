@@ -22,7 +22,8 @@ public:
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
 	void MouseUpdate();
-	void RayQuery(Ray ray);
+	void RayQuery(Ray& ray);
+	GameObject* RayGetFirstHit(Ray& ray);
 	void Update();
 	void Uninitialize();
 

@@ -37,7 +37,10 @@ void GameScene::Update(const float deltaTime_)
 
 	Ray ray = Ray(OdeumEngine::Get().GetCamera().GetPosition(), (Vector3(kZero) - OdeumEngine::Get().GetCamera().GetPosition()).Normalize());
 	
-	CollisionHandler::GetInstance()->RayQuery(ray);
+	GameObject* objectHit = CollisionHandler::GetInstance()->RayGetFirstHit(ray);
+
+	if (objectHit == object)
+		std::cout << "Hit scene object at: " + object->GetPosition().ToString() << std::endl;
 
 	object->Update(deltaTime_);
 }

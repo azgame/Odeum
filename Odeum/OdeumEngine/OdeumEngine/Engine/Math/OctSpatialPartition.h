@@ -54,6 +54,7 @@ public:
 	void AddObject(GameObject* go_);
 	GameObject* GetCollision(Ray ray_);
 	void UpdatePartition();
+
 private:
 
 	OctNode* root;

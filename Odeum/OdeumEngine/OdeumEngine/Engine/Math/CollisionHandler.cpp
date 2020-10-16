@@ -50,7 +50,7 @@ void CollisionHandler::MouseUpdate()
 	}
 }
 
-void CollisionHandler::RayQuery(Ray ray)
+void CollisionHandler::RayQuery(Ray& ray)
 {
 	if (m_scenePartition == nullptr) return;
 	
@@ -70,6 +70,17 @@ void CollisionHandler::RayQuery(Ray ray)
 
 	if (hitResult)
 		previousCollisions.push_back(hitResult);
+}
+
+GameObject* CollisionHandler::RayGetFirstHit(Ray& ray)
+{
+	RayQuery(ray);
+	
+	// previous collisions should only have a single object in it if the ray intersected with anything
+	if (previousCollisions.size() > 0)
+		return previousCollisions[0];
+
+	return nullptr;
 }
 
 void CollisionHandler::Update()
