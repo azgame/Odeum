@@ -17,6 +17,8 @@ public:
 	GameObject* target;
 	float maxAcceleration;
 	float maxSpeed;
+	float avoidDistance;
+	float lookAhead;
 	//when to stop approaching the target
 	float targetRadius;
 	//when to slow down when approaching the target i.e. "close enough""
