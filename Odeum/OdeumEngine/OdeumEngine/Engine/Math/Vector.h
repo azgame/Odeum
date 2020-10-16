@@ -70,6 +70,7 @@ public:
 
 	// Print
 	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ")"; }
+	inline std::string ToString() const { return std::string("(" + std::to_string(GetX()) + ", " + std::to_string(GetY()) + ")"); }
 
 	// Getters and setters
 	inline XMVECTOR GetVec() { return vec; }
@@ -117,6 +118,7 @@ public:
 
 	// Print
 	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ", " << GetZ() << ")"; }
+	inline std::string ToString() const { return std::string("(" + std::to_string(GetX()) + ", " + std::to_string(GetY()) + ", " + std::to_string(GetZ()) + ")"); }
 
 	// Getters and setters
 	inline XMVECTOR GetVec() { return vec; }
@@ -170,6 +172,7 @@ public:
 
 	// Print
 	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ", " << GetZ() << ", " << GetW() << ")"; }
+	inline std::string ToString() const { return std::string("(" + std::to_string(GetX()) + ", " + std::to_string(GetY()) + ", " + std::to_string(GetZ()) + ", " + std::to_string(GetW()) + ")"); }
 	
 	// Getters and Setters
 	inline XMVECTOR GetVec() { return vec; }

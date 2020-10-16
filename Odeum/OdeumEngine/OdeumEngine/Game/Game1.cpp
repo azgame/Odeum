@@ -32,7 +32,7 @@ void Game1::Update(const float deltaTime_)
 	m_currentScene->Update(deltaTime_);
 }
 
-void Game1::Render()
+void Game1::UIRender()
 {
 	m_currentScene->UIRender();
 }

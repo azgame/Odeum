@@ -24,6 +24,7 @@ OdeumEngine::OdeumEngine()
 
 OdeumEngine::~OdeumEngine()
 {
+	Uninitialize();
 }
 
 void OdeumEngine::AddSystem(CoreSystem* system_)
@@ -53,21 +54,21 @@ void OdeumEngine::Run()
 		m_engineTimer.UpdateFrameTicks();
 		float timeStep = m_engineTimer.GetDeltaTime();
 
-		m_gameInterface->Update(timeStep);
+		m_window->Update(); // Process windows events
 
 		m_camera.UpdateCamera();
+
+		m_gameInterface->Update(timeStep); // update game scene
 
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
 
-		m_gameInterface->Render();
+		m_gameInterface->UIRender(); // render game scene ui
 
 		for (auto system : m_systemStack)
-			system->UIRender();
+			system->UIRender(); // render system specific ui
 
-		m_window->Update(); // Draw
-
-		DXGraphics::Present();
+		DXGraphics::Present(); // present cumulative rendering to screen
 	}
 }
 
@@ -112,6 +113,7 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 	return true;
 }
 
+// temp way to load game scenes
 int OdeumEngine::GetSceneIndex(std::string fileName)
 {
 	int sceneNum = 0;

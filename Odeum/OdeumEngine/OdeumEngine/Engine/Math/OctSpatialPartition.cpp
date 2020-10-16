@@ -195,7 +195,6 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_)
 			Debug::Info(msg, __FILENAME__, __LINE__);
 			return result;
 		}
-			
 	}
 
 	return nullptr;
