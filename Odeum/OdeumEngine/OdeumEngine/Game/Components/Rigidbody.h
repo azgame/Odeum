@@ -60,12 +60,12 @@ private:
 	void UpdateOrientationQuaternion();
 
 	// Cross product
-	inline Vector3 Cross(Vector3 v1, Vector3 v2)
-	{
-		return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),
-					   v1.GetZ() * v2.GetX() - v1.GetX() * v2.GetZ(),
-					   v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX());
-	}
+	//inline Vector3 Cross(Vector3 v1, Vector3 v2)
+	//{
+	//	return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),
+	//				   v1.GetZ() * v2.GetX() - v1.GetX() * v2.GetZ(),
+	//				   v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX());
+	//}
 	
 	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_angle, rb_rotation, m_gameObject->GetScale()); }
 	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, m_gameObject->GetScale()); }

@@ -46,11 +46,11 @@ void CollisionHandler::MouseUpdate()
 			Input::Get().GetMouseY()), Vector2(width, height),
 			OdeumEngine::Get().GetCamera());
 
-		RayQuery(mouseRay);
+		RayQueryIntersectionPoint(mouseRay);
 	}
 }
 
-void CollisionHandler::RayQuery(Ray& ray)
+Vector3& CollisionHandler::RayQueryIntersectionPoint(Ray& ray)
 {
 	if (m_scenePartition == nullptr) return;
 	
@@ -72,9 +72,9 @@ void CollisionHandler::RayQuery(Ray& ray)
 		previousCollisions.push_back(hitResult);
 }
 
-GameObject* CollisionHandler::RayGetFirstHit(Ray& ray)
+GameObject* CollisionHandler::RayGetFirstHit(Ray& ray, Vector3** IntersectionPoint)
 {
-	RayQuery(ray);
+	RayQueryIntersectionPoint(ray);
 	
 	// previous collisions should only have a single object in it if the ray intersected with anything
 	if (previousCollisions.size() > 0)

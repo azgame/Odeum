@@ -37,7 +37,6 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 	float tMin = OdeumEngine::Get().GetCamera().GetNearClipPlane();
 	float tMax = OdeumEngine::Get().GetCamera().GetFarClipPlane();
 
-	// Have to use the dxtk for this since built in floatx/vector conversion would get hefty (see above)
 	Vector3 obbPos(box.transform.GetW());
 	Vector3 delta = obbPos - ray.origin;
 
@@ -131,4 +130,37 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 	ray.t = tMin;
 
 	return true;
+}
+
+struct Plane
+{
+	Plane() : plane(Vector4(kZero)) {} 
+	Plane(Vector3& v0, Vector3& v1, Vector3& v2)
+	{
+		// Cross of E1 and E2 gives the normal of the plane
+		Vector3 e1 = v1 - v0;
+		Vector3 e2 = v2 - v1;
+		Vector3 n = e1.Cross(e2);
+		n.Normalize();
+
+		// Find d with the negative dot product between the normal and a given point
+		float d = -(n.Dot(v0));
+
+		if (d == -0) d = 0;
+
+		// Plane is the normal and d
+		plane = Vector4(n, d);
+	}
+
+	Vector4 plane;
+};
+
+Vector4* CollisionDetection::RayOBBIntersectionPlane(Ray& ray, BoundingBox& box)
+{
+	// Construct 6 planes
+	
+
+	// Find where ray and normal of plane is v. close to 0
+
+	return nullptr;
 }

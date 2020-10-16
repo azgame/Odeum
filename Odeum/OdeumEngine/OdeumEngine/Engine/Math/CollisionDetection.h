@@ -20,6 +20,7 @@ public:
 
 	static Ray ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenSize, Camera& camera);
 	static bool RayOBBIntersection(Ray& ray, BoundingBox& box);
+	static Vector4* RayOBBIntersectionPlane(Ray& ray, BoundingBox& box);
 };
 
 #endif

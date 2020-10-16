@@ -11,6 +11,8 @@ class Component;
 
 class GameObject
 {
+	friend class Rigidbody;
+
 public:
 	GameObject(std::string fileName);
 	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
@@ -73,7 +75,7 @@ protected:
 	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
-	friend class Rigidbody;
+	
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
 	void UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale);
 	
