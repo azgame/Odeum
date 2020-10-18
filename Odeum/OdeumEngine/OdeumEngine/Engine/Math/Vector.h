@@ -215,6 +215,14 @@ protected:
 	XMVECTOR vec;
 };
 
+namespace Math
+{
+	inline float Dot(Vector3 v1, Vector3 v2)
+	{
+		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ());
+	}
+}
+
 // vv   not sure if we wanted to include this 
 
 class BoolVector
