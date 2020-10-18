@@ -18,8 +18,10 @@ public:
 private:
 	float teletime;
 	GameObject* object;
-	GameObject* plane;
+	bool shouldupdate;
 	GameObject* newObject;
+	GameObject* obstacle;
+	bool swapped;
 };
 
 #endif

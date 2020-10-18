@@ -131,6 +131,18 @@ public:
 	//Functions Added -Robert
 	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)); }
 	inline Vector3 Normalize(){return vec/ sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2));}
+	inline Vector3 Cross(Vector3 otherVec)
+	{
+		Vector3 t;
+		t.SetX( (XMVectorGetX(vec) * otherVec.GetZ()) - (XMVectorGetZ(vec) * otherVec.GetY()));
+		t.SetY( (XMVectorGetZ(vec) * otherVec.GetX()) - (XMVectorGetX(vec) * otherVec.GetZ()));
+		t.SetZ( (XMVectorGetX(vec) * otherVec.GetY()) - (XMVectorGetY(vec) * otherVec.GetZ()));
+		return t;
+	}
+	
+
+
+
 	inline float Dot(Vector3 v) { return (GetX() * v.GetX()) + (GetY() * v.GetY()) + (GetZ() * v.GetZ()); }
 	
 	inline Vector3 Cross(Vector3 v) 

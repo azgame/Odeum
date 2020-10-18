@@ -23,12 +23,12 @@ void Rigidbody::Update(float deltaTime)
 	
 	// update velocity
 	//totalVelocity += (Vector4)(p_totalAcceleration * deltaTime);
-
+	rb_totalVelocity += (rb_totalAcceleration * deltaTime);
+	rb_position += rb_totalVelocity * deltaTime + rb_totalAcceleration * 0.5f * deltaTime * deltaTime;
 	// ******* CURRENTLY A PROBLEM WITH SETTING POSITION AND ROTATION
 	//update position
-	rb_position += rb_totalVelocity * rb_speed * deltaTime;
+	//rb_position += rb_totalVelocity * rb_speed * deltaTime;
 	//m_gameObject->SetPosition(m_gameObject->GetPosition() + (Vector4)(totalVelocity * deltaTime + p_totalAcceleration * 0.5f * deltaTime * deltaTime));
-	
 
 	// update orientation
 	// this check just stops some math errors when there's no velocity set
@@ -36,8 +36,9 @@ void Rigidbody::Update(float deltaTime)
 	//m_gameObject->SetRotation(m_gameObject->GetRotation() + UpdateOrientationQuaternion(), p_angle);
 	rb_angle += rb_angleSpeed;
 
-	UpdateOrientationQuaternion();
-	UpdateTransform();
+	//UpdateOrientationQuaternion();
+	m_gameObject->SetPosition(rb_position);
+	//UpdateTransform();
 }
 
 // translate the position

@@ -11,11 +11,11 @@ void KinematicMovement::Update(float deltaTime)
 	    //sets position directly moving constantly 
 		if (!shouldFlee)
 		{
-			//object->SetPosition(object->GetPosition() + temp);
+			object->SetPosition(object->GetPosition() + temp);
 		}
 		else
 		{
-			temp = temp * 3;
+			temp = temp;
 			object->SetPosition(object->GetPosition() - temp);
 		}
 		
