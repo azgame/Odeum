@@ -52,7 +52,7 @@ public:
 	void Uninitialize();
 
 	void AddObject(GameObject* go_);
-	GameObject* GetCollision(Ray ray_);
+	GameObject* GetCollision(Ray ray_, Vector3** IntersectionPoint);
 	void UpdatePartition();
 
 private:

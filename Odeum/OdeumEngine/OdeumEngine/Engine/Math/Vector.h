@@ -144,6 +144,14 @@ public:
 
 
 	inline float Dot(Vector3 v) { return (GetX() * v.GetX()) + (GetY() * v.GetY()) + (GetZ() * v.GetZ()); }
+	
+	inline Vector3 Cross(Vector3 v) 
+	{
+		return Vector3(GetY() * v.GetZ() - GetZ() * v.GetY(),
+			GetZ() * v.GetX() - GetX() * v.GetZ(),
+			GetX() * v.GetY() - GetY() * v.GetX());
+	}
+
 	// Operator overloads
 	inline Vector3 operator- () const { return Vector3(XMVectorNegate(vec)); }
 	inline Vector3 operator+ (Vector3 v2_) const { return Vector3(XMVectorAdd(vec, v2_.GetVec())); }

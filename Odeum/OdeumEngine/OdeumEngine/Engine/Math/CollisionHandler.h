@@ -22,8 +22,8 @@ public:
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
 	void MouseUpdate();
-	void RayQuery(Ray& ray);
-	GameObject* RayGetFirstHit(Ray& ray);
+	Vector3& RayQueryIntersectionPoint(Ray& ray);
+	GameObject* RayGetFirstHit(Ray& ray, Vector3** IntersectionPoint);
 	void Update();
 	void Uninitialize();
 

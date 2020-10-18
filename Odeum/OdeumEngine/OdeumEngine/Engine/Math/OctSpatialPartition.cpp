@@ -159,7 +159,7 @@ void OctSpatialPartition::AddObject(GameObject* go_)
 	AddObjectToCell(root, go_);
 }
 
-GameObject* OctSpatialPartition::GetCollision(Ray ray_)
+GameObject* OctSpatialPartition::GetCollision(Ray ray_, Vector3** IntersectionPoint)
 {
 	if (m_rayIntersectionList.size() > 0)
 	{

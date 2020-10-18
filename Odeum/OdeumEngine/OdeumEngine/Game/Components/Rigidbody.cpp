@@ -72,7 +72,7 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float angle)
 void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
-	Vector3 axisOfRotation_ = Vector3(Cross(Vector3(rb_totalVelocity), Vector3(rb_angularVelocity)));
+	Vector3 axisOfRotation_ = Vector3(rb_totalVelocity).Cross(Vector3(rb_angularVelocity));
 	
 	// normalize
 	if (axisOfRotation_.Mag() == 0)
