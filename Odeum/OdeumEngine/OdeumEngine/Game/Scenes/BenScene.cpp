@@ -58,7 +58,7 @@ void BenScene::Update(const float deltaTime_)
 	object2->Update(deltaTime_);
 
 	CollisionHandler::GetInstance()->Update();
-	CollisionHandler::GetInstance()->MouseUpdate();
+	CollisionHandler::GetInstance()->MouseCollide();
 
 	if (Input::Get().isKeyPressed(Key::KeyCode::A)) {
 		Debug::Info("PLAY SOUND!", "BenScene.cpp", __LINE__);

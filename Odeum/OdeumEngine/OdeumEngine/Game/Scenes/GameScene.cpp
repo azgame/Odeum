@@ -6,10 +6,13 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+	object = new GameObject(CubeShape);
 	object->AddComponent<Rigidbody>();
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 10.0f));
+
+	CollisionHandler::GetInstance()->Initialize(100.0f);
+	CollisionHandler::GetInstance()->AddObject(object);
 }
 
 GameScene::~GameScene()
@@ -29,6 +32,11 @@ void GameScene::Update(const float deltaTime_)
 	angle += direction * (deltaTime_ * 0.1f);
 
 	object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
+
+	if (CollisionHandler::GetInstance()->MouseCollide())
+	{
+		std::cout << "Mouse click hit object!" << std::endl;
+	}
 
 	//object->Update(deltaTime_);
 }

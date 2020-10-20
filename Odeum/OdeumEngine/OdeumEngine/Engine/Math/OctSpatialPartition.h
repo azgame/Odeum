@@ -31,11 +31,11 @@ struct OctNode
 	void addCollisionObject(GameObject* go_);
 	int getObjectCount() const;
 	bool isLeaf() const;
-	BoundingBox& getBoundingBox();
+	OrientedBoundingBox& getBoundingBox();
 
 private:
 	friend class OctSpatialPartition;
-	BoundingBox* octBounds;
+	OrientedBoundingBox* octBounds;
 	OctNode* parent;
 	OctNode* children[CHILD_COUNT];
 

@@ -21,7 +21,7 @@ public:
 
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
-	void MouseUpdate();
+	bool MouseCollide();
 	void RayQueryFirst(Ray& ray, Vector4** IntersectionPlane);
 	void RayQueryList(Ray& ray, std::vector<GameObject*>& IntersectedObjects);
 	GameObject* RayGetFirstHit(Ray& ray, Vector4** IntersectionPlane = nullptr);

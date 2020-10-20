@@ -12,10 +12,22 @@ struct OrientedBoundingBox
 	// if confused, read these comments with the image on page 13: https://www2.cs.duke.edu/courses/cps124/spring04/notes/12_collisions/collision_detection.pdf
 
 	OrientedBoundingBox()
-		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) {}
+		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) 
+	{
+		basis.SetZ(Vector3(0.0f, 0.0f, -1.0f));
+	}
 	
 	OrientedBoundingBox(Vector3 Center, Matrix3 Basis, Vector3 Extents)
 		: center(Center), basis(Basis), halfExtents(Extents) {}
+
+	OrientedBoundingBox(Vector3 min, Vector3 max)
+	{
+		basis = Matrix3(kIdentity);
+		basis.SetZ(Vector3(0.0f, 0.0f, -1.0f));
+
+		center = Vector3(0.5f * (max - min) + min);
+		halfExtents = center - min;
+	}
 
 	bool Intersects(OrientedBoundingBox& Box)
 	{
@@ -51,19 +63,21 @@ struct OrientedBoundingBox
 		*plane++ = Vector4(center + (basis.GetZ() * halfExtents.GetZ()), halfExtents.GetZ());
 	}
 
+	Vector3 GetMin()
+	{
+		return center - (basis.GetX() * halfExtents.GetX()) - (basis.GetY() * halfExtents.GetY()) - (basis.GetZ() * halfExtents.GetZ());
+		
+	}
+
+	Vector3 GetMax()
+	{
+		return center + (basis.GetX() * halfExtents.GetX()) + (basis.GetY() * halfExtents.GetY()) + (basis.GetZ() * halfExtents.GetZ());
+	}
+
 	// Update with either a quaternion or a rotation matrix. Need to update each basis vector (basis -.getx(), -.gety(), -.getz()) with the new orientation
 	// void UpdateOrientation() {}
 
 private:
-	// Please supply a uniform unit vector (eg. [1, 1, -1])
-	Vector3 GetCorner(Vector3 Axis)
-	{
-		ASSERT(Axis.GetX() != 0 && Axis.GetY() != 0 && Axis.GetZ() != 0, "You supplied the wrong vector, and are thus an idiot.");
-
-		Axis = Vector3(Axis.GetX() / fabs(Axis.GetX()), Axis.GetY() / fabs(Axis.GetY()), Axis.GetZ() / fabs(Axis.GetZ()));
-
-		return center + (Axis * halfExtents);
-	}
 
 	bool IsSeperatingPlane(const Vector3& RPos, const Vector3& Plane, const OrientedBoundingBox& Box)
 	{

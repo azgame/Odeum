@@ -5,9 +5,7 @@ OctNode::OctNode(Vector3 pos_, float sz_, OctNode* parent_)
 	: octBounds(nullptr), parent(nullptr), children(), m_objectList(std::vector<GameObject*>())
 {
 	m_objectList.reserve(10);
-	octBounds = new BoundingBox();
-	octBounds->min = pos_;
-	octBounds->max = pos_ + Vector3(sz_, sz_, sz_);
+	octBounds = new OrientedBoundingBox(pos_, pos_ + Vector3(sz_, sz_, sz_));
 
 	sz = sz_;
 
@@ -45,49 +43,49 @@ void OctNode::Octify(int depth_)
 	float half = sz / 2.0f;
 
 	children[static_cast<int>(OctChildren::OCT_TLF)] = new OctNode(
-		Vector3(octBounds->min),
+		Vector3(octBounds->GetMin()),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_BLF)] = new OctNode(
-		Vector3(octBounds->min),
+		Vector3(octBounds->GetMin()),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_BRF)] = new OctNode(
-		Vector3(octBounds->min),
+		Vector3(octBounds->GetMin()),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_TRF)] = new OctNode(
-		Vector3(octBounds->min),
+		Vector3(octBounds->GetMin()),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_TLR)] = new OctNode(
-		Vector3(octBounds->min.GetX(), octBounds->min.GetY() + half, octBounds->min.GetZ() + half),
+		Vector3(octBounds->GetMin().GetX(), octBounds->GetMin().GetY() + half, octBounds->GetMin().GetZ() + half),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_BLR)] = new OctNode(
-		Vector3(octBounds->min.GetX(), octBounds->min.GetY(), octBounds->min.GetZ() + half),
+		Vector3(octBounds->GetMin().GetX(), octBounds->GetMin().GetY(), octBounds->GetMin().GetZ() + half),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_BRR)] = new OctNode(
-		Vector3(octBounds->min.GetX() + half, octBounds->min.GetY(), octBounds->min.GetZ() + half),
+		Vector3(octBounds->GetMin().GetX() + half, octBounds->GetMin().GetY(), octBounds->GetMin().GetZ() + half),
 		half,
 		this
 	);
 
 	children[static_cast<int>(OctChildren::OCT_TRR)] = new OctNode(
-		Vector3(octBounds->min.GetX() + half, octBounds->min.GetY() + half, octBounds->min.GetZ() + half),
+		Vector3(octBounds->GetMin().GetX() + half, octBounds->GetMin().GetY() + half, octBounds->GetMin().GetZ() + half),
 		half,
 		this
 	);
@@ -121,7 +119,7 @@ bool OctNode::isLeaf() const
 	return children[0] == nullptr;
 }
 
-BoundingBox& OctNode::getBoundingBox()
+OrientedBoundingBox& OctNode::getBoundingBox()
 {
 	return *octBounds;
 }
@@ -179,7 +177,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4** IntersectionP
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray_.isColliding(object->GetBoundingBox()))
+			if (ray_.IsColliding(object->GetBoundingBox()))
 			{
 				if (ray_.t < shortestDistance)
 				{
@@ -222,7 +220,7 @@ std::vector<GameObject*> OctSpatialPartition::GetCollisions(Ray& ray)
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray.isColliding(object->GetBoundingBox()))
+			if (ray.IsColliding(object->GetBoundingBox()))
 			{
 				if (ray.t < shortestDistance)
 				{
@@ -269,24 +267,22 @@ void OctSpatialPartition::AddObjectToCell(OctNode* cell_, GameObject* go_)
 
 void OctSpatialPartition::PrepareCollisionQuery(OctNode* cell_, Ray ray_)
 {
-	// TODO - Aidan: Enter cell that ray collides with, is this cell a leaf node add it to rayintersectionlist, if not recursively call this on children
-
 	if (cell_->isLeaf())
 	{
-		if (ray_.isColliding(cell_->getBoundingBox()))
+		if (ray_.IsColliding(cell_->getBoundingBox()))
 			m_rayIntersectionList.push_back(cell_);
 		return;
 	}
 
 	for (auto cell : cell_->children)
 	{
-		if (cell->isLeaf() && ray_.isColliding(cell->getBoundingBox()))
+		if (cell->isLeaf() && ray_.IsColliding(cell->getBoundingBox()))
 		{
 			m_rayIntersectionList.push_back(cell);
 			return;
 		}
 
-		if (ray_.isColliding(cell->getBoundingBox()))
+		if (ray_.IsColliding(cell->getBoundingBox()))
 			PrepareCollisionQuery(cell, ray_);
 	}
 }

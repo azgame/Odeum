@@ -35,9 +35,9 @@ void CollisionHandler::AddObject(GameObject* go_)
 	m_scenePartition->AddObject(go_);
 }
 
-void CollisionHandler::MouseUpdate()
+bool CollisionHandler::MouseCollide()
 {
-	if (Input::Get().isButtonClicked(Button1))
+	if (Input::Get().isButtonClicked(Button0))
 	{
 		float width = OdeumEngine::Get().GetWindow().GetWidth();
 		float height = OdeumEngine::Get().GetWindow().GetHeight();
@@ -46,8 +46,13 @@ void CollisionHandler::MouseUpdate()
 			Input::Get().GetMouseY()), Vector2(width, height),
 			OdeumEngine::Get().GetCamera());
 
-		RayQueryFirst(mouseRay, nullptr);
+		GameObject* hit = RayGetFirstHit(mouseRay, nullptr);
+
+		if (hit)
+			return true;
 	}
+
+	return false;
 }
 
 void CollisionHandler::RayQueryFirst(Ray& ray, Vector4** IntersectionPlane)

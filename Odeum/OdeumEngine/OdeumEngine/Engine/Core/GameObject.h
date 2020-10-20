@@ -38,8 +38,8 @@ public:
 
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
-	BoundingBox& GetBoundingBox() { return bbox; }
-	void SetBoundingBox(Vector3 min, Vector3 max) { bbox = BoundingBox(min, max, m_modelMatrix); }
+	OrientedBoundingBox& GetBoundingBox() { return bbox; }
+	void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
 
 	void SetHit(bool hit) 
 	{ 
@@ -64,7 +64,7 @@ protected:
 
 	Model m_model;
 	Matrix4 m_modelMatrix;
-	BoundingBox bbox;
+	OrientedBoundingBox bbox;
 	bool isHit;
 
 	std::string fileName;

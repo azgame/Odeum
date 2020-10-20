@@ -6,6 +6,7 @@
 
 struct Ray;
 struct BoundingBox;
+struct OrientedBoundingBox;
 
 class CollisionDetection
 {
@@ -19,8 +20,8 @@ public:
 	~CollisionDetection();
 
 	static Ray ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenSize, Camera& camera);
-	static bool RayOBBIntersection(Ray& ray, BoundingBox& box);
-	static Vector4* RayOBBIntersectionPlane(Ray& ray, BoundingBox& box);
+	static bool RayOBBIntersection(Ray& ray, OrientedBoundingBox& box);
+	static Vector4* RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box);
 };
 
 #endif

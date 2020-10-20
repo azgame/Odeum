@@ -32,23 +32,26 @@ Ray CollisionDetection::ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenS
 	return Ray(Vector3(raystart_World), Vector3(raydir_World));
 }
 
-bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
+bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box)
 {
 	float tMin = OdeumEngine::Get().GetCamera().GetNearClipPlane();
 	float tMax = OdeumEngine::Get().GetCamera().GetFarClipPlane();
 
-	Vector3 obbPos(box.transform.GetW());
+	Vector3 obbPos(box.center);
 	Vector3 delta = obbPos - ray.origin;
 
-	Vector3 xAxis(box.transform.GetX());
+	Vector3 xAxis(box.basis.GetX());
 
 	float e = Math::Dot(delta, xAxis);
 	float f = Math::Dot(xAxis, ray.direction);
 
+	Vector3 min = box.center - (box.basis.GetX() * box.halfExtents.GetX()) - (box.basis.GetY() * box.halfExtents.GetY()) - (box.basis.GetZ() * box.halfExtents.GetZ());
+	Vector3 max = box.center + (box.basis.GetX() * box.halfExtents.GetX()) + (box.basis.GetY() * box.halfExtents.GetY()) + (box.basis.GetZ() * box.halfExtents.GetZ());
+
 	if (fabs(f) > 0.001f)
 	{
-		float t1 = (e + box.min.GetX()) / f;
-		float t2 = (e + box.max.GetX()) / f;
+		float t1 = (e + min.GetX()) / f;
+		float t2 = (e + max.GetX()) / f;
 
 		if (t1 > t2)
 		{
@@ -66,18 +69,18 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 			return false;
 	}
 	else
-		if (-e + box.min.GetX() > 0.0f || -e + box.max.GetX() < 0.0f)
+		if (-e + min.GetX() > 0.0f || -e + max.GetX() < 0.0f)
 			return false;
 
-	Vector3 yAxis(box.transform.GetY());
+	Vector3 yAxis(box.basis.GetY());
 
 	e = Math::Dot(delta, yAxis);
 	f = Math::Dot(yAxis, ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
-		float t1 = (e + box.min.GetY()) / f;
-		float t2 = (e + box.max.GetY()) / f;
+		float t1 = (e + min.GetY()) / f;
+		float t2 = (e + max.GetY()) / f;
 
 		if (t1 > t2)
 		{
@@ -95,18 +98,18 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 			return false;
 	}
 	else
-		if (-e + box.min.GetY() > 0.0f || -e + box.max.GetY() < 0.0f)
+		if (-e + min.GetY() > 0.0f || -e + max.GetY() < 0.0f)
 			return false;
 
-	Vector3 zAxis(box.transform.GetZ());
+	Vector3 zAxis(box.basis.GetZ());
 
 	e = Math::Dot(delta, zAxis);
 	f = Math::Dot(zAxis, ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
-		float t1 = (e + box.min.GetZ()) / f;
-		float t2 = (e + box.max.GetZ()) / f;
+		float t1 = (e + min.GetZ()) / f;
+		float t2 = (e + max.GetZ()) / f;
 
 		if (t1 > t2)
 		{
@@ -124,7 +127,7 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 			return false;
 	}
 	else
-		if (-e + box.min.GetZ() > 0.0f || -e + box.max.GetZ() < 0.0f)
+		if (-e + min.GetZ() > 0.0f || -e + max.GetZ() < 0.0f)
 			return false;
 
 	ray.t = tMin;
@@ -133,9 +136,11 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 }
 
 // Assuming intersection with ray and box, ray with house intersection point
-Vector4* CollisionDetection::RayOBBIntersectionPlane(Ray& ray, BoundingBox& box)
+Vector4* CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box)
 {
 	Vector4* planes = new Vector4[6];
+	box.GetPlanes(planes);
+
 	Vector3 intersectionPoint = ray.origin + (ray.direction * ray.t);
 
 	for (int i = 0; i < 6; i++)
