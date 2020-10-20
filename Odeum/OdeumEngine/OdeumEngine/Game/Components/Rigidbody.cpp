@@ -4,9 +4,7 @@ void Rigidbody::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
 
-	rb_position = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-	//rb_rotation = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
-
+	rb_position = m_gameObject->GetPosition();
 
 	rb_angle = 0.0f;
 	rb_orientation = Quaternion();
@@ -50,21 +48,19 @@ void Rigidbody::Transform(Vector4 translate)
 // apply a force on the object
 void Rigidbody::ApplyForce(Vector4 force)
 {
-	Vector4 acceleration;
 	if (m_gameObject->GetMass() > 0)
 	{
-		acceleration = force / m_gameObject->GetMass();
+		rb_totalAcceleration = force / m_gameObject->GetMass();
 	}
 
 	// update total forces
 	rb_totalForce += force;
-	rb_totalAcceleration += acceleration;
+
 }
 
 void Rigidbody::AddAngularVelocity(Vector4 velocity, float angle)
 {
 	rb_angularVelocity += velocity;
-	//rb_totalVelocity += velocity;
 	rb_angleSpeed = angle;
 }
 
@@ -72,7 +68,7 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float angle)
 void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
-	Vector3 axisOfRotation_ = Vector3(rb_totalVelocity).Cross(Vector3(rb_angularVelocity));
+	Vector3 axisOfRotation_ = Math::Cross(Vector3(rb_totalVelocity), Vector3(rb_angularVelocity));
 	
 	// normalize
 	if (axisOfRotation_.Mag() == 0)
@@ -87,6 +83,5 @@ void Rigidbody::UpdateOrientationQuaternion()
 	Quaternion angVel(Vector4(angularVelocity_, 0.0005f));
 
 	// update the orientation
-	rb_orientation = Quaternion(rb_orientation + (rb_orientation * angVel * 0.5f * rb_angleSpeed));
-	rb_orientation = Quaternion(rb_orientation.GetVector4().Normalize());
+	rb_orientation = Quaternion(Vector4(rb_orientation + (rb_orientation * angVel * 0.5f * rb_angleSpeed)).Normalize());
 }

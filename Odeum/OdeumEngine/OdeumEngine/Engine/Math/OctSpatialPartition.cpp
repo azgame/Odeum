@@ -159,7 +159,7 @@ void OctSpatialPartition::AddObject(GameObject* go_)
 	AddObjectToCell(root, go_);
 }
 
-GameObject* OctSpatialPartition::GetCollision(Ray ray_, Vector3** IntersectionPoint)
+GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4** IntersectionPlane)
 {
 	if (m_rayIntersectionList.size() > 0)
 	{
@@ -172,6 +172,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_, Vector3** IntersectionPo
 
 	GameObject* result = nullptr;
 	OctNode* node = nullptr;
+	if (IntersectionPlane) *IntersectionPlane = nullptr;
 	float shortestDistance = FLT_MAX;
 
 	for (auto cell : m_rayIntersectionList)
@@ -182,22 +183,60 @@ GameObject* OctSpatialPartition::GetCollision(Ray ray_, Vector3** IntersectionPo
 			{
 				if (ray_.t < shortestDistance)
 				{
+					if (IntersectionPlane && *IntersectionPlane) delete * IntersectionPlane;
 					node = cell;
 					result = object;
 					shortestDistance = ray_.t;
+					if (IntersectionPlane) *IntersectionPlane = CollisionDetection::RayOBBIntersectionPlane(ray_, object->GetBoundingBox());
 				}
 			}	
 		}
 
 		if (result != nullptr)
 		{
-			std::string msg = "Ray collision in cell at: " + std::to_string(node->getBoundingBox().min.GetX()) + " " + std::to_string(node->getBoundingBox().min.GetY()) + " " + std::to_string(node->getBoundingBox().min.GetZ());
-			Debug::Info(msg, __FILENAME__, __LINE__);
 			return result;
 		}
 	}
 
 	return nullptr;
+}
+
+std::vector<GameObject*> OctSpatialPartition::GetCollisions(Ray& ray)
+{
+	if (m_rayIntersectionList.size() > 0)
+	{
+		for (auto cell : m_rayIntersectionList)
+			cell = nullptr;
+		m_rayIntersectionList.clear();
+	}
+
+	PrepareCollisionQuery(root, ray);
+
+	GameObject* result = nullptr;
+	OctNode* node = nullptr;
+	float shortestDistance = FLT_MAX;
+
+	std::vector<GameObject*> collisions;
+
+	for (auto cell : m_rayIntersectionList)
+	{
+		for (auto object : cell->m_objectList)
+		{
+			if (ray.isColliding(object->GetBoundingBox()))
+			{
+				if (ray.t < shortestDistance)
+				{
+					node = cell;
+					result = object;
+					shortestDistance = ray.t;
+				}
+
+				collisions.push_back(object);
+			}
+		}
+	}
+
+	return collisions;
 }
 
 void OctSpatialPartition::UpdatePartition()

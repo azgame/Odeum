@@ -22,8 +22,10 @@ public:
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
 	void MouseUpdate();
-	Vector3& RayQueryIntersectionPoint(Ray& ray);
-	GameObject* RayGetFirstHit(Ray& ray, Vector3** IntersectionPoint);
+	void RayQueryFirst(Ray& ray, Vector4** IntersectionPlane);
+	void RayQueryList(Ray& ray, std::vector<GameObject*>& IntersectedObjects);
+	GameObject* RayGetFirstHit(Ray& ray, Vector4** IntersectionPlane = nullptr);
+	std::vector<GameObject*>& RayGetList(Ray& ray);
 	void Update();
 	void Uninitialize();
 

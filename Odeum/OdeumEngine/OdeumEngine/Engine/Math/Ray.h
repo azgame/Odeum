@@ -34,7 +34,7 @@ struct Ray
 
 	inline Vector4* GetIntersectionPlane(BoundingBox& box)
 	{
-		return CollisionDetection::RayOBBIntersectionPlane(*this, box);
+		return nullptr;
 	}
 };
 

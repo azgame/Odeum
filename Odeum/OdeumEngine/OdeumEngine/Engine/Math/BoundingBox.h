@@ -6,15 +6,75 @@
 
 struct OrientedBoundingBox
 {
-	Matrix3 basis; // represents the orientation of the three axis. An AABB would be [xaxis (1, 0, 0), yaxis (0, 1, 0), zaxis (0, 0, 1)]. Rotate these to get the orientation of the obb
 	Vector3 center; // represents the position of the obb
+	Matrix3 basis; // represents the orientation of the three axis. An AABB would be [xaxis (1, 0, 0), yaxis (0, 1, 0), zaxis (0, 0, 1)]. Rotate these to get the orientation of the obb
 	Vector3 halfExtents; // center to bounds. to find faces, use plane p = center +/- (basis + extent) where the resulting vector is the plane normal and d is the extent
-	// if confused, read these comments with this image: https://www2.cs.duke.edu/courses/cps124/spring04/notes/12_collisions/collision_detection.pdf page 13
+	// if confused, read these comments with the image on page 13: https://www2.cs.duke.edu/courses/cps124/spring04/notes/12_collisions/collision_detection.pdf
 
 	OrientedBoundingBox()
-		: basis(kIdentity), center(Vector3(kIdentity) * 0.5f), halfExtents(Vector3(kIdentity) * 0.5f) {}
+		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) {}
 	
+	OrientedBoundingBox(Vector3 Center, Matrix3 Basis, Vector3 Extents)
+		: center(Center), basis(Basis), halfExtents(Extents) {}
 
+	bool Intersects(OrientedBoundingBox& Box)
+	{
+		Vector3 RPos;
+		RPos = center - Box.center;
+
+		return !(IsSeperatingPlane(RPos, basis.GetX(), Box) ||
+			IsSeperatingPlane(RPos, basis.GetY(), Box) ||
+			IsSeperatingPlane(RPos, basis.GetZ(), Box) ||
+			IsSeperatingPlane(RPos, Box.basis.GetX(), Box) ||
+			IsSeperatingPlane(RPos, Box.basis.GetY(), Box) ||
+			IsSeperatingPlane(RPos, Box.basis.GetZ(), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetX(), Box.basis.GetX()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetX(), Box.basis.GetY()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetX(), Box.basis.GetZ()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetY(), Box.basis.GetX()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetY(), Box.basis.GetY()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetY(), Box.basis.GetZ()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetZ(), Box.basis.GetX()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetZ(), Box.basis.GetY()), Box) ||
+			IsSeperatingPlane(RPos, Math::Cross(basis.GetZ(), Box.basis.GetZ()), Box));
+	}
+
+	// Fill an 6-sized array of vector4s with the planes of the obb
+	void GetPlanes(Vector4* Planes)
+	{
+		Vector4* plane = Planes;
+		*plane++ = Vector4(center + (basis.GetX() * -halfExtents.GetX()), -halfExtents.GetX());
+		*plane++ = Vector4(center + (basis.GetX() * halfExtents.GetX()), halfExtents.GetX());
+		*plane++ = Vector4(center + (basis.GetY() * -halfExtents.GetY()), -halfExtents.GetY());
+		*plane++ = Vector4(center + (basis.GetY() * halfExtents.GetY()), halfExtents.GetY());
+		*plane++ = Vector4(center + (basis.GetZ() * -halfExtents.GetZ()), -halfExtents.GetZ());
+		*plane++ = Vector4(center + (basis.GetZ() * halfExtents.GetZ()), halfExtents.GetZ());
+	}
+
+	// Update with either a quaternion or a rotation matrix. Need to update each basis vector (basis -.getx(), -.gety(), -.getz()) with the new orientation
+	// void UpdateOrientation() {}
+
+private:
+	// Please supply a uniform unit vector (eg. [1, 1, -1])
+	Vector3 GetCorner(Vector3 Axis)
+	{
+		ASSERT(Axis.GetX() != 0 && Axis.GetY() != 0 && Axis.GetZ() != 0, "You supplied the wrong vector, and are thus an idiot.");
+
+		Axis = Vector3(Axis.GetX() / fabs(Axis.GetX()), Axis.GetY() / fabs(Axis.GetY()), Axis.GetZ() / fabs(Axis.GetZ()));
+
+		return center + (Axis * halfExtents);
+	}
+
+	bool IsSeperatingPlane(const Vector3& RPos, const Vector3& Plane, const OrientedBoundingBox& Box)
+	{
+		return fabs(Math::Dot(RPos, Plane)) >
+			(fabs(Math::Dot(basis.GetX() * halfExtents.GetX(), Plane)) +
+			fabs(Math::Dot(basis.GetY() * halfExtents.GetY(), Plane)) +
+			fabs(Math::Dot(basis.GetZ() * halfExtents.GetZ(), Plane)) +
+			fabs(Math::Dot(Box.basis.GetX() * Box.halfExtents.GetX(), Plane)) +
+			fabs(Math::Dot(Box.basis.GetY() * Box.halfExtents.GetY(), Plane)) +
+			fabs(Math::Dot(Box.basis.GetZ() * Box.halfExtents.GetZ(), Plane)));
+	}
 };
 
 struct BoundingBox

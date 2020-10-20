@@ -13,6 +13,7 @@ public:
 	virtual void Update(float deltaTime) = 0;
 protected:
 	GameObject* m_gameObject;
+	bool m_dirtyFlag;
 };
 
 #endif

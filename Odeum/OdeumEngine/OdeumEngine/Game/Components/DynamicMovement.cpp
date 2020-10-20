@@ -56,14 +56,14 @@ Vector4 DynamicMovement::GetSteering()
 		temp=temp.Normalize();
 
 		Ray ray = Ray(Vector3(rb->GetPosition()), temp);
-		GameObject* objectHit = CollisionHandler::GetInstance()->RayGetFirstHit(ray);
+		GameObject* objectHit = CollisionHandler::GetInstance()->RayGetFirstHit(ray, nullptr);
 		
 		if (obstacles.find(objectHit) != obstacles.end())
 		{
 			//the normal is curently not working, need to get Plane to calculate the normal =(
 			 temp = Vector3( objectHit->GetPosition());
 			 Vector3 t = Vector3(object->GetPosition());
-			t = t.Cross((Vector3(0, 0, 0) + objectHit->GetPosition()));
+			t = Math::Cross(t, Vector3(objectHit->GetPosition()));
 			temp=temp.Normalize();
 			std::cout << "found" << std::endl;
 			targetPos = (temp * avoidDistance) + objectHit->GetPosition();

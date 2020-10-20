@@ -6,13 +6,10 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject(CubeShape, Colour(0.2f, 0.0f, 0.8f));
+	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
 	object->AddComponent<Rigidbody>();
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
-
-	CollisionHandler::GetInstance()->Initialize(1000.0f);
-	CollisionHandler::GetInstance()->AddObject(object);
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
 }
 
 GameScene::~GameScene()
@@ -29,20 +26,11 @@ void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 
-	angle += direction * (deltaTime_);
-	float elipticalV = cos(angle);
-	object->GetComponent<Rigidbody>()->SetVelocity(Vector4(elipticalV * 3.0f, 0.0f, 0.0f, 0.0f));
+	angle += direction * (deltaTime_ * 0.1f);
 
-	CollisionHandler::GetInstance()->Update();
+	object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
 
-	Ray ray = Ray(OdeumEngine::Get().GetCamera().GetPosition(), (Vector3(kZero) - OdeumEngine::Get().GetCamera().GetPosition()).Normalize());
-	
-	GameObject* objectHit = CollisionHandler::GetInstance()->RayGetFirstHit(ray);
-
-	if (objectHit == object)
-		std::cout << "Hit scene object at: " + object->GetPosition().ToString() << std::endl;
-
-	object->Update(deltaTime_);
+	//object->Update(deltaTime_);
 }
 
 void GameScene::UIRender()

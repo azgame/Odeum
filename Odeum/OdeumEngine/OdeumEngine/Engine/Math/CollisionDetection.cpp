@@ -42,8 +42,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 xAxis(box.transform.GetX());
 
-	float e = delta.Dot(xAxis);
-	float f = xAxis.Dot(ray.direction);
+	float e = Math::Dot(delta, xAxis);
+	float f = Math::Dot(xAxis, ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
@@ -71,8 +71,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 yAxis(box.transform.GetY());
 
-	e = delta.Dot(yAxis);
-	f = yAxis.Dot(ray.direction);
+	e = Math::Dot(delta, yAxis);
+	f = Math::Dot(yAxis, ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
@@ -100,8 +100,8 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 
 	Vector3 zAxis(box.transform.GetZ());
 
-	e = delta.Dot(zAxis);
-	f = zAxis.Dot(ray.direction);
+	e = Math::Dot(delta, zAxis);
+	f = Math::Dot(zAxis, ray.direction);
 
 	if (fabs(f) > 0.001f)
 	{
@@ -132,35 +132,17 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, BoundingBox& box)
 	return true;
 }
 
-struct Plane
-{
-	Plane() : plane(Vector4(kZero)) {} 
-	Plane(Vector3& v0, Vector3& v1, Vector3& v2)
-	{
-		// Cross of E1 and E2 gives the normal of the plane
-		Vector3 e1 = v1 - v0;
-		Vector3 e2 = v2 - v1;
-		Vector3 n = e1.Cross(e2);
-		n.Normalize();
-
-		// Find d with the negative dot product between the normal and a given point
-		float d = -(n.Dot(v0));
-
-		if (d == -0) d = 0;
-
-		// Plane is the normal and d
-		plane = Vector4(n, d);
-	}
-
-	Vector4 plane;
-};
-
+// Assuming intersection with ray and box, ray with house intersection point
 Vector4* CollisionDetection::RayOBBIntersectionPlane(Ray& ray, BoundingBox& box)
 {
-	// Construct 6 planes
-	
+	Vector4* planes = new Vector4[6];
+	Vector3 intersectionPoint = ray.origin + (ray.direction * ray.t);
 
-	// Find where ray and normal of plane is v. close to 0
+	for (int i = 0; i < 6; i++)
+	{
+		if (fabs(Math::Dot(Vector3(planes[i]), intersectionPoint) < 0.05f))
+			return &planes[i];
+	}
 
 	return nullptr;
 }

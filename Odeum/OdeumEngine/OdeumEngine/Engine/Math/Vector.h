@@ -61,10 +61,9 @@ public:
 	// vv that line and the other constructor that uses const XMFLOAT3& as a parameter take the same argument error
 	//inline explicit Vector3(FXMVECTOR vec_) { vec = vec_; }
 	inline explicit Vector2(EZeroTag) { vec = XMVectorZero(); }
-	// inline explicit Vector3(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
-	inline explicit Vector2(EXUnitVector) { vec = CreateXUnitVector(); }
-	inline explicit Vector2(EYUnitVector) { vec = CreateYUnitVector(); }
 	inline explicit Vector2(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
+	inline explicit Vector2(EXUnitVector) { vec = XMVectorSetX(vec, 1.0f); }
+	inline explicit Vector2(EYUnitVector) { vec = XMVectorSetY(vec, 1.0f); }
 
 	inline operator XMVECTOR() const { return vec; }
 
@@ -104,15 +103,13 @@ public:
 	inline Vector3(float x_, float y_, float z_) { vec = XMVectorSet(x_, y_, z_, 1.0f); }
 	inline Vector3(const XMFLOAT3& v_) { vec = XMLoadFloat3(&v_); }
 	inline Vector3(const XMVECTOR& v_) { vec = v_; }
-	//inline explicit Vector3(Vector4 v) { vec = v.GetVec(); }
-	// vv that line and the other constructor that uses const XMFLOAT3& as a parameter take the same argument error
+	inline explicit Vector3(Vector4 v);
 	//inline explicit Vector3(FXMVECTOR vec_) { vec = vec_; }
 	inline explicit Vector3(EZeroTag) { vec = XMVectorZero(); }
-	// inline explicit Vector3(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
+	inline explicit Vector3(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
 	inline explicit Vector3(EXUnitVector) { vec = CreateXUnitVector(); }
 	inline explicit Vector3(EYUnitVector) { vec = CreateYUnitVector(); }
 	inline explicit Vector3(EZUnitVector) { vec = CreateZUnitVector(); }
-	inline explicit Vector3(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
 	
 	inline operator XMVECTOR() const { return vec; }
 
@@ -131,33 +128,15 @@ public:
 	//Functions Added -Robert
 	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)); }
 	inline Vector3 Normalize(){return vec/ sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2));}
-	inline Vector3 Cross(Vector3 otherVec)
-	{
-		Vector3 t;
-		t.SetX( (XMVectorGetX(vec) * otherVec.GetZ()) - (XMVectorGetZ(vec) * otherVec.GetY()));
-		t.SetY( (XMVectorGetZ(vec) * otherVec.GetX()) - (XMVectorGetX(vec) * otherVec.GetZ()));
-		t.SetZ( (XMVectorGetX(vec) * otherVec.GetY()) - (XMVectorGetY(vec) * otherVec.GetZ()));
-		return t;
-	}
-	
-
-
-
-	inline float Dot(Vector3 v) { return (GetX() * v.GetX()) + (GetY() * v.GetY()) + (GetZ() * v.GetZ()); }
-	
-	inline Vector3 Cross(Vector3 v) 
-	{
-		return Vector3(GetY() * v.GetZ() - GetZ() * v.GetY(),
-			GetZ() * v.GetX() - GetX() * v.GetZ(),
-			GetX() * v.GetY() - GetY() * v.GetX());
-	}
 
 	// Operator overloads
 	inline Vector3 operator- () const { return Vector3(XMVectorNegate(vec)); }
 	inline Vector3 operator+ (Vector3 v2_) const { return Vector3(XMVectorAdd(vec, v2_.GetVec())); }
 	inline Vector3 operator- (Vector3 v2_) const { return Vector3(XMVectorSubtract(vec, v2_.GetVec())); }
 	inline Vector3 operator* (Vector3 v2_) const { return Vector3(XMVectorMultiply(vec, v2_.GetVec())); }
+	inline Vector3 operator* (float s_) const { return vec * s_; }
 	inline Vector3 operator/ (Vector3 v2_) const { return Vector3(XMVectorDivide(vec, v2_.GetVec())); }
+	inline Vector3 operator/ (float s_) const { return Vector3(GetX() / s_, GetY() / s_, GetZ() / s_); }
 
 	inline Vector3& operator += (Vector3 v_) { *this = *this + v_; return *this; }
 	inline Vector3& operator -= (Vector3 v_) { *this = *this - v_; return *this; }
@@ -168,6 +147,8 @@ protected:
 	XMVECTOR vec;
 };
 
+class Quaternion;
+
 class Vector4 {
 public:
 	inline Vector4() { vec = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); }
@@ -175,18 +156,14 @@ public:
 	inline Vector4(Vector3 vec_, float w_) { vec = XMVectorSetW(vec_.GetVec(), w_); }
 	inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
 	inline Vector4(const XMVECTOR& v_) { vec = v_; }
-	//inline Vector4(Quaternion q_) { vec = q_.GetVec(); }
-	// inline Vector4(Scalar& s_) { vec = s_.GetVec(); }
+	inline Vector4(Quaternion q_);
 	inline explicit Vector4(Vector3 xyz_) { vec = SetWToOne(xyz_); }
-	// vv that line and the other constructor that uses const XMVECTOR& as a parameter take the same argument error
-	//inline explicit Vector4(FXMVECTOR vec_) { vec = vec_; }
 	inline explicit Vector4(EZeroTag) { vec = XMVectorZero(); }
-	// inline explicit Vector4(EIdentityTag) { vec = SplatOne(); }
+	inline explicit Vector4(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
 	inline explicit Vector4(EXUnitVector) { vec = CreateXUnitVector(); }
 	inline explicit Vector4(EYUnitVector) { vec = CreateYUnitVector(); }
 	inline explicit Vector4(EZUnitVector) { vec = CreateZUnitVector(); }
 	inline explicit Vector4(EWUnitVector) { vec = CreateWUnitVector(); }
-	inline explicit Vector4(EIdentityTag) { vec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f); }
 
 	inline operator XMVECTOR() const { return vec; }
 
@@ -227,24 +204,21 @@ protected:
 	XMVECTOR vec;
 };
 
+Vector3::Vector3(Vector4 v) { vec = v.GetVec(); }
+
 namespace Math
 {
 	inline float Dot(Vector3 v1, Vector3 v2)
 	{
 		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ());
 	}
+
+	inline Vector3 Cross(Vector3 v1, Vector3 v2)
+	{
+		return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),
+			v1.GetZ() * v2.GetX() - v1.GetX() * v2.GetZ(),
+			v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX());
+	}
 }
-
-// vv   not sure if we wanted to include this 
-
-class BoolVector
-{
-public:
-	inline BoolVector(FXMVECTOR vec_) { vec = vec_; }
-	inline operator XMVECTOR() const { return vec; }
-
-protected:
-	XMVECTOR vec;
-};
 
 #endif

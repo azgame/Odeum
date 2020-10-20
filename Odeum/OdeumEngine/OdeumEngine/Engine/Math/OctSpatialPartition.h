@@ -52,7 +52,8 @@ public:
 	void Uninitialize();
 
 	void AddObject(GameObject* go_);
-	GameObject* GetCollision(Ray ray_, Vector3** IntersectionPoint);
+	GameObject* GetCollision(Ray& ray_, Vector4** IntersectionPlane);
+	std::vector<GameObject*> GetCollisions(Ray& ray);
 	void UpdatePartition();
 
 private:

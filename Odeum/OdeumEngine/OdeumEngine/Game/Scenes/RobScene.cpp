@@ -28,7 +28,8 @@ RobScene::RobScene() : Scene()
 	//object->GetComponent<KinimaticMovement>()->target = newObject;
 	object->GetComponent<Rigidbody>()->SetMass(1);
 
-	
+	object->SetTag("Player");
+	newObject->SetTag("Obstacle");
 	
 	teletime=1000;
 }
@@ -46,6 +47,26 @@ bool RobScene::Initialize()
 
 void RobScene::Update(const float deltaTime_)
 {
+	// Ray test
+	Ray forward = Ray(Vector3(object->GetPosition()), Vector3(object->GetVelocity().Normalize()));
+	Vector4* intersectionPlane = nullptr;
+
+	// Get a list of collided objects
+	std::vector<GameObject*> colliders = CollisionHandler::GetInstance()->RayGetList(forward);
+
+	// get the intersection plane from any of the objects that were collided with
+	for (auto obj : colliders)
+	{
+		if (obj->Tag() == "Obstacle")
+			intersectionPlane = CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox());
+	}
+
+	// Get the first collided object
+	// If you pass in a Vector4*, it'll be filled with the intersection plane where the ray collided with the obb, if there was a collision
+	GameObject* target = CollisionHandler::GetInstance()->RayGetFirstHit(forward, &intersectionPlane);	
+	Vector3 normal = Vector3(*intersectionPlane); // the normal is the first three components of the plane
+
+	SAFE_DELETE(intersectionPlane);
 
 	std::cout << object->GetPosition().GetX() << " " << object->GetPosition().GetY() << std::endl;
 	if (shouldupdate)

@@ -4,7 +4,7 @@
 #include "Component.h"
 
 // Moving model loading to a graphics component
-GameObject::GameObject(std::string fileName)
+GameObject::GameObject(std::string fileName, std::string tag_)
 {
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_rotation = Vector4(kYUnitVector);
@@ -12,17 +12,21 @@ GameObject::GameObject(std::string fileName)
 
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 
+	tag = tag_;
+
 	m_model.SetParent(this);
 	m_model.Load(fileName);
 
 	SceneGraph::Get()->AddGameObject(this);
 }
 
-GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour)
+GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string tag_)
 {
 	m_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 	m_rotation = Vector4(kYUnitVector);
 	m_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	tag = tag_;
 
 	UpdateTransform(m_position, 0.0f, m_rotation, m_scale);
 

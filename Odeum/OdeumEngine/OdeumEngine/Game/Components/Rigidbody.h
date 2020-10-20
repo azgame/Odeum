@@ -33,9 +33,6 @@ public:
 	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
 	void AddAngularVelocity(Vector4 velocity, float angle);
 
-	
-	
-
 private:
 	// options for now
 	Vector4 rb_totalForce;
