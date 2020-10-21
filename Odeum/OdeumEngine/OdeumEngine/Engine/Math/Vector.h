@@ -208,17 +208,114 @@ Vector3::Vector3(Vector4 v) { vec = v.GetVec(); }
 
 namespace Math
 {
-	inline float Dot(Vector3 v1, Vector3 v2)
+	inline float Dot(const Vector3 v1, const Vector3 v2)
 	{
 		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ());
 	}
+	inline float Dot(const Vector4 v1, const Vector4 v2)
+	{
+		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ()) + (v1.GetW() * v2.GetW());
+	}
 
-	inline Vector3 Cross(Vector3 v1, Vector3 v2)
+
+	inline Vector3 Cross(const Vector3 v1, const Vector3 v2)
 	{
 		return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),
 			v1.GetZ() * v2.GetX() - v1.GetX() * v2.GetZ(),
 			v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX());
 	}
+
+	// Courtesy of Scott
+	// Reflects off a normal
+	inline Vector3 Reflect(const Vector3 v, const Vector3 n)
+	{
+		/*Vector3 result;
+		float scalar = 2.0f * Dot(v, n);
+		Vector3 temp = n * scalar;
+		result = temp - v;
+		*/
+		return (n * (2.0f * Dot(v, n))) - v;
+	}
+	inline Vector4 Reflect(const Vector4 v, const Vector4 n)
+	{
+		/*Vector3 result;
+		float scalar = 2.0f * Dot(v, n);
+		Vector3 temp = n * scalar;
+		result = temp - v;
+		*/
+		return (n * (2.0f * Dot(v, n))) - v;
+	}
+	// Reflects off a plane
+	// when uncommenting this function, make sure to comment out the first 4 lines of the function (as seen above)
+	/*inline Vector3 Reflect(const Vector3 v, const Plane p)
+	{
+		Vector3 result;
+		float scalar = 2.0f * Dot(v, p);
+		Vector3 temp = p * scalar;
+		result = temp - v;
+		
+		return (p * (2.0f * Dot(v, p))) - v;
+	}*/
+
+	// Finds the distance between two vectors
+	inline float Distance(const Vector3 v1, const Vector3 v2)
+	{
+		return (v1 - v2).Mag();
+	}
+	inline float Distance(const Vector4 v1, const Vector4 v2)
+	{
+		return (v1 - v2).Mag();
+	}
+
+	// Finds the distance between a vector and a plane
+	/*inline float Distance(const Vector3 v, Plane p)
+	{
+		return v.GetX() * p.GetX() + v.GetY() * p.GetY() + v.GetZ() * p.GetZ() - p.GetD();
+	}*/
+
+	// returns the linear interpolated vector with a give t value
+	inline Vector3 Lerp(const Vector3 v1, const Vector3 v2, float t)
+	{
+		return ((Vector3)v1 + (Vector3)(t * (v2 - v1)));
+	}
+	inline Vector4 Lerp(const Vector4 v1, const Vector4 v2, float t)
+	{
+		return ((Vector4)v1 + (Vector4)(t * (v2 - v1)));
+	}
+
+	// returns a vector with the minimal values 
+	// ** not sure why I want to write everything in a single return statement **
+	inline Vector3 Min(const Vector3 v1, const Vector3 v2)
+	{
+		return Vector3((v1.GetX() < v2.GetX()) ? v1.GetX() : v2.GetX(),
+					   (v1.GetY() < v2.GetY()) ? v1.GetY() : v2.GetY(),
+					   (v1.GetZ() < v2.GetZ()) ? v1.GetZ() : v2.GetZ());
+	}
+	inline Vector4 Min(const Vector4 v1, const Vector4 v2)
+	{
+		return Vector4((v1.GetX() < v2.GetX()) ? v1.GetX() : v2.GetX(),
+					   (v1.GetY() < v2.GetY()) ? v1.GetY() : v2.GetY(),
+				   	   (v1.GetZ() < v2.GetZ()) ? v1.GetZ() : v2.GetZ(),
+					   (v1.GetW() < v2.GetW()) ? v1.GetW() : v2.GetW());
+	}
+
+	// returns a vector with the maximum values
+	inline Vector3 Max(const Vector3 v1, const Vector3 v2)
+	{
+		return Vector3((v1.GetX() > v2.GetX()) ? v1.GetX() : v2.GetX(),
+					   (v1.GetY() > v2.GetY()) ? v1.GetY() : v2.GetY(),
+					   (v1.GetZ() > v2.GetZ()) ? v1.GetZ() : v2.GetZ());
+	}
+	inline Vector4 Max(const Vector4 v1, const Vector4 v2)
+	{
+		return Vector4((v1.GetX() > v2.GetX()) ? v1.GetX() : v2.GetX(),
+					   (v1.GetY() > v2.GetY()) ? v1.GetY() : v2.GetY(),
+					   (v1.GetZ() > v2.GetZ()) ? v1.GetZ() : v2.GetZ(),
+					   (v1.GetW() > v2.GetW()) ? v1.GetW() : v2.GetW());
+	}
+
+
+	// STILL NEED TO ADD IN MORE TRANSFORMATION FUNCTIONS
 }
 
 #endif

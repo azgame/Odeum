@@ -73,7 +73,56 @@ struct OrientedBoundingBox
 	}
 
 	// Update with either a quaternion or a rotation matrix. Need to update each basis vector (basis -.getx(), -.gety(), -.getz()) with the new orientation
-	// void UpdateOrientation() {}
+	// Reference - https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+	void UpdateOrientation(Quaternion q) 
+	{
+		// find the angle and axis of the quaternion rotation and apply that rotation to the matrix
+		// make sure the quaternion is normalized
+		if (q.GetVector4().GetW() > 1.0f)
+		{
+			q = Quaternion(q.GetVector4().Normalize());
+		}
+
+		// these will be what we use to rotate the bounding box
+		float angle, x, y, z;
+		
+		angle = 2.0f * acos(q.GetVector4().GetW());
+		double s = sqrt(1.0f - q.GetVector4().GetW() * q.GetVector4().GetW());
+
+		// avoid dividing by zero
+		if (s < 0.0001f)
+		{
+			x = q.GetVector4().GetX();
+			y = q.GetVector4().GetY();
+			z = q.GetVector4().GetZ();
+		}
+		else 
+		{
+			// normalizes
+			x = q.GetVector4().GetX() / s;
+			y = q.GetVector4().GetY() / s;
+			z = q.GetVector4().GetZ() / s;
+		}
+		
+		// rotate the basis vectors by angle on the (x, y, z) axis
+		// create rotation matrices for each axis
+		Matrix3 rot = Matrix3(DirectX::XMMatrixRotationAxis(Vector3(x, y, z), angle));
+
+		// rotate each axis with the rotation matrix
+		basis.SetX(rot * basis.GetX());
+		basis.SetY(rot * basis.GetY());
+		basis.SetZ(rot * basis.GetZ());
+	}
+
+	// ^^^ that might have been redundant, I REALLY HOPE THIS ISN'T ALL WE HAD TO DO 
+	void UpdateOrientation2(Quaternion q)
+	{
+		// Matrix already has a constructor that builds a rotation matrix from a quaternion
+		Matrix3 m = Matrix3(q);
+		basis.SetX(m * basis.GetX());
+		basis.SetY(m * basis.GetY());
+		basis.SetZ(m * basis.GetZ());
+	}
 
 private:
 
