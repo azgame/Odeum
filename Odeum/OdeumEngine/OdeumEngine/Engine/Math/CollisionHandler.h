@@ -22,9 +22,10 @@ public:
 	void Initialize(float worldsz_);
 	void AddObject(GameObject* go_);
 	bool MouseCollide();
-	void RayQueryFirst(Ray& ray, Vector4** IntersectionPlane);
+	Ray GetMouseRay();
+	void RayQueryFirst(Ray& ray, Vector4* IntersectionPlane);
 	void RayQueryList(Ray& ray, std::vector<GameObject*>& IntersectedObjects);
-	GameObject* RayGetFirstHit(Ray& ray, Vector4** IntersectionPlane = nullptr);
+	GameObject* RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane = nullptr);
 	std::vector<GameObject*>& RayGetList(Ray& ray);
 	void Update();
 	void Uninitialize();

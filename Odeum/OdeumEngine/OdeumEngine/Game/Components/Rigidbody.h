@@ -26,9 +26,9 @@ public:
 	inline void SetMass(float mass) { rb_mass = mass; }
 	inline void SetVelocity(Vector4 velocity) { rb_totalVelocity = velocity; }
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
-	inline void SetPosition(Vector4 position) { rb_position = position; UpdateTransform(); }
-	inline void SetRotation(Vector4 rotation, float angle) { rb_orientation = Quaternion(Vector3(rotation), angle); UpdateTransform(); }
-	inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; UpdateTransform(); }
+	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle) { rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
 
 	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
 	void AddAngularVelocity(Vector4 velocity, float angle);

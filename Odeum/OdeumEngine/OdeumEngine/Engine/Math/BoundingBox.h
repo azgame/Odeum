@@ -14,7 +14,6 @@ struct OrientedBoundingBox
 	OrientedBoundingBox()
 		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) 
 	{
-		basis.SetZ(Vector3(0.0f, 0.0f, -1.0f));
 	}
 	
 	OrientedBoundingBox(Vector3 Center, Matrix3 Basis, Vector3 Extents)
@@ -23,10 +22,9 @@ struct OrientedBoundingBox
 	OrientedBoundingBox(Vector3 min, Vector3 max)
 	{
 		basis = Matrix3(kIdentity);
-		basis.SetZ(Vector3(0.0f, 0.0f, -1.0f));
 
-		center = Vector3(0.5f * (max - min) + min);
-		halfExtents = center - min;
+		halfExtents = Vector3(0.5f * (max - min));
+		center = halfExtents + min;
 	}
 
 	bool Intersects(OrientedBoundingBox& Box)
@@ -52,21 +50,21 @@ struct OrientedBoundingBox
 	}
 
 	// Fill an 6-sized array of vector4s with the planes of the obb
-	void GetPlanes(Vector4* Planes)
+	std::vector<Vector4> GetPlanes()
 	{
-		Vector4* plane = Planes;
-		*plane++ = Vector4(center + (basis.GetX() * -halfExtents.GetX()), -halfExtents.GetX());
-		*plane++ = Vector4(center + (basis.GetX() * halfExtents.GetX()), halfExtents.GetX());
-		*plane++ = Vector4(center + (basis.GetY() * -halfExtents.GetY()), -halfExtents.GetY());
-		*plane++ = Vector4(center + (basis.GetY() * halfExtents.GetY()), halfExtents.GetY());
-		*plane++ = Vector4(center + (basis.GetZ() * -halfExtents.GetZ()), -halfExtents.GetZ());
-		*plane++ = Vector4(center + (basis.GetZ() * halfExtents.GetZ()), halfExtents.GetZ());
+		std::vector<Vector4> plane;
+		plane.push_back(Vector4(center + (basis.GetX() * -halfExtents.GetX()), -halfExtents.GetX()));
+		plane.push_back(Vector4(center + (basis.GetX() * halfExtents.GetX()), halfExtents.GetX()));
+		plane.push_back(Vector4(center + (basis.GetY() * -halfExtents.GetY()), -halfExtents.GetY()));
+		plane.push_back(Vector4(center + (basis.GetY() * halfExtents.GetY()), halfExtents.GetY()));
+		plane.push_back(Vector4(center + (basis.GetZ() * -halfExtents.GetZ()), -halfExtents.GetZ()));
+		plane.push_back(Vector4(center + (basis.GetZ() * halfExtents.GetZ()), halfExtents.GetZ()));
+		return plane;
 	}
 
 	Vector3 GetMin()
 	{
 		return center - (basis.GetX() * halfExtents.GetX()) - (basis.GetY() * halfExtents.GetY()) - (basis.GetZ() * halfExtents.GetZ());
-		
 	}
 
 	Vector3 GetMax()

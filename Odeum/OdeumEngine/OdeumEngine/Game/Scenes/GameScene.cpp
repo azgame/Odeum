@@ -17,11 +17,12 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 GameScene::~GameScene()
 {
+	CollisionHandler::GetInstance()->Uninitialize();
 }
 
 bool GameScene::Initialize()
 {
-	Debug::Info("Creating Game Scene", __FILENAME__, __LINE__);
+	LOG("Creating Game Scene");
 	return true;
 }
 
@@ -32,13 +33,16 @@ void GameScene::Update(const float deltaTime_)
 	angle += direction * (deltaTime_ * 0.1f);
 
 	object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
+	object->Update(deltaTime_);
 
-	if (CollisionHandler::GetInstance()->MouseCollide())
+	Vector4 intersectionPlane;
+	Ray mouseRay = CollisionHandler::GetInstance()->GetMouseRay();
+
+	if (Input::Get().isButtonClicked(Button1))
 	{
-		std::cout << "Mouse click hit object!" << std::endl;
+		CollisionHandler::GetInstance()->RayGetFirstHit(mouseRay, &intersectionPlane);
+		LOG(intersectionPlane.ToString());
 	}
-
-	//object->Update(deltaTime_);
 }
 
 void GameScene::UIRender()

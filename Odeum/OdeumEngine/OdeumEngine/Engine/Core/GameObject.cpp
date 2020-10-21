@@ -102,12 +102,14 @@ void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation
 {
 	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * DirectX::XMMatrixRotationAxis(rotation.GetVec(), angle) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 	// update bounding box
+	bbox.basis = Matrix3(m_modelMatrix);
 }
 
 void GameObject::UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale)
 {
 	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * GetRotationMatrix(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 	// update bounding box
+	bbox.basis = Matrix3(m_modelMatrix);
 }
 
 Matrix4 GameObject::GetRotationMatrix(Quaternion quat)

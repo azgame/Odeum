@@ -49,7 +49,7 @@ void RobScene::Update(const float deltaTime_)
 {
 	// Ray test
 	Ray forward = Ray(Vector3(object->GetPosition()), Vector3(object->GetVelocity().Normalize()));
-	Vector4* intersectionPlane = nullptr;
+	Vector4 intersectionPlane;
 
 	// Get a list of collided objects
 	std::vector<GameObject*> colliders = CollisionHandler::GetInstance()->RayGetList(forward);
@@ -64,9 +64,7 @@ void RobScene::Update(const float deltaTime_)
 	// Get the first collided object
 	// If you pass in a Vector4*, it'll be filled with the intersection plane where the ray collided with the obb, if there was a collision
 	GameObject* target = CollisionHandler::GetInstance()->RayGetFirstHit(forward, &intersectionPlane);	
-	Vector3 normal = Vector3(*intersectionPlane); // the normal is the first three components of the plane
-
-	SAFE_DELETE(intersectionPlane);
+	Vector3 normal = Vector3(intersectionPlane); // the normal is the first three components of the plane
 
 	std::cout << object->GetPosition().GetX() << " " << object->GetPosition().GetY() << std::endl;
 	if (shouldupdate)

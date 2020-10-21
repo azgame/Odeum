@@ -40,13 +40,13 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box)
 	Vector3 obbPos(box.center);
 	Vector3 delta = obbPos - ray.origin;
 
+	Vector3 min = box.GetMin();
+	Vector3 max = box.GetMax();
+
 	Vector3 xAxis(box.basis.GetX());
 
 	float e = Math::Dot(delta, xAxis);
 	float f = Math::Dot(xAxis, ray.direction);
-
-	Vector3 min = box.center - (box.basis.GetX() * box.halfExtents.GetX()) - (box.basis.GetY() * box.halfExtents.GetY()) - (box.basis.GetZ() * box.halfExtents.GetZ());
-	Vector3 max = box.center + (box.basis.GetX() * box.halfExtents.GetX()) + (box.basis.GetY() * box.halfExtents.GetY()) + (box.basis.GetZ() * box.halfExtents.GetZ());
 
 	if (fabs(f) > 0.001f)
 	{
@@ -136,18 +136,17 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box)
 }
 
 // Assuming intersection with ray and box, ray with house intersection point
-Vector4* CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box)
+Vector4 CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box)
 {
-	Vector4* planes = new Vector4[6];
-	box.GetPlanes(planes);
+	std::vector<Vector4> planes = box.GetPlanes();
 
 	Vector3 intersectionPoint = ray.origin + (ray.direction * ray.t);
 
 	for (int i = 0; i < 6; i++)
 	{
 		if (fabs(Math::Dot(Vector3(planes[i]), intersectionPoint) < 0.05f))
-			return &planes[i];
+			return planes[i];
 	}
 
-	return nullptr;
+	return Vector4();
 }

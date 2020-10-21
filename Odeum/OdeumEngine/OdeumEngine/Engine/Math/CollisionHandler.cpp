@@ -37,7 +37,7 @@ void CollisionHandler::AddObject(GameObject* go_)
 
 bool CollisionHandler::MouseCollide()
 {
-	if (Input::Get().isButtonClicked(Button0))
+	if (Input::Get().isButtonClicked(Button1))
 	{
 		float width = OdeumEngine::Get().GetWindow().GetWidth();
 		float height = OdeumEngine::Get().GetWindow().GetHeight();
@@ -55,7 +55,17 @@ bool CollisionHandler::MouseCollide()
 	return false;
 }
 
-void CollisionHandler::RayQueryFirst(Ray& ray, Vector4** IntersectionPlane)
+Ray CollisionHandler::GetMouseRay()
+{
+	float width = OdeumEngine::Get().GetWindow().GetWidth();
+	float height = OdeumEngine::Get().GetWindow().GetHeight();
+
+	return CollisionDetection::ScreenPosToWorldRay(Vector2(Input::Get().GetMouseX(),
+		Input::Get().GetMouseY()), Vector2(width, height),
+		OdeumEngine::Get().GetCamera());
+}
+
+void CollisionHandler::RayQueryFirst(Ray& ray, Vector4* IntersectionPlane)
 {
 	if (m_scenePartition == nullptr) return;
 	
@@ -84,7 +94,7 @@ void CollisionHandler::RayQueryList(Ray& ray, std::vector<GameObject*>& Intersec
 	IntersectedObjects = m_scenePartition->GetCollisions(ray);
 }
 
-GameObject* CollisionHandler::RayGetFirstHit(Ray& ray, Vector4** IntersectionPlane)
+GameObject* CollisionHandler::RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane)
 {
 	RayQueryFirst(ray, IntersectionPlane);
 	

@@ -6,6 +6,7 @@ OctNode::OctNode(Vector3 pos_, float sz_, OctNode* parent_)
 {
 	m_objectList.reserve(10);
 	octBounds = new OrientedBoundingBox(pos_, pos_ + Vector3(sz_, sz_, sz_));
+	octBounds->center = Vector3(0.0f, 0.0f, 0.0f);
 
 	sz = sz_;
 
@@ -157,7 +158,7 @@ void OctSpatialPartition::AddObject(GameObject* go_)
 	AddObjectToCell(root, go_);
 }
 
-GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4** IntersectionPlane)
+GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPlane)
 {
 	if (m_rayIntersectionList.size() > 0)
 	{
@@ -170,7 +171,6 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4** IntersectionP
 
 	GameObject* result = nullptr;
 	OctNode* node = nullptr;
-	if (IntersectionPlane) *IntersectionPlane = nullptr;
 	float shortestDistance = FLT_MAX;
 
 	for (auto cell : m_rayIntersectionList)
@@ -181,11 +181,14 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4** IntersectionP
 			{
 				if (ray_.t < shortestDistance)
 				{
-					if (IntersectionPlane && *IntersectionPlane) delete * IntersectionPlane;
 					node = cell;
 					result = object;
 					shortestDistance = ray_.t;
-					if (IntersectionPlane) *IntersectionPlane = CollisionDetection::RayOBBIntersectionPlane(ray_, object->GetBoundingBox());
+
+					if (IntersectionPlane)
+					{
+						*IntersectionPlane = CollisionDetection::RayOBBIntersectionPlane(ray_, object->GetBoundingBox());
+					}
 				}
 			}	
 		}
