@@ -17,7 +17,7 @@ namespace Utility
 
 	template <typename T> T AlignedDivide(T value, size_t alignment)
 	{
-		return (T)((value_ + alignment_ - 1) / alignment_);
+		return (T)((value + alignment - 1) / alignment);
 	}
 
 	inline std::wstring MakeWStr(std::string String)

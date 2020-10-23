@@ -349,7 +349,7 @@ inline void GraphicsContext::SetRootSignature(const RootSignature& rootSig_)
 
 inline void ComputeContext::SetRootSignature(const RootSignature& rootSig)
 {
-    if (rootSig.GetRootSignature == m_curComputeRootSignature)
+    if (rootSig.GetRootSignature() == m_curComputeRootSignature)
         return;
 
     m_commandList->SetComputeRootSignature(m_curComputeRootSignature = rootSig.GetRootSignature());

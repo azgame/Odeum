@@ -34,7 +34,7 @@ Ray CollisionDetection::ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenS
 	return Ray(Vector3(raystart_World), Vector3(raydir_World));
 }
 
-bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box)
+bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, Vector4* Intersection)
 {
 	float tMin = OdeumEngine::Get().GetCamera().GetNearClipPlane();
 	float tMax = OdeumEngine::Get().GetCamera().GetFarClipPlane();

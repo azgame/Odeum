@@ -20,7 +20,7 @@ public:
 	~CollisionDetection();
 
 	static Ray ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenSize, Camera& camera);
-	static bool RayOBBIntersection(Ray& ray, OrientedBoundingBox& box);
+	static bool RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, Vector4* Intersection);
 	static void RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box, Vector4* Intersection);
 };
 

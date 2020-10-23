@@ -13,8 +13,7 @@ struct OrientedBoundingBox
 
 	OrientedBoundingBox()
 		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) 
-	{
-	}
+	{}
 	
 	OrientedBoundingBox(Vector3 Center, Matrix3 Basis, Vector3 Extents)
 		: center(Center), basis(Basis), halfExtents(Extents) {}
