@@ -103,20 +103,20 @@ void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI
 // Seperate function for threaded portion (because of mutex RAII)
 Texture* TextureManager::FindOrLoad(std::string textureName_)
 {
-	std::lock_guard<std::mutex> lg(sm_mutex);
-
 	auto iter = sm_textureMap.find(textureName_);
 	if (iter != sm_textureMap.end())
 	{
 		return iter->second.get();
 	}
 
-	Texture* newTexture = new Texture(textureName_);
-	sm_textureMap[textureName_].reset(newTexture);
-
 	FormattedRawTexture result = {};
 	UINT8* initialData = stbi_load((sm_rootDirectory + textureName_).c_str(), &result.width, &result.height, &result.stride, STBI_default);
 	
+    std::lock_guard<std::mutex> lg(sm_mutex);
+
+    Texture* newTexture = new Texture(textureName_);
+    sm_textureMap[textureName_].reset(newTexture);
+
     if (initialData)
     {
         FormatTexture(result, initialData, DXGI_FORMAT_R8G8B8A8_UNORM);

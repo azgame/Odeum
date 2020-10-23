@@ -69,8 +69,7 @@ void CollisionHandler::RayQueryFirst(Ray& ray, Vector4* IntersectionPlane)
 {
 	if (m_scenePartition == nullptr) return;
 	
-	GameObject* hitResult = nullptr;
-	hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
+	GameObject* hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
 
 	if (hitResult)
 		hitResult->SetHit(true);

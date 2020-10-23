@@ -59,7 +59,12 @@ public:
 	TextureManager& operator=(const TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&&) = delete;
 
-	void Initialize(std::string textureDirectory_) { sm_rootDirectory = textureDirectory_; }
+	void Initialize(std::string textureDirectory_) 
+	{ 
+		sm_rootDirectory = textureDirectory_; 
+		GetInvalidTexture();
+	}
+
 	void ShutDown() 
 	{
 		sm_textureMap.clear(); 

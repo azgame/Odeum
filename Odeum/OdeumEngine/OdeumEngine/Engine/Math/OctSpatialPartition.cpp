@@ -184,17 +184,13 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPl
 					node = cell;
 					result = object;
 					shortestDistance = ray_.t;
-
-					if (IntersectionPlane)
-					{
-						*IntersectionPlane = CollisionDetection::RayOBBIntersectionPlane(ray_, object->GetBoundingBox());
-					}
 				}
 			}	
 		}
 
 		if (result != nullptr)
 		{
+			CollisionDetection::RayOBBIntersectionPlane(ray_, result->GetBoundingBox(), IntersectionPlane);
 			return result;
 		}
 	}

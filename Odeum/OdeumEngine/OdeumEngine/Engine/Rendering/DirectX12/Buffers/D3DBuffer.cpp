@@ -145,12 +145,12 @@ void StructuredBuffer::CreateDerivedView()
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterSRV(CommandContext& context_)
 {
-	// Transition resource via context
+	context_.TransitionResource(m_counterBuffer, D3D12_RESOURCE_STATE_GENERIC_READ);
 	return m_counterBuffer.GetSRV();
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& StructuredBuffer::GetCounterUAV(CommandContext& context_)
 {
-	// Transition resource via context
+	context_.TransitionResource(m_counterBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	return m_counterBuffer.GetUAV();
 }

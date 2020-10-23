@@ -22,8 +22,6 @@
 
 class CommandContext;
 
-// TODO Aidan: Add compute
-
 class DescriptorHandle
 {
 public:
@@ -90,6 +88,11 @@ public:
 		m_graphicsHandleCache.StageDescriptorHandles(rootIndex_, offset_, numHandles_, handles_);
 	}
 
+	void SetComputeDescriptorHandles(UINT rootIndex_, UINT offset_, UINT numHandles_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
+	{
+		m_computeHandleCache.StageDescriptorHandles(rootIndex_, offset_, numHandles_, handles_);
+	}
+
 	D3D12_GPU_DESCRIPTOR_HANDLE UploadDirect(D3D12_CPU_DESCRIPTOR_HANDLE handle_);
 
 	void CommitGraphicsDescriptorTables(ID3D12GraphicsCommandList* cmdList_)
@@ -98,9 +101,20 @@ public:
 			CopyAndBindStagedTables(m_graphicsHandleCache, cmdList_, &ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable);
 	}
 
+	void CommitComputeDescriptorTables(ID3D12GraphicsCommandList* cmdList_)
+	{
+		if (m_computeHandleCache.m_staleRootParamsBitMap != 0)
+			CopyAndBindStagedTables(m_computeHandleCache, cmdList_, &ID3D12GraphicsCommandList::SetComputeRootDescriptorTable);
+	}
+
 	void ParseGraphicsRootSignature(const RootSignature& rootSig_)
 	{
 		m_graphicsHandleCache.ParseRootSignature(m_descriptorType, rootSig_);
+	}
+
+	void ParseComputeRootSignature(const RootSignature& RootSig)
+	{
+		m_computeHandleCache.ParseRootSignature(m_descriptorType, RootSig);
 	}
 
 private:
@@ -167,6 +181,7 @@ private:
 	};
 
 	DescriptorHandleCache m_graphicsHandleCache;
+	DescriptorHandleCache m_computeHandleCache;
 
 	bool HasSpace(uint32_t count_)
 	{

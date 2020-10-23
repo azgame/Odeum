@@ -48,7 +48,7 @@ bool RobScene::Initialize()
 void RobScene::Update(const float deltaTime_)
 {
 	// Ray test
-	Ray forward = Ray(Vector3(object->GetPosition()), Vector3(object->GetVelocity().Normalize()));
+	Ray forward = Ray(Vector3(object->GetPosition()), Vector3(object->GetVelocity()).Normalize());
 	Vector4 intersectionPlane;
 
 	// Get a list of collided objects
@@ -58,7 +58,7 @@ void RobScene::Update(const float deltaTime_)
 	for (auto obj : colliders)
 	{
 		if (obj->Tag() == "Obstacle")
-			intersectionPlane = CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox());
+			CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox(), &intersectionPlane);
 	}
 
 	// Get the first collided object
@@ -73,7 +73,7 @@ void RobScene::Update(const float deltaTime_)
 	}
 	else
 	{
-	newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
+		newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 		shouldupdate = true;
 	}
 	 teletime -= 1;

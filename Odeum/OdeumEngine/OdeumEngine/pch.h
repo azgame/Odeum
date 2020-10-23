@@ -61,6 +61,10 @@
 #undef min
 #endif
 
+#ifdef max
+#undef max
+#endif
+
 #ifdef RELEASE
 	#define ASSERT(expression,...) (void)(expression)
 	#define LOG(...) (void)()

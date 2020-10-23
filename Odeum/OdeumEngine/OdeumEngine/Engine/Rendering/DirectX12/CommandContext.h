@@ -21,6 +21,7 @@
 #include "BufferAllocator.h"
 #include "D3DCore.h"
 #include "Colour.h"
+#include "CommandSignature.h"
 #include <queue>
 
 class ColourBuffer;
@@ -240,6 +241,39 @@ public:
 
 class ComputeContext : public CommandContext
 {
+public:
+    static ComputeContext& RequestContext(const std::wstring& ID = L"", bool Async = false);
+
+    void ClearUAV(D3DBuffer& Target);
+    void ClearUAV(ColourBuffer& Target);
+
+    void SetRootSignature(const RootSignature& RootSig);
+
+    void SetConstantArray(UINT RootIndex, UINT NumConstants, const void* pConstants);
+    void SetConstant(UINT RootIndex, UINT Val, UINT Offset = 0);
+    void SetConstants(UINT RootIndex, UINT X);
+    void SetConstants(UINT RootIndex, UINT X, UINT Y);
+    void SetConstants(UINT RootIndex, UINT X, UINT Y, UINT Z);
+    void SetConstants(UINT RootIndex, UINT X, UINT Y, UINT Z, UINT W);
+    void SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV);
+    void SetDynamicConstantBufferView(UINT RootIndex, size_t BufferSize, const void* BufferData);
+    void SetDynamicSRV(UINT RootIndex, size_t BufferSize, const void* BufferData);
+    void SetBufferSRV(UINT RootIndex, const D3DBuffer& SRV, UINT64 Offset = 0);
+    void SetBufferUAV(UINT RootIndex, const D3DBuffer& UAV, UINT64 Offset = 0);
+    void SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRIPTOR_HANDLE FirstHandle);
+
+    void SetDynamicDescriptor(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle);
+    void SetDynamicDescriptors(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[]);
+    void SetDynamicSampler(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle);
+    void SetDynamicSamplers(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[]);
+
+    void Dispatch(size_t GroupCountX = 1, size_t GroupCountY = 1, size_t GroupCountZ = 1);
+    void Dispatch1D(size_t ThreadCountX, size_t GroupSizeX = 64);
+    void Dispatch2D(size_t ThreadCountX, size_t ThreadCountY, size_t GroupSizeX = 8, size_t GroupSizeY = 8);
+    void Dispatch3D(size_t ThreadCountX, size_t ThreadCountY, size_t ThreadCountZ, size_t GroupSizeX, size_t GroupSizeY, size_t GroupSizeZ);
+    void DispatchIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset = 0);
+    void ExecuteIndirect(CommandSignature& CommandSig, D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset = 0,
+        uint32_t MaxCommands = 1, D3DBuffer* CommandCounterBuffer = nullptr, uint64_t CounterOffset = 0);
 };
 
 inline void CommandContext::FlushResourceBarriers()
