@@ -29,7 +29,7 @@ struct OctNode
 	OctNode* getParent();
 	OctNode* getChild(OctChildren childPos_);
 	void addCollisionObject(GameObject* go_);
-	int getObjectCount() const;
+	size_t getObjectCount() const;
 	bool isLeaf() const;
 	OrientedBoundingBox& getBoundingBox();
 

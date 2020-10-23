@@ -5,6 +5,7 @@
 
 #include "Buffers/ColourBuffer.h"
 #include "Buffers/DepthBuffer.h"
+#include "CommandSignature.h"
 
 #include "../../Core/OdeumEngine.h"
 
@@ -97,6 +98,9 @@ namespace DXGraphics
 	ColourBuffer m_presentBuffer;
 	ColourBuffer m_overlayBuffer;
 	DepthBuffer m_sceneDepthBuffer;
+
+	CommandSignature DispatchIndirectCommandSignature(1);
+	CommandSignature DrawIndirectCommandSignature(1);
 
 	IDXGISwapChain1* sm_swapChain = nullptr;
 
@@ -247,7 +251,7 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 
 	for (uint32_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
-		m_displayPlane[i].Destroy();
+		m_displayPlane[i].ResetResource();
 	}
 
 	if (FAILED(sm_swapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, width_, height_, swapChainFormat, 0)))
@@ -358,6 +362,12 @@ void DXGraphics::InitializeCommonState()
 
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+
+	DispatchIndirectCommandSignature[0].SetType(D3D12_INDIRECT_ARGUMENT_TYPE_DISPATCH);
+	DispatchIndirectCommandSignature.Finalize();
+
+	DrawIndirectCommandSignature[0].SetType(D3D12_INDIRECT_ARGUMENT_TYPE_DRAW);
+	DrawIndirectCommandSignature.Finalize();
 }
 
 void DXGraphics::Shutdown()
@@ -376,11 +386,11 @@ void DXGraphics::Shutdown()
 	DescriptorAllocator::DestroyHeaps();
 
 	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-		m_displayPlane[i].Destroy();
+		m_displayPlane[i].ResetResource();
 
-	m_preDisplayBuffer.Destroy();
-	m_presentBuffer.Destroy();
-	m_sceneDepthBuffer.Destroy();
+	m_preDisplayBuffer.ResetResource();
+	m_presentBuffer.ResetResource();
+	m_sceneDepthBuffer.ResetResource();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
 }

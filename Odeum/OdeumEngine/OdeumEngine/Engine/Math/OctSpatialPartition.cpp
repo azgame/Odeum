@@ -110,7 +110,7 @@ void OctNode::addCollisionObject(GameObject* go_)
 	m_objectList.push_back(go_);
 }
 
-int OctNode::getObjectCount() const
+size_t OctNode::getObjectCount() const
 {
 	return m_objectList.size();
 }

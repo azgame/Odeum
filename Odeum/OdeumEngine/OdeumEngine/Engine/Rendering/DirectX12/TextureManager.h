@@ -33,9 +33,9 @@ public:
 		Create(width_, width_, height_, format_, initialData_);
 	}
 
-	virtual void Destroy() override
+	virtual void ResetResource() override
 	{
-		D3DResource::Destroy();
+		D3DResource::ResetResource();
 		m_cpuDescHandle.ptr = 0;
 	}
 
@@ -73,7 +73,6 @@ public:
 	Texture* LoadFromFile(std::string textureName_);
 	Texture* CreateAndStore(Colour colour_);
 
-	UINT BytesPerPixel(DXGI_FORMAT format);
 	Texture* GetInvalidTexture();
 
 private:
@@ -94,8 +93,6 @@ private:
 
 	void FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format);
 	Texture* FindOrLoad(std::string textureName_);
-
-	size_t BitsPerPixel(DXGI_FORMAT format);
 	
 	std::map<std::string, std::unique_ptr<Texture>> sm_textureMap;
 	std::mutex sm_mutex;

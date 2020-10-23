@@ -18,10 +18,7 @@ public:
 	}
 
 	void Create(const std::wstring& name_, uint32_t width_, uint32_t height_, DXGI_FORMAT format_,
-		D3D12_GPU_VIRTUAL_ADDRESS gpuAddress_ = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN);
-
-	void Create(const std::wstring& name_, uint32_t width_, uint32_t height_, uint32_t numSamples_, 
-		DXGI_FORMAT format_, D3D12_GPU_VIRTUAL_ADDRESS gpuAddress_ = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN);
+		uint32_t numSamples_ = 1, D3D12_GPU_VIRTUAL_ADDRESS gpuAddress_ = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN);
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV() const { return m_dsvHandle[0]; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV_DepthReadOnly() const { return m_dsvHandle[1]; }

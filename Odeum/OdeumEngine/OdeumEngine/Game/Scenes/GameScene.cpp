@@ -35,7 +35,7 @@ void GameScene::Update(const float deltaTime_)
 
 	angle += direction * (deltaTime_ * 0.1f);
 
-	object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
+	//object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
 	object->Update(deltaTime_);
 
 	Vector4 intersectionPlane;

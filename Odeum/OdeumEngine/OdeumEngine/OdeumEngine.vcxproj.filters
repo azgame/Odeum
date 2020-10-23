@@ -144,6 +144,7 @@
     <ClInclude Include="Engine\Core\AudioHandler.h" />
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Game\Components\KinematicMovement.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

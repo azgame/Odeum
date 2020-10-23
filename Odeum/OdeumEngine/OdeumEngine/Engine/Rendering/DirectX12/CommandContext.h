@@ -347,6 +347,17 @@ inline void GraphicsContext::SetRootSignature(const RootSignature& rootSig_)
     m_dynamicSamplerDescHeap.ParseGraphicsRootSignature(rootSig_);
 }
 
+inline void ComputeContext::SetRootSignature(const RootSignature& rootSig)
+{
+    if (rootSig.GetRootSignature == m_curComputeRootSignature)
+        return;
+
+    m_commandList->SetComputeRootSignature(m_curComputeRootSignature = rootSig.GetRootSignature());
+
+    m_dynamicViewDescHeap.ParseComputeRootSignature(rootSig);
+    m_dynamicSamplerDescHeap.ParseComputeRootSignature(rootSig);
+}
+
 inline void GraphicsContext::SetScissor(UINT left_, UINT top_, UINT right_, UINT bottom_)
 {
     SetScissor(CD3DX12_RECT(left_, top_, right_, bottom_));
@@ -371,6 +382,42 @@ inline void GraphicsContext::SetBlendFactor(Colour blend_)
 inline void GraphicsContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology_)
 {
     m_commandList->IASetPrimitiveTopology(topology_);
+}
+
+inline void ComputeContext::SetConstantArray(UINT RootEntry, UINT NumConstants, const void* pConstants)
+{
+    m_commandList->SetComputeRoot32BitConstants(RootEntry, NumConstants, pConstants, 0);
+}
+
+inline void ComputeContext::SetConstant(UINT RootEntry, UINT Val, UINT Offset)
+{
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Val, Offset);
+}
+
+inline void ComputeContext::SetConstants(UINT RootEntry, UINT X)
+{
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
+}
+
+inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y)
+{
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
+}
+
+inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y, UINT Z)
+{
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z, 2);
+}
+
+inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y, UINT Z, UINT W)
+{
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z, 2);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, W, 3);
 }
 
 inline void GraphicsContext::SetConstantArray(UINT rootIndex_, UINT numConstants_, const void* pConstants_)
@@ -409,6 +456,11 @@ inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_, UIN
     m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, w_, 3);
 }
 
+inline void ComputeContext::SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV)
+{
+    m_commandList->SetComputeRootConstantBufferView(RootIndex, CBV);
+}
+
 inline void GraphicsContext::SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUAL_ADDRESS cbv_)
 {
     m_commandList->SetGraphicsRootConstantBufferView(rootIndex_, cbv_);
@@ -420,6 +472,14 @@ inline void GraphicsContext::SetDynamicConstantBufferView(UINT rootIndex_, size_
     BufferEntry constantBuffer = m_CpuBufferAllocator.Allocate(bufferSize_);
     memcpy(constantBuffer.CpuAddress, cBufferData_, bufferSize_);
     m_commandList->SetGraphicsRootConstantBufferView(rootIndex_, constantBuffer.GpuAddress);
+}
+
+inline void ComputeContext::SetDynamicConstantBufferView(UINT RootIndex, size_t BufferSize, const void* BufferData)
+{
+    ASSERT(BufferData != nullptr && Utility::isAligned(BufferData, 16));
+    BufferEntry constantBuffer = m_CpuBufferAllocator.Allocate(BufferSize);
+    memcpy(constantBuffer.CpuAddress, BufferData, BufferSize);
+    m_commandList->SetGraphicsRootConstantBufferView(RootIndex, constantBuffer.GpuAddress);
 }
 
 inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_)
@@ -467,16 +527,64 @@ inline void GraphicsContext::SetDynamicSRV(UINT rootIndex_, size_t bufferSize_, 
     m_commandList->SetGraphicsRootShaderResourceView(rootIndex_, buffer.GpuAddress);
 }
 
+inline void ComputeContext::SetDynamicSRV(UINT RootIndex, size_t BufferSize, const void* BufferData)
+{
+    ASSERT(BufferData != nullptr && Utility::isAligned(BufferData, 16));
+    BufferEntry srvBuffer = m_CpuBufferAllocator.Allocate(BufferSize);
+    memcpy(srvBuffer.CpuAddress, BufferData, BufferSize);
+    m_commandList->SetComputeRootShaderResourceView(RootIndex, srvBuffer.GpuAddress);
+}
+
 inline void GraphicsContext::SetBufferSRV(UINT rootIndex_, const D3DBuffer& srv_, UINT64 offset_)
 {
-    ASSERT((srv_.m_usageState & D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE) != 0);
+    ASSERT((srv_.currentState & D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE) != 0);
     m_commandList->SetGraphicsRootShaderResourceView(rootIndex_, srv_.GetGpuVirtualAddress() + offset_);
+}
+
+inline void ComputeContext::SetBufferSRV(UINT RootIndex, const D3DBuffer& SRV, UINT64 Offset)
+{
+    ASSERT((SRV.currentState & D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE) != 0);
+    m_commandList->SetComputeRootShaderResourceView(RootIndex, SRV.GetGpuVirtualAddress() + Offset);
 }
 
 inline void GraphicsContext::SetBufferUAV(UINT rootIndex_, const D3DBuffer& uav_, UINT64 offset_)
 {
-    ASSERT((uav_.m_usageState & D3D12_RESOURCE_STATE_UNORDERED_ACCESS) != 0);
+    ASSERT((uav_.currentState & D3D12_RESOURCE_STATE_UNORDERED_ACCESS) != 0);
     m_commandList->SetGraphicsRootUnorderedAccessView(rootIndex_, uav_.GetGpuVirtualAddress() + offset_);
+}
+
+inline void ComputeContext::SetBufferUAV(UINT RootIndex, const D3DBuffer& UAV, UINT64 Offset)
+{
+    ASSERT((UAV.currentState & D3D12_RESOURCE_STATE_UNORDERED_ACCESS) != 0);
+    m_commandList->SetComputeRootUnorderedAccessView(RootIndex, UAV.GetGpuVirtualAddress() + Offset);
+}
+
+inline void ComputeContext::Dispatch(size_t GroupCountX, size_t GroupCountY, size_t GroupCountZ)
+{
+    FlushResourceBarriers();
+    m_dynamicViewDescHeap.CommitComputeDescriptorTables(m_commandList);
+    m_dynamicSamplerDescHeap.CommitComputeDescriptorTables(m_commandList);
+    m_commandList->Dispatch((UINT)GroupCountX, (UINT)GroupCountY, (UINT)GroupCountZ);
+}
+
+inline void ComputeContext::Dispatch1D(size_t ThreadCountX, size_t GroupSizeX)
+{
+    Dispatch(Utility::AlignedDivide(ThreadCountX, GroupSizeX), 1, 1);
+}
+
+inline void ComputeContext::Dispatch2D(size_t ThreadCountX, size_t ThreadCountY, size_t GroupSizeX, size_t GroupSizeY)
+{
+    Dispatch(
+        Utility::AlignedDivide(ThreadCountX, GroupSizeX),
+        Utility::AlignedDivide(ThreadCountY, GroupSizeY), 1);
+}
+
+inline void ComputeContext::Dispatch3D(size_t ThreadCountX, size_t ThreadCountY, size_t ThreadCountZ, size_t GroupSizeX, size_t GroupSizeY, size_t GroupSizeZ)
+{
+    Dispatch(
+        Utility::AlignedDivide(ThreadCountX, GroupSizeX),
+        Utility::AlignedDivide(ThreadCountY, GroupSizeY),
+        Utility::AlignedDivide(ThreadCountZ, GroupSizeZ));
 }
 
 inline void GraphicsContext::SetDescriptorTable(UINT rootIndex_, D3D12_GPU_DESCRIPTOR_HANDLE handle_)
@@ -484,9 +592,19 @@ inline void GraphicsContext::SetDescriptorTable(UINT rootIndex_, D3D12_GPU_DESCR
     m_commandList->SetGraphicsRootDescriptorTable(rootIndex_, handle_);
 }
 
+inline void ComputeContext::SetDescriptorTable(UINT RootIndex, D3D12_GPU_DESCRIPTOR_HANDLE FirstHandle)
+{
+    m_commandList->SetComputeRootDescriptorTable(RootIndex, FirstHandle);
+}
+
 inline void GraphicsContext::SetDynamicDescriptor(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_)
 {
     SetDynamicDescriptors(rootIndex_, offset_, 1, &handle_);
+}
+
+inline void ComputeContext::SetDynamicDescriptor(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle)
+{
+    SetDynamicDescriptors(RootIndex, Offset, 1, &Handle);
 }
 
 inline void GraphicsContext::SetDynamicDescriptors(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
@@ -494,9 +612,24 @@ inline void GraphicsContext::SetDynamicDescriptors(UINT rootIndex_, UINT offset_
     m_dynamicViewDescHeap.SetGraphicsDescriptorHandle(rootIndex_, offset_, count_, handles_);
 }
 
+inline void ComputeContext::SetDynamicDescriptors(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[])
+{
+    m_dynamicViewDescHeap.SetComputeDescriptorHandles(RootIndex, Offset, Count, Handles);
+}
+
 inline void GraphicsContext::SetDynamicSampler(UINT rootIndex_, UINT offset_, D3D12_CPU_DESCRIPTOR_HANDLE handle_)
 {
     SetDynamicSamplers(rootIndex_, offset_, 1, &handle_);
+}
+
+inline void ComputeContext::SetDynamicSampler(UINT RootIndex, UINT Offset, D3D12_CPU_DESCRIPTOR_HANDLE Handle)
+{
+    SetDynamicSamplers(RootIndex, Offset, 1, &Handle);
+}
+
+inline void ComputeContext::SetDynamicSamplers(UINT RootIndex, UINT Offset, UINT Count, const D3D12_CPU_DESCRIPTOR_HANDLE Handles[])
+{
+    m_dynamicSamplerDescHeap.SetComputeDescriptorHandles(RootIndex, Offset, Count, Handles);
 }
 
 inline void GraphicsContext::SetDynamicSamplers(UINT rootIndex_, UINT offset_, UINT count_, const D3D12_CPU_DESCRIPTOR_HANDLE handles_[])
@@ -543,6 +676,23 @@ inline void GraphicsContext::DrawIndexedInstanced(UINT indexCountPerInstance_, U
     m_dynamicViewDescHeap.CommitGraphicsDescriptorTables(m_commandList);
     m_dynamicSamplerDescHeap.CommitGraphicsDescriptorTables(m_commandList);
     m_commandList->DrawIndexedInstanced(indexCountPerInstance_, instanceCount_, startIndexLocation_, baseVertexLocation_, startInstanceLocation_);
+}
+
+inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
+    D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset,
+    uint32_t MaxCommands, D3DBuffer* CommandCounterBuffer, uint64_t CounterOffset)
+{
+    FlushResourceBarriers();
+    m_dynamicViewDescHeap.CommitGraphicsDescriptorTables(m_commandList);
+    m_dynamicSamplerDescHeap.CommitGraphicsDescriptorTables(m_commandList);
+    m_commandList->ExecuteIndirect(CommandSig.GetSignature(), MaxCommands,
+        ArgumentBuffer.GetResource(), ArgumentStartOffset,
+        CommandCounterBuffer == nullptr ? nullptr : CommandCounterBuffer->GetResource(), CounterOffset);
+}
+
+inline void ComputeContext::DispatchIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset)
+{
+    ExecuteIndirect(DXGraphics::DispatchIndirectCommandSignature, ArgumentBuffer, ArgumentBufferOffset);
 }
 
 #endif

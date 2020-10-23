@@ -209,6 +209,7 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Engine\Core\AudioHandler.h" />
     <ClInclude Include="Engine\Math\BoundingBox.h" />

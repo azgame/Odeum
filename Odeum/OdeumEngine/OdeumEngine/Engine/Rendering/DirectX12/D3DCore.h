@@ -10,6 +10,7 @@ class CommandListManager;
 class ContextManager;
 class ColourBuffer;
 class DepthBuffer;
+class CommandSignature;
 
 #define SWAP_CHAIN_BUFFER_COUNT 3
 
@@ -37,6 +38,9 @@ namespace DXGraphics
 	extern ColourBuffer m_presentBuffer;
 	extern ColourBuffer m_overlayBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
+
+	extern CommandSignature DispatchIndirectCommandSignature;
+	extern CommandSignature DrawIndirectCommandSignature;
 
 	extern D3D12_BLEND_DESC alphaBlend;
 	extern D3D12_RASTERIZER_DESC rasterDesc;

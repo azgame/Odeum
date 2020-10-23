@@ -1,8 +1,7 @@
 #include "ColourBuffer.h"
 
 #include "../D3DCore.h"
-
-// TODO Aidan: Make comments
+#include "../RadiometryUtility.h"
 
 void ColourBuffer::CreateFromSwapChain(const std::wstring& name_, ID3D12Resource* pResource_)
 {
@@ -18,7 +17,7 @@ void ColourBuffer::CreateFromSwapChain(const std::wstring& name_, ID3D12Resource
 void ColourBuffer::Create(const std::wstring& name_, uint32_t width_, uint32_t height_, uint32_t numMips_, DXGI_FORMAT format_, D3D12_GPU_VIRTUAL_ADDRESS vmPtr)
 {
 	numMips_ = (numMips_ == 0 ? CalculateNumMips(width_, height_) : numMips_);
-	D3D12_RESOURCE_FLAGS flags = CombineResourceFlags();
+	D3D12_RESOURCE_FLAGS flags = CombineResourceFlags(); 
 	D3D12_RESOURCE_DESC desc = CreateTextureDesc(width_, height_, 1, numMips_, format_, flags);
 
 	desc.SampleDesc.Count = m_fragmentCount;
@@ -55,11 +54,6 @@ void ColourBuffer::CreateArray(const std::wstring& name_, uint32_t width_, uint3
 	CreateDerivedViews(DXGraphics::m_device, format_, arrayCount_, 1);
 }
 
-void ColourBuffer::GenerateMipMaps(GraphicsContext& context_)
-{
-	// not yet
-}
-
 void ColourBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_, uint32_t arraySize_, uint32_t numMips_)
 {
 	ASSERT(arraySize_ == 1 || numMips_ == 1, "Only one of array size or num mips must equal 0!");
@@ -71,7 +65,7 @@ void ColourBuffer::CreateDerivedViews(ID3D12Device* device_, DXGI_FORMAT format_
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
 	rtvDesc.Format = format_;
-	uavDesc.Format = GetUAVFormat(format_);
+	uavDesc.Format = DXUtility::GetUAVFormat(format_);
 	srvDesc.Format = format_;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
