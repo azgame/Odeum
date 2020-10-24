@@ -194,6 +194,8 @@
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -280,6 +282,8 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
     <ClInclude Include="Game\Components\KinematicMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />

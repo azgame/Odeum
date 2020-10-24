@@ -60,6 +60,8 @@
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -145,6 +147,8 @@
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Game\Components\KinematicMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

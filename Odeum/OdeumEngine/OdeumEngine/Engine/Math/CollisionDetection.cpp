@@ -34,7 +34,7 @@ Ray CollisionDetection::ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenS
 	return Ray(Vector3(raystart_World), Vector3(raydir_World));
 }
 
-bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, Vector4* Intersection)
+bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, Vector4* IntersectionPlane)
 {
 	float tMin = OdeumEngine::Get().GetCamera().GetNearClipPlane();
 	float tMax = OdeumEngine::Get().GetCamera().GetFarClipPlane();
@@ -138,7 +138,7 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, 
 }
 
 // Assuming intersection with ray and box, ray with house intersection point
-void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box, Vector4* Intersection)
+void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box, Vector4* IntersectionPlane)
 {
 	std::vector<Vector4> planes = box.GetPlanes();
 
@@ -151,7 +151,7 @@ void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& 
 		
 		if (dot < 0.05 && dot >= 0.0)
 		{
-			*Intersection = planes[i];
+			*IntersectionPlane = planes[i];
 		}
 	}
 }

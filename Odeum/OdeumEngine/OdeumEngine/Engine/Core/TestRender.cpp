@@ -92,16 +92,6 @@ void TestRender::Update(float deltaTime_)
 	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
 
-	/*m_mainViewport.Width = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainViewport.Height = (float)OdeumEngine::Get().GetWindow().GetHeight();
-	m_mainViewport.MinDepth = -1.0f;
-	m_mainViewport.MaxDepth = 0.0f;
-
-	m_mainScissor.left = 0;
-	m_mainScissor.top = 0;
-	m_mainScissor.right = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainScissor.bottom = (float)OdeumEngine::Get().GetWindow().GetHeight();*/
-
 	struct VSConstants
 	{
 		DirectX::XMMATRIX viewProj;
