@@ -19,7 +19,7 @@ using namespace Graphics;
 
 // replace with getting refresh rate from monitor in initialization
 #define REFRESH_RATE 100.0f
-#define NUM_FRAMES_FOR_AVERAGES 120
+#define NUM_FRAMES_FOR_AVERAGES 60
 
 namespace DXGraphics
 {

@@ -149,6 +149,8 @@
     <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
+    <ClInclude Include="Engine\Core\EngineProfiling.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffectData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

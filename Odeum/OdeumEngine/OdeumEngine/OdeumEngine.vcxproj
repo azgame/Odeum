@@ -211,6 +211,8 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\EngineProfiling.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffectData.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Engine\Core\AudioHandler.h" />

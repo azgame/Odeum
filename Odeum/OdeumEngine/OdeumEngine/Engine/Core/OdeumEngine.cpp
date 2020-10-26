@@ -82,7 +82,10 @@ bool OdeumEngine::Initialize()
 	DXGraphics::Initialize();
 
 	if (!m_gameInterface->Initialize())
+	{
 		Debug::Error("Could not initialize game scene", __FILENAME__, __LINE__);
+		return false;
+	}
 
 	m_currentScene = GetSceneIndex("SceneLoad.txt");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
