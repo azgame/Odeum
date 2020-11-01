@@ -3,9 +3,9 @@
 
 #include "D3DIncludes.h"
 
+
 struct ParticleEffectData
 {
-
 };
 
 #endif

@@ -48,6 +48,8 @@ namespace DXGraphics
 
 	float GetFrameRate();
 	float GetFrameTime();
+
+
 }
 
 #endif

@@ -56,9 +56,9 @@ void OdeumEngine::Run()
 
 		m_window->Update(); // Process windows events
 
-		m_camera.UpdateCamera();
-
 		m_gameInterface->Update(timeStep); // update game scene
+
+		m_camera.UpdateCamera();
 
 		for (auto system : m_systemStack)
 			system->Update(timeStep);

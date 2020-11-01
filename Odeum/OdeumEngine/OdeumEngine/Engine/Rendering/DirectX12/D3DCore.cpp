@@ -316,7 +316,7 @@ void DXGraphics::Present()
 
 	if (frameCounter == 0)
 	{
-		frameTimeAverage = frameTimeTotal / NUM_FRAMES_FOR_AVERAGES;
+		frameTimeAverage = frameTimeTotal / (float)NUM_FRAMES_FOR_AVERAGES;
 		frameTimeTotal = 0.0f;
 	}
 

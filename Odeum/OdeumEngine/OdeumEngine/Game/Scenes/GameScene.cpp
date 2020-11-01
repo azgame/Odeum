@@ -6,8 +6,6 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	SCOPEDTIMER(scopedTimer);
-
 	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
 	object->AddComponent<Rigidbody>();
 

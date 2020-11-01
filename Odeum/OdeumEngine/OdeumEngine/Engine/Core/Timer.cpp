@@ -16,6 +16,7 @@ void Timer::UpdateFrameTicks()
 	m_currentTicks = GetTickCount();
 }
 
+// In seconds
 float Timer::GetDeltaTime() const
 {
 	return static_cast<float>((m_currentTicks - m_prevTicks) / 1000.0f);

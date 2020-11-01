@@ -72,6 +72,8 @@ void TestRender::Detach()
 
 void TestRender::Update(float deltaTime_)
 {
+	SCOPEDTIMER(timer);
+
 	while (m_bufferHead != m_bufferTail)
 	{
 		// Handle events here
@@ -145,24 +147,26 @@ void TestRender::Update(float deltaTime_)
 	}
 
 	graphics.Finish();
+
+	if (frameCounter == 0)
+	{
+		averageFrameTime = frameTimeTotal / 120.0f;
+		frameTimeTotal = 0.0f;
+	}
+
+	frameTimeTotal += timer.GetTime();
+	frameCounter = (frameCounter + 1) % 120;	
 }
 
 void TestRender::UIRender()
 {
-	if (frameCounter == 5)
-	{
-		frameTime = DXGraphics::GetFrameTime();
-		frameRate = DXGraphics::GetFrameRate();
-	}
-
 	ImGui::Begin("Frame Profiling");
 
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
+	ImGui::Text("Test Render frame time: %.2f ms/frame", averageFrameTime);
 
 	ImGui::End();
-
-	frameCounter = (frameCounter + 1) % 6;
 
 	UIRenderD3DResources();
 }

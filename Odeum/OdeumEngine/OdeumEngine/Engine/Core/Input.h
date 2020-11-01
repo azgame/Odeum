@@ -55,6 +55,7 @@ private:
 	static InputState<MouseCode> sm_mousePressed;
 
 	static Vector2 mousePos;
+	static Vector2 lastMousePos;
 
 	static std::unique_ptr<Input> sm_input;
 };
