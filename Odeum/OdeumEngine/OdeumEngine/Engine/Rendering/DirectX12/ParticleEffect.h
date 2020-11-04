@@ -8,6 +8,9 @@
 
 #include "Buffers/D3DBuffer.h"
 
+class ComputeContext;
+
+
 class ParticleEffect
 {
 public:
@@ -28,15 +31,20 @@ public:
 		velocity = Vector3(0.0f, 0.0f, 0.0f);
 	}
 
+	void Initialize();
+	void Update(ComputeContext& Compute, float deltaTime);
+	void Destroy();
+
+	// Particle props
 	float emission;
 	Colour colour;
 	float lifeTime;
 
-	uint32_t kMaxParticles = 1000;
+	// Texture
 	std::string textureName;
 
+	// Physical props
 	float mass;
-
 	Vector2 scale;
 	float rotation;
 	Vector3 size;
@@ -46,7 +54,11 @@ public:
 
 private:
 	
+	uint32_t kMaxParticles = 1000;
+	float elapsedTime;
+
 	StructuredBuffer m_particleBuffer;
+	StructuredBuffer m_spawnStateBuffer;
 	ByteAddressedBuffer m_aliveList[2];
 	ByteAddressedBuffer m_deadList;
 
