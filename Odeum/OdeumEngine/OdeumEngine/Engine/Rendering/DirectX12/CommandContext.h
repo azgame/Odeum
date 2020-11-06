@@ -26,6 +26,7 @@
 
 class ColourBuffer;
 class DepthBuffer;
+class PixelBuffer;
 class CommandContext;
 class GraphicsContext;
 class ComputeContext;
@@ -116,16 +117,16 @@ public:
     void CopyBuffer(D3DResource& dest_, D3DResource& src_);
     void CopyBufferRegion(D3DResource& dest_, size_t destOffset_, D3DResource& src_, size_t srcOffset_, size_t numBytes_);
     void CopySubresource(D3DResource& dest_, UINT destSubIndex_, D3DResource& src_, UINT srcSubIndex);
-    // void CopyCounter(D3DResource& dest_, size_t destOffset_, StructuredBuffer& src_);
-    // void ResetCount(StructuredBbuffer& buffer_, uint32_t value_ = 0);
+    void CopyCounter(D3DResource& dest_, size_t destOffset_, StructuredBuffer& src_);
+    void ResetCounter(StructuredBuffer& buffer_, uint32_t value_ = 0);
 
     static void InitializeTexture(D3DResource& dest_, UINT numSubresources_, D3D12_SUBRESOURCE_DATA subResource_[]);
     static void InitializeBuffer(D3DResource& dest_, const void* pData_, size_t numBytes_, size_t offset_ = 0);
     static void InitializeTextureArraySlice(D3DResource& dest_, UINT sliceIndex_, D3DResource& src_);
-    // static void ReadbackTexture2D(D3DResource& readBackBuffer_, PixelBuffer& srcBuffer_);
+    static void ReadbackTexture2D(D3DResource& readBackBuffer_, PixelBuffer& srcBuffer_);
 
     void WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_);
-    // void FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_);
+    void FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_);
 
     void TransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow = false);
     void BeginTransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow = false);
@@ -693,6 +694,20 @@ inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
 inline void ComputeContext::DispatchIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset)
 {
     ExecuteIndirect(DXGraphics::DispatchIndirectCommandSignature, ArgumentBuffer, ArgumentBufferOffset);
+}
+
+inline void CommandContext::CopyCounter(D3DResource& Dest, size_t DestOffset, StructuredBuffer& Src)
+{
+    TransitionResource(Dest, D3D12_RESOURCE_STATE_COPY_DEST);
+    TransitionResource(Src.GetCounterBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE);
+    FlushResourceBarriers();
+    m_commandList->CopyBufferRegion(Dest.GetResource(), DestOffset, Src.GetCounterBuffer().GetResource(), 0, 4);
+}
+
+inline void CommandContext::ResetCounter(StructuredBuffer& Buf, uint32_t Value)
+{
+    FillBuffer(Buf.GetCounterBuffer(), 0, Value, sizeof(uint32_t));
+    TransitionResource(Buf.GetCounterBuffer(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 }
 
 #endif

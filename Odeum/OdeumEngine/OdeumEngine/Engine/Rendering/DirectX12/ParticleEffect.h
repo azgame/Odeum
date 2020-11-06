@@ -3,67 +3,76 @@
 
 #include "D3DIncludes.h"
 
-#include "Colour.h"
-#include "../../Math/D3DMath.h"
-
 #include "Buffers/D3DBuffer.h"
+#include "ParticleStructs.h"
 
 class ComputeContext;
 
+struct ParticleInitProperties
+{
+	ParticleInitProperties() : colour(1.0f, 1.0f, 1.0f, 1.0f)
+	{
+		ZeroMemory(this, sizeof(*this));
+
+		minLife = 1.0f;
+		maxLife = 2.0f;
+		lifeTIme = 20.0f;
+		minMass = 0.1f;
+		maxMass = 1.0f;
+		spread = Vector3(1.0f, 1.0f, 1.0f);
+		minVelocity = Vector2(0.25f, 2.0f);
+		maxVelocity = Vector2(-0.25f, 2.0f);
+	}
+
+	// Particle props
+	Colour colour;
+	float minLife;
+	float maxLife;
+	float lifeTIme;
+
+	// Physical props
+	float minMass;
+	float maxMass;
+	float rotationMax;
+	Vector3 spread;
+	Vector2 minVelocity;
+	Vector2 maxVelocity;
+	ParticleLaunchingData lauchingData;
+};
 
 class ParticleEffect
 {
 public:
 
-	ParticleEffect() : colour(1.0f, 1.0f, 1.0f)
+	ParticleEffect(ParticleInitProperties Properties)
 	{
-		ZeroMemory(this, sizeof(*this));
-
-		colour = Colour(1.0f, 1.0f, 1.0f, 1.0f);
-		lifeTime = 1.0f;
-		emission = 0.0f;
-
-		scale = Vector2(1.0f, 1.0f);
-		rotation = 0.0f;
-		size = Vector3(1.0f, 1.0f, 1.0f);
-		spread = Vector3(1.0f, 1.0f, 1.0f);
-		position = Vector3(0.0f, 0.0f, 0.0f);
-		velocity = Vector3(0.0f, 0.0f, 0.0f);
+		m_currentParticleBuffer = 0;
+		elapsedTime = 0.0f;
+		m_properties = Properties;
+		kMaxParticles = Properties.lauchingData.maxParticles;
 	}
 
 	void Initialize();
 	void Update(ComputeContext& Compute, float deltaTime);
-	void Destroy();
 
-	// Particle props
-	float emission;
-	Colour colour;
-	float lifeTime;
+	float GetElapsedTime() { return elapsedTime; }
+	float GetLifeTime() { return m_properties.lifeTIme; }
 
 	// Texture
-	std::string textureName;
-
-	// Physical props
-	float mass;
-	Vector2 scale;
-	float rotation;
-	Vector3 size;
-	Vector3 spread;
-	Vector3 position;
-	Vector3 velocity;
+	// std::string textureName;
 
 private:
 	
 	uint32_t kMaxParticles = 1000;
 	float elapsedTime;
 
-	StructuredBuffer m_particleBuffer;
-	StructuredBuffer m_spawnStateBuffer;
-	ByteAddressedBuffer m_aliveList[2];
-	ByteAddressedBuffer m_deadList;
+	ParticleInitProperties m_properties;
 
-	ByteAddressedBuffer m_dispatchBuffer; 
-	D3D12_CPU_DESCRIPTOR_HANDLE m_randNoiseTex; // texture for generating random noise to find random values
+	uint8_t m_currentParticleBuffer;
+	StructuredBuffer m_particleBuffer[2];
+	StructuredBuffer m_spawnStateBuffer;
+	ByteAddressedBuffer m_dispatchArgsBuffer; 
+	// D3D12_CPU_DESCRIPTOR_HANDLE m_particleTexture;
 };
 
 #endif

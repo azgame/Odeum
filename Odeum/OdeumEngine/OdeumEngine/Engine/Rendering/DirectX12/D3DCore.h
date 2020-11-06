@@ -39,12 +39,15 @@ namespace DXGraphics
 	extern ColourBuffer m_overlayBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
 
-	extern CommandSignature DispatchIndirectCommandSignature;
+	extern CommandSignature DispatchIndirectCommandSignature(1);
 	extern CommandSignature DrawIndirectCommandSignature;
 
 	extern D3D12_BLEND_DESC alphaBlend;
+	extern D3D12_BLEND_DESC blendPreMultiplied;
 	extern D3D12_RASTERIZER_DESC rasterDesc;
+	extern D3D12_RASTERIZER_DESC rasterTwoSided;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+	extern D3D12_DEPTH_STENCIL_DESC depthReadOnly;
 
 	float GetFrameRate();
 	float GetFrameTime();

@@ -108,8 +108,11 @@ namespace DXGraphics
 	GraphicsPSO m_presentPSO;
 
 	D3D12_BLEND_DESC alphaBlend;
+	D3D12_BLEND_DESC blendPreMultiplied;
 	D3D12_RASTERIZER_DESC rasterDesc;
+	D3D12_RASTERIZER_DESC rasterTwoSided;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+	D3D12_DEPTH_STENCIL_DESC depthReadOnly;
 
 	float frameTimeAverage = 0.0f;
 	float frameTimeTotal = 0.0f;
@@ -348,6 +351,8 @@ void DXGraphics::InitializeCommonState()
 	alphaBlend.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
+	blendPreMultiplied = alphaBlend;
+
 	depthReadWrite.DepthEnable = FALSE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
@@ -360,8 +365,14 @@ void DXGraphics::InitializeCommonState()
 	depthReadWrite.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 	depthReadWrite.BackFace = depthReadWrite.FrontFace;
 
+	depthReadOnly = depthReadWrite;
+	depthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+
+	rasterTwoSided = rasterDesc;
+	rasterTwoSided.CullMode = D3D12_CULL_MODE_NONE;
 
 	DispatchIndirectCommandSignature[0].SetType(D3D12_INDIRECT_ARGUMENT_TYPE_DISPATCH);
 	DispatchIndirectCommandSignature.Finalize();
