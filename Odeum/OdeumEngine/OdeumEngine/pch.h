@@ -26,6 +26,7 @@
 
 // Engine
 #include "Engine/Core/Debug.h"
+#include "Engine/Core/EngineProfiling.h"
 #include "Engine/Core/Utility.h"
 #include "Engine/Math/MathUtility.h"
 
@@ -61,11 +62,16 @@
 #undef min
 #endif
 
+#ifdef max
+#undef max
+#endif
+
 #ifdef RELEASE
 	#define ASSERT(expression,...) (void)(expression)
 	#define LOG(...) (void)()
 	#define ERROR(...) (void)()
-	#define BREAKPOINT() (void)()	
+	#define BREAKPOINT() (void)()
+	#define SCOPEDTIMER(name) (void)(name)
 #else //--Debug
 
 	#define ASSERT(expression,...) \
@@ -81,6 +87,8 @@
 		Debug::Error(__VA_ARGS__, __FILENAME__, __LINE__);
 
 	#define BREAKPOINT() __debugbreak();
+
+	#define SCOPEDTIMER(name) ScopedTimer name(__FUNCTION__, __FILENAME__, __LINE__);
 
 #endif
 

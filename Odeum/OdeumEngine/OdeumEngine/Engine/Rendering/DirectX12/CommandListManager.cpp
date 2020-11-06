@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "CommandListManager.h"
 
 #include <algorithm>
@@ -148,7 +159,7 @@ uint64_t CommandQueue::IncrementFence()
 bool CommandQueue::IsFenceComplete(uint64_t fenceValue_)
 {
 	if (fenceValue_ > m_lastCompletedFenceValue)
-		m_lastCompletedFenceValue = max(m_lastCompletedFenceValue, m_fence->GetCompletedValue());
+		m_lastCompletedFenceValue = std::max(m_lastCompletedFenceValue, m_fence->GetCompletedValue());
 
 	return fenceValue_ <= m_lastCompletedFenceValue;
 }

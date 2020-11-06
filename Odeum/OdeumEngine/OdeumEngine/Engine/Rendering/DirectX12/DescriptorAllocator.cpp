@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "DescriptorAllocator.h"
 
 #include "Buffers/D3DResource.h"
@@ -7,7 +18,7 @@
 using namespace DXGraphics;
 
 std::mutex DescriptorAllocator::m_allocatorMutex; // thread lock
-std::vector<ID3D12DescriptorHeap*> DescriptorAllocator::m_descriptorHeapPool;
+std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> DescriptorAllocator::m_descriptorHeapPool;
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(UINT count_)
 {
@@ -30,9 +41,6 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(UINT count_)
 
 void DescriptorAllocator::DestroyHeaps()
 {
-	for (auto heap : m_descriptorHeapPool)
-		heap->Release();
-
 	m_descriptorHeapPool.clear();
 }
 
@@ -46,12 +54,12 @@ ID3D12DescriptorHeap* DescriptorAllocator::GetNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE
 	desc.NodeMask = 1;
 	desc.NumDescriptors = kDescriptorsPerHeap;
 
-	ID3D12DescriptorHeap* heap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap;
 
 	if (FAILED(m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap))))
 		Debug::Error("Could not create descriptor heap!", __FILENAME__, __LINE__);
 
 	m_descriptorHeapPool.emplace_back(heap); // Create new heap and add it to the pool
 	
-	return heap;
+	return heap.Get();
 }

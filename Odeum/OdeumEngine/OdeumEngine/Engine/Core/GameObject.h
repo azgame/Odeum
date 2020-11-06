@@ -3,15 +3,19 @@
 
 #include "../../pch.h"
 #include "../Rendering/DirectX12/Model.h"
+#include "../Math/BoundingBox.h"
+#include "../Math/Transform.h"
 #include "../Rendering/DirectX12/Colour.h"
 
 class Component;
 
 class GameObject
 {
+	friend class Rigidbody;
+
 public:
-	GameObject(std::string fileName);
-	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
+	GameObject(std::string fileName, std::string tag = "Default");
+	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f), std::string tag = "Default");
 	~GameObject();
 
 	void Initialize(std::string modelTextureLoadFile);
@@ -34,6 +38,16 @@ public:
 
 	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
+	OrientedBoundingBox& GetBoundingBox() { return bbox; }
+	void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
+
+	void SetHit(bool hit) 
+	{ 
+		isHit = hit;
+	}
+
+	void SetTag(std::string Tag) { tag = Tag; }
+	std::string Tag() { return tag; }
 
 	Vector4 GetPosition() { return m_position; }
 	Vector4 GetVelocity() { return m_velocity; }
@@ -50,8 +64,11 @@ protected:
 
 	Model m_model;
 	Matrix4 m_modelMatrix;
+	OrientedBoundingBox bbox;
+	bool isHit;
 
 	std::string fileName;
+	std::string tag;
 
 	std::vector<Component*> m_components;
 
@@ -63,7 +80,12 @@ protected:
 	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
+	
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
+	void UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale);
+	
+	// Matrix math -- THIS WILL BE MOVED
+	Matrix4 GetRotationMatrix(Quaternion quat);
 };
 
 template<typename T>

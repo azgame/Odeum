@@ -1,7 +1,19 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "CommandContext.h"
 
 #include "Buffers/ColourBuffer.h"
 #include "Buffers/DepthBuffer.h"
+#include "Buffers/ReadbackBuffer.h"
 
 // TODO Aidan: Make comments
 
@@ -68,7 +80,7 @@ CommandContext::~CommandContext()
 
 void CommandContext::DestroyAllContexts()
 {
-    BufferAllocator::DestroyAllPages();
+    BufferAllocator::Destroy();
     DynamicDescriptorHeap::Destroy();
     DXGraphics::m_contextManager.DestroyAllContexts();
 }
@@ -79,6 +91,14 @@ CommandContext& CommandContext::RequestContext(std::wstring name_)
     CommandContext* context = DXGraphics::m_contextManager.AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
     context->m_id = name_;
     return *context;
+}
+
+ComputeContext& ComputeContext::RequestContext(const std::wstring& name_, bool Async)
+{
+    ComputeContext& NewContext = DXGraphics::m_contextManager.AllocateContext(
+        Async ? D3D12_COMMAND_LIST_TYPE_COMPUTE : D3D12_COMMAND_LIST_TYPE_DIRECT)->GetComputeContext();
+    NewContext.m_id = name_;
+    return NewContext;
 }
 
 uint64_t CommandContext::Flush(bool waitForCompletion_)
@@ -122,8 +142,8 @@ uint64_t CommandContext::Finish(bool waitForCompletion_)
     queue.DiscardAllocator(fenceValue, m_currentAllocator);
     m_currentAllocator = nullptr;
 
-    m_CpuBufferAllocator.CleanupUsedPages(fenceValue);
-    m_GpuBufferAllocator.CleanupUsedPages(fenceValue);
+    m_CpuBufferAllocator.RecyclePages(fenceValue);
+    m_GpuBufferAllocator.RecyclePages(fenceValue);
     m_dynamicViewDescHeap.CleanupUsedHeaps(fenceValue);
     m_dynamicSamplerDescHeap.CleanupUsedHeaps(fenceValue);
 
@@ -228,6 +248,25 @@ void CommandContext::InitializeTextureArraySlice(D3DResource& dest_, UINT sliceI
     Context.Finish(true);
 }
 
+void CommandContext::ReadbackTexture2D(D3DResource& readBackBuffer_, PixelBuffer& srcBuffer_)
+{
+    // The footprint may depend on the device of the resource, but we assume there is only one device.
+    D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint;
+    DXGraphics::m_device->GetCopyableFootprints(&srcBuffer_.GetResource()->GetDesc(), 0, 1, 0, &PlacedFootprint, nullptr, nullptr, nullptr);
+
+    // This very short command list only issues one API call and will be synchronized so we can immediately read
+    // the buffer contents.
+    CommandContext& Context = CommandContext::RequestContext(L"Copy texture to memory");
+
+    Context.TransitionResource(srcBuffer_, D3D12_RESOURCE_STATE_COPY_SOURCE, true);
+
+    Context.m_commandList->CopyTextureRegion(
+        &CD3DX12_TEXTURE_COPY_LOCATION(readBackBuffer_.GetResource(), PlacedFootprint), 0, 0, 0,
+        &CD3DX12_TEXTURE_COPY_LOCATION(srcBuffer_.GetResource(), 0), nullptr);
+
+    Context.Finish(true);
+}
+
 void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_)
 {
     ASSERT(pData_ != nullptr && Utility::isAligned(pData_, 16));
@@ -236,9 +275,13 @@ void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const v
     CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
 }
 
+void CommandContext::FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_)
+{
+}
+
 void CommandContext::TransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow)
 {
-    D3D12_RESOURCE_STATES prevState = resource_.m_usageState;
+    D3D12_RESOURCE_STATES prevState = resource_.currentState;
 
     if (m_type == D3D12_COMMAND_LIST_TYPE_COMPUTE)
     {
@@ -258,15 +301,15 @@ void CommandContext::TransitionResource(D3DResource& resource_, D3D12_RESOURCE_S
         BarrierDesc.Transition.StateAfter = newState_;
 
         // Check to see if we already started the transition
-        if (newState_ == resource_.m_transitioningState)
+        if (newState_ == resource_.transitionState)
         {
             BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_END_ONLY;
-            resource_.m_transitioningState = (D3D12_RESOURCE_STATES)-1;
+            resource_.transitionState = (D3D12_RESOURCE_STATES)-1;
         }
         else
             BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
-        resource_.m_usageState = newState_;
+        resource_.currentState = newState_;
     }
     else if (newState_ == D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
         InsertUAVBarrier(resource_, flushNow);
@@ -277,10 +320,10 @@ void CommandContext::TransitionResource(D3DResource& resource_, D3D12_RESOURCE_S
 
 void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow)
 {
-    if (resource_.m_transitioningState != (D3D12_RESOURCE_STATES)-1)
-        TransitionResource(resource_, resource_.m_transitioningState);
+    if (resource_.transitionState != (D3D12_RESOURCE_STATES)-1)
+        TransitionResource(resource_, resource_.transitionState);
 
-    D3D12_RESOURCE_STATES prevState = resource_.m_usageState;
+    D3D12_RESOURCE_STATES prevState = resource_.currentState;
 
     if (prevState != newState_)
     {
@@ -295,7 +338,7 @@ void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOU
 
         BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY;
 
-        resource_.m_transitioningState = newState_;
+        resource_.transitionState = newState_;
     }
 
     if (flushNow || m_numBarriersToFlush == 16)
@@ -360,9 +403,16 @@ void CommandContext::Reset()
 
 void GraphicsContext::ClearUAV(D3DBuffer& target_)
 {
-    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_dynamicViewDescHeap.UploadDirect(target_.GetUAV());
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_dynamicViewDescHeap.UploadDirect(target_.UnorderedAccessView());
     const UINT clearColor[4] = {};
-    m_commandList->ClearUnorderedAccessViewUint(gpuHandle, target_.GetUAV(), target_.GetResource(), clearColor, 0, nullptr);
+    m_commandList->ClearUnorderedAccessViewUint(gpuHandle, target_.UnorderedAccessView(), target_.GetResource(), clearColor, 0, nullptr);
+}
+
+void ComputeContext::ClearUAV(D3DBuffer& Target)
+{
+    D3D12_GPU_DESCRIPTOR_HANDLE GpuVisibleHandle = m_dynamicViewDescHeap.UploadDirect(Target.UnorderedAccessView());
+    const UINT ClearColor[4] = {};
+    m_commandList->ClearUnorderedAccessViewUint(GpuVisibleHandle, Target.UnorderedAccessView(), Target.GetResource(), ClearColor, 0, nullptr);
 }
 
 void GraphicsContext::ClearUAV(ColourBuffer& target_)
@@ -372,6 +422,15 @@ void GraphicsContext::ClearUAV(ColourBuffer& target_)
 
     const float* clearColor = target_.GetClearColour().GetPtr();
     m_commandList->ClearUnorderedAccessViewFloat(GpuVisibleHandle, target_.GetUAV(), target_.GetResource(), clearColor, 1, &clearRect);
+}
+
+void ComputeContext::ClearUAV(ColourBuffer& Target)
+{
+    D3D12_GPU_DESCRIPTOR_HANDLE GpuVisibleHandle = m_dynamicViewDescHeap.UploadDirect(Target.GetUAV());
+    CD3DX12_RECT ClearRect(0, 0, (LONG)Target.GetWidth(), (LONG)Target.GetHeight());
+
+    const float* ClearColor = Target.GetClearColour().GetPtr();
+    m_commandList->ClearUnorderedAccessViewFloat(GpuVisibleHandle, Target.GetUAV(), Target.GetResource(), ClearColor, 1, &ClearRect);
 }
 
 void GraphicsContext::ClearColor(ColourBuffer& target_)

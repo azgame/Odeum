@@ -10,6 +10,7 @@ class CommandListManager;
 class ContextManager;
 class ColourBuffer;
 class DepthBuffer;
+class CommandSignature;
 
 #define SWAP_CHAIN_BUFFER_COUNT 3
 
@@ -38,12 +39,20 @@ namespace DXGraphics
 	extern ColourBuffer m_overlayBuffer;
 	extern DepthBuffer m_sceneDepthBuffer;
 
+	extern CommandSignature DispatchIndirectCommandSignature(1);
+	extern CommandSignature DrawIndirectCommandSignature;
+
 	extern D3D12_BLEND_DESC alphaBlend;
+	extern D3D12_BLEND_DESC blendPreMultiplied;
 	extern D3D12_RASTERIZER_DESC rasterDesc;
+	extern D3D12_RASTERIZER_DESC rasterTwoSided;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+	extern D3D12_DEPTH_STENCIL_DESC depthReadOnly;
 
 	float GetFrameRate();
 	float GetFrameTime();
+
+
 }
 
 #endif

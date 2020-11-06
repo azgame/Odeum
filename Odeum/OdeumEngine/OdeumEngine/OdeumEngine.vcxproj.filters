@@ -17,7 +17,6 @@
     <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
-    <ClCompile Include="Game\Components\ComponentTest.cpp" />
     <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
@@ -36,12 +35,10 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
-    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
-    <ClCompile Include="Game\Components\KinimaticMovement.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Engine\Core\Window.cpp" />
@@ -53,7 +50,18 @@
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
-    <ClCompile Include="Game\Scenes\BenScene2.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
+    <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
+    <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
+    <ClCompile Include="Engine\Math\Transform.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody.cpp" />
+    <ClCompile Include="Engine\Core\AudioHandler.cpp" />
+    <ClCompile Include="Game\Components\AudioSource.cpp" />
+    <ClCompile Include="Game\Components\KinematicMovement.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -70,7 +78,6 @@
     <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
-    <ClInclude Include="Game\Components\ComponentTest.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />
@@ -111,12 +118,10 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
-    <ClInclude Include="Game\Components\SimplePhysics.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
-    <ClInclude Include="Game\Components\KinimaticMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
@@ -128,10 +133,29 @@
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
-    <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
+    <ClInclude Include="Engine\Math\BoundingBox.h" />
+    <ClInclude Include="Engine\Math\Ray.h" />
+    <ClInclude Include="Engine\Math\CollisionDetection.h" />
+    <ClInclude Include="Engine\Math\CollisionHandler.h" />
+    <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
+    <ClInclude Include="Engine\Math\Transform.h" />
+    <ClInclude Include="Game\Components\Rigidbody.h" />
+    <ClInclude Include="Engine\Core\AudioHandler.h" />
+    <ClInclude Include="Game\Components\AudioSource.h" />
+    <ClInclude Include="Game\Components\KinematicMovement.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
+    <ClInclude Include="Engine\Core\EngineProfiling.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Engine\Resources\Audio\TestCoin.wav" />
   </ItemGroup>
 </Project>

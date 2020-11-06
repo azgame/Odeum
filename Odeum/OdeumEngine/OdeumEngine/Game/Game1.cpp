@@ -1,5 +1,9 @@
 #include "Game1.h"
 
+#include "Scenes/GameScene.h"
+#include "Scenes/StartScene.h"
+#include "Scenes/RobScene.h"
+#include "Scenes/BenScene.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -28,7 +32,7 @@ void Game1::Update(const float deltaTime_)
 	m_currentScene->Update(deltaTime_);
 }
 
-void Game1::Render()
+void Game1::UIRender()
 {
 	m_currentScene->UIRender();
 }
@@ -50,9 +54,6 @@ void Game1::BuildScene()
 		break;
 	case 3:
 		m_currentScene = new BenScene();
-		break;
-	case 4:
-		m_currentScene = new BenScene2();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

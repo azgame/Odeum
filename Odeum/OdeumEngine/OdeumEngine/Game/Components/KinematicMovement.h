@@ -1,11 +1,9 @@
-#ifndef KinimaticMovement_H
-#define KinimaticMovement_H
+#ifndef KINEMATICMOVEMENT_H
+#define KINEMATICMOVEMENT_H
 
+#include "Rigidbody.h"
 
-
-#include "SimplePhysics.h"
-
-class KinimaticMovement : public Component
+class KinematicMovement : public Component
 {
 public:
 	void OnAttach(GameObject* parent) override;

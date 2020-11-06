@@ -4,11 +4,15 @@
 #include "../../pch.h"
 #include "Window.h"
 #include "KeyCodes.h"
+#include "MouseCodes.h"
 #include "../Events/KeyEvent.h"
+#include "../Events/MouseEvent.h"
+#include "../Math/Vector.h"
 
 #include <map>
 
 using namespace Key;
+using namespace Mouse;
 
 class Input {
 public:
@@ -20,24 +24,38 @@ public:
 	Input& operator=(Input&&) = delete;
 
 	static Input& Get();
-	void Reset() { sm_keyPressed = InputState(); }
+	void Reset() 
+	{ 
+		sm_keyPressed = InputState<KeyCode>();
+		sm_mousePressed = InputState<MouseCode>();
+	}
 
-	bool Update(KeyEvent& key);
+	void KeyUpdate(KeyEvent& key);
 	bool isKeyPressed(KeyCode key);
+	void MouseUpdate(MouseButtonEvent& mouse);
+	bool isButtonClicked(MouseCode mouse);
+
+	float GetMouseX();
+	float GetMouseY();
 	
+	template<typename T>
 	struct InputState
 	{
 		InputState()
 		{
-			keyStates.clear();
+			states.clear();
 		}
 
-		std::map<KeyCode, bool> keyStates; // TODO Aidan: too large, change this later
+		std::map<T, bool> states; // TODO Aidan: too large, change this later
 	};
 
 private:
 
-	static InputState sm_keyPressed;
+	static InputState<KeyCode> sm_keyPressed;
+	static InputState<MouseCode> sm_mousePressed;
+
+	static Vector2 mousePos;
+	static Vector2 lastMousePos;
 
 	static std::unique_ptr<Input> sm_input;
 };

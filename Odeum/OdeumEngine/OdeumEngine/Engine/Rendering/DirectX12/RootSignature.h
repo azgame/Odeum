@@ -110,7 +110,10 @@ public:
 	{
 	}
 
-	void Destroy();
+	void Destroy()
+	{
+		if (m_rootSignature) m_rootSignature->Release();  m_rootSignature = nullptr;
+	}
 
 	void Reset(UINT numRootParams_, UINT numStaticSamplers = 0);
 

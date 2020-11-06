@@ -11,7 +11,7 @@ public:
 
 	virtual bool Initialize() = 0;
 	virtual void Update(const float deltaTime_) = 0;
-	virtual void Render() = 0;
+	virtual void UIRender() = 0;
 };
 
 

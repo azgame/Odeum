@@ -1,16 +1,15 @@
 #include "GameScene.h"
-#include "../Components/KinimaticMovement.h"
+#include "../Components/KinematicMovement.h"
 #include "../Components/DynamicMovement.h"
-#include "../Components/ComponentTest.h"
+#include "../../Engine/Math/CollisionHandler.h"
+#include "../Components/Rigidbody.h"
 
-GameScene::GameScene() : Scene()
+GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
 	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+	object->AddComponent<Rigidbody>();
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
-	object->AddComponents<DynamicMovement, KinimaticMovement, ComponentTest>();
-	object->RemoveComponent<KinimaticMovement>();
-	object->RemoveComponents<DynamicMovement, ComponentTest>();
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 }
 
 GameScene::~GameScene()
@@ -19,7 +18,7 @@ GameScene::~GameScene()
 
 bool GameScene::Initialize()
 {
-	Debug::Info("Creating Game Scene", __FILENAME__, __LINE__);
+	LOG("Creating Game Scene")
 	return true;
 }
 
@@ -28,8 +27,8 @@ void GameScene::Update(const float deltaTime_)
 	cameraController.UpdateMainCamera();
 
 	angle += direction * (deltaTime_ * 0.1f);
-	object->SetRotation(Vector4(kYUnitVector), angle);
 
+	object->GetComponent<Rigidbody>()->SetRotation(Quaternion(Vector3(kYUnitVector), angle));
 	object->Update(deltaTime_);
 }
 

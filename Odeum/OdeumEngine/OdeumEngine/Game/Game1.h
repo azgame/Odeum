@@ -5,12 +5,6 @@
 
 #include "../Engine/Core/OdeumEngine.h"
 
-#include "Scenes/GameScene.h"
-#include "Scenes/StartScene.h"
-#include "Scenes/RobScene.h"
-#include "Scenes/BenScene.h"
-#include "Scenes/BenScene2.h"
-
 class Game1 : public GameInterface
 {
 public:
@@ -19,7 +13,7 @@ public:
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
-	virtual void Render();
+	virtual void UIRender();
 private:
 	int								m_currentSceneNum;
 	Scene*							m_currentScene;

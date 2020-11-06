@@ -19,6 +19,8 @@ TestRender::TestRender()
 
 TestRender::~TestRender()
 {
+	m_colourPSO.Destroy();
+	m_rootSig.Destroy();
 }
 
 void TestRender::Attach()
@@ -65,11 +67,13 @@ void TestRender::Detach()
 	m_rootSig.Destroy();
 	m_colourPSO.Destroy();
 
-	if (m_pHeap) m_pHeap->Release(); m_pHeap = NULL;
+	if (m_pHeap) m_pHeap->Release();
 }
 
 void TestRender::Update(float deltaTime_)
 {
+	SCOPEDTIMER(timer);
+
 	while (m_bufferHead != m_bufferTail)
 	{
 		// Handle events here
@@ -89,16 +93,6 @@ void TestRender::Update(float deltaTime_)
 	m_mainScissor.top = 0;
 	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
-
-	/*m_mainViewport.Width = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainViewport.Height = (float)OdeumEngine::Get().GetWindow().GetHeight();
-	m_mainViewport.MinDepth = -1.0f;
-	m_mainViewport.MaxDepth = 0.0f;
-
-	m_mainScissor.left = 0;
-	m_mainScissor.top = 0;
-	m_mainScissor.right = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainScissor.bottom = (float)OdeumEngine::Get().GetWindow().GetHeight();*/
 
 	struct VSConstants
 	{
@@ -143,8 +137,8 @@ void TestRender::Update(float deltaTime_)
 			Model::Mesh& mesh = object->GetModel().GetMesh(i);
 			uint32_t vertexStride = object->GetModel().m_vertexStride;
 			uint32_t indexCount = mesh.indexCount;
-			uint32_t startIndex = mesh.indexDataByteOffset / sizeof(uint16_t);
-			uint32_t baseVertex = mesh.vertexDataByteOffset / sizeof(Vertex);
+			uint32_t startIndex = mesh.indexOffset;
+			uint32_t baseVertex = mesh.vertexOffset;
 
 			graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
 
@@ -153,24 +147,26 @@ void TestRender::Update(float deltaTime_)
 	}
 
 	graphics.Finish();
+
+	if (frameCounter == 0)
+	{
+		averageFrameTime = frameTimeTotal / 120.0f;
+		frameTimeTotal = 0.0f;
+	}
+
+	frameTimeTotal += timer.GetTime();
+	frameCounter = (frameCounter + 1) % 120;	
 }
 
 void TestRender::UIRender()
 {
-	if (frameCounter == 5)
-	{
-		frameTime = DXGraphics::GetFrameTime();
-		frameRate = DXGraphics::GetFrameRate();
-	}
-
 	ImGui::Begin("Frame Profiling");
 
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
+	ImGui::Text("Test Render frame time: %.2f ms/frame", averageFrameTime);
 
 	ImGui::End();
-
-	frameCounter = (frameCounter + 1) % 6;
 
 	UIRenderD3DResources();
 }

@@ -24,6 +24,7 @@ OdeumEngine::OdeumEngine()
 
 OdeumEngine::~OdeumEngine()
 {
+	Uninitialize();
 }
 
 void OdeumEngine::AddSystem(CoreSystem* system_)
@@ -37,8 +38,6 @@ void OdeumEngine::OnEvent(Event& e)
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OdeumEngine::Close));
 	dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OdeumEngine::Resize));
-	dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
-	dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OdeumEngine::KeyboardInput));
 
 	for (auto system : m_systemStack)
 	{
@@ -55,21 +54,21 @@ void OdeumEngine::Run()
 		m_engineTimer.UpdateFrameTicks();
 		float timeStep = m_engineTimer.GetDeltaTime();
 
-		m_gameInterface->Update(timeStep);
+		m_window->Update(); // Process windows events
+
+		m_gameInterface->Update(timeStep); // update game scene
 
 		m_camera.UpdateCamera();
 
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
 
-		m_gameInterface->Render();
+		m_gameInterface->UIRender(); // render game scene ui
 
 		for (auto system : m_systemStack)
-			system->UIRender();
+			system->UIRender(); // render system specific ui
 
-		m_window->Update(); // Draw
-
-		DXGraphics::Present();
+		DXGraphics::Present(); // present cumulative rendering to screen
 	}
 }
 
@@ -83,7 +82,10 @@ bool OdeumEngine::Initialize()
 	DXGraphics::Initialize();
 
 	if (!m_gameInterface->Initialize())
+	{
 		Debug::Error("Could not initialize game scene", __FILENAME__, __LINE__);
+		return false;
+	}
 
 	m_currentScene = GetSceneIndex("SceneLoad.txt");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
@@ -114,11 +116,7 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 	return true;
 }
 
-bool OdeumEngine::KeyboardInput(KeyEvent& keyEvent)
-{
-	return Input::Get().Update(keyEvent);
-}
-
+// temp way to load game scenes
 int OdeumEngine::GetSceneIndex(std::string fileName)
 {
 	int sceneNum = 0;
@@ -132,5 +130,6 @@ int OdeumEngine::GetSceneIndex(std::string fileName)
 		}
 	}
 
+	sceneFile.close();
 	return sceneNum;
 }

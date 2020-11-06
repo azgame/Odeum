@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #include "DynamicDescriptorHeap.h"
 
 #include "CommandContext.h"
@@ -7,7 +18,7 @@
 std::mutex DynamicDescriptorHeap::sm_mutex;
 
 // static for safe thread use and access
-std::vector<ID3D12DescriptorHeap*> DynamicDescriptorHeap::sm_descriptorHeapPool[2];
+std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> DynamicDescriptorHeap::sm_descriptorHeapPool[2];
 std::queue<std::pair<uint64_t, ID3D12DescriptorHeap*>> DynamicDescriptorHeap::sm_retiredDescriptorHeaps[2];
 std::queue<ID3D12DescriptorHeap*> DynamicDescriptorHeap::sm_availableDescriptorHeaps[2];
 
@@ -78,12 +89,12 @@ ID3D12DescriptorHeap* DynamicDescriptorHeap::RequestDescriptorHeap(D3D12_DESCRIP
 		heapDesc.NumDescriptors = numDescriptorsPerHeap;
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		heapDesc.NodeMask = 1;
-		ID3D12DescriptorHeap* heapPtr;
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapPtr;
 		if (FAILED(DXGraphics::m_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&heapPtr))))
 			Debug::Error("Could not create new descriptor heap", __FILENAME__, __LINE__);
 
 		sm_descriptorHeapPool[heapType].emplace_back(heapPtr);
-		return heapPtr;
+		return heapPtr.Get();
 	}
 }
 

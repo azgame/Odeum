@@ -1,5 +1,6 @@
-#include "KinimaticMovement.h"
-void KinimaticMovement::Update(float deltaTime)
+#include "KinematicMovement.h"
+
+void KinematicMovement::Update(float deltaTime)
 {
 	//make sure we have a target or there will be errors
 	if (target)
@@ -10,11 +11,11 @@ void KinimaticMovement::Update(float deltaTime)
 	    //sets position directly moving constantly 
 		if (!shouldFlee)
 		{
-			//object->SetPosition(object->GetPosition() + temp);
+			object->SetPosition(object->GetPosition() + temp);
 		}
 		else
 		{
-			temp = temp * 3;
+			temp = temp;
 			object->SetPosition(object->GetPosition() - temp);
 		}
 		
@@ -22,7 +23,7 @@ void KinimaticMovement::Update(float deltaTime)
 	}
 }
 
-void KinimaticMovement::OnAttach(GameObject* parent)
+void KinematicMovement::OnAttach(GameObject* parent)
 {   //set default values and get our object's components
 	object = parent;
 	if (maxSpeed < 0.01)
@@ -31,7 +32,7 @@ void KinimaticMovement::OnAttach(GameObject* parent)
 	}
 }
 
-Vector4 KinimaticMovement::GetSteering()
+Vector4 KinematicMovement::GetSteering()
 {
 	Vector3 velocity(0.0f, 0.0f, 0.0f);
 	

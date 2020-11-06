@@ -100,7 +100,7 @@ float4 main(PS_INPUT input) : SV_Target0
     float3 diffuseColour = texDiffuse.Sample(sampler0, input.uv);
     float3 specularColour = float3(0.56f, 0.56f, 0.56f);
     float specularMask = texSpec.Sample(sampler0, input.uv).g;
-    float3 ambientColour = diffuseColour * float3(0.1f, 0.1f, 0.1f);
+    float3 ambientColour = diffuseColour * float3(0.25f, 0.25f, 0.25f);
     float gloss = 16.0f;
 
     float3 colour = 0.0f;

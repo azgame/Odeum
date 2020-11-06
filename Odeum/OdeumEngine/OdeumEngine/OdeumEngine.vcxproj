@@ -74,12 +74,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\GameDev\Audio\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\GameDev\Audio\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -99,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
@@ -108,8 +110,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Lib;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies);fmod_vc.lib;fmodL_vc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\GameDev\VulkanSDK\1.2.148.1\Lib;$(WindowsSDK_LibraryPath_x64);%(AdditionalLibraryDirectories);C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -145,12 +147,19 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>;C:\GameDev\Audio\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);fmod_vc.lib;fmodL_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Game\Components\AudioSource.cpp" />
+    <ClCompile Include="Engine\Core\AudioHandler.cpp" />
+    <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
+    <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Game\Components\DynamicMovement.cpp" />
-    <ClCompile Include="Game\Scenes\BenScene2.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
@@ -160,7 +169,6 @@
     <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
-    <ClCompile Include="Game\Components\ComponentTest.cpp" />
     <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
@@ -179,13 +187,15 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandContext.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\PipelineState.cpp" />
     <ClCompile Include="Engine\Core\GameObject.cpp" />
-    <ClCompile Include="Game\Components\SimplePhysics.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
-    <ClCompile Include="Game\Components\KinimaticMovement.cpp" />
+    <ClCompile Include="Game\Components\KinematicMovement.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\LightSource.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -197,10 +207,22 @@
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
+    <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\EngineProfiling.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
+    <ClInclude Include="Game\Components\AudioSource.h" />
+    <ClInclude Include="Engine\Core\AudioHandler.h" />
+    <ClInclude Include="Engine\Math\BoundingBox.h" />
+    <ClInclude Include="Engine\Math\CollisionDetection.h" />
+    <ClInclude Include="Engine\Math\CollisionHandler.h" />
+    <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
+    <ClInclude Include="Engine\Math\Ray.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Game\Components\DynamicMovement.h" />
-    <ClInclude Include="Game\Scenes\BenScene2.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
@@ -215,7 +237,6 @@
     <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
     <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
-    <ClInclude Include="Game\Components\ComponentTest.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />
@@ -256,13 +277,15 @@
     <ClInclude Include="Engine\Core\OdeumEngine.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandContext.h" />
     <ClInclude Include="Engine\Core\GameObject.h" />
-    <ClInclude Include="Game\Components\SimplePhysics.h" />
+    <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
-    <ClInclude Include="Game\Components\KinimaticMovement.h" />
+    <ClInclude Include="Game\Components\KinematicMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\LightSource.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
@@ -273,6 +296,8 @@
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
+    <ClInclude Include="Engine\Math\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
@@ -303,6 +328,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Engine\Resources\Audio\TestCoin.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

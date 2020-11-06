@@ -1,3 +1,14 @@
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+// Developed by Minigraph
+//
+// Author:  James Stanard 
+
 #ifndef BUFFERALLOCATOR_H
 #define BUFFERALLOCATOR_H
 
@@ -12,6 +23,7 @@ class BufferEntry
 public:
 	BufferEntry(D3DResource& resource_, size_t offset_, size_t size_) :
 		buffer(resource_), offset(offset_), size(size_) {}
+
 
 	D3DResource& buffer;
 	size_t offset;
@@ -28,7 +40,7 @@ public:
 	BufferPage(ID3D12Resource* resource_, D3D12_RESOURCE_STATES usage_) : D3DResource()
 	{
 		m_resource.Attach(resource_);
-		m_usageState = usage_;
+		currentState = usage_;
 		m_GpuVirtualAddress = m_resource->GetGPUVirtualAddress();
 		m_resource->Map(0, nullptr, &m_CpuVirtualAddress);
 	}
@@ -113,8 +125,8 @@ public:
 
 	BufferEntry Allocate(size_t byteSize_, size_t alignment = 256);
 
-	void CleanupUsedPages(uint64_t fenceID_);
-	static void DestroyAllPages()
+	void RecyclePages(uint64_t fenceID_);
+	static void Destroy()
 	{
 		sm_pageManager[0].Destroy();
 		sm_pageManager[1].Destroy();

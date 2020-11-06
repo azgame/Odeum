@@ -56,7 +56,6 @@ private:
 class MouseButtonEvent : public Event
 {
 public:
-	// Getter
 	MouseCode GetMouseButton() const { return button; }
 
 	EVENT_CATEGORY(EventCategoryMouse | EventCategoryInput)
@@ -68,7 +67,7 @@ protected:
 class MouseButtonPressedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonPressedEvent(const MouseCode button_) : MouseButtonEvent(button) {}
+	MouseButtonPressedEvent(const MouseCode button_) : MouseButtonEvent(button_) {}
 
 	std::string ToString() const override
 	{
@@ -83,7 +82,7 @@ public:
 class MouseButtonReleasedEvent : public MouseButtonEvent
 {
 public:
-	MouseButtonReleasedEvent(const MouseCode button_) : MouseButtonEvent(button) {}
+	MouseButtonReleasedEvent(const MouseCode button_) : MouseButtonEvent(button_) {}
 
 	std::string ToString() const override
 	{
@@ -94,4 +93,5 @@ public:
 
 	EVENT_TYPE(MouseButtonReleased)
 };
+
 #endif
