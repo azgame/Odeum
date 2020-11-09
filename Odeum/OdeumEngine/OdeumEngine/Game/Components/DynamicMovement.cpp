@@ -60,7 +60,7 @@ Vector4 DynamicMovement::GetSteering()
 		for (auto obj : colliders)
 		{
 			if (obj->Tag() == "Obstacle")
-				intersectionPlane = CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox());
+				 CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox(),&intersectionPlane);
 		}
 		
 		// Get the first collided object
