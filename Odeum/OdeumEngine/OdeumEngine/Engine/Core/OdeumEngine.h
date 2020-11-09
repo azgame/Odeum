@@ -17,6 +17,8 @@ class WindowCloseEvent;
 class WindowResizeEvent;
 class KeyEvent;
 
+class AbstractRenderer;
+
 class OdeumEngine
 {
 public:
@@ -40,8 +42,6 @@ public:
 	bool Initialize();
 	void Uninitialize();
 
-	
-
 private:
 
 	bool Close(WindowCloseEvent& closeEvent);
@@ -55,6 +55,8 @@ private:
 	Timer					m_engineTimer;
 	Camera					m_camera;
 	SystemStack				m_systemStack;
+
+	AbstractRenderer*		m_renderer;
 
 	bool					m_isRunning;
 	uint32_t				m_currentScene;

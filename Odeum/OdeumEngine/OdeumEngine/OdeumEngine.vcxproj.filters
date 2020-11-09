@@ -5,6 +5,12 @@
     <FxCompile Include="Engine\Shaders\Present.hlsl" />
     <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
     <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleUpdateCS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleFinalDispatchArgs.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleSpawnCS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleVS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticlePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -62,6 +68,7 @@
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -151,9 +158,13 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
     <ClInclude Include="Engine\Core\EngineProfiling.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
+    <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Engine\Shaders\ParticleCommon.hlsli" />
+    <None Include="Engine\Shaders\ParticleRS.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />

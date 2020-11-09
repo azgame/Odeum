@@ -1,6 +1,7 @@
 #include "OdeumEngine.h"
 
 #include "../Rendering/DirectX12/D3DCore.h"
+#include "../Rendering/DirectX12/D3DRenderer.h"
 #include "../Events/ApplicationEvent.h"
 #include "../Events/KeyEvent.h"
 
@@ -20,6 +21,7 @@ OdeumEngine::OdeumEngine()
 
 	m_window = new Window();
 	m_camera = Camera();
+	m_renderer = new D3DRenderer();
 }
 
 OdeumEngine::~OdeumEngine()
@@ -60,13 +62,19 @@ void OdeumEngine::Run()
 
 		m_camera.UpdateCamera();
 
+		m_renderer->Update(timeStep);
+
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
+
+		m_renderer->Render(m_camera, timeStep);
 
 		m_gameInterface->UIRender(); // render game scene ui
 
 		for (auto system : m_systemStack)
 			system->UIRender(); // render system specific ui
+
+		m_renderer->UIRender();
 
 		DXGraphics::Present(); // present cumulative rendering to screen
 	}
@@ -91,7 +99,9 @@ bool OdeumEngine::Initialize()
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
 
 	// Test
-	m_systemStack.Push(new TestRender());
+	// m_systemStack.Push(new TestRender());
+
+	m_renderer->Initialize(*m_window);
 
 	return true;
 }

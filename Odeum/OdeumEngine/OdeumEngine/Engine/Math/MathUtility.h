@@ -24,7 +24,7 @@ namespace Math
 		return distribution(gen);
 	}
 
-	int RandIntInRange(int low, int high)
+	inline int RandIntInRange(int low, int high)
 	{
 		std::random_device rd;
 		std::mt19937 gen(rd());

@@ -87,7 +87,7 @@ void GraphicsPSO::CompileVertexShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR 
 {
 	ID3DBlob* vertexShader;
 
-	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL)))
+	if (FAILED(D3DCompileFromFile(file_, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &vertexShader, NULL)))
 		Debug::Error("Could not create vertex shader", __FILENAME__, __LINE__);
 
 	m_psoDesc.VS = { reinterpret_cast<UINT8*>(vertexShader->GetBufferPointer()), vertexShader->GetBufferSize() };
@@ -97,7 +97,7 @@ void GraphicsPSO::CompilePixelShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR t
 {
 	ID3DBlob* pixelShader;
 
-	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL)))
+	if (FAILED(D3DCompileFromFile(file_, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &pixelShader, NULL)))
 		Debug::Error("Could not create pixel shader", __FILENAME__, __LINE__);
 
 	m_psoDesc.PS = { reinterpret_cast<UINT8*>(pixelShader->GetBufferPointer()), pixelShader->GetBufferSize() };
@@ -123,7 +123,7 @@ ComputePSO::ComputePSO()
 void ComputePSO::CompileComputeShader(LPCWSTR file_, LPCSTR entryPoint_, LPCSTR targetProfile_)
 {
 	ID3DBlob* computeShader;
-	if (FAILED(D3DCompileFromFile(file_, NULL, NULL, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &computeShader, NULL)))
+	if (FAILED(D3DCompileFromFile(file_, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint_, targetProfile_, D3DCOMPILE_ALL_RESOURCES_BOUND, 0, &computeShader, NULL)))
 		ERROR("Could not create compute shader");
 
 	m_computeDesc.CS = { reinterpret_cast<UINT8*>(computeShader->GetBufferPointer()), computeShader->GetBufferSize() };

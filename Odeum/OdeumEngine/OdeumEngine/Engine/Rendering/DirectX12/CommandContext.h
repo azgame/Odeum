@@ -238,6 +238,9 @@ public:
         UINT startVertexLocation_ = 0, UINT startInstanceLocation_ = 0);
     void DrawIndexedInstanced(UINT indexCountPerInstance_, UINT instanceCount_, UINT startIndexLocation_,
         int baseVertexLocation_, UINT startInstanceLocation_);
+    void DrawIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset = 0);
+    void ExecuteIndirect(CommandSignature& CommandSig, D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset = 0,
+        uint32_t MaxCommands = 1, D3DBuffer* CommandCounterBuffer = nullptr, uint64_t CounterOffset = 0);
 };
 
 class ComputeContext : public CommandContext
@@ -480,7 +483,7 @@ inline void ComputeContext::SetDynamicConstantBufferView(UINT RootIndex, size_t 
     ASSERT(BufferData != nullptr && Utility::isAligned(BufferData, 16));
     BufferEntry constantBuffer = m_CpuBufferAllocator.Allocate(BufferSize);
     memcpy(constantBuffer.CpuAddress, BufferData, BufferSize);
-    m_commandList->SetGraphicsRootConstantBufferView(RootIndex, constantBuffer.GpuAddress);
+    m_commandList->SetComputeRootConstantBufferView(RootIndex, constantBuffer.GpuAddress);
 }
 
 inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_)
@@ -679,13 +682,30 @@ inline void GraphicsContext::DrawIndexedInstanced(UINT indexCountPerInstance_, U
     m_commandList->DrawIndexedInstanced(indexCountPerInstance_, instanceCount_, startIndexLocation_, baseVertexLocation_, startInstanceLocation_);
 }
 
-inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
+inline void GraphicsContext::ExecuteIndirect(CommandSignature& CommandSig,
     D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset,
     uint32_t MaxCommands, D3DBuffer* CommandCounterBuffer, uint64_t CounterOffset)
 {
     FlushResourceBarriers();
     m_dynamicViewDescHeap.CommitGraphicsDescriptorTables(m_commandList);
     m_dynamicSamplerDescHeap.CommitGraphicsDescriptorTables(m_commandList);
+    m_commandList->ExecuteIndirect(CommandSig.GetSignature(), MaxCommands,
+        ArgumentBuffer.GetResource(), ArgumentStartOffset,
+        CommandCounterBuffer == nullptr ? nullptr : CommandCounterBuffer->GetResource(), CounterOffset);
+}
+
+inline void GraphicsContext::DrawIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset)
+{
+    ExecuteIndirect(DXGraphics::DrawIndirectCommandSignature, ArgumentBuffer, ArgumentBufferOffset);
+}
+
+inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
+    D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset,
+    uint32_t MaxCommands, D3DBuffer* CommandCounterBuffer, uint64_t CounterOffset)
+{
+    FlushResourceBarriers();
+    m_dynamicViewDescHeap.CommitComputeDescriptorTables(m_commandList);
+    m_dynamicSamplerDescHeap.CommitComputeDescriptorTables(m_commandList);
     m_commandList->ExecuteIndirect(CommandSig.GetSignature(), MaxCommands,
         ArgumentBuffer.GetResource(), ArgumentStartOffset,
         CommandCounterBuffer == nullptr ? nullptr : CommandCounterBuffer->GetResource(), CounterOffset);

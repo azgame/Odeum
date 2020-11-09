@@ -59,6 +59,7 @@ public:
 	void SetFOV(float fov_) { m_fieldOfView = fov_; UpdateProjectionMatrix(); }
 	void SetAspectRatio(float aspectRatio_) { m_aspectRatio = aspectRatio_; UpdateProjectionMatrix(); }
 	void SetZRange(float near_, float far_) { m_nearPlane = near_; m_farPlane = far_; UpdateProjectionMatrix(); }
+	float GetAspectRatio() { return m_aspectRatio; }
 	float GetFieldOfView() { return m_fieldOfView; }
 	float GetNearClipPlane() { return m_nearPlane; }
 	float GetFarClipPlane() { return m_farPlane; }
