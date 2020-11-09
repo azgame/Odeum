@@ -56,9 +56,9 @@ void OdeumEngine::Run()
 
 		m_window->Update(); // Process windows events
 
-		m_camera.UpdateCamera();
-
 		m_gameInterface->Update(timeStep); // update game scene
+
+		m_camera.UpdateCamera();
 
 		for (auto system : m_systemStack)
 			system->Update(timeStep);
@@ -82,7 +82,10 @@ bool OdeumEngine::Initialize()
 	DXGraphics::Initialize();
 
 	if (!m_gameInterface->Initialize())
+	{
 		Debug::Error("Could not initialize game scene", __FILENAME__, __LINE__);
+		return false;
+	}
 
 	m_currentScene = GetSceneIndex("SceneLoad.txt");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());

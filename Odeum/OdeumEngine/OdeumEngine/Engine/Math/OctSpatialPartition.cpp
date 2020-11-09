@@ -110,7 +110,7 @@ void OctNode::addCollisionObject(GameObject* go_)
 	m_objectList.push_back(go_);
 }
 
-int OctNode::getObjectCount() const
+size_t OctNode::getObjectCount() const
 {
 	return m_objectList.size();
 }
@@ -177,24 +177,20 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPl
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray_.IsColliding(object->GetBoundingBox()))
+			if (ray_.IsColliding(object->GetBoundingBox(), IntersectionPlane))
 			{
 				if (ray_.t < shortestDistance)
 				{
 					node = cell;
 					result = object;
 					shortestDistance = ray_.t;
-
-					if (IntersectionPlane)
-					{
-						*IntersectionPlane = CollisionDetection::RayOBBIntersectionPlane(ray_, object->GetBoundingBox());
-					}
 				}
 			}	
 		}
 
 		if (result != nullptr)
 		{
+			// CollisionDetection::RayOBBIntersectionPlane(ray_, result->GetBoundingBox(), IntersectionPlane);
 			return result;
 		}
 	}
@@ -223,7 +219,7 @@ std::vector<GameObject*> OctSpatialPartition::GetCollisions(Ray& ray)
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray.IsColliding(object->GetBoundingBox()))
+			if (ray.IsColliding(object->GetBoundingBox(), nullptr))
 			{
 				if (ray.t < shortestDistance)
 				{
@@ -272,20 +268,20 @@ void OctSpatialPartition::PrepareCollisionQuery(OctNode* cell_, Ray ray_)
 {
 	if (cell_->isLeaf())
 	{
-		if (ray_.IsColliding(cell_->getBoundingBox()))
+		if (ray_.IsColliding(cell_->getBoundingBox(), nullptr))
 			m_rayIntersectionList.push_back(cell_);
 		return;
 	}
 
 	for (auto cell : cell_->children)
 	{
-		if (cell->isLeaf() && ray_.IsColliding(cell->getBoundingBox()))
+		if (cell->isLeaf() && ray_.IsColliding(cell->getBoundingBox(), nullptr))
 		{
 			m_rayIntersectionList.push_back(cell);
 			return;
 		}
 
-		if (ray_.IsColliding(cell->getBoundingBox()))
+		if (ray_.IsColliding(cell->getBoundingBox(), nullptr))
 			PrepareCollisionQuery(cell, ray_);
 	}
 }

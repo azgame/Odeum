@@ -5,6 +5,7 @@
 
 #include "Buffers/ColourBuffer.h"
 #include "Buffers/DepthBuffer.h"
+#include "CommandSignature.h"
 
 #include "../../Core/OdeumEngine.h"
 
@@ -18,7 +19,7 @@ using namespace Graphics;
 
 // replace with getting refresh rate from monitor in initialization
 #define REFRESH_RATE 100.0f
-#define NUM_FRAMES_FOR_AVERAGES 120
+#define NUM_FRAMES_FOR_AVERAGES 60
 
 namespace DXGraphics
 {
@@ -98,14 +99,20 @@ namespace DXGraphics
 	ColourBuffer m_overlayBuffer;
 	DepthBuffer m_sceneDepthBuffer;
 
+	CommandSignature DispatchIndirectCommandSignature(1);
+	CommandSignature DrawIndirectCommandSignature(1);
+
 	IDXGISwapChain1* sm_swapChain = nullptr;
 
 	RootSignature m_presentRootSig;
 	GraphicsPSO m_presentPSO;
 
 	D3D12_BLEND_DESC alphaBlend;
+	D3D12_BLEND_DESC blendPreMultiplied;
 	D3D12_RASTERIZER_DESC rasterDesc;
+	D3D12_RASTERIZER_DESC rasterTwoSided;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+	D3D12_DEPTH_STENCIL_DESC depthReadOnly;
 
 	float frameTimeAverage = 0.0f;
 	float frameTimeTotal = 0.0f;
@@ -247,7 +254,7 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 
 	for (uint32_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
-		m_displayPlane[i].Destroy();
+		m_displayPlane[i].ResetResource();
 	}
 
 	if (FAILED(sm_swapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, width_, height_, swapChainFormat, 0)))
@@ -312,7 +319,7 @@ void DXGraphics::Present()
 
 	if (frameCounter == 0)
 	{
-		frameTimeAverage = frameTimeTotal / NUM_FRAMES_FOR_AVERAGES;
+		frameTimeAverage = frameTimeTotal / (float)NUM_FRAMES_FOR_AVERAGES;
 		frameTimeTotal = 0.0f;
 	}
 
@@ -344,6 +351,8 @@ void DXGraphics::InitializeCommonState()
 	alphaBlend.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
+	blendPreMultiplied = alphaBlend;
+
 	depthReadWrite.DepthEnable = FALSE;
 	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
@@ -356,8 +365,20 @@ void DXGraphics::InitializeCommonState()
 	depthReadWrite.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 	depthReadWrite.BackFace = depthReadWrite.FrontFace;
 
+	depthReadOnly = depthReadWrite;
+	depthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+
+	rasterTwoSided = rasterDesc;
+	rasterTwoSided.CullMode = D3D12_CULL_MODE_NONE;
+
+	DispatchIndirectCommandSignature[0].SetType(D3D12_INDIRECT_ARGUMENT_TYPE_DISPATCH);
+	DispatchIndirectCommandSignature.Finalize();
+
+	DrawIndirectCommandSignature[0].SetType(D3D12_INDIRECT_ARGUMENT_TYPE_DRAW);
+	DrawIndirectCommandSignature.Finalize();
 }
 
 void DXGraphics::Shutdown()
@@ -376,11 +397,11 @@ void DXGraphics::Shutdown()
 	DescriptorAllocator::DestroyHeaps();
 
 	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-		m_displayPlane[i].Destroy();
+		m_displayPlane[i].ResetResource();
 
-	m_preDisplayBuffer.Destroy();
-	m_presentBuffer.Destroy();
-	m_sceneDepthBuffer.Destroy();
+	m_preDisplayBuffer.ResetResource();
+	m_presentBuffer.ResetResource();
+	m_sceneDepthBuffer.ResetResource();
 
 	if (m_device != nullptr) m_device->Release(); m_device = nullptr;
 }

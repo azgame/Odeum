@@ -39,12 +39,7 @@ bool CollisionHandler::MouseCollide()
 {
 	if (Input::Get().isButtonClicked(Button1))
 	{
-		float width = OdeumEngine::Get().GetWindow().GetWidth();
-		float height = OdeumEngine::Get().GetWindow().GetHeight();
-
-		Ray mouseRay = CollisionDetection::ScreenPosToWorldRay(Vector2(Input::Get().GetMouseX(),
-			Input::Get().GetMouseY()), Vector2(width, height),
-			OdeumEngine::Get().GetCamera());
+		Ray mouseRay = GetMouseRay();
 
 		GameObject* hit = RayGetFirstHit(mouseRay, nullptr);
 
@@ -57,8 +52,8 @@ bool CollisionHandler::MouseCollide()
 
 Ray CollisionHandler::GetMouseRay()
 {
-	float width = OdeumEngine::Get().GetWindow().GetWidth();
-	float height = OdeumEngine::Get().GetWindow().GetHeight();
+	float width = (float)OdeumEngine::Get().GetWindow().GetWidth();
+	float height = (float)OdeumEngine::Get().GetWindow().GetHeight();
 
 	return CollisionDetection::ScreenPosToWorldRay(Vector2(Input::Get().GetMouseX(),
 		Input::Get().GetMouseY()), Vector2(width, height),
@@ -69,8 +64,7 @@ void CollisionHandler::RayQueryFirst(Ray& ray, Vector4* IntersectionPlane)
 {
 	if (m_scenePartition == nullptr) return;
 	
-	GameObject* hitResult = nullptr;
-	hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
+	GameObject* hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
 
 	if (hitResult)
 		hitResult->SetHit(true);

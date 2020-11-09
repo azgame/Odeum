@@ -25,9 +25,6 @@ public:
 	HWND GetHWND() { return m_hwnd; }
 	const HWND GetHWND() const { return m_hwnd; }
 
-	//HWND GetglfwHWND() { return glfwGetWin32Window(m_window); }
-	//const HWND GetglfwHWND() const { return glfwGetWin32Window(m_window); }
-
 	int GetWidth() { return m_data.width; }
 	int GetHeight() { return m_data.height; }
 	int GetXPos() { return m_data.xPos; }

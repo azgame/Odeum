@@ -13,8 +13,7 @@ struct OrientedBoundingBox
 
 	OrientedBoundingBox()
 		: center(Vector3(kIdentity) * 0.5f), basis(kIdentity), halfExtents(Vector3(kIdentity) * 0.5f) 
-	{
-	}
+	{}
 	
 	OrientedBoundingBox(Vector3 Center, Matrix3 Basis, Vector3 Extents)
 		: center(Center), basis(Basis), halfExtents(Extents) {}
@@ -53,12 +52,12 @@ struct OrientedBoundingBox
 	std::vector<Vector4> GetPlanes()
 	{
 		std::vector<Vector4> plane;
-		plane.push_back(Vector4(center + (basis.GetX() * -halfExtents.GetX()), -halfExtents.GetX()));
-		plane.push_back(Vector4(center + (basis.GetX() * halfExtents.GetX()), halfExtents.GetX()));
-		plane.push_back(Vector4(center + (basis.GetY() * -halfExtents.GetY()), -halfExtents.GetY()));
-		plane.push_back(Vector4(center + (basis.GetY() * halfExtents.GetY()), halfExtents.GetY()));
-		plane.push_back(Vector4(center + (basis.GetZ() * -halfExtents.GetZ()), -halfExtents.GetZ()));
-		plane.push_back(Vector4(center + (basis.GetZ() * halfExtents.GetZ()), halfExtents.GetZ()));
+		plane.push_back(Vector4(basis.GetX(), halfExtents.GetX() * basis.GetX().GetX() + halfExtents.GetX() * basis.GetX().GetY() + halfExtents.GetX() * basis.GetX().GetZ()));
+		plane.push_back(Vector4(-basis.GetX(), halfExtents.GetX() * basis.GetX().GetX() + halfExtents.GetX() * basis.GetX().GetY() + halfExtents.GetX() * basis.GetX().GetZ()));
+		plane.push_back(Vector4(basis.GetY(), halfExtents.GetY() * basis.GetY().GetX() + halfExtents.GetY() * basis.GetY().GetY() + halfExtents.GetY() * basis.GetY().GetZ()));
+		plane.push_back(Vector4(-basis.GetY(), halfExtents.GetY() * basis.GetY().GetX() + halfExtents.GetY() * basis.GetY().GetY() + halfExtents.GetY() * basis.GetY().GetZ()));
+		plane.push_back(Vector4(basis.GetZ(), halfExtents.GetZ() * basis.GetZ().GetX() + halfExtents.GetZ() * basis.GetZ().GetY() + halfExtents.GetZ() * basis.GetZ().GetZ()));
+		plane.push_back(Vector4(-basis.GetZ(), halfExtents.GetZ() * basis.GetZ().GetX() + halfExtents.GetZ() * basis.GetZ().GetY() + halfExtents.GetZ() * basis.GetZ().GetZ()));
 		return plane;
 	}
 
@@ -99,9 +98,9 @@ struct OrientedBoundingBox
 		else 
 		{
 			// normalizes
-			x = q.GetVector4().GetX() / s;
-			y = q.GetVector4().GetY() / s;
-			z = q.GetVector4().GetZ() / s;
+			x = q.GetVector4().GetX() / (float)s;
+			y = q.GetVector4().GetY() / (float)s;
+			z = q.GetVector4().GetZ() / (float)s;
 		}
 		
 		// rotate the basis vectors by angle on the (x, y, z) axis

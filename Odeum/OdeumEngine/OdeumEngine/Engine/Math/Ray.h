@@ -32,11 +32,11 @@ struct Ray
 		return CollisionDetection::RayOBBIntersection(*this, box);
 	}*/
 
-	inline bool IsColliding(OrientedBoundingBox& box)
+	inline bool IsColliding(OrientedBoundingBox& box, Vector4* IntersectionPlane)
 	{
 		t = -1.0f;
 
-		return CollisionDetection::RayOBBIntersection(*this, box);
+		return CollisionDetection::RayOBBIntersection(*this, box, IntersectionPlane);
 	}
 };
 

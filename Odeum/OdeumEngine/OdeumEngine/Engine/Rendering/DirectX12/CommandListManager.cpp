@@ -159,7 +159,7 @@ uint64_t CommandQueue::IncrementFence()
 bool CommandQueue::IsFenceComplete(uint64_t fenceValue_)
 {
 	if (fenceValue_ > m_lastCompletedFenceValue)
-		m_lastCompletedFenceValue = max(m_lastCompletedFenceValue, m_fence->GetCompletedValue());
+		m_lastCompletedFenceValue = std::max(m_lastCompletedFenceValue, m_fence->GetCompletedValue());
 
 	return fenceValue_ <= m_lastCompletedFenceValue;
 }

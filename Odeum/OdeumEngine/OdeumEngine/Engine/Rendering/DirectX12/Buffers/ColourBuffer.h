@@ -30,18 +30,9 @@ public:
     const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTV() const { return m_rtvHandle; }
     const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const { return m_uavHandle[0]; }
 
-    void SetMsaaMode(uint32_t numColorSamples_, uint32_t numCoverageSamples_)
-    {
-        ASSERT(numCoverageSamples_ >= numColorSamples_, "Number of Coverage samples must be equal to or greater than the number of colour samples.");
-        m_fragmentCount = numColorSamples_;
-        m_sampleCount = numCoverageSamples_;
-    }
-
     void SetClearColour(Colour clearColour_) { m_clearColour = clearColour_; }
     Colour GetClearColour() const { return m_clearColour; }
     
-    void GenerateMipMaps(GraphicsContext& context_);
-
 protected:
 
     D3D12_RESOURCE_FLAGS CombineResourceFlags() const

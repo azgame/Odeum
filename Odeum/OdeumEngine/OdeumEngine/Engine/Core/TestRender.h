@@ -32,9 +32,9 @@ private:
 	void InitializeUI();
 	void UIRenderD3DResources();
 
-	uint32_t frameCounter = 0;
-	float frameRate = 0.0f;
-	float frameTime = 0.0f;
+	uint16_t frameCounter;
+	float averageFrameTime;
+	float frameTimeTotal;
 };
 
 #endif

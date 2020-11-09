@@ -6,6 +6,8 @@
 
 #include "../../Core/GameObject.h"
 
+#include <thread>
+
 void Model::Load(std::string fileName)
 {
 	Assimp::Importer importer;
@@ -205,6 +207,8 @@ void Model::LoadTextures()
 	{
 		const Material& material = m_pMaterials[mIndex];
 
+		std::thread t0;
+		
 		matTextures[0] = TextureManager::Get()->LoadFromFile(material.diffuseTextureFile);
 
 		matTextures[1] = TextureManager::Get()->LoadFromFile(material.specularTextureFile);

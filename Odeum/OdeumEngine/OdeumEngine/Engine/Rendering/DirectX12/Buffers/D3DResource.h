@@ -13,26 +13,22 @@ public:
 	D3DResource() : 
 		m_gpuAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL), 
 		m_resource(nullptr),
-		m_usageState(D3D12_RESOURCE_STATE_COMMON),
-		m_transitioningState((D3D12_RESOURCE_STATES)-1)
+		currentState(D3D12_RESOURCE_STATE_COMMON),
+		transitionState((D3D12_RESOURCE_STATES)-1)
 	{}
 
 	D3DResource(ID3D12Resource* resource_, D3D12_RESOURCE_STATES state_) : 
+		m_gpuAddress(D3D12_GPU_VIRTUAL_ADDRESS_NULL),
 		m_resource(resource_), 
-		m_usageState(state_),
-		m_transitioningState((D3D12_RESOURCE_STATES)-1)
-	{
-		m_gpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
-	}
+		currentState(state_),
+		transitionState((D3D12_RESOURCE_STATES)-1)
+	{}
 
-	virtual void Destroy()
+	virtual void ResetResource()
 	{
 		m_gpuAddress = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 		m_resource = nullptr;
 	}
-
-	ID3D12Resource* operator->() { return m_resource.Get(); }
-	const ID3D12Resource* operator->() const { return m_resource.Get(); }
 
 	ID3D12Resource* GetResource() { return m_resource.Get(); }
 	const ID3D12Resource* GetResource() const { return m_resource.Get(); }
@@ -40,12 +36,15 @@ public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() { return m_gpuAddress; }
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const { return m_gpuAddress; }
 
-	D3D12_RESOURCE_STATES m_usageState;
-	D3D12_RESOURCE_STATES m_transitioningState;
+	D3D12_RESOURCE_STATES currentState;
+	D3D12_RESOURCE_STATES transitionState;
 
 protected:
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_resource;
 	D3D12_GPU_VIRTUAL_ADDRESS m_gpuAddress;
 };
+
+
 
 #endif
