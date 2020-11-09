@@ -25,6 +25,8 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 
 	if (initialData_)
 		CommandContext::InitializeBuffer(*this, initialData_, allocatedSize);
+
+	CreateExtraViews();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::ConstantBufferView(uint32_t offset_, uint32_t size_) const

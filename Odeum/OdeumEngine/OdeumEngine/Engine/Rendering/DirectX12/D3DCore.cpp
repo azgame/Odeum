@@ -224,7 +224,7 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 
 	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
-	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
+	m_presentBuffer.SetClearColour(Colour(0.0f, 0.0f, 0.0f));
 	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
 	m_overlayBuffer.SetClearColour(Colour(1.0f, 1.0f, 1.0f, 0.0f));
 	m_overlayBuffer.Create(L"Overlay buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -235,9 +235,7 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 {
 	if (sm_swapChain == nullptr)
-	{
 		return;
-	}
 
 	if (width_ == 0 || height_ == 0)
 		return;
@@ -369,7 +367,7 @@ void DXGraphics::InitializeCommonState()
 	depthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+	rasterDesc.CullMode = D3D12_CULL_MODE_FRONT;
 
 	rasterTwoSided = rasterDesc;
 	rasterTwoSided.CullMode = D3D12_CULL_MODE_NONE;

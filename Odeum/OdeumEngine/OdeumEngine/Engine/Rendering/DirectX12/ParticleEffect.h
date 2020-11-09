@@ -16,7 +16,7 @@ struct ParticleInitProperties
 
 		minLife = 1.0f;
 		maxLife = 2.0f;
-		lifeTIme = 20.0f;
+		lifeTime = 20.0f;
 		minMass = 0.1f;
 		maxMass = 1.0f;
 		spread = Vector3(1.0f, 1.0f, 1.0f);
@@ -28,7 +28,7 @@ struct ParticleInitProperties
 	Colour colour;
 	float minLife;
 	float maxLife;
-	float lifeTIme;
+	float lifeTime;
 
 	// Physical props
 	float minMass;
@@ -56,7 +56,7 @@ public:
 	void Update(ComputeContext& Compute, float deltaTime);
 
 	float GetElapsedTime() { return elapsedTime; }
-	float GetLifeTime() { return m_properties.lifeTIme; }
+	float GetLifeTime() { return m_properties.lifeTime; }
 
 	// Texture
 	// std::string textureName;

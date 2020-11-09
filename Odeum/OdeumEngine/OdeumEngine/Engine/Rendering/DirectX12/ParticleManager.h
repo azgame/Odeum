@@ -12,10 +12,10 @@ class Camera;
 
 struct ParticleSharedConstantBuffer
 {
-	Matrix4 viewProjMatrix;
+	DirectX::XMMATRIX viewProjMatrix;
+	DirectX::XMMATRIX invView;
 	float aspectRatio;
-	float width;
-	float height;
+	float farClipZ;
 };
 
 class ParticleManager
@@ -25,12 +25,18 @@ public:
 	ParticleManager();
 	~ParticleManager();
 
-	static ParticleManager& Get() { return *sm_instance; }
+	static ParticleManager& Get() 
+	{ 
+		if (sm_instance == nullptr)
+			sm_instance = new ParticleManager();
+
+		return *sm_instance; 
+	}
 
 	void Initialize(uint32_t Width, uint32_t Height);
 	void CreateEffect(ParticleInitProperties Properties);
 	void Update(ComputeContext& Compute, float deltaTime);
-	void Render(CommandContext& Context, const Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
+	void Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
 	void Uninitialize();
 
 	ComputePSO GetParticleSpawnPSO() { return sm_particleSpawnCS; }

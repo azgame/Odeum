@@ -18,13 +18,13 @@ void ParticleEffect::Initialize()
 		spawnData[i].ageSpeed = 1.0f / Math::RandValInRange(m_properties.minLife, m_properties.maxLife);
 		float horizontalAngle = Math::RandValInRange(0.0f, DirectX::XM_2PI);
 		float horizontalVelocity = Math::RandValInRange(m_properties.minVelocity.GetX(), m_properties.minVelocity.GetY());
-		spawnData[i].startingVelocity.SetX(horizontalVelocity * cos(horizontalAngle));
-		spawnData[i].startingVelocity.SetY(Math::RandValInRange(m_properties.maxVelocity.GetX(), m_properties.maxVelocity.GetY()));
-		spawnData[i].startingVelocity.SetZ(horizontalVelocity * sin(horizontalAngle));
-		spawnData[i].spread = m_properties.spread;
-		spawnData[i].startSize = Math::RandValInRange(0.5f, 2.0f);
-		spawnData[i].endSize = Math::RandValInRange(0.5f, 2.0f);
-		spawnData[i].colour = m_properties.colour;
+		spawnData[i].startingVelocity.x = horizontalVelocity * cos(horizontalAngle);
+		spawnData[i].startingVelocity.y = Math::RandValInRange(m_properties.maxVelocity.GetX(), m_properties.maxVelocity.GetY());
+		spawnData[i].startingVelocity.z = horizontalVelocity * sin(horizontalAngle);
+		DirectX::XMStoreFloat3(&spawnData[i].spread, m_properties.spread);
+		spawnData[i].startSize = Math::RandValInRange(4.0f, 8.0f);
+		spawnData[i].endSize = Math::RandValInRange(3.0f, 10.0f);
+		DirectX::XMStoreFloat4(&spawnData[i].colour, m_properties.colour);
 		spawnData[i].mass = Math::RandValInRange(m_properties.minMass, m_properties.maxMass);
 		spawnData[i].rotation = Math::RandValInRange(0.0f, m_properties.rotationMax);
 	}
@@ -32,8 +32,8 @@ void ParticleEffect::Initialize()
 	// Create appropriate buffers (spawn buffer, 2 particle buffers, dispatch args buffer)
 	m_spawnStateBuffer.Create("SpawnDataBuffer", kMaxParticles, sizeof(ParticleSpawnData), spawnData.data());
 
-	m_particleBuffer[0].Create("Particle Bbuffer", kMaxParticles, sizeof(ParticleSimulationData));
-	m_particleBuffer[1].Create("Particle Bbuffer", kMaxParticles, sizeof(ParticleSimulationData));
+	m_particleBuffer[0].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));
+	m_particleBuffer[1].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));
 
 	__declspec(align(16)) UINT dispatchIndirectData[3] = { 0, 1, 1 };
 	m_dispatchArgsBuffer.Create("Dispatch Args Buffer", 1, sizeof(D3D12_DISPATCH_ARGUMENTS), dispatchIndirectData);
@@ -86,7 +86,8 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	Compute.SetPipelineState(ParticleManager::Get().GetParticleSpawnPSO());
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
 	UINT numSpawnThreads = (UINT)(m_properties.lauchingData.spawnRate * deltaTime);
-	Compute.Dispatch(Utility::AlignedDivide(numSpawnThreads, 64), 1, 1);
+	UINT alignedDivide = Utility::AlignedDivide(numSpawnThreads, 64);
+	Compute.Dispatch(alignedDivide, 1, 1);
 
 	// Set to finding dispatch args pso
 	// Goal here is to write the number of particles (divided byb 64) to the dispatch args buffer so that when we update our particles,

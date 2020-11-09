@@ -6,7 +6,7 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+	object = new GameObject("Engine/Resources/Models/Cube.obj");
 	object->AddComponent<Rigidbody>();
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
