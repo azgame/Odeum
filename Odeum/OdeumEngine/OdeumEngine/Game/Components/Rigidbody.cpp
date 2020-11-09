@@ -33,10 +33,10 @@ void Rigidbody::Update(float deltaTime)
 	// change game object orientation
 	//m_gameObject->SetRotation(m_gameObject->GetRotation() + UpdateOrientationQuaternion(), p_angle);
 	rb_angle += rb_angleSpeed;
-
+	
 	//UpdateOrientationQuaternion();
-	//m_gameObject->SetPosition(rb_position);
-	UpdateTransform();
+	m_gameObject->SetPosition(rb_position);
+	//UpdateTransform();
 }
 
 // translate the position
