@@ -71,7 +71,7 @@ void D3DRenderer::Initialize(Window& Window)
 	particleProps.lauchingData.speed = 1.0f;
 	particleProps.lauchingData.groundBounce = 1.25f;
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -1.0f, 0.0f));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(3.0f, 0.0f, 0.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
 	ParticleManager::Get().CreateEffect(particleProps);
 
@@ -111,7 +111,7 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 20.0f, 20.0f));
+	DirectX::XMStoreFloat3(&light.position, Vector3(10.0f, 20.0f, -30.0f));
 	light.radiusSq = 4000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(0.3f, 0.3f, 0.3f));
 

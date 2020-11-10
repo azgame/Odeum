@@ -6,7 +6,7 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cube.obj");
+	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
 	object->AddComponent<Rigidbody>();
 	object->GetComponent<Rigidbody>()->SetPosition(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 
