@@ -18,13 +18,15 @@ ParticleManager::ParticleManager()
 
 ParticleManager::~ParticleManager()
 {
+	SAFE_DELETE(sm_instance);
+	readBack.UnMap();
 }
 
 void ParticleManager::Initialize(uint32_t Width, uint32_t Height)
 {
 	// initialize root signature
 	m_rootSignature.Reset(5);
-	m_rootSignature[0].InitAsConstants(0, 3);
+	m_rootSignature[0].InitAsConstants(0, 1);
 	m_rootSignature[1].InitAsConstantBuffer(1);
 	m_rootSignature[2].InitAsConstantBuffer(2);
 	m_rootSignature[3].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 0, 3);
@@ -62,6 +64,8 @@ void ParticleManager::Initialize(uint32_t Width, uint32_t Height)
 	m_particleFinalDispatchIndirectArgs.Create("DispatchIndirectArgs", 1, sizeof(D3D12_DISPATCH_ARGUMENTS), dispatchIndirectArgs);
 	m_vertexBuffer.Create("ParticleVertexBuffer", MAX_PARTICLES, sizeof(ParticleVertexData));
 	m_indexBuffer.Create("ParticleIndexBuffer", MAX_PARTICLES, sizeof(UINT));
+	readBack.Create(1, 4);
+	
 
 	// create texture array -- later
 }
@@ -108,8 +112,16 @@ void ParticleManager::Update(ComputeContext& Compute, float deltaTime)
 	Compute.SetDynamicDescriptor(3, 1, m_drawIndirectArgs.UnorderedAccessView());
 	Compute.SetDynamicDescriptor(4, 0, m_vertexBuffer.GetCounterSRV(Compute));
 	Compute.Dispatch(1, 1, 1);
-}
 
+	Compute.TransitionResource(m_vertexBuffer.GetCounterBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE);
+	Compute.CopyBufferRegion(readBack, 0, m_vertexBuffer.GetCounterBuffer(), 0, 4);
+
+	particleCount = (UINT*)readBack.Map();
+	//if (particleCount != nullptr)
+	//	std::cout << "Number of particles: " << *particleCount << std::endl;
+	readBack.UnMap();
+}
+	
 void ParticleManager::Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget)
 {
 	uint32_t width = renderTarget.GetWidth();
@@ -117,10 +129,8 @@ void ParticleManager::Render(CommandContext& Context, Camera& Camera, ColourBuff
 
 	ASSERT(width == depthTarget.GetWidth() && height == depthTarget.GetHeight(), "Mismatch in size of render and depth targets");
 
-	m_CBperFrameData.invView = DirectX::XMMatrixInverse(nullptr, Camera.GetViewMatrix());
-	m_CBperFrameData.viewProjMatrix = DirectX::XMMATRIX(Camera.GetViewProjMatrix());
-	m_CBperFrameData.aspectRatio = Camera.GetAspectRatio();
-	m_CBperFrameData.farClipZ = Camera.GetFarClipPlane();
+	m_CBperFrameData.viewProjMatrix = Camera.GetViewProjMatrix();
+	m_CBperFrameData.invView = Matrix4(DirectX::XMMatrixInverse(nullptr, Camera.GetViewMatrix()));
 
 	D3D12_RECT scissor;
 	scissor.left = 0;
@@ -133,17 +143,18 @@ void ParticleManager::Render(CommandContext& Context, Camera& Camera, ColourBuff
 	viewport.TopLeftY = 0.0;
 	viewport.Width = (float)width;
 	viewport.Height = (float)height;
-	viewport.MinDepth = 0.0;
-	viewport.MaxDepth = 1.0;
+	viewport.MinDepth = -1.0;
+	viewport.MaxDepth = 0.0;
 
 	GraphicsContext& Graphics = Context.GetGraphicsContext();
+
 	Graphics.SetRootSignature(m_rootSignature);
 	Graphics.SetDynamicConstantBufferView(1, sizeof(ParticleSharedConstantBuffer), &m_CBperFrameData);
 	Graphics.SetPipelineState(sm_drawParticlesNoTileNoSort);
 	Graphics.TransitionResource(m_vertexBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	Graphics.TransitionResource(m_drawIndirectArgs, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
 	Graphics.TransitionResource(m_indexBuffer, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-	Graphics.SetDynamicDescriptor(4, 0, m_vertexBuffer.ShaderResourceView());
+	Graphics.SetDynamicDescriptor(4, 1, m_vertexBuffer.ShaderResourceView());
 	Graphics.SetDynamicDescriptor(4, 2, m_indexBuffer.ShaderResourceView());
 	Graphics.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	Graphics.TransitionResource(renderTarget, D3D12_RESOURCE_STATE_RENDER_TARGET);

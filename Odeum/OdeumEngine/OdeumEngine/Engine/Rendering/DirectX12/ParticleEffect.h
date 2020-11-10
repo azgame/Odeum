@@ -4,16 +4,18 @@
 #include "D3DIncludes.h"
 
 #include "Buffers/D3DBuffer.h"
+#include "Buffers/ReadbackBuffer.h"
 #include "ParticleStructs.h"
 
 class ComputeContext;
 
 struct ParticleInitProperties
 {
-	ParticleInitProperties() : colour(1.0f, 1.0f, 1.0f, 1.0f)
+	ParticleInitProperties()
 	{
 		ZeroMemory(this, sizeof(*this));
-
+		startColour = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		endColour = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		minLife = 1.0f;
 		maxLife = 2.0f;
 		lifeTime = 20.0f;
@@ -25,7 +27,8 @@ struct ParticleInitProperties
 	}
 
 	// Particle props
-	Colour colour;
+	DirectX::XMFLOAT4 startColour;
+	DirectX::XMFLOAT4 endColour;
 	float minLife;
 	float maxLife;
 	float lifeTime;
@@ -37,6 +40,8 @@ struct ParticleInitProperties
 	Vector3 spread;
 	Vector2 minVelocity;
 	Vector2 maxVelocity;
+	Vector2 minSize;
+	Vector2 maxSize;
 	ParticleLaunchingData lauchingData;
 };
 
@@ -71,8 +76,13 @@ private:
 	uint8_t m_currentParticleBuffer;
 	StructuredBuffer m_particleBuffer[2];
 	StructuredBuffer m_spawnStateBuffer;
-	ByteAddressedBuffer m_dispatchArgsBuffer; 
+	ByteAddressBuffer m_dispatchArgsBuffer; 
 	// D3D12_CPU_DESCRIPTOR_HANDLE m_particleTexture;
+
+	ReadbackBuffer particleCountReadback;
+	UINT* particleCount;
+	ReadbackBuffer threadGroupReadback;
+	UINT* threadGroupCount;
 };
 
 #endif

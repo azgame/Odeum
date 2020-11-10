@@ -32,6 +32,10 @@ private:
 	uint16_t frameCounter;
 	float averageFrameTime;
 	float frameTimeTotal;
+
+	uint32_t particleCount;
+	float averageNumParticles;
+	float totalNumParticles;
 };
 
 #endif

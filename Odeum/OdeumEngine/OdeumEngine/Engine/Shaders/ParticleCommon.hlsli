@@ -1,60 +1,46 @@
-#include "ParticleRS.hlsli"
-
-cbuffer ChangesPerFrame : register(b1)
-{
-    float4x4 viewProj;
-	float4x4 invView;
-    float aspectRatio;
-	float farClipZ;
-};
 
 cbuffer LaunchData : register(b2)
 {
 	float3 launchPosition;
-	float3 xAxis;
-	float3 yAxis;
-	float3 zAxis;
 	float speed;
+	float3 xAxis;
 	uint maxParticles;
+	float3 yAxis;
 	float spawnRate;
-	float3 gravity;
+	float3 zAxis;
 	float groundBounce;
-	uint randomIndices[64];
+	float3 gravity;
+	float pad1;
+	uint4 randomIndices[64];
 };
 
 struct ParticleSpawnData
 {
 	float ageSpeed;
-	float3 startingVelocity;
-	float mass;
 	float rotation;
+	float mass;
 	float startSize;
+	float3 startingVelocity;
 	float endSize;
 	float3 spread;
-	float4 colour;
+	float pad2;
+	float4 startColour;
+	float4 endColour;
 };
 
 struct ParticleSimulationData
 {
 	float3 position;
-	float3 velocity;
 	float mass;
+	float3 velocity;
 	float age;
 	float rotation;
 	uint spawnIndex;
-};
-
-struct ParticleVertex
-{
-    float3 position;
-    float4 colour;
-    float size;
 };
 
 struct ParticleVertexOutput
 {
 	float4 Pos : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
-	nointerpolation float4 Colour : TEXCOORD2;
-	nointerpolation float LinearZ : TEXCOORD3;
+	float4 Colour : TEXCOORD1;
 };

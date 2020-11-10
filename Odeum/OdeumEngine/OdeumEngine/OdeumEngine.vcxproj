@@ -384,6 +384,7 @@
   <ItemGroup>
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
+    <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

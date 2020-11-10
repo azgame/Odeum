@@ -21,6 +21,9 @@ public:
 	{
 		m_resource->Unmap(0, &CD3DX12_RANGE(0, 0));
 	}
+
+private:
+	void CreateExtraViews() {}
 };
 
 #endif

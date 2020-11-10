@@ -89,7 +89,7 @@ D3D12_RESOURCE_DESC D3DBuffer::ResourceDescription()
 }
 
 // create views for uav and srv
-void ByteAddressedBuffer::CreateExtraViews()
+void ByteAddressBuffer::CreateExtraViews()
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;

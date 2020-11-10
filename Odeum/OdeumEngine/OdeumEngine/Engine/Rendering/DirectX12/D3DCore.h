@@ -47,6 +47,7 @@ namespace DXGraphics
 	extern D3D12_RASTERIZER_DESC rasterTwoSided;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadOnly;
+	extern D3D12_DEPTH_STENCIL_DESC depthDisabled;
 
 	float GetFrameRate();
 	float GetFrameTime();

@@ -1,9 +1,10 @@
 #include "ParticleCommon.hlsli"
+#include "ParticleUpdateUtility.hlsli"
 
-cbuffer CB0 : register(b0)
+cbuffer CBO : register(b0)
 {
 	float elapsedTime;
-}
+};
 
 StructuredBuffer<ParticleSpawnData> spawnData : register(t0);
 StructuredBuffer<ParticleSimulationData> inputBuffer : register(t1);
@@ -27,8 +28,8 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	float stepSize = (particle.position.y > 0.0 && particle.velocity.y < 0.0) ?
 		min(elapsedTime, particle.position.y / -particle.velocity.y) : elapsedTime;
 
-	particle.position += particle.velocity * elapsedTime;
-	particle.velocity += gravity * particle.mass * elapsedTime;
+	particle.position += particle.velocity * stepSize;
+	particle.velocity += gravity * particle.mass * stepSize;
 
 	stepSize = elapsedTime - stepSize;
 	if (stepSize > 0.0)
@@ -47,8 +48,8 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	ParticleVertex vertex;
 	vertex.position = particle.position;
 	vertex.size = lerp(spawn.startSize, spawn.endSize, particle.age);
-	vertex.colour = spawn.colour;
-	// vertex.colour *= particle.age * (1.0 - particle.age) * (1.0 - particle.age) * 6.7;
+	vertex.colour = lerp(spawn.startColour, spawn.endColour, particle.age);
+	vertex.colour *= particle.age * (1.0 - particle.age) * (1.0 - particle.age) * 6.7;
 
 	vertexBuffer[vertexBuffer.IncrementCounter()] = vertex;
 }

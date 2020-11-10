@@ -113,6 +113,7 @@ namespace DXGraphics
 	D3D12_RASTERIZER_DESC rasterTwoSided;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
 	D3D12_DEPTH_STENCIL_DESC depthReadOnly;
+	D3D12_DEPTH_STENCIL_DESC depthDisabled;
 
 	float frameTimeAverage = 0.0f;
 	float frameTimeTotal = 0.0f;
@@ -195,15 +196,9 @@ void DXGraphics::Initialize()
 	m_presentRootSig.Finalize(L"Present");
 
 	m_presentPSO.SetRootSignature(m_presentRootSig);
-	m_presentPSO.SetRasterizerState(rasterDesc);
-	rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
-
+	m_presentPSO.SetRasterizerState(rasterTwoSided);
 	m_presentPSO.SetBlendState(alphaBlend);
-
-	m_presentPSO.SetDepthStencilState(depthReadWrite);
-	depthReadWrite.DepthEnable = TRUE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+	m_presentPSO.SetDepthStencilState(depthDisabled);
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);
@@ -350,10 +345,11 @@ void DXGraphics::InitializeCommonState()
 	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	blendPreMultiplied = alphaBlend;
+	blendPreMultiplied.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
 
-	depthReadWrite.DepthEnable = FALSE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	depthReadWrite.DepthEnable = TRUE;
+	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	depthReadWrite.StencilEnable = FALSE;
 	depthReadWrite.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 	depthReadWrite.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
@@ -366,8 +362,13 @@ void DXGraphics::InitializeCommonState()
 	depthReadOnly = depthReadWrite;
 	depthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
+	depthDisabled = depthReadWrite;
+	depthDisabled.DepthEnable = FALSE;
+	depthDisabled.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthDisabled.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	rasterDesc.CullMode = D3D12_CULL_MODE_FRONT;
+	rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
 
 	rasterTwoSided = rasterDesc;
 	rasterTwoSided.CullMode = D3D12_CULL_MODE_NONE;

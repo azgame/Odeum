@@ -1,4 +1,5 @@
 #include "ParticleCommon.hlsli"
+#include "ParticleUpdateUtility.hlsli"
 
 StructuredBuffer<ParticleSpawnData> spawnData : register(t0);
 RWStructuredBuffer<ParticleSimulationData> outputBuffer : register(u2);
@@ -11,7 +12,8 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	if (index >= maxParticles)
 		return;
 
-	uint particleIndex = randomIndices[DTid.x];
+	uint idx = DTid.x;
+	uint particleIndex = randomIndices[idx].x;
 	ParticleSpawnData spawn = spawnData[particleIndex];
 
 	float3 launchVelocity = spawn.startingVelocity.x * xAxis + spawn.startingVelocity.y * yAxis + spawn.startingVelocity.z * zAxis;

@@ -10,8 +10,9 @@
 void ParticleEffect::Initialize()
 {
 	// create a vector of spawn data to be passed into the spawn particle buffer
-	std::vector<ParticleSpawnData> spawnData(kMaxParticles);
-	
+	//std::vector<ParticleSpawnData> spawnData(kMaxParticles);
+	ParticleSpawnData* spawnData = (ParticleSpawnData*)_malloca(sizeof(ParticleSpawnData) * kMaxParticles);
+
 	// For each particle, fill an entry in the spawn data with randomized data, within the ranges provided by the particle effect data
 	for (int i = 0; i < kMaxParticles; i++)
 	{
@@ -22,21 +23,27 @@ void ParticleEffect::Initialize()
 		spawnData[i].startingVelocity.y = Math::RandValInRange(m_properties.maxVelocity.GetX(), m_properties.maxVelocity.GetY());
 		spawnData[i].startingVelocity.z = horizontalVelocity * sin(horizontalAngle);
 		DirectX::XMStoreFloat3(&spawnData[i].spread, m_properties.spread);
-		spawnData[i].startSize = Math::RandValInRange(4.0f, 8.0f);
-		spawnData[i].endSize = Math::RandValInRange(3.0f, 10.0f);
-		DirectX::XMStoreFloat4(&spawnData[i].colour, m_properties.colour);
+		spawnData[i].startSize = Math::RandValInRange(m_properties.minSize.GetX(), m_properties.minSize.GetY());
+		spawnData[i].endSize = Math::RandValInRange(m_properties.maxSize.GetX(), m_properties.maxSize.GetY());
+		spawnData[i].startColour = m_properties.startColour;
+		spawnData[i].endColour = m_properties.endColour;
 		spawnData[i].mass = Math::RandValInRange(m_properties.minMass, m_properties.maxMass);
 		spawnData[i].rotation = Math::RandValInRange(0.0f, m_properties.rotationMax);
 	}
 
 	// Create appropriate buffers (spawn buffer, 2 particle buffers, dispatch args buffer)
-	m_spawnStateBuffer.Create("SpawnDataBuffer", kMaxParticles, sizeof(ParticleSpawnData), spawnData.data());
+	m_spawnStateBuffer.Create("SpawnDataBuffer", kMaxParticles, sizeof(ParticleSpawnData), spawnData);
+
+	_freea(spawnData);
 
 	m_particleBuffer[0].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));
 	m_particleBuffer[1].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));
 
 	__declspec(align(16)) UINT dispatchIndirectData[3] = { 0, 1, 1 };
 	m_dispatchArgsBuffer.Create("Dispatch Args Buffer", 1, sizeof(D3D12_DISPATCH_ARGUMENTS), dispatchIndirectData);
+
+	particleCountReadback.Create(1, 4);
+	threadGroupReadback.Create(1, 4);
 }
 
 void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
@@ -45,9 +52,10 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 
 	// Get 64 random particle indices (between 0 and kMaxParticles) to determine the pre generated particle spawn details to be used
 	for (int i = 0; i < 64; i++)
-		m_properties.lauchingData.randomIndices[i] = Math::RandIntInRange(0, kMaxParticles - 1);
+		m_properties.lauchingData.randomIndices[i].x = Math::RandIntInRange(0, kMaxParticles - 1);
 
-	/* Two particle buffers, one spawn buffer. When particle is spawned, its state (position, velocity, etc.) is written to 1st buffer.
+	/* 
+		Two particle buffers, one spawn buffer. When particle is spawned, its state (position, velocity, etc.) is written to 1st buffer.
 		In the next pass, the state is retrieved from 1st buffer, updated, and written to 2nd buffer. 1st buffer is transitioned so
 		that it can be used to write to. Spawning particles are written to 2nd buffer. Current state of particles is in 2nd buffer.
 		Process repeats for particles until they have exceeded their lifetime, and are removed, opening space for new particles to spawn.
@@ -56,7 +64,17 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	// Pre fill the cbv with particle launching details (ie. spawn location, initial direction, speed, max particles, etc.)
 	// Transition the currently used particle buffer to a shader resource to get the state of each alive particle
 	// Set current particle buffer and spawn buffer as srvs
+
+	/*Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer].GetCounterBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE);
+	Compute.CopyBufferRegion(particleCountReadback, 0, m_particleBuffer[m_currentParticleBuffer].GetCounterBuffer(), 0, 4);
+
+	particleCount = (UINT*)particleCountReadback.Map();
+	if (particleCount != nullptr)
+		std::cout << "Number of particles: " << *particleCount << std::endl;
+	particleCountReadback.UnMap();*/
+
 	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
+
 	Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer], D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
 	Compute.SetDynamicDescriptor(4, 1, m_particleBuffer[m_currentParticleBuffer].ShaderResourceView());
@@ -86,11 +104,10 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	Compute.SetPipelineState(ParticleManager::Get().GetParticleSpawnPSO());
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
 	UINT numSpawnThreads = (UINT)(m_properties.lauchingData.spawnRate * deltaTime);
-	UINT alignedDivide = Utility::AlignedDivide(numSpawnThreads, 64);
-	Compute.Dispatch(alignedDivide, 1, 1);
+	Compute.Dispatch((numSpawnThreads + 63) / 64, 1, 1);
 
 	// Set to finding dispatch args pso
-	// Goal here is to write the number of particles (divided byb 64) to the dispatch args buffer so that when we update our particles,
+	// Goal here is to write the number of particles (divided by 64) to the dispatch args buffer so that when we update our particles,
 	//	we run the appropriate number of thread groups (in the compute shader it is multiplied by 64, so 64 threads per group, totaling # of particles)
 	Compute.SetPipelineState(ParticleManager::Get().GetParticleDispatchIndArgsPSO());
 	Compute.TransitionResource(m_dispatchArgsBuffer, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
