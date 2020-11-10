@@ -2,6 +2,8 @@
 
 #include "Ray.h"
 #include "BoundingBox.h"
+#include "Simplex.h"
+#include "Collider.h"
 
 #include "../Core/OdeumEngine.h"
 
@@ -50,6 +52,7 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, 
 	float e = Math::Dot(xAxis, delta);
 	float f = Math::Dot(ray.direction, xAxis);
 
+	// FIND INTERSECTION PLANES
 	if (fabs(f) > 0.001f)
 	{
 		float t1 = (e + min.GetX()) / f;
@@ -134,6 +137,27 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, 
 
 	ray.t = tMin;
 
+	// FINDING WHICH PLANE THE INTERSECTION WAS ON
+	// First we find out the position of the ray based on t
+	Vector3 pos = ray.FindPosition();
+	
+	// Then we check to see which center plane is closest to the vector
+	std::vector<Vector4> planes = box.GetPlanes();
+	float shortestDistance = VERY_LARGE_FLOAT;
+	float newDistance = 0;
+
+	for (auto p : planes)
+	{
+		// find the center of each plane
+		Vector3 center = box.center + Vector3(p.GetVec() * p.GetW());
+		newDistance = (pos - center).Mag();
+		if (fabs(newDistance) < fabs(shortestDistance)) {
+			shortestDistance = newDistance;
+			Intersection = &p;
+		}
+	}
+
+	// I THINK WE ARE GOOOD
 	return true;
 }
 
@@ -154,4 +178,38 @@ void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& 
 			*Intersection = planes[i];
 		}
 	}
+}
+
+bool CollisionDetection::GJKCollisionDetection(Collider* c1, Collider* c2)
+{
+	// Get initial point with any direction
+	Vector3 supPoint = Math::Support(c1, c2, Vector3(0.0f, 1.0f, 0.0f));
+	
+	// Simplex is stored as an arrary of points, maximum of 4
+	Simplex points;
+	// Add new point to the new simplex
+	points.Push_Front(supPoint);
+
+	// The new direction will be pointing towards the origin
+	Vector3 direction = -supPoint;
+
+	while (true)
+	{
+		supPoint = Math::Support(c1, c2, direction);
+
+		if (Math::Dot(supPoint, direction) <= 0.0f)
+		{
+			// no collision
+			return false;
+		}
+
+		points.Push_Front(supPoint);
+
+		if (Math::NextSimplex(points, direction))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

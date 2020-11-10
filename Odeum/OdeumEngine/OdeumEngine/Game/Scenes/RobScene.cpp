@@ -8,12 +8,17 @@ RobScene::RobScene() : Scene()
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
 	CollisionHandler::GetInstance()->Initialize(1000.0f);
 	object = new GameObject("Engine/Resources/Models/Cube.obj");
-	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
-	newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 	obstacle = new GameObject("Engine/Resources/Models/Cube.obj");
-	obstacle->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<Rigidbody>();
+	object->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	newObject->AddComponent<Rigidbody>();
+	newObject->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
+
+	obstacle->AddComponent<Rigidbody>();
+	obstacle->GetComponent<Rigidbody>()->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
+
 	object->AddComponent <DynamicMovement>();
 	object->AddComponent <KinematicMovement>();
 	object->GetComponent<DynamicMovement>()->shouldAvoid = true;
@@ -22,7 +27,7 @@ RobScene::RobScene() : Scene()
 	//CollisionHandler::GetInstance()->AddObject(object);
 	CollisionHandler::GetInstance()->AddObject(newObject);
 	CollisionHandler::GetInstance()->AddObject(obstacle);
-	std::cout << object->GetPosition().GetX() <<" "<< object->GetPosition().GetY() << std::endl;
+	std::cout << object->GetComponent<Rigidbody>()->GetPosition().GetX() <<" "<< object->GetComponent<Rigidbody>()->GetPosition().GetY() << std::endl;
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
 	object->GetComponent<DynamicMovement>()->target = newObject;
 	//object->GetComponent<KinimaticMovement>()->target = newObject;
@@ -48,7 +53,7 @@ bool RobScene::Initialize()
 void RobScene::Update(const float deltaTime_)
 {
 	// Ray test
-	Ray forward = Ray(Vector3(object->GetPosition()), Vector3(object->GetVelocity()).Normalize());
+	Ray forward = Ray(Vector3(object->GetComponent<Rigidbody>()->GetPosition()), Vector3(object->GetComponent<Rigidbody>()->GetVelocity()).Normalize());
 	Vector4 intersectionPlane;
 
 	// Get a list of collided objects
@@ -66,14 +71,14 @@ void RobScene::Update(const float deltaTime_)
 	GameObject* target = CollisionHandler::GetInstance()->RayGetFirstHit(forward, &intersectionPlane);	
 	Vector3 normal = Vector3(intersectionPlane); // the normal is the first three components of the plane
 
-	std::cout << object->GetPosition().GetX() << " " << object->GetPosition().GetY() << std::endl;
+	std::cout << object->GetComponent<Rigidbody>()->GetPosition().GetX() << " " << object->GetComponent<Rigidbody>()->GetPosition().GetY() << std::endl;
 	if (shouldupdate)
 	{
 		object->Update(deltaTime_);
 	}
 	else
 	{
-		newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
+		newObject->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 		shouldupdate = true;
 	}
 	 teletime -= 1;
@@ -85,13 +90,13 @@ void RobScene::Update(const float deltaTime_)
 		// newObject->SetPosition(Vector4(a, 0.0f, b, 1.0f));
 		 if (swapped==true)
 		 {
-			 newObject->SetPosition(Vector4(5, 0.0f, 2, 1.0f));
+			 newObject->GetComponent<Rigidbody>()->SetPosition(Vector4(5, 0.0f, 2, 1.0f));
 			 swapped = false;
 		 }
 		 else
 		 {
 			 swapped = true;
-			 newObject->SetPosition(Vector4(-5, 0.0f, -2, 1.0f));
+			 newObject->GetComponent<Rigidbody>()->SetPosition(Vector4(-5, 0.0f, -2, 1.0f));
 		 }
 	 }
 

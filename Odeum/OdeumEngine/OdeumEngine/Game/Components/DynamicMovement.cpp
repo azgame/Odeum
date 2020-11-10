@@ -45,7 +45,7 @@ Vector4 DynamicMovement::GetSteering()
 {
 	Vector3 temp;
 	Vector3 direction;
-	Vector4 targetPos = target->GetPosition();
+	Vector4 targetPos = target->GetComponent<Rigidbody>()->GetPosition();
 	if (shouldAvoid)
 	{
 		temp = Vector3(rb->GetVelocity());
@@ -61,12 +61,12 @@ Vector4 DynamicMovement::GetSteering()
 		if (obstacles.find(objectHit) != obstacles.end())
 		{
 			//the normal is curently not working, need to get Plane to calculate the normal =(
-			 temp = Vector3( objectHit->GetPosition());
-			 Vector3 t = Vector3(object->GetPosition());
-			t = Math::Cross(t, Vector3(objectHit->GetPosition()));
+			 temp = Vector3( objectHit->GetComponent<Rigidbody>()->GetPosition());
+			 Vector3 t = Vector3(object->GetComponent<Rigidbody>()->GetPosition());
+			t = Math::Cross(t, Vector3(objectHit->GetComponent<Rigidbody>()->GetPosition()));
 			temp=temp.Normalize();
 			std::cout << "found" << std::endl;
-			targetPos = (temp * avoidDistance) + objectHit->GetPosition();
+			targetPos = (temp * avoidDistance) + objectHit->GetComponent<Rigidbody>()->GetPosition();
 		}
 		
 	}
@@ -75,15 +75,15 @@ Vector4 DynamicMovement::GetSteering()
 	if (!shouldFlee)
 	{
 
-		direction.SetX(targetPos.GetX() - object->GetPosition().GetX());
-		direction.SetY(targetPos.GetY() - object->GetPosition().GetY());
-		direction.SetZ(targetPos.GetZ() - object->GetPosition().GetZ());
+		direction.SetX(targetPos.GetX() - object->GetComponent<Rigidbody>()->GetPosition().GetX());
+		direction.SetY(targetPos.GetY() - object->GetComponent<Rigidbody>()->GetPosition().GetY());
+		direction.SetZ(targetPos.GetZ() - object->GetComponent<Rigidbody>()->GetPosition().GetZ());
 	}
 	else
 	{
-		direction.SetX(object->GetPosition().GetX() - targetPos.GetX());
-		direction.SetY(object->GetPosition().GetY() - targetPos.GetY());
-		direction.SetZ(object->GetPosition().GetZ() - targetPos.GetZ());
+		direction.SetX(object->GetComponent<Rigidbody>()->GetPosition().GetX() - targetPos.GetX());
+		direction.SetY(object->GetComponent<Rigidbody>()->GetPosition().GetY() - targetPos.GetY());
+		direction.SetZ(object->GetComponent<Rigidbody>()->GetPosition().GetZ() - targetPos.GetZ());
 	}
 	float distance = direction.Mag();
 	

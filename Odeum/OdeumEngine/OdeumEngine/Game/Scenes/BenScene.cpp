@@ -37,6 +37,12 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	CollisionHandler::GetInstance()->AddObject(object);
 	CollisionHandler::GetInstance()->AddObject(object2);
+
+
+	Vector4 testIntersectionPlane;
+	Ray testRay = Ray(Vector3(), Vector3());
+	OrientedBoundingBox testObb;
+	CollisionDetection::RayOBBIntersection(testRay, testObb, &testIntersectionPlane);
 }
 
 BenScene::~BenScene()

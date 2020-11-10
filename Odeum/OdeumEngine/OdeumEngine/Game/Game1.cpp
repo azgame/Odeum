@@ -4,6 +4,7 @@
 #include "Scenes/StartScene.h"
 #include "Scenes/RobScene.h"
 #include "Scenes/BenScene.h"
+#include "Scenes/GJKTestScene.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -55,6 +56,8 @@ void Game1::BuildScene()
 	case 3:
 		m_currentScene = new BenScene();
 		break;
+	case 4:
+		m_currentScene = new GJKTestScene();
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;

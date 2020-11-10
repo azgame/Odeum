@@ -73,7 +73,7 @@ struct OrientedBoundingBox
 
 	// Update with either a quaternion or a rotation matrix. Need to update each basis vector (basis -.getx(), -.gety(), -.getz()) with the new orientation
 	// Reference - https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
-	void UpdateOrientation(Quaternion q) 
+	/*void UpdateOrientation(Quaternion q) 
 	{
 		// find the angle and axis of the quaternion rotation and apply that rotation to the matrix
 		// make sure the quaternion is normalized
@@ -112,9 +112,8 @@ struct OrientedBoundingBox
 		basis.SetY(rot * basis.GetY());
 		basis.SetZ(rot * basis.GetZ());
 	}
-
-	// ^^^ that might have been redundant, I REALLY HOPE THIS ISN'T ALL WE HAD TO DO 
-	void UpdateOrientation2(Quaternion q)
+	*/
+	void UpdateOrientation(Quaternion q)
 	{
 		// Matrix already has a constructor that builds a rotation matrix from a quaternion
 		Matrix3 m = Matrix3(q);

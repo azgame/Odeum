@@ -2,6 +2,7 @@
 #define QUATERNION_H
 
 #include "Vector.h"
+#include "EulerAngles.h"
 
 class Quaternion
 {
@@ -36,5 +37,44 @@ protected:
 };
 
 Vector4::Vector4(Quaternion q_) { vec = q_.GetVector4(); }
+
+// This is where we got the quaternion to euler calculations
+// https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
+
+namespace Math {
+	inline EulerAngles QuatToEuler(Quaternion q_) {
+		// can't seem to access members of quaternion so we must turn it into a vector4 first
+		Vector4 q = q_.GetVector4();
+		EulerAngles e;
+
+		// we use squared values a lot so make variables for them (doubles more precise)
+		double sqw = q.GetW() * q.GetW();
+		double sqx = q.GetX() * q.GetX();
+		double sqy = q.GetY() * q.GetY();
+		double sqz = q.GetZ() * q.GetZ();
+
+		double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+		double test = q.GetX() * q.GetY() + q.GetZ() * q.GetW();
+
+		// 
+		if (test > 0.49999 * unit) { // singularity at north pole
+			e.yaw = 2 * atan2(q.GetX(), q.GetW());
+			e.pitch = PI / 2;
+			e.roll = 0;
+			return e;
+		}
+		if (test < -0.49999 * unit) { // singularity at south pole
+			e.yaw = -2 * atan2(q.GetX(), q.GetW());
+			e.pitch = -PI / 2;
+			e.roll = 0;
+			return e;
+		}
+		e.yaw = atan2(2 * q.GetY() * q.GetW() - 2 * q.GetX() * q.GetZ(), sqx - sqy - sqz + sqw);
+		e.pitch = asin(2 * test / unit);
+		e.roll = atan2(2 * q.GetX() * q.GetW() - 2 * q.GetY() * q.GetZ(), -sqx + sqy - sqz + sqw);
+
+		return e;
+	};
+}
 
 #endif
