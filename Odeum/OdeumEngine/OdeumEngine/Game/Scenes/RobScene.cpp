@@ -3,12 +3,13 @@
 #include "../Components/DynamicMovement.h"
 #include "../Components/Rigidbody.h"
 #include "../Engine/Math/CollisionHandler.h"
+using namespace std;
 RobScene::RobScene() : Scene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
 	CollisionHandler::GetInstance()->Initialize(1000.0f);
 	object = new GameObject("Engine/Resources/Models/Cube.obj");
-	object->SetPosition(Vector4(-1.0f, 0.0f, 0.0f, 1.0f));
+	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
 	newObject->SetPosition(Vector4(5.0f, 0.0f, 5.0f, 1.0f));
 	obstacle = new GameObject("Engine/Resources/Models/Cube.obj");
@@ -16,7 +17,6 @@ RobScene::RobScene() : Scene()
 	object->AddComponent<Rigidbody>();
 	object->AddComponent <DynamicMovement>();
 	object->GetComponent<DynamicMovement>()->shouldAvoid = true;
-	
 
 	obstacle->SetTag("Obstacle");
 	object->SetTag("Player");
@@ -45,6 +45,7 @@ bool RobScene::Initialize()
 
 void RobScene::Update(const float deltaTime_)
 {
+	cout << object->GetPosition().GetX()<< " "<< object->GetPosition().GetY()<< " "<< object->GetPosition().GetZ() << std::endl;
 
 
 	object->Update(deltaTime_);

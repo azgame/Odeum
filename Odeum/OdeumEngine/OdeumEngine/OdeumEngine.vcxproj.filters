@@ -69,6 +69,17 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
+    <ClCompile Include="Engine\Recast\Recast.cpp" />
+    <ClCompile Include="Engine\Recast\RecastAlloc.cpp" />
+    <ClCompile Include="Engine\Recast\RecastArea.cpp" />
+    <ClCompile Include="Engine\Recast\RecastAssert.cpp" />
+    <ClCompile Include="Engine\Recast\RecastContour.cpp" />
+    <ClCompile Include="Engine\Recast\RecastFilter.cpp" />
+    <ClCompile Include="Engine\Recast\RecastLayers.cpp" />
+    <ClCompile Include="Engine\Recast\RecastMesh.cpp" />
+    <ClCompile Include="Engine\Recast\RecastMeshDetail.cpp" />
+    <ClCompile Include="Engine\Recast\RecastRasterization.cpp" />
+    <ClCompile Include="Engine\Recast\RecastRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -160,6 +171,9 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
+    <ClInclude Include="Engine\Recast\Recast.h" />
+    <ClInclude Include="Engine\Recast\RecastAssert.h" />
+    <ClInclude Include="Engine\Recast\RecastAlloc.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -35,8 +35,8 @@ void Rigidbody::Update(float deltaTime)
 	rb_angle += rb_angleSpeed;
 
 	//UpdateOrientationQuaternion();
-
-	UpdateTransform();
+	m_gameObject->SetPosition(rb_position);
+	//UpdateTransform();
 }
 
 // translate the position

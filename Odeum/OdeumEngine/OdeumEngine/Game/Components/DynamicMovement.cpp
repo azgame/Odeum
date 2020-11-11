@@ -145,5 +145,6 @@ Vector4 DynamicMovement::GetSteering()
 		temp = temp * maxAcceleration;
 	}
 	//only using x and z
+	
 	return Vector4(temp.GetX(), 0.0f, temp.GetZ(), 0.0f);
 }
