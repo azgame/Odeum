@@ -268,6 +268,8 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);
 	m_overlayBuffer.Create(L"Overlay buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 
+	OdeumEngine::Get().GetCamera().SetAspectRatio((float)s_displayWidth / (float)s_displayHeight);
+
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
 }

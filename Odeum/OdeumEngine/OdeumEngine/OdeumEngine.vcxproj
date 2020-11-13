@@ -212,6 +212,7 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\JSONUtility\json.hpp" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
     <ClInclude Include="Engine\Core\EngineProfiling.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />

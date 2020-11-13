@@ -66,7 +66,7 @@ void D3DRenderer::Initialize(Window& Window)
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 100000;
+	particleProps.lauchingData.maxParticles = 40000;
 	particleProps.lauchingData.spawnRate = 64.0f;
 	particleProps.lauchingData.speed = 1.0f;
 	particleProps.lauchingData.groundBounce = 1.25f;
@@ -179,7 +179,7 @@ void D3DRenderer::UIRender()
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
 	ImGui::Text("Render Pass frame time: %.2f ms/frame", averageFrameTime);
-	ImGui::Text("Total Number of On Screen Particles: %.0f", averageNumParticles);
+	ImGui::Text("Total Number of Particles: %.0f", averageNumParticles);
 
 	ImGui::End();
 

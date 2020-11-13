@@ -160,6 +160,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
+    <ClInclude Include="Engine\JSONUtility\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -7,6 +7,9 @@
 
 #include "TestRender.h"
 
+#include "../JSONUtility/json.hpp"
+#include "Utility.h"
+
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
 OdeumEngine::OdeumEngine()
@@ -82,8 +85,16 @@ void OdeumEngine::Run()
 
 bool OdeumEngine::Initialize()
 {	
+	std::wstring windowName;
+	uint32_t windowWidth, windowHeight;
+	bool vSync, ultraWide;
+
+	LoadEngineProfile("Engine/Config/EngineConfig.json", windowName, windowWidth, windowHeight, vSync, ultraWide);
+
 	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
-	m_window->Initialize(1600, 900, false, false);
+	m_window->Initialize(windowName, windowWidth, windowHeight, vSync, ultraWide);
+
+	m_camera.SetAspectRatio((float)windowWidth / (float)windowHeight);
 	
 	m_engineTimer.Initialize();
 
@@ -95,7 +106,8 @@ bool OdeumEngine::Initialize()
 		return false;
 	}
 
-	m_currentScene = GetSceneIndex("SceneLoad.txt");
+	// m_currentScene = GetSceneIndex("SceneLoad.txt");
+	LoadGameSceneIndex("Engine/Config/EngineConfig.json");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
 
 	// Test
@@ -142,4 +154,30 @@ int OdeumEngine::GetSceneIndex(std::string fileName)
 
 	sceneFile.close();
 	return sceneNum;
+}
+
+void OdeumEngine::LoadEngineProfile(std::string FileName, std::wstring& WindowName, uint32_t& Width, uint32_t& Height, bool& VSync, bool& UltraWide)
+{
+	std::ifstream configFile(FileName);
+	nlohmann::json jsonReader;
+
+	configFile >> jsonReader;
+	configFile.close();
+
+	WindowName = Utility::MakeWStr(jsonReader["Config"]["GameName"].get<std::string>());
+	Width =jsonReader["Config"]["WindowWidth"].get<int>();
+	Height = jsonReader["Config"]["WindowHeight"].get<int>();
+	VSync = jsonReader["Config"]["VSync"].get<bool>();
+	UltraWide = jsonReader["Config"]["UltraWide"].get<bool>();
+}
+
+void OdeumEngine::LoadGameSceneIndex(std::string FileName)
+{
+	std::ifstream configFile(FileName);
+	nlohmann::json jsonReader;
+
+	configFile >> jsonReader;
+	configFile.close();
+
+	m_currentScene = jsonReader["Config"]["Scene"].get<int>();
 }
