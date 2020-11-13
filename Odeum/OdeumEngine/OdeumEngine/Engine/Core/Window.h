@@ -14,7 +14,7 @@ class Window
 {
 public:
 
-	void Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide);
+	void Initialize(std::wstring WindowName, uint32_t width, uint32_t height, bool vSync, bool ultraWide);
 	void Update();
 	 LRESULT MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
@@ -49,7 +49,7 @@ private:
 
 	WindowData m_data;
 
-	LPCWSTR				m_applicationName;
+	std::wstring			m_applicationName;
 	HINSTANCE				m_hInstance;
 	HWND					m_hwnd;
 

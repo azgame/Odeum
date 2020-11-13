@@ -40,7 +40,7 @@ protected:
 	D3D12_CPU_DESCRIPTOR_HANDLE m_srv;
 };
 
-class ByteAddressedBuffer : public D3DBuffer
+class ByteAddressBuffer : public D3DBuffer
 {
 public:
 	virtual void CreateExtraViews() override;
@@ -58,12 +58,12 @@ public:
 
 	virtual void CreateExtraViews() override;
 
-	ByteAddressedBuffer& GetCounterBuffer() { return m_counterBuffer; }
+	ByteAddressBuffer& GetCounterBuffer() { return m_counterBuffer; }
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCounterSRV(CommandContext& context_);
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCounterUAV(CommandContext& context_);
 
 private:
-	ByteAddressedBuffer m_counterBuffer; // if we want to read the atomic compute counter for this buffer
+	ByteAddressBuffer m_counterBuffer; // if we want to read the atomic compute counter for this buffer
 };
 
 #endif

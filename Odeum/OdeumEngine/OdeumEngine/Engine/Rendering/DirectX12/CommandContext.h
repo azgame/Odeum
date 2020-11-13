@@ -51,6 +51,24 @@ The idea of the context is to extrapolate all of the functions needed for settin
  The code here is the culmination of all the wrappers and managers created. The context simply wraps the specific gpu calls such that it is simpler for the end user
 */
 
+struct DWParam
+{
+    DWParam(FLOAT f) : Float(f) {}
+    DWParam(UINT u) : Uint(u) {}
+    DWParam(INT i) : Int(i) {}
+
+    void operator= (FLOAT f) { Float = f; }
+    void operator= (UINT u) { Uint = u; }
+    void operator= (INT i) { Int = i; }
+
+    union
+    {
+        FLOAT Float;
+        UINT Uint;
+        INT Int;
+    };
+};
+
 #define VALID_COMPUTE_QUEUE_RESOURCE_STATES \
     ( D3D12_RESOURCE_STATE_UNORDERED_ACCESS \
     | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE \
@@ -206,11 +224,11 @@ public:
 
     // Set data into root signature
     void SetConstantArray(UINT rootIndex_, UINT numConstants_, const void* pConstants);
-    void SetConstant(UINT rootIndex_, UINT val_, UINT Offset = 0);
-    void SetConstants(UINT rootIndex_, UINT x_);
-    void SetConstants(UINT rootIndex_, UINT x_, UINT y_);
-    void SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_);
-    void SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_, UINT w_);
+    void SetConstant(UINT rootIndex_, DWParam val_, UINT Offset = 0);
+    void SetConstants(UINT rootIndex_, DWParam x_);
+    void SetConstants(UINT rootIndex_, DWParam x_, DWParam y_);
+    void SetConstants(UINT rootIndex_, DWParam x_, DWParam y_, DWParam z_);
+    void SetConstants(UINT rootIndex_, DWParam x_, DWParam y_, DWParam z_, DWParam w_);
     void SetConstantBuffer(UINT rootIndex_, D3D12_GPU_VIRTUAL_ADDRESS cbv_);
     void SetDynamicConstantBufferView(UINT rootIndex_, size_t bufferSize_, const void* cBufferData_);
     void SetBufferSRV(UINT rootIndex_, const D3DBuffer& srv_, UINT64 offset_ = 0);
@@ -238,6 +256,9 @@ public:
         UINT startVertexLocation_ = 0, UINT startInstanceLocation_ = 0);
     void DrawIndexedInstanced(UINT indexCountPerInstance_, UINT instanceCount_, UINT startIndexLocation_,
         int baseVertexLocation_, UINT startInstanceLocation_);
+    void DrawIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset = 0);
+    void ExecuteIndirect(CommandSignature& CommandSig, D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset = 0,
+        uint32_t MaxCommands = 1, D3DBuffer* CommandCounterBuffer = nullptr, uint64_t CounterOffset = 0);
 };
 
 class ComputeContext : public CommandContext
@@ -251,11 +272,11 @@ public:
     void SetRootSignature(const RootSignature& RootSig);
 
     void SetConstantArray(UINT RootIndex, UINT NumConstants, const void* pConstants);
-    void SetConstant(UINT RootIndex, UINT Val, UINT Offset = 0);
-    void SetConstants(UINT RootIndex, UINT X);
-    void SetConstants(UINT RootIndex, UINT X, UINT Y);
-    void SetConstants(UINT RootIndex, UINT X, UINT Y, UINT Z);
-    void SetConstants(UINT RootIndex, UINT X, UINT Y, UINT Z, UINT W);
+    void SetConstant(UINT RootIndex, DWParam Val, UINT Offset = 0);
+    void SetConstants(UINT RootIndex, DWParam X);
+    void SetConstants(UINT RootIndex, DWParam X, DWParam Y);
+    void SetConstants(UINT RootIndex, DWParam X, DWParam Y, DWParam Z);
+    void SetConstants(UINT RootIndex, DWParam X, DWParam Y, DWParam Z, DWParam W);
     void SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV);
     void SetDynamicConstantBufferView(UINT RootIndex, size_t BufferSize, const void* BufferData);
     void SetDynamicSRV(UINT RootIndex, size_t BufferSize, const void* BufferData);
@@ -390,35 +411,35 @@ inline void ComputeContext::SetConstantArray(UINT RootEntry, UINT NumConstants, 
     m_commandList->SetComputeRoot32BitConstants(RootEntry, NumConstants, pConstants, 0);
 }
 
-inline void ComputeContext::SetConstant(UINT RootEntry, UINT Val, UINT Offset)
+inline void ComputeContext::SetConstant(UINT RootEntry, DWParam Val, UINT Offset)
 {
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Val, Offset);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Val.Uint, Offset);
 }
 
-inline void ComputeContext::SetConstants(UINT RootEntry, UINT X)
+inline void ComputeContext::SetConstants(UINT RootEntry, DWParam X)
 {
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X.Uint, 0);
 }
 
-inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y)
+inline void ComputeContext::SetConstants(UINT RootEntry, DWParam X, DWParam Y)
 {
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X.Uint, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y.Uint, 1);
 }
 
-inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y, UINT Z)
+inline void ComputeContext::SetConstants(UINT RootEntry, DWParam X, DWParam Y, DWParam Z)
 {
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z, 2);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X.Uint, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y.Uint, 1);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z.Uint, 2);
 }
 
-inline void ComputeContext::SetConstants(UINT RootEntry, UINT X, UINT Y, UINT Z, UINT W)
+inline void ComputeContext::SetConstants(UINT RootEntry, DWParam X, DWParam Y, DWParam Z, DWParam W)
 {
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, X, 0);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y, 1);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z, 2);
-    m_commandList->SetComputeRoot32BitConstant(RootEntry, W, 3);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, X.Uint, 0);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Y.Uint, 1);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, Z.Uint, 2);
+    m_commandList->SetComputeRoot32BitConstant(RootEntry, W.Uint, 3);
 }
 
 inline void GraphicsContext::SetConstantArray(UINT rootIndex_, UINT numConstants_, const void* pConstants_)
@@ -426,35 +447,35 @@ inline void GraphicsContext::SetConstantArray(UINT rootIndex_, UINT numConstants
     m_commandList->SetGraphicsRoot32BitConstants(rootIndex_, numConstants_, pConstants_, 0);
 }
 
-inline void GraphicsContext::SetConstant(UINT rootIndex_, UINT val_, UINT offset_)
+inline void GraphicsContext::SetConstant(UINT rootIndex_, DWParam val_, UINT offset_)
 {
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, val_, offset_);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, val_.Uint, offset_);
 }
 
-inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_)
+inline void GraphicsContext::SetConstants(UINT rootIndex_, DWParam x_)
 {
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_, 0);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_.Uint, 0);
 }
 
-inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_)
+inline void GraphicsContext::SetConstants(UINT rootIndex_, DWParam x_, DWParam y_)
 {
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_, 0);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_, 1);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_.Uint, 0);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_.Uint, 1);
 }
 
-inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_)
+inline void GraphicsContext::SetConstants(UINT rootIndex_, DWParam x_, DWParam y_, DWParam z_)
 {
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_, 0);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_, 1);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, z_, 2);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_.Uint, 0);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_.Uint, 1);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, z_.Uint, 2);
 }
 
-inline void GraphicsContext::SetConstants(UINT rootIndex_, UINT x_, UINT y_, UINT z_, UINT w_)
+inline void GraphicsContext::SetConstants(UINT rootIndex_, DWParam x_, DWParam y_, DWParam z_, DWParam w_)
 {
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_, 0);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_, 1);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, z_, 2);
-    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, w_, 3);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, x_.Uint, 0);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, y_.Uint, 1);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, z_.Uint, 2);
+    m_commandList->SetGraphicsRoot32BitConstant(rootIndex_, w_.Uint, 3);
 }
 
 inline void ComputeContext::SetConstantBuffer(UINT RootIndex, D3D12_GPU_VIRTUAL_ADDRESS CBV)
@@ -480,7 +501,7 @@ inline void ComputeContext::SetDynamicConstantBufferView(UINT RootIndex, size_t 
     ASSERT(BufferData != nullptr && Utility::isAligned(BufferData, 16));
     BufferEntry constantBuffer = m_CpuBufferAllocator.Allocate(BufferSize);
     memcpy(constantBuffer.CpuAddress, BufferData, BufferSize);
-    m_commandList->SetGraphicsRootConstantBufferView(RootIndex, constantBuffer.GpuAddress);
+    m_commandList->SetComputeRootConstantBufferView(RootIndex, constantBuffer.GpuAddress);
 }
 
 inline void GraphicsContext::SetDynamicVB(UINT slot_, size_t numVerts_, size_t vertStride_, const void* vertexBufferData_)
@@ -679,13 +700,30 @@ inline void GraphicsContext::DrawIndexedInstanced(UINT indexCountPerInstance_, U
     m_commandList->DrawIndexedInstanced(indexCountPerInstance_, instanceCount_, startIndexLocation_, baseVertexLocation_, startInstanceLocation_);
 }
 
-inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
+inline void GraphicsContext::ExecuteIndirect(CommandSignature& CommandSig,
     D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset,
     uint32_t MaxCommands, D3DBuffer* CommandCounterBuffer, uint64_t CounterOffset)
 {
     FlushResourceBarriers();
     m_dynamicViewDescHeap.CommitGraphicsDescriptorTables(m_commandList);
     m_dynamicSamplerDescHeap.CommitGraphicsDescriptorTables(m_commandList);
+    m_commandList->ExecuteIndirect(CommandSig.GetSignature(), MaxCommands,
+        ArgumentBuffer.GetResource(), ArgumentStartOffset,
+        CommandCounterBuffer == nullptr ? nullptr : CommandCounterBuffer->GetResource(), CounterOffset);
+}
+
+inline void GraphicsContext::DrawIndirect(D3DBuffer& ArgumentBuffer, uint64_t ArgumentBufferOffset)
+{
+    ExecuteIndirect(DXGraphics::DrawIndirectCommandSignature, ArgumentBuffer, ArgumentBufferOffset);
+}
+
+inline void ComputeContext::ExecuteIndirect(CommandSignature& CommandSig,
+    D3DBuffer& ArgumentBuffer, uint64_t ArgumentStartOffset,
+    uint32_t MaxCommands, D3DBuffer* CommandCounterBuffer, uint64_t CounterOffset)
+{
+    FlushResourceBarriers();
+    m_dynamicViewDescHeap.CommitComputeDescriptorTables(m_commandList);
+    m_dynamicSamplerDescHeap.CommitComputeDescriptorTables(m_commandList);
     m_commandList->ExecuteIndirect(CommandSig.GetSignature(), MaxCommands,
         ArgumentBuffer.GetResource(), ArgumentStartOffset,
         CommandCounterBuffer == nullptr ? nullptr : CommandCounterBuffer->GetResource(), CounterOffset);

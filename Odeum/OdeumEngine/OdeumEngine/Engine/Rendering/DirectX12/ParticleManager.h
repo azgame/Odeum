@@ -5,17 +5,16 @@
 #include "PipelineState.h"
 #include "ParticleEffect.h"
 #include "CommandContext.h"
+#include "Buffers/ReadbackBuffer.h"
 
 class GraphicsPSO;
 class RootSignature;
 class Camera;
 
-struct ParticleSharedConstantBuffer
+__declspec(align(16)) struct ParticleSharedConstantBuffer
 {
 	Matrix4 viewProjMatrix;
-	float aspectRatio;
-	float width;
-	float height;
+	Matrix4 invView;
 };
 
 class ParticleManager
@@ -25,18 +24,26 @@ public:
 	ParticleManager();
 	~ParticleManager();
 
-	static ParticleManager& Get() { return *sm_instance; }
+	static ParticleManager& Get() 
+	{ 
+		if (sm_instance == nullptr)
+			sm_instance = new ParticleManager();
+
+		return *sm_instance; 
+	}
 
 	void Initialize(uint32_t Width, uint32_t Height);
 	void CreateEffect(ParticleInitProperties Properties);
 	void Update(ComputeContext& Compute, float deltaTime);
-	void Render(CommandContext& Context, const Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
+	void Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
 	void Uninitialize();
 
 	ComputePSO GetParticleSpawnPSO() { return sm_particleSpawnCS; }
 	ComputePSO GetParticleUpdatePSO() { return sm_particleUpdateCS; }
 	ComputePSO GetParticleDispatchIndArgsPSO() { return sm_particleDispatchIndirectArgsCS; }
 	StructuredBuffer GetParticleOutputBuffer() { return m_vertexBuffer; }
+
+	uint32_t GetTotalNumParticles() { return *particleCount; }
 
 private:
 
@@ -52,8 +59,11 @@ private:
 	RootSignature m_rootSignature;
 	StructuredBuffer m_indexBuffer;
 	StructuredBuffer m_vertexBuffer;
-	ByteAddressedBuffer m_drawIndirectArgs;
-	ByteAddressedBuffer m_particleFinalDispatchIndirectArgs;
+	ByteAddressBuffer m_drawIndirectArgs;
+	ByteAddressBuffer m_particleFinalDispatchIndirectArgs;
+
+	ReadbackBuffer readBack;
+	UINT* particleCount;
 
 	ParticleSharedConstantBuffer m_CBperFrameData;
 	

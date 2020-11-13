@@ -124,7 +124,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	return WindowHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 }
 
-void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide)
+void Window::Initialize(std::wstring WindowName, uint32_t width, uint32_t height, bool vSync, bool ultraWide)
 {
 	WindowHandle = this;
 
@@ -134,7 +134,7 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 	m_hInstance = GetModuleHandle(NULL);
 
 	// Give the application a name
-	m_applicationName = L"OdeumEngine";
+	m_applicationName = WindowName;
 
 	// Setup the windows class with default settings
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -147,7 +147,7 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = m_applicationName;
+	wc.lpszClassName = m_applicationName.c_str();
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	// Register the window class
@@ -179,22 +179,22 @@ void Window::Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraW
 		m_data.xPos = m_data.yPos = 0;
 
 		// Create the window with the screen settings and get the handle to it
-		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName.c_str(), m_applicationName.c_str(),
 			WS_POPUP,
 			m_data.xPos, m_data.yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
 	}
 	else
 	{
-		m_data.width = 1600;
-		m_data.height = 900;
-		m_data.ultraWide = (m_data.width / m_data.height == 21.0f / 9.0f);
+		m_data.width = width;
+		m_data.height = height;
+		m_data.ultraWide = ultraWide;
 
 		// Place the window in the middle of the screen
 		m_data.xPos = (GetSystemMetrics(SM_CXSCREEN) - m_data.width) / 2;
 		m_data.yPos = (GetSystemMetrics(SM_CYSCREEN) - m_data.height) / 2;
 
 		// Create the window with the screen settings and get the handle to it
-		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName.c_str(), m_applicationName.c_str(),
 			WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_THICKFRAME | WS_OVERLAPPEDWINDOW,
 			m_data.xPos, m_data.yPos, m_data.width, m_data.height, NULL, NULL, m_hInstance, NULL);
 	}
@@ -222,7 +222,7 @@ void Window::UninitializeWindow()
 	m_hwnd = NULL;
 
 	// Remove the application instance
-	UnregisterClass(m_applicationName, m_hInstance);
+	UnregisterClass(m_applicationName.c_str(), m_hInstance);
 	m_hInstance = NULL;
 
 	WindowHandle = NULL;

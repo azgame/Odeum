@@ -39,6 +39,7 @@ void DynamicDescriptorHeap::CleanupUsedHeaps(uint64_t fenceValue_)
 	RetireCurrentHeap();
 	RetireUsedHeaps(fenceValue_);
 	m_graphicsHandleCache.ClearCache();
+	m_computeHandleCache.ClearCache();
 }
 
 // Bypass setting descriptor handles via tables and place a single handle directly into the heap. Not thread safe
@@ -162,6 +163,7 @@ void DynamicDescriptorHeap::CopyAndBindStagedTables(DescriptorHandleCache& handl
 void DynamicDescriptorHeap::UnbindAllValid()
 {
 	m_graphicsHandleCache.UnbindAllValid();
+	m_computeHandleCache.UnbindAllValid();
 }
 
 // Determine needed space for handle cache

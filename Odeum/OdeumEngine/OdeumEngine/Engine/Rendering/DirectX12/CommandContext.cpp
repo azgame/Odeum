@@ -277,6 +277,10 @@ void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const v
 
 void CommandContext::FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_)
 {
+    BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
+    size_t alignedDivide = Utility::AlignedDivide(numBytes_, 16);
+    memset(tempSpace.CpuAddress, value_, numBytes_);
+    CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
 }
 
 void CommandContext::TransitionResource(D3DResource& resource_, D3D12_RESOURCE_STATES newState_, bool flushNow)
@@ -348,7 +352,7 @@ void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOU
 void CommandContext::InsertUAVBarrier(D3DResource& resource_, bool flushNow)
 {
     ASSERT(m_numBarriersToFlush < 16, "Can't have more than 16 barriers");
-    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush];
+    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush++];
 
     barrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
     barrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

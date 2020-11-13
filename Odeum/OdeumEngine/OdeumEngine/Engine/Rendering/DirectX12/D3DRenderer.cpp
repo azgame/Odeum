@@ -1,30 +1,18 @@
-#include "TestRender.h"
+#include "D3DRenderer.h"
 
-#include "../Rendering/DirectX12/D3DCore.h"
-#include "../Rendering/DirectX12/Buffers/ColourBuffer.h"
-#include "../Rendering/DirectX12/Buffers/DepthBuffer.h"
-#include "../Rendering/DirectX12/LightSource.h"
-#include "../Rendering/DirectX12/SceneGraph.h"
-#include "../Rendering/DirectX12/SamplerDesc.h"
-#include "../Rendering/DirectX12/ParticleManager.h"
+#include "D3DCore.h"
+#include "Buffers/ColourBuffer.h"
+#include "Buffers/DepthBuffer.h"
+#include "LightSource.h"
+#include "SceneGraph.h"
+#include "SamplerDesc.h"
+#include "ParticleManager.h"
+#include "RootSignature.h"
 
-#include "OdeumEngine.h"
+#include "../../Core/Camera.h"
+#include "../../Core/Window.h"
 
-TestRender::TestRender()
-{
-	m_eventFrameLimit = 16;
-	m_eventQueue.resize(m_eventFrameLimit);
-	m_bufferHead = 0;
-	m_bufferTail = 0;
-}
-
-TestRender::~TestRender()
-{
-	m_colourPSO.Destroy();
-	m_rootSig.Destroy();
-}
-
-void TestRender::Attach()
+void D3DRenderer::Initialize(Window& Window)
 {
 	SamplerDesc defaultSampler;
 	defaultSampler.MaxAnisotropy = 8;
@@ -59,50 +47,45 @@ void TestRender::Attach()
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
 
-	//ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
+	ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
 
 	ParticleInitProperties particleProps;
-	particleProps.startColour = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	particleProps.lifeTime = 15.0f;
-	particleProps.minLife = 1.0f;
-	particleProps.maxLife = 10.0f;
-	particleProps.minMass = 1.0f;
-	particleProps.maxMass = 5.0f;
+	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.3f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(0.8f, 1.0f, 0.0f, 1.0f);
+	particleProps.lifeTime = FLT_MAX;
+	particleProps.minLife = 10.0f;
+	particleProps.maxLife = 25.0f;
+	particleProps.minMass = 0.1f;
+	particleProps.maxMass = 2.0f;
 	particleProps.rotationMax = 1.0f;
-	particleProps.minVelocity = Vector2(-1.0f, -1.0f);
-	particleProps.maxVelocity = Vector2(1.0f, 1.0f);
+	particleProps.spread = Vector3(20.0f, 50.0f, 20.0f);
+	particleProps.minVelocity = Vector2(1.0f, 1.0f);
+	particleProps.maxVelocity = Vector2(2.0f, 2.0f);
+	particleProps.minSize = Vector2(0.0050f, 0.0075f);
+	particleProps.maxSize = Vector2(0.01f, 0.0125f);
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 1000;
-	particleProps.lauchingData.spawnRate = 2.0f;
-	particleProps.lauchingData.speed = 3.0f;
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(4.0f, 0.0f, -5.0f));
+	particleProps.lauchingData.maxParticles = 40000;
+	particleProps.lauchingData.spawnRate = 64.0f;
+	particleProps.lauchingData.speed = 1.0f;
+	particleProps.lauchingData.groundBounce = 1.25f;
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -1.0f, 0.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
 	ParticleManager::Get().CreateEffect(particleProps);
 
 	CreateUIResources();
-	InitializeUI();
+	InitializeUI(Window);
 }
 
-void TestRender::Detach()
+void D3DRenderer::Update(float deltaTime)
 {
-	m_rootSig.Destroy();
-	m_colourPSO.Destroy();
-
-	if (m_pHeap) m_pHeap->Release();
 }
 
-void TestRender::Update(float deltaTime_)
+void D3DRenderer::Render(Camera& Camera, float deltaTime)
 {
 	SCOPEDTIMER(timer);
-
-	while (m_bufferHead != m_bufferTail)
-	{
-		// Handle events here
-		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
-	}
 
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -124,15 +107,17 @@ void TestRender::Update(float deltaTime_)
 		DirectX::XMMATRIX model;
 		DirectX::XMFLOAT3 viewerPos;
 	} vsConstants;
-	vsConstants.viewProj = OdeumEngine::Get().GetCamera().GetViewProjMatrix();
-	DirectX::XMStoreFloat3(&vsConstants.viewerPos, OdeumEngine::Get().GetCamera().GetPosition());
+	vsConstants.viewProj = Camera.GetViewProjMatrix();
+	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 20.0f, 20.0f));
+	DirectX::XMStoreFloat3(&light.position, Vector3(10.0f, 20.0f, -30.0f));
 	light.radiusSq = 4000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(0.3f, 0.3f, 0.3f));
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
+
+	ParticleManager::Get().Update(graphics.GetComputeContext(), deltaTime);
 
 	graphics.TransitionResource(DXGraphics::m_presentBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	graphics.TransitionResource(DXGraphics::m_sceneDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
@@ -167,8 +152,10 @@ void TestRender::Update(float deltaTime_)
 			graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
-		}	
+		}
 	}
+
+	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);
 
 	graphics.Finish();
 
@@ -176,36 +163,34 @@ void TestRender::Update(float deltaTime_)
 	{
 		averageFrameTime = frameTimeTotal / 120.0f;
 		frameTimeTotal = 0.0f;
+		averageNumParticles = totalNumParticles / 120.f;
+		totalNumParticles = 0.0f;
 	}
 
 	frameTimeTotal += timer.GetTime();
-	frameCounter = (frameCounter + 1) % 120;	
+	totalNumParticles += ParticleManager::Get().GetTotalNumParticles();
+	frameCounter = (frameCounter + 1) % 120;
 }
 
-void TestRender::UIRender()
+void D3DRenderer::UIRender()
 {
 	ImGui::Begin("Frame Profiling");
 
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
-	ImGui::Text("Test Render frame time: %.2f ms/frame", averageFrameTime);
+	ImGui::Text("Render Pass frame time: %.2f ms/frame", averageFrameTime);
+	ImGui::Text("Total Number of Particles: %.0f", averageNumParticles);
 
 	ImGui::End();
 
 	UIRenderD3DResources();
 }
 
-void TestRender::HandleEvent(Event& event_) // Queue events
+void D3DRenderer::Uninitialize()
 {
-	if ((m_bufferTail + 1) % m_eventFrameLimit == m_bufferHead)
-		return;
-
-	m_eventQueue[m_bufferTail] = &event_;
-
-	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
 }
 
-void TestRender::CreateUIResources()
+void D3DRenderer::CreateUIResources()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -219,7 +204,7 @@ void TestRender::CreateUIResources()
 	}
 }
 
-void TestRender::InitializeUI()
+void D3DRenderer::InitializeUI(Window& Window)
 {
 	// Imgui integration
 	IMGUI_CHECKVERSION();
@@ -228,12 +213,12 @@ void TestRender::InitializeUI()
 
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplWin32_Init(OdeumEngine::Get().GetWindow().GetHWND());
+	ImGui_ImplWin32_Init(Window.GetHWND());
 	ImGui_ImplDX12_Init(DXGraphics::m_device, SWAP_CHAIN_BUFFER_COUNT, DXGraphics::m_presentBuffer.GetFormat(),
 		m_pHeap, m_pHeap->GetCPUDescriptorHandleForHeapStart(), m_pHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
-void TestRender::UIRenderD3DResources()
+void D3DRenderer::UIRenderD3DResources()
 {
 	GraphicsContext& uiContext = CommandContext::RequestContext(L"UI context").GetGraphicsContext();
 

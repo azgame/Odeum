@@ -113,6 +113,7 @@ namespace DXGraphics
 	D3D12_RASTERIZER_DESC rasterTwoSided;
 	D3D12_DEPTH_STENCIL_DESC depthReadWrite;
 	D3D12_DEPTH_STENCIL_DESC depthReadOnly;
+	D3D12_DEPTH_STENCIL_DESC depthDisabled;
 
 	float frameTimeAverage = 0.0f;
 	float frameTimeTotal = 0.0f;
@@ -195,15 +196,9 @@ void DXGraphics::Initialize()
 	m_presentRootSig.Finalize(L"Present");
 
 	m_presentPSO.SetRootSignature(m_presentRootSig);
-	m_presentPSO.SetRasterizerState(rasterDesc);
-	rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
-
+	m_presentPSO.SetRasterizerState(rasterTwoSided);
 	m_presentPSO.SetBlendState(alphaBlend);
-
-	m_presentPSO.SetDepthStencilState(depthReadWrite);
-	depthReadWrite.DepthEnable = TRUE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+	m_presentPSO.SetDepthStencilState(depthDisabled);
 
 	m_presentPSO.SetSampleMask(0xFFFFFFFF);
 	m_presentPSO.SetInputLayout(0, nullptr);
@@ -224,7 +219,7 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 
 	m_preDisplayBuffer.Create(L"Pre display buffer", nativeWidth_, nativeHeight_, 1, swapChainFormat);
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", nativeWidth_, nativeHeight_, DXGI_FORMAT_D32_FLOAT);
-	m_presentBuffer.SetClearColour(Colour(0.20f, 1.0f, 1.0f));
+	m_presentBuffer.SetClearColour(Colour(0.7f, 0.7f, 0.7f));
 	m_presentBuffer.Create(L"Present buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R11G11B10_FLOAT);
 	m_overlayBuffer.SetClearColour(Colour(1.0f, 1.0f, 1.0f, 0.0f));
 	m_overlayBuffer.Create(L"Overlay buffer", nativeWidth_, nativeHeight_, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -235,9 +230,7 @@ void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nati
 void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 {
 	if (sm_swapChain == nullptr)
-	{
 		return;
-	}
 
 	if (width_ == 0 || height_ == 0)
 		return;
@@ -274,6 +267,8 @@ void DXGraphics::Resize(uint32_t width_, uint32_t height_)
 	m_sceneDepthBuffer.Create(L"Scene depth buffer", s_displayWidth, s_displayHeight, DXGI_FORMAT_D32_FLOAT);
 	m_presentBuffer.Create(L"Present buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R11G11B10_FLOAT);
 	m_overlayBuffer.Create(L"Overlay buffer", s_displayWidth, s_displayHeight, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	OdeumEngine::Get().GetCamera().SetAspectRatio((float)s_displayWidth / (float)s_displayHeight);
 
 	s_currentBuffer = 0;
 	m_commandManager.IdleGPU();
@@ -352,10 +347,11 @@ void DXGraphics::InitializeCommonState()
 	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	blendPreMultiplied = alphaBlend;
+	blendPreMultiplied.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
 
-	depthReadWrite.DepthEnable = FALSE;
-	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	depthReadWrite.DepthEnable = TRUE;
+	depthReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	depthReadWrite.StencilEnable = FALSE;
 	depthReadWrite.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 	depthReadWrite.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
@@ -368,8 +364,13 @@ void DXGraphics::InitializeCommonState()
 	depthReadOnly = depthReadWrite;
 	depthReadOnly.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 
+	depthDisabled = depthReadWrite;
+	depthDisabled.DepthEnable = FALSE;
+	depthDisabled.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	depthDisabled.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+
 	rasterDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+	rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
 
 	rasterTwoSided = rasterDesc;
 	rasterTwoSided.CullMode = D3D12_CULL_MODE_NONE;

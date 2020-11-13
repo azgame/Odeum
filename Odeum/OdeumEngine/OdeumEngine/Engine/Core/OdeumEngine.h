@@ -17,6 +17,8 @@ class WindowCloseEvent;
 class WindowResizeEvent;
 class KeyEvent;
 
+class AbstractRenderer;
+
 class OdeumEngine
 {
 public:
@@ -40,8 +42,6 @@ public:
 	bool Initialize();
 	void Uninitialize();
 
-	
-
 private:
 
 	bool Close(WindowCloseEvent& closeEvent);
@@ -49,12 +49,16 @@ private:
 	bool KeyboardInput(KeyEvent& keyEvent);
 
 	int GetSceneIndex(std::string fileName);
+	void LoadEngineProfile(std::string FileName, std::wstring& WindowName, uint32_t& Width, uint32_t& Height, bool& VSync, bool& UltraWide);
+	void LoadGameSceneIndex(std::string FileName);
 
 	GameInterface*			m_gameInterface;
 	Window*					m_window;
 	Timer					m_engineTimer;
 	Camera					m_camera;
 	SystemStack				m_systemStack;
+
+	AbstractRenderer*		m_renderer;
 
 	bool					m_isRunning;
 	uint32_t				m_currentScene;
