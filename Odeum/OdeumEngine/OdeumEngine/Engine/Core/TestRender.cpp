@@ -12,7 +12,6 @@
 
 TestRender::TestRender()
 {
-	m_eventQueue = RingBuffer<Event*>(16);
 }
 
 TestRender::~TestRender()

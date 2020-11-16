@@ -4,8 +4,8 @@
 #include "../Rendering/DirectX12/D3DRenderer.h"
 #include "../Events/ApplicationEvent.h"
 #include "../Events/KeyEvent.h"
-
-#include "TestRender.h"
+#include "EngineProfiling.h"
+#include "JobSystem.h"
 
 #include "../JSONUtility/json.hpp"
 #include "Utility.h"
@@ -83,22 +83,41 @@ void OdeumEngine::Run()
 	}
 }
 
+void Spin(float milliseconds)
+{
+	milliseconds /= 1000.0f;
+	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+	double ms = 0;
+	while (ms < milliseconds)
+	{
+		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+		ms = time_span.count();
+	}
+}
+
 bool OdeumEngine::Initialize()
 {	
-	std::wstring windowName;
-	uint32_t windowWidth, windowHeight;
-	bool vSync, ultraWide;
+	JobSystem::Get().Initialize();
 
-	LoadEngineProfile("Engine/Config/EngineConfig.json", windowName, windowWidth, windowHeight, vSync, ultraWide);
+	{
+		SCOPEDTIMER(singleThread);
+		Spin(100);
+		Spin(100);
+		Spin(100);
+		Spin(100);
+	}
 
-	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
-	m_window->Initialize(windowName, windowWidth, windowHeight, vSync, ultraWide);
+	{
+		SCOPEDTIMER(multiThread);
+		JobSystem::Get().Execute([] {Spin(100); });
+		JobSystem::Get().Execute([] {Spin(100); });
+		JobSystem::Get().Execute([] {Spin(100); });
+		JobSystem::Get().Execute([] {Spin(100); });
+	}
 
-	m_camera.SetAspectRatio((float)windowWidth / (float)windowHeight);
-	
-	m_engineTimer.Initialize();
-
-	DXGraphics::Initialize();
+	InitializeGraphics();
+	InitializeEngine();
 
 	if (!m_gameInterface->Initialize())
 	{
@@ -106,14 +125,8 @@ bool OdeumEngine::Initialize()
 		return false;
 	}
 
-	// m_currentScene = GetSceneIndex("SceneLoad.txt");
 	LoadGameSceneIndex("Engine/Config/EngineConfig.json");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
-
-	// Test
-	// m_systemStack.Push(new TestRender());
-
-	m_renderer->Initialize(*m_window);
 
 	return true;
 }
@@ -138,22 +151,27 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 	return true;
 }
 
-// temp way to load game scenes
-int OdeumEngine::GetSceneIndex(std::string fileName)
+void OdeumEngine::InitializeGraphics()
 {
-	int sceneNum = 0;
-	std::string line;
-	std::ifstream sceneFile(fileName);
-	if (sceneFile.is_open())
-	{
-		while (std::getline(sceneFile, line))
-		{
-			sceneNum = std::stoi(line);
-		}
-	}
+	std::wstring windowName;
+	uint32_t windowWidth, windowHeight;
+	bool vSync, ultraWide;
 
-	sceneFile.close();
-	return sceneNum;
+	LoadEngineProfile("Engine/Config/EngineConfig.json", windowName, windowWidth, windowHeight, vSync, ultraWide);
+
+	m_window->SetEventCallback(BIND_EVENT_FN(OdeumEngine::OnEvent));
+	m_window->Initialize(windowName, windowWidth, windowHeight, vSync, ultraWide);
+
+	m_camera.SetAspectRatio((float)windowWidth / (float)windowHeight);
+
+	DXGraphics::Initialize();
+
+	m_renderer->Initialize(*m_window);
+}
+
+void OdeumEngine::InitializeEngine()
+{
+	m_engineTimer.Initialize();
 }
 
 void OdeumEngine::LoadEngineProfile(std::string FileName, std::wstring& WindowName, uint32_t& Width, uint32_t& Height, bool& VSync, bool& UltraWide)

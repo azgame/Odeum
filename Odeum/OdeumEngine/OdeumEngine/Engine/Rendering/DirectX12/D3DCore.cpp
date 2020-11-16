@@ -11,6 +11,8 @@
 
 #include "../Common/GraphicsCore.h"
 
+#include "ParticleManager.h"
+
 #include "TextureManager.h"
 
 #include <algorithm>
@@ -211,6 +213,7 @@ void DXGraphics::Initialize()
 	InitializeRenderingBuffers(s_displayWidth, s_displayHeight);
 
 	TextureManager::Get()->Initialize("Engine/Resources/Textures/");
+	ParticleManager::Get().Initialize(m_presentBuffer.GetWidth(), m_presentBuffer.GetHeight());
 }
 
 void DXGraphics::InitializeRenderingBuffers(uint32_t nativeWidth_, uint32_t nativeHeight_)

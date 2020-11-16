@@ -2,6 +2,7 @@
 #define JOBSYSTEM_H
 
 #include "../../pch.h"
+#include "../DataStructures/RingBuffer.h"
 
 #include <functional>
 #include <atomic>
@@ -28,31 +29,13 @@ public:
 
 private:
 
-	
-
 	JobSystem() : m_jobQueue(256) {}
 
 	void Poll();
+	void ThreadInitialize();
 
 	static std::unique_ptr<JobSystem> sm_jobSystemInstance;
 	friend std::default_delete<JobSystem>;
-
-	struct ThreadHandle
-	{
-		std::thread thread;
-		std::function<void()> job;
-
-		ThreadHandle()
-		{
-			thread = std::thread([]
-			{
-				while (true)
-				{
-					if (JobSystem::Get().)
-				}
-			});
-		}
-	};
 
 	std::mutex sm_mutex;
 	size_t m_numThreads;
@@ -60,7 +43,6 @@ private:
 	uint32_t m_jobCount;
 	std::atomic<uint64_t> m_finishedJobs;
 	RingBuffer<std::function<void()>> m_jobQueue;
-	std::vector<ThreadHandle> m_workers;
 	
 public:
 

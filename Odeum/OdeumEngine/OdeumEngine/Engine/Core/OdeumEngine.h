@@ -46,9 +46,10 @@ private:
 
 	bool Close(WindowCloseEvent& closeEvent);
 	bool Resize(WindowResizeEvent& resizeEvent);
-	bool KeyboardInput(KeyEvent& keyEvent);
+	
+	void InitializeGraphics();
+	void InitializeEngine();
 
-	int GetSceneIndex(std::string fileName);
 	void LoadEngineProfile(std::string FileName, std::wstring& WindowName, uint32_t& Width, uint32_t& Height, bool& VSync, bool& UltraWide);
 	void LoadGameSceneIndex(std::string FileName);
 

@@ -10,7 +10,7 @@ class CoreSystem
 {
 public:
 
-	CoreSystem(const std::string& name_ = "System") : m_debugName(name_) {}
+	CoreSystem(const std::string& name_ = "System") : m_debugName(name_), m_eventQueue(16) {}
 	virtual ~CoreSystem() = default;
 
 	virtual void Attach() {}
