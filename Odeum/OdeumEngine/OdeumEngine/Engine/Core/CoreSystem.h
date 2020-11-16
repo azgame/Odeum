@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "../Events/Event.h"
 
-#include <queue>
+#include "../DataStructures/RingBuffer.h"
 
 class CoreSystem
 {
@@ -24,10 +24,7 @@ public:
 protected:
 	std::string m_debugName;
 
-	std::vector<Event*> m_eventQueue;
-	uint16_t m_bufferHead;
-	uint16_t m_bufferTail;
-	uint16_t m_eventFrameLimit;
+	RingBuffer<Event*> m_eventQueue;
 };
 
 #endif
