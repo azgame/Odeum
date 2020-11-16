@@ -50,7 +50,8 @@ void D3DRenderer::Initialize(Window& Window)
 	ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
 
 	ParticleInitProperties particleProps;
-	particleProps.colour = Colour(1.0f, 1.0f, 1.0f, 1.0f);
+	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.3f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(0.8f, 1.0f, 0.0f, 1.0f);
 	particleProps.lifeTime = FLT_MAX;
 	particleProps.minLife = 10.0f;
 	particleProps.maxLife = 25.0f;
@@ -58,17 +59,19 @@ void D3DRenderer::Initialize(Window& Window)
 	particleProps.maxMass = 2.0f;
 	particleProps.rotationMax = 1.0f;
 	particleProps.spread = Vector3(20.0f, 50.0f, 20.0f);
-	particleProps.minVelocity = Vector2(2.0f, 20.0f);
-	particleProps.maxVelocity = Vector2(5.0f, 18.0f);
+	particleProps.minVelocity = Vector2(1.0f, 1.0f);
+	particleProps.maxVelocity = Vector2(2.0f, 2.0f);
+	particleProps.minSize = Vector2(0.0050f, 0.0075f);
+	particleProps.maxSize = Vector2(0.01f, 0.0125f);
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 1000;
-	particleProps.lauchingData.spawnRate = 256.0f;
+	particleProps.lauchingData.maxParticles = 40000;
+	particleProps.lauchingData.spawnRate = 64.0f;
 	particleProps.lauchingData.speed = 1.0f;
 	particleProps.lauchingData.groundBounce = 1.25f;
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -9.81f, 0.0f));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(3.0f, 0.0f, 0.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -1.0f, 0.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
 	ParticleManager::Get().CreateEffect(particleProps);
 
@@ -108,7 +111,7 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(-10.0f, 20.0f, 20.0f));
+	DirectX::XMStoreFloat3(&light.position, Vector3(10.0f, 20.0f, -30.0f));
 	light.radiusSq = 4000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(0.3f, 0.3f, 0.3f));
 
@@ -160,9 +163,12 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 	{
 		averageFrameTime = frameTimeTotal / 120.0f;
 		frameTimeTotal = 0.0f;
+		averageNumParticles = totalNumParticles / 120.f;
+		totalNumParticles = 0.0f;
 	}
 
 	frameTimeTotal += timer.GetTime();
+	totalNumParticles += ParticleManager::Get().GetTotalNumParticles();
 	frameCounter = (frameCounter + 1) % 120;
 }
 
@@ -172,7 +178,8 @@ void D3DRenderer::UIRender()
 
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
-	ImGui::Text("Test Render frame time: %.2f ms/frame", averageFrameTime);
+	ImGui::Text("Render Pass frame time: %.2f ms/frame", averageFrameTime);
+	ImGui::Text("Total Number of Particles: %.0f", averageNumParticles);
 
 	ImGui::End();
 

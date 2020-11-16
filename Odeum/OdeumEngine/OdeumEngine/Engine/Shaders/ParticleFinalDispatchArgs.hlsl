@@ -1,4 +1,5 @@
 #include "ParticleCommon.hlsli"
+#include "ParticleUpdateUtility.hlsli"
 
 ByteAddressBuffer instanceCounter : register(t0);
 RWByteAddressBuffer numThreadGroups : register(u0);

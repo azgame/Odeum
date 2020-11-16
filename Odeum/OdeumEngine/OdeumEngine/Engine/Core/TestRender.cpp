@@ -62,7 +62,8 @@ void TestRender::Attach()
 	//ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
 
 	ParticleInitProperties particleProps;
-	particleProps.colour = Colour(1.0f, 0.0f, 0.0f, 1.0f);
+	particleProps.startColour = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	particleProps.lifeTime = 15.0f;
 	particleProps.minLife = 1.0f;
 	particleProps.maxLife = 10.0f;

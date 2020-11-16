@@ -5,17 +5,16 @@
 #include "PipelineState.h"
 #include "ParticleEffect.h"
 #include "CommandContext.h"
+#include "Buffers/ReadbackBuffer.h"
 
 class GraphicsPSO;
 class RootSignature;
 class Camera;
 
-struct ParticleSharedConstantBuffer
+__declspec(align(16)) struct ParticleSharedConstantBuffer
 {
-	DirectX::XMMATRIX viewProjMatrix;
-	DirectX::XMMATRIX invView;
-	float aspectRatio;
-	float farClipZ;
+	Matrix4 viewProjMatrix;
+	Matrix4 invView;
 };
 
 class ParticleManager
@@ -44,6 +43,8 @@ public:
 	ComputePSO GetParticleDispatchIndArgsPSO() { return sm_particleDispatchIndirectArgsCS; }
 	StructuredBuffer GetParticleOutputBuffer() { return m_vertexBuffer; }
 
+	uint32_t GetTotalNumParticles() { return *particleCount; }
+
 private:
 
 	static ParticleManager* sm_instance;
@@ -58,8 +59,11 @@ private:
 	RootSignature m_rootSignature;
 	StructuredBuffer m_indexBuffer;
 	StructuredBuffer m_vertexBuffer;
-	ByteAddressedBuffer m_drawIndirectArgs;
-	ByteAddressedBuffer m_particleFinalDispatchIndirectArgs;
+	ByteAddressBuffer m_drawIndirectArgs;
+	ByteAddressBuffer m_particleFinalDispatchIndirectArgs;
+
+	ReadbackBuffer readBack;
+	UINT* particleCount;
 
 	ParticleSharedConstantBuffer m_CBperFrameData;
 	

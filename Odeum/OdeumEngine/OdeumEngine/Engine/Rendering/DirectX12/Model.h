@@ -93,7 +93,7 @@ public:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE* m_srvs; // materials/textures
 	StructuredBuffer m_vertexBuffer;
-	ByteAddressedBuffer m_indexBuffer;
+	ByteAddressBuffer m_indexBuffer;
 
 	Matrix4 m_modelMatrix;
 

@@ -352,7 +352,7 @@ void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOU
 void CommandContext::InsertUAVBarrier(D3DResource& resource_, bool flushNow)
 {
     ASSERT(m_numBarriersToFlush < 16, "Can't have more than 16 barriers");
-    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush];
+    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush++];
 
     barrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
     barrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

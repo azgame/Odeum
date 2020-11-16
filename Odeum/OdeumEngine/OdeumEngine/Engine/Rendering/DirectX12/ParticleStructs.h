@@ -5,43 +5,33 @@
 #include "../../Math/D3DMath.h"
 #include "Buffers/D3DBuffer.h"
 
-struct ParticleSpawnData
+__declspec(align(16)) struct ParticleSpawnData
 {
-	ParticleSpawnData()
-	{
-		ZeroMemory(this, sizeof(*this));
-		ageSpeed = 0.0f;
-		startingVelocity = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-		mass = 0.0f;
-		rotation = 0.0f;
-		startSize = 0.0f;
-		endSize = 0.0f;
-		spread = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-		colour = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-
 	float ageSpeed;
-	DirectX::XMFLOAT3 startingVelocity;
-	float mass;
 	float rotation;
+	float mass;
 	float startSize;
+	DirectX::XMFLOAT3 startingVelocity;
 	float endSize;
 	DirectX::XMFLOAT3 spread;
-	DirectX::XMFLOAT4 colour;
+	float pad;
+	DirectX::XMFLOAT4 startColour;
+	DirectX::XMFLOAT4 endColour;
 };
 
 __declspec(align(16)) struct ParticleLaunchingData
 {
 	DirectX::XMFLOAT3 launchPosition;
-	DirectX::XMFLOAT3 xAxis;
-	DirectX::XMFLOAT3 yAxis;
-	DirectX::XMFLOAT3 zAxis;
 	float speed;
+	DirectX::XMFLOAT3 xAxis;
 	UINT maxParticles;
+	DirectX::XMFLOAT3 yAxis;
 	float spawnRate;
-	DirectX::XMFLOAT3 gravity;
+	DirectX::XMFLOAT3 zAxis;
 	float groundBounce;
-	UINT randomIndices[64];
+	DirectX::XMFLOAT3 gravity;
+	float pad;
+	DirectX::XMUINT4 randomIndices[64];
 };
 
 struct ParticleSimulationData
@@ -57,8 +47,8 @@ struct ParticleSimulationData
 struct ParticleVertexData
 {
 	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT4 colour;
 	float size;
+	DirectX::XMFLOAT4 colour;
 };
 
 #endif

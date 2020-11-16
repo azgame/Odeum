@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;..\..\..\Recast\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
@@ -153,17 +153,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Engine\Recast\Recast.cpp" />
-    <ClCompile Include="Engine\Recast\RecastAlloc.cpp" />
-    <ClCompile Include="Engine\Recast\RecastArea.cpp" />
-    <ClCompile Include="Engine\Recast\RecastAssert.cpp" />
-    <ClCompile Include="Engine\Recast\RecastContour.cpp" />
-    <ClCompile Include="Engine\Recast\RecastFilter.cpp" />
-    <ClCompile Include="Engine\Recast\RecastLayers.cpp" />
-    <ClCompile Include="Engine\Recast\RecastMesh.cpp" />
-    <ClCompile Include="Engine\Recast\RecastMeshDetail.cpp" />
-    <ClCompile Include="Engine\Recast\RecastRasterization.cpp" />
-    <ClCompile Include="Engine\Recast\RecastRegion.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
@@ -223,9 +212,7 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Recast\Recast.h" />
-    <ClInclude Include="Engine\Recast\RecastAlloc.h" />
-    <ClInclude Include="Engine\Recast\RecastAssert.h" />
+    <ClInclude Include="Engine\JSONUtility\json.hpp" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
     <ClInclude Include="Engine\Core\EngineProfiling.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
@@ -398,6 +385,7 @@
   <ItemGroup>
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
+    <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
