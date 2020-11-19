@@ -321,7 +321,7 @@ void DXGraphics::Present()
 		frameTimeTotal = 0.0f;
 	}
 
-	frameTimeTotal += frameTime;
+	frameTimeTotal += (float)frameTime;
 	frameCounter = (frameCounter + 1) % NUM_FRAMES_FOR_AVERAGES;
 
 	Graphics::SetFrameTime((float)frameTime);

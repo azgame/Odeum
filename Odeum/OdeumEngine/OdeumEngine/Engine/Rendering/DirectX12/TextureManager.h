@@ -36,7 +36,7 @@ public:
 	virtual void ResetResource() override
 	{
 		D3DResource::ResetResource();
-		m_cpuDescHandle.ptr = 0;
+		//m_cpuDescHandle.ptr = 0;
 	}
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_cpuDescHandle; }

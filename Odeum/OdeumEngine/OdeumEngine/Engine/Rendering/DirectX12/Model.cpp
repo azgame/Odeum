@@ -8,8 +8,10 @@
 
 #include <thread>
 
-void Model::Load(std::string fileName)
+void Model::Load()
 {
+	std::string fileName = m_details.fileName;
+
 	Assimp::Importer importer;
 
 	importer.SetPropertyInteger(AI_CONFIG_PP_RVC_FLAGS,

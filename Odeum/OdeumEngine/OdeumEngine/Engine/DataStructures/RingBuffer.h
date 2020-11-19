@@ -37,16 +37,16 @@ template<typename T>
 inline bool RingBuffer<T>::push_back(T Element)
 {
 	bool result = false;
-	std::lock_guard<std::mutex> lg(sm_mutex);
+	sm_mutex.lock();
 
 	if ((m_head + 1) % m_ringLimit != m_tail)
 	{
 		m_ringBuffer[m_head] = Element;
 		m_head = (m_head + 1) % m_ringLimit;
-
 		result = true;
 	}
 
+	sm_mutex.unlock();
 	return result;
 }
 
@@ -54,16 +54,16 @@ template<typename T>
 inline bool RingBuffer<T>::pop_front(T& Element)
 {
 	bool result = false;
-	std::lock_guard<std::mutex> lg(sm_mutex);
+	sm_mutex.lock();
 
 	if (m_tail != m_head)
 	{
 		Element = m_ringBuffer[m_tail];
-		m_head = (m_tail + 1) % m_ringLimit;
-
+		m_tail = (m_tail + 1) % m_ringLimit;
 		result = true;
 	}
 
+	sm_mutex.unlock();
 	return result;
 }
 

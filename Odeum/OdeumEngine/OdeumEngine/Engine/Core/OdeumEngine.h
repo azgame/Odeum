@@ -47,6 +47,7 @@ private:
 	bool Close(WindowCloseEvent& closeEvent);
 	bool Resize(WindowResizeEvent& resizeEvent);
 	
+	void InitializeWindow();
 	void InitializeGraphics();
 	void InitializeEngine();
 

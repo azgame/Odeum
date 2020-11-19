@@ -53,7 +53,7 @@ D3D12_VERTEX_BUFFER_VIEW D3DBuffer::VertexBufferView(size_t BaseVertexIndex) con
 
 	D3D12_VERTEX_BUFFER_VIEW vertBufferView;
 	vertBufferView.BufferLocation = m_gpuAddress + offset;
-	vertBufferView.SizeInBytes = size;
+	vertBufferView.SizeInBytes = (UINT)size;
 	vertBufferView.StrideInBytes = elementByteSize;
 	return vertBufferView;
 }
@@ -66,7 +66,7 @@ D3D12_INDEX_BUFFER_VIEW D3DBuffer::IndexBufferView(size_t StartIndex) const
 
 	D3D12_INDEX_BUFFER_VIEW indexBufferView;
 	indexBufferView.BufferLocation = m_gpuAddress + offset;
-	indexBufferView.SizeInBytes = size;
+	indexBufferView.SizeInBytes = (UINT)size;
 	indexBufferView.Format = b32bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 	return indexBufferView;
 }

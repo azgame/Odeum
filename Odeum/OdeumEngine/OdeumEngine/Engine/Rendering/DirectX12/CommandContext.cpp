@@ -279,7 +279,7 @@ void CommandContext::FillBuffer(D3DResource& dest_, size_t destOffset_, float va
 {
     BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
     size_t alignedDivide = Utility::AlignedDivide(numBytes_, 16);
-    memset(tempSpace.CpuAddress, value_, numBytes_);
+    memset(tempSpace.CpuAddress, (int)value_, numBytes_);
     CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
 }
 

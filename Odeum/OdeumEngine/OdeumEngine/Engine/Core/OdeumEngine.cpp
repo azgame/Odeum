@@ -7,6 +7,8 @@
 #include "EngineProfiling.h"
 #include "JobSystem.h"
 
+#include <functional>
+
 #include "../JSONUtility/json.hpp"
 #include "Utility.h"
 
@@ -98,32 +100,20 @@ void Spin(float milliseconds)
 
 bool OdeumEngine::Initialize()
 {	
-	JobSystem::Get().Initialize();
+	JobSystem::Initialize();
 
-	{
-		SCOPEDTIMER(singleThread);
-		Spin(100);
-		Spin(100);
-		Spin(100);
-		Spin(100);
-	}
+	InitializeWindow();
 
-	{
-		SCOPEDTIMER(multiThread);
-		JobSystem::Get().Execute([] {Spin(100); });
-		JobSystem::Get().Execute([] {Spin(100); });
-		JobSystem::Get().Execute([] {Spin(100); });
-		JobSystem::Get().Execute([] {Spin(100); });
-	}
-
-	InitializeGraphics();
-	InitializeEngine();
-
+	JobSystem::Execute([this] {InitializeGraphics(); });
+	JobSystem::Execute([this] {InitializeEngine(); });
+	 
 	if (!m_gameInterface->Initialize())
 	{
 		Debug::Error("Could not initialize game scene", __FILENAME__, __LINE__);
 		return false;
 	}
+
+	JobSystem::WaitForCompletion();
 
 	LoadGameSceneIndex("Engine/Config/EngineConfig.json");
 	m_gameInterface->Update(m_engineTimer.GetDeltaTime());
@@ -151,7 +141,7 @@ bool OdeumEngine::Resize(WindowResizeEvent& resizeEvent)
 	return true;
 }
 
-void OdeumEngine::InitializeGraphics()
+void OdeumEngine::InitializeWindow()
 {
 	std::wstring windowName;
 	uint32_t windowWidth, windowHeight;
@@ -163,7 +153,10 @@ void OdeumEngine::InitializeGraphics()
 	m_window->Initialize(windowName, windowWidth, windowHeight, vSync, ultraWide);
 
 	m_camera.SetAspectRatio((float)windowWidth / (float)windowHeight);
+}
 
+void OdeumEngine::InitializeGraphics()
+{
 	DXGraphics::Initialize();
 
 	m_renderer->Initialize(*m_window);

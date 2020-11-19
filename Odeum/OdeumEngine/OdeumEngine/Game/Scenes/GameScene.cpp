@@ -5,6 +5,7 @@
 #include "../Components/Rigidbody.h"
 
 #include "../../Engine/Rendering/DirectX12/ParticleManager.h"
+#include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -39,6 +40,8 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
 	ParticleManager::Get().CreateEffect(particleProps);
+
+	SceneGraph::Get()->LoadObjectsIntoMemory();
 }
 
 GameScene::~GameScene()
