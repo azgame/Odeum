@@ -153,6 +153,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\Recast\Recast.cpp" />
+    <ClCompile Include="Engine\Recast\RecastAlloc.cpp" />
+    <ClCompile Include="Engine\Recast\RecastArea.cpp" />
+    <ClCompile Include="Engine\Recast\RecastAssert.cpp" />
+    <ClCompile Include="Engine\Recast\RecastContour.cpp" />
+    <ClCompile Include="Engine\Recast\RecastFilter.cpp" />
+    <ClCompile Include="Engine\Recast\RecastLayers.cpp" />
+    <ClCompile Include="Engine\Recast\RecastMesh.cpp" />
+    <ClCompile Include="Engine\Recast\RecastMeshDetail.cpp" />
+    <ClCompile Include="Engine\Recast\RecastRasterization.cpp" />
+    <ClCompile Include="Engine\Recast\RecastRegion.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
@@ -212,7 +223,11 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\AI\Node.h" />
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
+    <ClInclude Include="Engine\Recast\Recast.h" />
+    <ClInclude Include="Engine\Recast\RecastAlloc.h" />
+    <ClInclude Include="Engine\Recast\RecastAssert.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
     <ClInclude Include="Engine\Core\EngineProfiling.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
