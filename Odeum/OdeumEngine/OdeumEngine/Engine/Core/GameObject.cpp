@@ -15,7 +15,7 @@ GameObject::GameObject(std::string fileName, std::string tag_)
 	tag = tag_;
 
 	m_model.SetParent(this);
-	m_model.Load(fileName);
+	m_model.m_details.fileName = fileName;
 
 	SceneGraph::Get()->AddGameObject(this);
 }
@@ -36,7 +36,7 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string ta
 	{
 	case ShapeTypes::CubeShape:
 	{
-		m_model.Load("Engine/Resources/Models/Cube.obj");
+		m_model.m_details.fileName = "Engine/Resources/Models/Cube.obj";
 		break;
 	}
 	default:

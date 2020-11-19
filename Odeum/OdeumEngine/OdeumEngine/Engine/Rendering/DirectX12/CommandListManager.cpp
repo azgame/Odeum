@@ -104,7 +104,7 @@ CommandQueue::~CommandQueue()
 void CommandQueue::Initialize(ID3D12Device* device_)
 {
 	ASSERT(device_ != nullptr, "Device is null!");
-	ASSERT(!isReady(), "Command queue as been initialized!");
+	ASSERT(!isReady(), "Command queue has been initialized!");
 	ASSERT(m_allocatorPool.Size() == 0, "Allocator pool size if not 0!");
 
 	// Create our command queue

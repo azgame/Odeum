@@ -14,7 +14,7 @@ void ParticleEffect::Initialize()
 	ParticleSpawnData* spawnData = (ParticleSpawnData*)_malloca(sizeof(ParticleSpawnData) * kMaxParticles);
 
 	// For each particle, fill an entry in the spawn data with randomized data, within the ranges provided by the particle effect data
-	for (int i = 0; i < kMaxParticles; i++)
+	for (uint32_t i = 0; i < kMaxParticles; i++)
 	{
 		spawnData[i].ageSpeed = 1.0f / Math::RandValInRange(m_properties.minLife, m_properties.maxLife);
 		float horizontalAngle = Math::RandValInRange(0.0f, DirectX::XM_2PI);

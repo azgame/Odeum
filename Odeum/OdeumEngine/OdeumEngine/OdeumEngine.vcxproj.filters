@@ -69,6 +69,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
+    <ClCompile Include="Engine\Core\JobSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -161,6 +162,8 @@
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
+    <ClInclude Include="Engine\Core\JobSystem.h" />
+    <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

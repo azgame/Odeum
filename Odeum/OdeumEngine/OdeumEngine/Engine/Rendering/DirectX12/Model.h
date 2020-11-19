@@ -30,13 +30,14 @@ public:
 		SAFE_DELETE(m_srvs);
 	}
 
-	void Load(std::string fileName);
+	void Load();
 	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
 
 	struct ModelInfo
 	{
+		std::string fileName;
 		uint32_t meshCount;
 		uint32_t materialCount;
 		uint32_t vertexDataByteSize;
