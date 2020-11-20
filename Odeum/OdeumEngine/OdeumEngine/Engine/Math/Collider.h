@@ -7,9 +7,10 @@ struct Collider
 {
 private:
 	std::vector<Vector3> c_vertices;
+	std::vector<Vector3> s_vertices;
 
 public:
-	Collider(std::vector<Vector3>& vertices) { c_vertices = vertices; };
+	Collider(std::vector<Vector3>& vertices) { c_vertices = s_vertices = vertices; };
 	
 	// This returns the furthest point in a vector of vertices using a given direction
 	inline Vector3 FindFurthestPoint(Vector3 direction)
@@ -28,6 +29,22 @@ public:
 			}
 		}
 		return maxPoint;
+	}
+
+	inline void Transpose(Vector3 t) {
+		for (int i = 0; i < c_vertices.size(); i++)
+		{
+			c_vertices[i] = s_vertices[i] + t;
+		}
+	}
+
+	inline void Rotate(Vector3 axis, float angle)
+	{
+		Matrix3 rotationMat = Matrix3(XMMatrixRotationAxis(axis, angle));
+		for (int i = 0; i < c_vertices.size(); i++)
+		{
+			c_vertices[i] = rotationMat * c_vertices[i];
+		}
 	}
 
 	// testing
@@ -124,11 +141,13 @@ namespace Math {
 
 	inline bool Tetrahedron(Simplex& points, Vector3& direction)
 	{
+		// points of tetrahedron we create
 		Vector3 a = points[0];
 		Vector3 b = points[1];
 		Vector3 c = points[2];
 		Vector3 d = points[3];
 
+		// vectors between points
 		Vector3 ab = b - a;
 		Vector3 ac = c - a;
 		Vector3 ad = d - a;
@@ -160,7 +179,7 @@ namespace Math {
 	{
 		switch (points.Size())
 		{
-		case 2: return Line(points, direction);
+		case 2: return Line(points, direction); // don't need this
 		case 3: return Triangle(points, direction);
 		case 4: return Tetrahedron(points, direction);
 		}

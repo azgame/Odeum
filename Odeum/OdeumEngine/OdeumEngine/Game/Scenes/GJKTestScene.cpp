@@ -35,6 +35,9 @@ GJKTestScene::GJKTestScene()
 	{
 		std::cout << "DID NOT COLLIDE!!" << std::endl;
 	}
+
+	// Box Collision with GJK
+
 }
 
 GJKTestScene::~GJKTestScene()

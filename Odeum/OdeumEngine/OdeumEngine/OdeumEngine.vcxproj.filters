@@ -62,6 +62,7 @@
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
     <ClCompile Include="Game\Components\BoxCollider.cpp" />
     <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Engine\Math\Simplex.h" />
     <ClInclude Include="Engine\Math\Collider.h" />
     <ClInclude Include="Game\Scenes\GJKTestScene.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

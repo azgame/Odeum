@@ -12,6 +12,7 @@ void Rigidbody::OnAttach(GameObject* parent)
 	rb_totalVelocity = Vector4();
 	rb_speed = 2.0f;
 	rb_angleSpeed = 0.0005f;
+	rb_rotationSpeed = 0.0005f;
 
 	rb_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -36,7 +37,7 @@ void Rigidbody::Update(float deltaTime)
 }
 
 // translate the position
-void Rigidbody::Transform(Vector4 translate)
+void Rigidbody::Transpose(Vector4 translate)
 {
 	rb_position += translate;
 }

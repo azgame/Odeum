@@ -26,10 +26,15 @@ public:
 		return *this;
 	}
 
-	void Push_Front(Vector3 p)
+	inline void Push_Front(Vector3 p)
 	{
 		s_points = { p, s_points[0], s_points[1], s_points[2] };
 		s_size = std::min(s_size + 1, 4);
+	}
+
+	inline void ReplacePoint(int i, Vector3 p)
+	{
+		s_points[i] = p;
 	}
 
 	Vector3& operator[] (int i) { return s_points[i]; }

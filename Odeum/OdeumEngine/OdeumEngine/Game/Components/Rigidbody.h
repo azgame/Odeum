@@ -13,7 +13,7 @@ public:
 	void Update(float deltaTime) override;
 
 	// movement functions
-	void Transform(Vector4 translate);
+	void Transpose(Vector4 translate);
 	void ApplyForce(Vector4 force);
 	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
 	void AddAngularVelocity(Vector4 velocity);
@@ -33,8 +33,10 @@ public:
 	inline void SetVelocity(Vector4 velocity) { rb_totalVelocity = velocity; }
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
 	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
-	inline void SetRotation(Vector4 rotation, float angle) { rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle) { if(Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle, float rotSpeed) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); rb_rotationSpeed = rotSpeed; } //UpdateTransform(); }
 	inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
+	inline void SetRotation(Quaternion rotationQuat, float rotSpeed) { rb_orientation = rotationQuat; rb_rotationSpeed = rotSpeed; } //UpdateTransform();}
 	inline void SetScale(Vector4 scale) { rb_scale = scale; }
 	
 
@@ -53,7 +55,7 @@ private:
 	float rb_angle;
 	
 	float rb_angleSpeed;
-
+	float rb_rotationSpeed;
 
 	float rb_speed;
 	

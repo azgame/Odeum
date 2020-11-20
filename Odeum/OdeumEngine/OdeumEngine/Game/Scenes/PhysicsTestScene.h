@@ -1,5 +1,5 @@
-#ifndef GJKTESTSCENE_H
-#define GJKTESTSCENE_H
+#ifndef PHYSICSTESTSCENE_H
+#define PHYSICSTESTSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
@@ -8,11 +8,11 @@
 #include "../Engine/Math/Collider.h"
 #include "../Engine/Math/CollisionDetection.h"
 
-class GJKTestScene : public Scene
+class PhysicsTestScene : public Scene
 {
 public:
-	GJKTestScene();
-	virtual ~GJKTestScene();
+	PhysicsTestScene();
+	virtual ~PhysicsTestScene();
 
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
@@ -20,9 +20,17 @@ public:
 
 private:
 	CameraController cameraController;
-	Collider* c1;
-	Collider* c2;
+	Collider* c_1;
+	Collider* c_2;
+
+	GameObject* go_1;
+	GameObject* go_2;
+
+	bool isMoving;
+	bool isRotating;
+	bool isRotationalVelocity;
+
+	float rotationCounter;
 
 };
-
 #endif

@@ -209,6 +209,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Math\Collider.h" />
@@ -299,6 +300,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
