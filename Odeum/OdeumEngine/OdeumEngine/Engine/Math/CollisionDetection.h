@@ -7,6 +7,8 @@
 struct Ray;
 struct BoundingBox;
 struct OrientedBoundingBox;
+struct Simplex;
+struct Collider;
 
 class CollisionDetection
 {
@@ -22,6 +24,8 @@ public:
 	static Ray ScreenPosToWorldRay(Vector2 MouseCoords, Vector2 ScreenSize, Camera& camera);
 	static bool RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, Vector4* IntersectionPlane);
 	static void RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box, Vector4* IntersectionPlane);
+	// should update this so it takes in any object with at least 4 vertices
+	static bool GJKCollisionDetection(Collider* s1, Collider* s2);
 };
 
 #endif
