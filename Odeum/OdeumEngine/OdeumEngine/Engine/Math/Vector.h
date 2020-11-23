@@ -208,15 +208,33 @@ Vector3::Vector3(Vector4 v) { vec = v.GetVec(); }
 
 namespace Math
 {
+	inline float Dot(const Vector2 v1, const Vector2 v2)
+	{
+		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY());
+	}
+
 	inline float Dot(const Vector3 v1, const Vector3 v2)
 	{
 		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ());
 	}
+
 	inline float Dot(const Vector4 v1, const Vector4 v2)
 	{
 		return (v1.GetX() * v2.GetX()) + (v1.GetY() * v2.GetY()) + (v1.GetZ() * v2.GetZ()) + (v1.GetW() * v2.GetW());
 	}
 
+	inline Vector2 TripleProduct(const Vector2 v1, const Vector2 v2, const Vector2 v3)
+	{
+		Vector2 retVal;
+
+		float ac = Dot(v1, v3);
+		float bc = Dot(v2, v3);
+
+		retVal.SetX(v2.GetX() * ac - v1.GetX() * bc);
+		retVal.SetY(v2.GetY() * ac - v1.GetY() * bc);
+		
+		return retVal;
+	}
 
 	inline Vector3 Cross(const Vector3 v1, const Vector3 v2)
 	{

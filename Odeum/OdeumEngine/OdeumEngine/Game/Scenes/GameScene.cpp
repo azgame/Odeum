@@ -3,9 +3,12 @@
 #include "../Components/DynamicMovement.h"
 #include "../../Engine/Math/CollisionHandler.h"
 #include "../Components/Rigidbody.h"
+#include "../Engine/Math/Collider.h"
 
 #include "../../Engine/Rendering/DirectX12/ParticleManager.h"
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
+
+
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -15,7 +18,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	ParticleInitProperties particleProps;
+	/*ParticleInitProperties particleProps;
 	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 	particleProps.lifeTime = FLT_MAX;
@@ -39,7 +42,24 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -0.1f, 0.0f));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
-	ParticleManager::Get().CreateEffect(particleProps);
+	ParticleManager::Get().CreateEffect(particleProps);*/
+
+	std::vector<Vector2> t1;
+	t1.push_back(Vector2(4.0f, 5.0f));
+	t1.push_back(Vector2(4.0f, 11.0f));
+	t1.push_back(Vector2(9.0f, 9.0f));
+
+	std::vector<Vector2> t2;
+	t2.push_back(Vector2(5.0f, 7.0f));
+	t2.push_back(Vector2(12.0f, 7.0f));
+	t2.push_back(Vector2(10.0f, 2.0f));
+	t2.push_back(Vector2(7.0f, 3.0f));
+
+	Collider2D c1(t1);
+	Collider2D c2(t2);
+
+	if (CollisionDetection::GJKCollisionDetection2D(&c1, &c2))
+		std::cout << "GJK in 2D successful!" << std::endl;
 
 	SceneGraph::Get()->LoadObjectsIntoMemory();
 }
