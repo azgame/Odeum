@@ -22,6 +22,7 @@ public:
 	void AddGameObject(GameObject* go);
 	void RemoveGameObject(GameObject* go);
 	void LoadObjectsIntoMemory();
+	void UpdateObjects(float deltaTime);
 	void Uninitialize();
 
 	inline std::vector<GameObject*>& GetGameObjects() 
