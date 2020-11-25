@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
+    <ClCompile Include="Game\Components\BoxCollider.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
     <ClCompile Include="Engine\Math\CollisionDetection.cpp" />
@@ -198,6 +199,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
+    <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -211,6 +213,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
@@ -219,6 +222,10 @@
     <ClInclude Include="Engine\Core\EngineProfiling.h" />
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
+    <ClInclude Include="Engine\Math\Collider.h" />
+    <ClInclude Include="Engine\Math\EulerAngles.h" />
+    <ClInclude Include="Engine\Math\Simplex.h" />
+    <ClInclude Include="Game\Components\BoxCollider.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Engine\Core\AudioHandler.h" />
@@ -293,6 +300,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
+    <ClInclude Include="Game\Scenes\GJKTestScene.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
@@ -305,6 +313,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">

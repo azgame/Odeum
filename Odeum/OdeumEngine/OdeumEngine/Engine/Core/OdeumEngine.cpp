@@ -85,19 +85,6 @@ void OdeumEngine::Run()
 	}
 }
 
-void Spin(float milliseconds)
-{
-	milliseconds /= 1000.0f;
-	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-	double ms = 0;
-	while (ms < milliseconds)
-	{
-		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-		ms = time_span.count();
-	}
-}
-
 bool OdeumEngine::Initialize()
 {	
 	JobSystem::Initialize();

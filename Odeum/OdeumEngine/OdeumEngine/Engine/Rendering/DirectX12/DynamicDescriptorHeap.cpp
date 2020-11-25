@@ -189,6 +189,9 @@ uint32_t DynamicDescriptorHeap::DescriptorHandleCache::ComputeStagedSize()
 	return neededSpace;
 }
 
+/* Note about "stale" descriptors. Refers to the fact that when you set new descriptors in the cache, the descriptors in the heap are now "stale" 
+	and must be marked for renewal from the cache. So we mark the bitmap and signal that we want to update those descriptors which are "stale" */
+
 void DynamicDescriptorHeap::DescriptorHandleCache::CopyAndBindStaleTables(D3D12_DESCRIPTOR_HEAP_TYPE type_, uint32_t descSize_, DescriptorHandle destHandleStart_, ID3D12GraphicsCommandList* cmdList_, void(__stdcall ID3D12GraphicsCommandList::* setFunc_)(UINT, D3D12_GPU_DESCRIPTOR_HANDLE))
 {
 	uint32_t staleParamCount = 0;
@@ -320,7 +323,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::StageDescriptorHandles(UINT r
 
 	// Mark assignments: mark number of handles at offset
 	TableCache.assignedHandlesBitMap |= ((1 << numHandles_) - 1) << offset_;
-	// Mark table as stale
+	// signal which root params have been set in cache and ready for transfer
 	m_staleRootParamsBitMap |= (1 << rootIndex_);
 }
 
@@ -338,6 +341,7 @@ void DynamicDescriptorHeap::DescriptorHandleCache::ParseRootSignature(D3D12_DESC
 	unsigned long rootIndex;
 	while (_BitScanForward(&rootIndex, tableParams))
 	{
+		// Found the first param, level it so that when we search again, we hit the next assigned table param
 		tableParams ^= (1 << rootIndex);
 
 		UINT tableSize = rootSig_.m_descriptorTableSize[rootIndex];

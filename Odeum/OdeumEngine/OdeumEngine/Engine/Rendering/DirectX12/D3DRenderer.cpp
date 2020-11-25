@@ -79,6 +79,7 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 		DirectX::XMMATRIX model;
 		DirectX::XMFLOAT3 viewerPos;
 	} vsConstants;
+
 	vsConstants.viewProj = Camera.GetViewProjMatrix();
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 

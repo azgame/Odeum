@@ -70,6 +70,9 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
+    <ClCompile Include="Game\Components\BoxCollider.cpp" />
+    <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -164,6 +167,12 @@
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
     <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
+    <ClInclude Include="Game\Components\BoxCollider.h" />
+    <ClInclude Include="Engine\Math\EulerAngles.h" />
+    <ClInclude Include="Engine\Math\Simplex.h" />
+    <ClInclude Include="Engine\Math\Collider.h" />
+    <ClInclude Include="Game\Scenes\GJKTestScene.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

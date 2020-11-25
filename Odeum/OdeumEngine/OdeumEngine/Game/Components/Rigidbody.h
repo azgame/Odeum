@@ -12,60 +12,57 @@ public:
 	void OnDetach() {};
 	void Update(float deltaTime) override;
 
-	// other functions
-	void Transform(Vector4 translate);
+	// movement functions
+	void Transpose(Vector4 translate);
 	void ApplyForce(Vector4 force);
+	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
+	void AddAngularVelocity(Vector4 velocity);
+	void AddAngularVelocity(Vector4 velocity, float angleSpeed);
 
 	// Getters
 	inline float GetMass() { return rb_mass; }
 	inline Vector4 GetPosition() { return rb_position; }
 	inline Vector4 GetVelocity() { return rb_totalVelocity; }
 	inline Vector4 GetAcceleration() { return rb_totalAcceleration; }
+	inline Vector4 GetScale() { return rb_scale; }
+	// gotta change this
+	inline Vector4 GetRotation() { return Vector4(rb_orientation); }
 
 	// Setters
 	inline void SetMass(float mass) { rb_mass = mass; }
 	inline void SetVelocity(Vector4 velocity) { rb_totalVelocity = velocity; }
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
 	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
-	inline void SetRotation(Vector4 rotation, float angle) { rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle) { if(Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle, float rotSpeed) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); rb_rotationSpeed = rotSpeed; } //UpdateTransform(); }
 	inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
-
-	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
-	void AddAngularVelocity(Vector4 velocity, float angle);
+	inline void SetRotation(Quaternion rotationQuat, float rotSpeed) { rb_orientation = rotationQuat; rb_rotationSpeed = rotSpeed; } //UpdateTransform();}
+	inline void SetScale(Vector4 scale) { rb_scale = scale; }
+	
 
 private:
-	// options for now
+	// Member Variables
 	Vector4 rb_totalForce;
 	Vector4 rb_totalAcceleration;
-	// using vector instead of quaternion for now
 	Vector4 rb_position;
 	//Vector4 rb_rotation;
 	Vector4 rb_totalVelocity;
 	Vector4 rb_angularVelocity;
-
+	Vector4 rb_scale;
 	Quaternion rb_orientation;
 
 	float rb_mass;
 	float rb_angle;
+	
 	float rb_angleSpeed;
-
+	float rb_rotationSpeed;
 
 	float rb_speed;
 	
-	// this is for physics assignment 1, will change everything to force after I think
-	// might want to move parts of this to MathUtility.h
 	void UpdateOrientationQuaternion();
-
-	// Cross product
-	//inline Vector3 Cross(Vector3 v1, Vector3 v2)
-	//{
-	//	return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),
-	//				   v1.GetZ() * v2.GetX() - v1.GetX() * v2.GetZ(),
-	//				   v1.GetX() * v2.GetY() - v1.GetY() * v2.GetX());
-	//}
 	
 	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_angle, rb_rotation, m_gameObject->GetScale()); }
-	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, m_gameObject->GetScale()); }
+	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, rb_scale); }
 };
 
 #endif

@@ -11,12 +11,12 @@ void KinematicMovement::Update(float deltaTime)
 	    //sets position directly moving constantly 
 		if (!shouldFlee)
 		{
-			object->SetPosition(object->GetPosition() + temp);
+			object->GetComponent<Rigidbody>()->SetPosition(object->GetComponent<Rigidbody>()->GetPosition() + temp);
 		}
 		else
 		{
 			temp = temp;
-			object->SetPosition(object->GetPosition() - temp);
+			object->GetComponent<Rigidbody>()->SetPosition(object->GetComponent<Rigidbody>()->GetPosition() - temp);
 		}
 		
 		
@@ -38,9 +38,9 @@ Vector4 KinematicMovement::GetSteering()
 	
 	float rotation;
 	//velocity=target position -object position
-	velocity.SetX(target->GetPosition().GetX() - object->GetPosition().GetX());
-	velocity.SetY(target->GetPosition().GetY() - object->GetPosition().GetY());
-	velocity.SetZ(target->GetPosition().GetZ() - object->GetPosition().GetZ());
+	velocity.SetX(target->GetComponent<Rigidbody>()->GetPosition().GetX() - object->GetComponent<Rigidbody>()->GetPosition().GetX());
+	velocity.SetY(target->GetComponent<Rigidbody>()->GetPosition().GetY() - object->GetComponent<Rigidbody>()->GetPosition().GetY());
+	velocity.SetZ(target->GetComponent<Rigidbody>()->GetPosition().GetZ() - object->GetComponent<Rigidbody>()->GetPosition().GetZ());
 	velocity = velocity.Normalize();
 	velocity= velocity * maxSpeed;
 	//this deals with the rotation which will be implemented after
@@ -50,7 +50,8 @@ Vector4 KinematicMovement::GetSteering()
 	}
 	else
 	{
-		rotation = object->GetRotation().GetY();
+		// JUST GOTTA FIGURE OUT HOW TO GET THIS FROM QUATERNION INSTEAD
+		rotation = object->GetComponent<Rigidbody>()->GetRotation().GetY();
 	}
 	
 	return Vector4(velocity, rotation);

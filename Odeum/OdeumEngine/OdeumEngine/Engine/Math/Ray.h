@@ -38,6 +38,11 @@ struct Ray
 
 		return CollisionDetection::RayOBBIntersection(*this, box, IntersectionPlane);
 	}
+
+	inline Vector3 FindPosition()
+	{
+		return origin + (direction * t);
+	}
 };
 
 #endif

@@ -2,6 +2,8 @@
 
 #include "Ray.h"
 #include "BoundingBox.h"
+#include "Simplex.h"
+#include "Collider.h"
 
 #include "../Core/OdeumEngine.h"
 
@@ -50,6 +52,7 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, 
 	float e = Math::Dot(xAxis, delta);
 	float f = Math::Dot(ray.direction, xAxis);
 
+	// FIND INTERSECTION PLANES
 	if (fabs(f) > 0.001f)
 	{
 		float t1 = (e + min.GetX()) / f;
@@ -134,6 +137,27 @@ bool CollisionDetection::RayOBBIntersection(Ray& ray, OrientedBoundingBox& box, 
 
 	ray.t = tMin;
 
+	// FINDING WHICH PLANE THE INTERSECTION WAS ON
+	// First we find out the position of the ray based on t
+	Vector3 pos = ray.FindPosition();
+	
+	// Then we check to see which center plane is closest to the vector
+	std::vector<Vector4> planes = box.GetPlanes();
+	float shortestDistance = VERY_LARGE_FLOAT;
+	float newDistance = 0;
+
+	for (auto p : planes)
+	{
+		// find the center of each plane
+		Vector3 center = box.center + Vector3(p.GetVec() * p.GetW());
+		newDistance = (pos - center).Mag();
+		if (fabs(newDistance) < fabs(shortestDistance)) {
+			shortestDistance = newDistance;
+			IntersectionPlane = &p;
+		}
+	}
+
+	// I THINK WE ARE GOOOD
 	return true;
 }
 
@@ -154,4 +178,134 @@ void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& 
 			*IntersectionPlane = planes[i];
 		}
 	}
+}
+
+bool CollisionDetection::GJKCollisionDetection(Collider* c1, Collider* c2)
+{
+	// Get initial point with any direction
+	Vector3 supPoint = Math::Support(c1, c2, Vector3(0.0f, 1.0f, 0.0f));
+	
+	// Simplex is stored as an arrary of points, maximum of 4
+	Simplex<Vector3> points;
+	// Add new point to the new simplex
+	points.Push_Front(supPoint);
+
+	// The new direction will be pointing towards the origin
+	Vector3 direction = -supPoint;
+
+	while (true)
+	{
+		supPoint = Math::Support(c1, c2, direction);
+
+		if (Math::Dot(supPoint, direction) <= 0.0f)
+		{
+			// no collision
+			return false;
+		}
+
+		points.Push_Front(supPoint);
+
+		if (Math::NextSimplex(points, direction))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//bool CollisionDetection::GJKCollisionDetection2D(Collider2D* c1, Collider2D* c2)
+//{
+//	// Get initial point with any direction
+//	Vector2 supPoint = Math::Support(c1, c2, Vector2(0.0f, 1.0f));
+//
+//	// Simplex is stored as an arrary of points, maximum of 4
+//	Simplex<Vector2> points;
+//	// Add new point to the new simplex
+//	points.Push_Front(supPoint);
+//
+//	// The new direction will be pointing towards the origin
+//	Vector2 direction = -supPoint;
+//
+//	while (true)
+//	{
+//		supPoint = Math::Support(c1, c2, direction);
+//
+//		if (Math::Dot(supPoint, direction) <= 0.0f)
+//		{
+//			// no collision
+//			return false;
+//		}
+//
+//		points.Push_Front(supPoint);
+//
+//		if (Math::NextSimplex(points, direction))
+//		{
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
+
+bool CollisionDetection::GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2)
+{
+	size_t index = 0; // index of current vertex of simplex
+	Vector2 a, b, c, ao, ab, ac, abperp, acperp, simplex[3];
+
+	Vector2 supPoint = Math::Support(s1, s2, Vector2(0.0f, 1.0f));
+	Vector2 direction = -supPoint;
+
+	int counter = 0;
+
+	a = simplex[0] = supPoint;
+
+	while (true) {
+		counter++;
+
+		a = simplex[++index] = Math::Support(s1, s2, direction);
+
+		if (Math::Dot(a, direction) <= 0)
+			return false; // no collision
+
+		ao = -a; // from point A to Origin is just negative A
+
+		// simplex has 2 points (a line segment, not a triangle yet)
+		if (index < 2) {
+			b = simplex[0];
+			ab = b - a; // from point A to B
+			direction = Math::TripleProduct(ab, ao, ab); // normal to AB towards Origin
+			if ((direction.GetX() * direction.GetX() + direction.GetY() * direction.GetY()) == 0)
+				direction = Vector2(ab.GetY(), -ab.GetX());
+			continue; // skip to next iteration
+		}
+
+		b = simplex[1];
+		c = simplex[0];
+		ab = b - a; // from point A to B
+		ac = c - a; // from point A to C
+
+		acperp = Math::TripleProduct(ab, ac, ac);
+
+		if (Math::Dot(acperp, ao) >= 0) {
+
+			direction = acperp; // new direction is normal to AC towards Origin
+		}
+		else {
+
+			abperp = Math::TripleProduct(ac, ab, ab);
+
+			if (Math::Dot(abperp, ao) < 0)
+				return true; // collision
+
+			simplex[0] = simplex[1]; // swap first element (point C)
+
+			direction = abperp; // new direction is normal to AB towards Origin
+		}
+
+		simplex[1] = simplex[2]; // swap element in the middle (point B)
+		--index;
+	}
+
+	return false;
 }
