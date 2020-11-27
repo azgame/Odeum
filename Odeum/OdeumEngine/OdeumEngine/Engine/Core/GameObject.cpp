@@ -29,6 +29,13 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string ta
 	case ShapeTypes::CubeShape:
 	{
 		m_model.m_details.fileName = "Engine/Resources/Models/Cube.obj";
+		m_model.m_flatColour = colour;
+		break;
+	}
+	case ShapeTypes::SphereShape:
+	{
+		m_model.m_details.fileName = "Engine/Resources/Models/Sphere.obj";
+		m_model.m_flatColour = colour;
 		break;
 	}
 	default:

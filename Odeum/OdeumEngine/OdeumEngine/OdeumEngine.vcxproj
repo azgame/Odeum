@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\NavMesh\NavMeshManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
     <ClCompile Include="Game\Components\BoxCollider.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
@@ -216,6 +217,8 @@
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Math\Plane.h" />
+    <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
     <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />

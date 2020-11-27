@@ -16,7 +16,7 @@ public:
 	inline Vector3 FindFurthestPoint(Vector3 direction)
 	{
 		Vector3 maxPoint;
-		float maxDistance = -VERY_LARGE_FLOAT;
+		float maxDistance = -FLT_MAX;
 
 		for (auto v : c_vertices)
 		{
@@ -68,7 +68,7 @@ public:
 	inline Vector2 FindFurthestPoint(Vector2 direction)
 	{
 		Vector2 maxPoint;
-		float maxDistance = -VERY_LARGE_FLOAT;
+		float maxDistance = -FLT_MAX;
 
 		for (auto v : c_vertices)
 		{

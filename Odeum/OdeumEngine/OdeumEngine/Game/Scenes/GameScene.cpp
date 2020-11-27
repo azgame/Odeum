@@ -12,7 +12,7 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+	object = new GameObject(ShapeTypes::SphereShape, Colour(0.0f, 1.0f, 1.0f, 1.0f), "Player");
 	object->AddComponent<Rigidbody>();
 	object->GetComponent<Rigidbody>()->SetPosition(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 
@@ -44,7 +44,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	ParticleManager::Get().CreateEffect(particleProps);*/
 
-	std::vector<Vector2> t1;
+	/*std::vector<Vector2> t1;
 	t1.push_back(Vector2(4.0f, 5.0f));
 	t1.push_back(Vector2(4.0f, 11.0f));
 	t1.push_back(Vector2(9.0f, 9.0f));
@@ -59,7 +59,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	Collider2D c2(t2);
 
 	if (CollisionDetection::GJKCollisionDetection2D(&c1, &c2))
-		std::cout << "GJK in 2D successful!" << std::endl;
+		std::cout << "GJK in 2D successful!" << std::endl;*/
 
 	SceneGraph::Get()->LoadObjectsIntoMemory();
 }
