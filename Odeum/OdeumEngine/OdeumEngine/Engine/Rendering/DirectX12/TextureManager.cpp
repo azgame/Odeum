@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../stb_image/stb_image.h"
 
+#include <sstream>
+
 #include "D3DCore.h"
 #include "CommandContext.h"
 #include "Colour.h"
@@ -75,9 +77,10 @@ Texture* TextureManager::LoadFromFile(std::string textureName_)
 }
 
 // NYI
-Texture* TextureManager::CreateAndStore(Colour colour_)
+Texture* TextureManager::LoadColour(Colour colour_)
 {
-    return new Texture("Empty");
+    Texture* texture = GetColourTexture(colour_);
+    return texture;
 }
 
 void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format)
@@ -135,6 +138,32 @@ Texture* TextureManager::FindOrLoad(std::string textureName_)
 	return newTexture;
 }
 
+Texture* TextureManager::GetColourTexture(Colour colour)
+{
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2) << colour.GetR() << colour.GetG() << colour.GetB() << colour.GetA();
+    std::string colourName = stream.str();
+
+    Texture* colourTexture;
+
+    auto iter = sm_textureMap.find(colourName);
+    if (iter != sm_textureMap.end())
+    {
+        colourTexture = iter->second.get();
+        return colourTexture;
+    }
+    else
+    {
+        sm_mutex.lock();
+        colourTexture = new Texture(colourName);
+        sm_textureMap[colourName].reset(colourTexture);
+        sm_mutex.unlock();
+    }
+
+    colourTexture->Create(1, 1, DXGI_FORMAT_R32G32B32A32_FLOAT, colour.GetPtr());
+    return colourTexture;
+}
+
 Texture* TextureManager::GetInvalidTexture()
 {
     Texture* invalid;
@@ -147,8 +176,10 @@ Texture* TextureManager::GetInvalidTexture()
     }
     else
     {
+        sm_mutex.lock();
         invalid = new Texture("Invalid");
         sm_textureMap["Invalid"].reset(invalid);
+        sm_mutex.unlock();
     }
 
     uint32_t MagentaPixel = 0x00FF00FF;

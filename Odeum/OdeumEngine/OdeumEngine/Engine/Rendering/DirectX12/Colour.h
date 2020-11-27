@@ -25,6 +25,11 @@ public:
 
 	operator DirectX::XMVECTOR() const { return m_colourValue; }
 
+	inline uint32_t ConvertToBit()
+	{
+		return (uint32_t)((uint32_t)(GetR() * 32.0f) | ((uint32_t)(GetG() * 32.0f) << 8) | ((uint32_t)(GetB() * 32.0f) << 16) | ((uint32_t)(GetA() * 32.0f) << 24));
+	}
+
 private:
 	DirectX::XMVECTORF32 m_colourValue;
 };

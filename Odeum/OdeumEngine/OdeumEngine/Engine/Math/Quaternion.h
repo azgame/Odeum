@@ -59,19 +59,19 @@ namespace Math {
 		// 
 		if (test > 0.49999 * unit) { // singularity at north pole
 			e.yaw = 2 * atan2(q.GetX(), q.GetW());
-			e.pitch = PI / 2;
+			e.pitch = (float)(PI / 2.0);
 			e.roll = 0;
 			return e;
 		}
 		if (test < -0.49999 * unit) { // singularity at south pole
 			e.yaw = -2 * atan2(q.GetX(), q.GetW());
-			e.pitch = -PI / 2;
+			e.pitch = (float)(-PI / 2.0);
 			e.roll = 0;
 			return e;
 		}
-		e.yaw = atan2(2 * q.GetY() * q.GetW() - 2 * q.GetX() * q.GetZ(), sqx - sqy - sqz + sqw);
-		e.pitch = asin(2 * test / unit);
-		e.roll = atan2(2 * q.GetX() * q.GetW() - 2 * q.GetY() * q.GetZ(), -sqx + sqy - sqz + sqw);
+		e.yaw = (float)atan2(2 * q.GetY() * q.GetW() - 2 * q.GetX() * q.GetZ(), sqx - sqy - sqz + sqw);
+		e.pitch = (float)asin(2 * test / unit);
+		e.roll = (float)atan2(2 * q.GetX() * q.GetW() - 2 * q.GetY() * q.GetZ(), -sqx + sqy - sqz + sqw);
 
 		return e;
 	};

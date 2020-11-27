@@ -209,15 +209,22 @@ void Model::LoadTextures()
 	{
 		const Material& material = m_pMaterials[mIndex];
 
-		std::thread t0;
-		
-		matTextures[0] = TextureManager::Get()->LoadFromFile(material.diffuseTextureFile);
+		if (!std::string(material.diffuseTextureFile).empty())
+		{
+			matTextures[0] = TextureManager::Get()->LoadFromFile(material.diffuseTextureFile);
 
-		matTextures[1] = TextureManager::Get()->LoadFromFile(material.specularTextureFile);
-		if (!matTextures[1]->isValid())
+			matTextures[1] = TextureManager::Get()->LoadFromFile(material.specularTextureFile);
+			if (!matTextures[1]->isValid())
+				matTextures[1] = matTextures[0];
+
+			matTextures[3] = TextureManager::Get()->LoadFromFile(material.normalTextureFile);
+		}
+		else
+		{
+			matTextures[0] = TextureManager::Get()->LoadColour(m_flatColour);
 			matTextures[1] = matTextures[0];
-
-		matTextures[3] = TextureManager::Get()->LoadFromFile(material.normalTextureFile);
+			matTextures[3] = matTextures[0];
+		}
 
 		m_srvs[mIndex * 6 + 0] = matTextures[0]->GetSRV();
 		m_srvs[mIndex * 6 + 1] = matTextures[1]->GetSRV();
