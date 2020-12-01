@@ -22,7 +22,7 @@ public:
 		{
 			float distance = Math::Dot(v, direction);
 
-			if (distance > maxDistance)
+				if (distance > maxDistance)
 			{
 				maxDistance = distance;
 				maxPoint = v;
@@ -43,7 +43,7 @@ public:
 		Matrix3 rotationMat = Matrix3(XMMatrixRotationAxis(axis, angle));
 		for (int i = 0; i < c_vertices.size(); i++)
 		{
-			c_vertices[i] = rotationMat * c_vertices[i];
+			c_vertices[i] = rotationMat * s_vertices[i];
 		}
 	}
 
@@ -62,11 +62,13 @@ public:
 // lots of helper functions
 namespace Math {
 
+	// find the furthest point along a given direction
 	inline Vector3 Support(Collider* cA, Collider* cB, Vector3 direction)
 	{
 		return cA->FindFurthestPoint(direction) - cB->FindFurthestPoint(-direction);
 	}
 
+	// see if two vectors are pointing the same way
 	inline bool SameDirection(const Vector3& direction, const Vector3& ao)
 	{
 		return Math::Dot(direction, ao) > 0;
@@ -94,10 +96,12 @@ namespace Math {
 	}
 
 	inline bool Triangle(Simplex& points, Vector3& direction) {
+		// creating points of a triangle
 		Vector3 a = points[0];
 		Vector3 b = points[1];
 		Vector3 c = points[2];
 
+		// vectors between points
 		Vector3 ab = b - a;
 		Vector3 ac = c - a;
 		Vector3 ao = -a;
