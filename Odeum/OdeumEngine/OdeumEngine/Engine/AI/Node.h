@@ -5,7 +5,7 @@ class Node
 {
 public:
 	Node() {};
-	virtual ~Node() {}
+	 ~Node() {}
 	enum NodeStates
 	{
 		FAILURE,
@@ -16,26 +16,20 @@ public:
 	{
 		 return m_nodeState; 
 	};
-	//typedef void  NodeReturn(*NodeStates);
+	
+	//typedef NodeStates(*NodeReturn) (<< insert params here >> );
+	typedef NodeStates(*NodeReturn());
+	virtual NodeStates Evaluate() {};
+	
+
+	
+
 protected:
 	NodeStates m_nodeState;
 
 
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

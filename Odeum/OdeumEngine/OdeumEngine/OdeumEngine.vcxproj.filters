@@ -80,6 +80,8 @@
     <ClCompile Include="Engine\Recast\RecastMesh.cpp" />
     <ClCompile Include="Engine\Recast\RecastMeshDetail.cpp" />
     <ClCompile Include="Engine\Recast\RecastRasterization.cpp" />
+    <ClCompile Include="Engine\AI\ActionNode.cpp" />
+    <ClCompile Include="Engine\AI\Selector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -176,6 +178,8 @@
     <ClInclude Include="Engine\Recast\Recast.h" />
     <ClInclude Include="Engine\Recast\RecastAlloc.h" />
     <ClInclude Include="Engine\Recast\RecastAssert.h" />
+    <ClInclude Include="Engine\AI\ActionNode.h" />
+    <ClInclude Include="Engine\AI\Selector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -152,7 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\AI\ActionNode.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\AI\Selector.cpp" />
     <ClCompile Include="Engine\Recast\Recast.cpp" />
     <ClCompile Include="Engine\Recast\RecastAlloc.cpp" />
     <ClCompile Include="Engine\Recast\RecastArea.cpp" />
@@ -223,7 +225,9 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\AI\ActionNode.h" />
     <ClInclude Include="Engine\AI\Node.h" />
+    <ClInclude Include="Engine\AI\Selector.h" />
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
     <ClInclude Include="Engine\Recast\Recast.h" />
     <ClInclude Include="Engine\Recast\RecastAlloc.h" />
