@@ -10,11 +10,10 @@
 void ParticleEffect::Initialize()
 {
 	// create a vector of spawn data to be passed into the spawn particle buffer
-	//std::vector<ParticleSpawnData> spawnData(kMaxParticles);
-	ParticleSpawnData* spawnData = (ParticleSpawnData*)_malloca(sizeof(ParticleSpawnData) * kMaxParticles);
+	std::vector<ParticleSpawnData> spawnData(kMaxParticles);
 
 	// For each particle, fill an entry in the spawn data with randomized data, within the ranges provided by the particle effect data
-	for (int i = 0; i < kMaxParticles; i++)
+	for (uint32_t i = 0; i < kMaxParticles; i++)
 	{
 		spawnData[i].ageSpeed = 1.0f / Math::RandValInRange(m_properties.minLife, m_properties.maxLife);
 		float horizontalAngle = Math::RandValInRange(0.0f, DirectX::XM_2PI);
@@ -32,9 +31,7 @@ void ParticleEffect::Initialize()
 	}
 
 	// Create appropriate buffers (spawn buffer, 2 particle buffers, dispatch args buffer)
-	m_spawnStateBuffer.Create("SpawnDataBuffer", kMaxParticles, sizeof(ParticleSpawnData), spawnData);
-
-	_freea(spawnData);
+	m_spawnStateBuffer.Create("SpawnDataBuffer", kMaxParticles, sizeof(ParticleSpawnData), spawnData.data());
 
 	m_particleBuffer[0].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));
 	m_particleBuffer[1].Create("Particle Buffer", kMaxParticles, sizeof(ParticleSimulationData));

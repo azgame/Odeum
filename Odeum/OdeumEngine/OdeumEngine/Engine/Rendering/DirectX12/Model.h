@@ -19,7 +19,8 @@ public:
 		m_pVertexData(nullptr),
 		m_pIndexData(nullptr),
 		m_srvs(nullptr),
-		m_vertexStride(sizeof(Vertex)) {}
+		m_vertexStride(sizeof(Vertex)),
+		m_flatColour(1.0f, 1.0f, 1.0f, 1.0f) {}
 
 	~Model()
 	{
@@ -30,13 +31,14 @@ public:
 		SAFE_DELETE(m_srvs);
 	}
 
-	void Load(std::string fileName);
+	void Load();
 	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
 
 	struct ModelInfo
 	{
+		std::string fileName;
 		uint32_t meshCount;
 		uint32_t materialCount;
 		uint32_t vertexDataByteSize;
@@ -80,6 +82,7 @@ public:
 
 	ModelInfo		m_details;
 	Mesh*			m_pMesh;
+	Colour			m_flatColour;
 	Vertex*			m_pVertexData; // temp vertex storage for upload
 	uint16_t*		m_pIndexData; // temp index storage for upload
 	Material*		m_pMaterials;

@@ -47,34 +47,6 @@ void D3DRenderer::Initialize(Window& Window)
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
 
-	ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
-
-	ParticleInitProperties particleProps;
-	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.3f, 0.0f, 1.0f);
-	particleProps.endColour = DirectX::XMFLOAT4(0.8f, 1.0f, 0.0f, 1.0f);
-	particleProps.lifeTime = FLT_MAX;
-	particleProps.minLife = 10.0f;
-	particleProps.maxLife = 25.0f;
-	particleProps.minMass = 0.1f;
-	particleProps.maxMass = 2.0f;
-	particleProps.rotationMax = 1.0f;
-	particleProps.spread = Vector3(20.0f, 50.0f, 20.0f);
-	particleProps.minVelocity = Vector2(1.0f, 1.0f);
-	particleProps.maxVelocity = Vector2(2.0f, 2.0f);
-	particleProps.minSize = Vector2(0.0050f, 0.0075f);
-	particleProps.maxSize = Vector2(0.01f, 0.0125f);
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 40000;
-	particleProps.lauchingData.spawnRate = 64.0f;
-	particleProps.lauchingData.speed = 1.0f;
-	particleProps.lauchingData.groundBounce = 1.25f;
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -1.0f, 0.0f));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
-
-	ParticleManager::Get().CreateEffect(particleProps);
-
 	CreateUIResources();
 	InitializeUI(Window);
 }
@@ -107,6 +79,7 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 		DirectX::XMMATRIX model;
 		DirectX::XMFLOAT3 viewerPos;
 	} vsConstants;
+
 	vsConstants.viewProj = Camera.GetViewProjMatrix();
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 

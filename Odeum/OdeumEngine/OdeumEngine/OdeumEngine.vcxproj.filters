@@ -69,19 +69,11 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
-    <ClCompile Include="Engine\Recast\RecastRegion.cpp" />
-    <ClCompile Include="Engine\Recast\Recast.cpp" />
-    <ClCompile Include="Engine\Recast\RecastAlloc.cpp" />
-    <ClCompile Include="Engine\Recast\RecastArea.cpp" />
-    <ClCompile Include="Engine\Recast\RecastAssert.cpp" />
-    <ClCompile Include="Engine\Recast\RecastContour.cpp" />
-    <ClCompile Include="Engine\Recast\RecastFilter.cpp" />
-    <ClCompile Include="Engine\Recast\RecastLayers.cpp" />
-    <ClCompile Include="Engine\Recast\RecastMesh.cpp" />
-    <ClCompile Include="Engine\Recast\RecastMeshDetail.cpp" />
-    <ClCompile Include="Engine\Recast\RecastRasterization.cpp" />
-    <ClCompile Include="Engine\AI\ActionNode.cpp" />
-    <ClCompile Include="Engine\AI\Selector.cpp" />
+    <ClCompile Include="Engine\Core\JobSystem.cpp" />
+    <ClCompile Include="Game\Components\BoxCollider.cpp" />
+    <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
+    <ClCompile Include="Engine\NavMesh\NavMeshManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\DynamicMovement.h" />
@@ -174,12 +166,16 @@
     <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
     <ClInclude Include="Engine\JSONUtility\json.hpp" />
-    <ClInclude Include="Engine\AI\Node.h" />
-    <ClInclude Include="Engine\Recast\Recast.h" />
-    <ClInclude Include="Engine\Recast\RecastAlloc.h" />
-    <ClInclude Include="Engine\Recast\RecastAssert.h" />
-    <ClInclude Include="Engine\AI\ActionNode.h" />
-    <ClInclude Include="Engine\AI\Selector.h" />
+    <ClInclude Include="Engine\Core\JobSystem.h" />
+    <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
+    <ClInclude Include="Game\Components\BoxCollider.h" />
+    <ClInclude Include="Engine\Math\EulerAngles.h" />
+    <ClInclude Include="Engine\Math\Simplex.h" />
+    <ClInclude Include="Engine\Math\Collider.h" />
+    <ClInclude Include="Game\Scenes\GJKTestScene.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
+    <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
+    <ClInclude Include="Engine\Math\Plane.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

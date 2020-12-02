@@ -14,7 +14,7 @@ public:
 	static Matrix4 RotationFromQuaternion(Quaternion quat);
 	Matrix4 TranslationFromVector(Vector3 vec);
 
-	Matrix4 Update();
+	//Matrix4 Update();
 
 private:
 	Matrix4 m_transform;

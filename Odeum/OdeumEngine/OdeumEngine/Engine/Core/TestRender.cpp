@@ -12,10 +12,6 @@
 
 TestRender::TestRender()
 {
-	m_eventFrameLimit = 16;
-	m_eventQueue.resize(m_eventFrameLimit);
-	m_bufferHead = 0;
-	m_bufferTail = 0;
 }
 
 TestRender::~TestRender()
@@ -98,11 +94,12 @@ void TestRender::Update(float deltaTime_)
 {
 	SCOPEDTIMER(timer);
 
-	while (m_bufferHead != m_bufferTail)
+	Event* e;
+	while (!m_eventQueue.pop_front(e))
 	{
 		// Handle events here
-		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
 	}
+	e = nullptr;
 
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -197,12 +194,7 @@ void TestRender::UIRender()
 
 void TestRender::HandleEvent(Event& event_) // Queue events
 {
-	if ((m_bufferTail + 1) % m_eventFrameLimit == m_bufferHead)
-		return;
-
-	m_eventQueue[m_bufferTail] = &event_;
-
-	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
+	m_eventQueue.push_back(&event_);
 }
 
 void TestRender::CreateUIResources()

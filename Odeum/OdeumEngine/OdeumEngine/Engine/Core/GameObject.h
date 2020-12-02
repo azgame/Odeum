@@ -49,17 +49,6 @@ public:
 	void SetTag(std::string Tag) { tag = Tag; }
 	std::string Tag() { return tag; }
 
-	Vector4 GetPosition() { return m_position; }
-	Vector4 GetVelocity() { return m_velocity; }
-	Vector4 GetRotation() { return m_rotation; }
-	Vector4 GetScale() { return m_scale; }
-	float GetMass() { return m_mass; }
-	
-	void SetPosition(Vector4 position);
-	void SetRotation(Vector4 rotation, float angle = 0.0f);
-	void SetScale(Vector4 scale);
-	void SetMass(float mass);
-
 protected:
 
 	Model m_model;
@@ -67,17 +56,13 @@ protected:
 	OrientedBoundingBox bbox;
 	bool isHit;
 
+	// add transform
+
+
 	std::string fileName;
 	std::string tag;
 
 	std::vector<Component*> m_components;
-
-	Vector4 m_position;
-	Vector4 m_velocity;
-	Vector4 m_rotation;
-	Vector4 m_scale;
-
-	float m_mass;
 
 	void CreateAttachedComponent(Component* pAttachedComponent);
 	

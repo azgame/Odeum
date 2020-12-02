@@ -744,7 +744,7 @@ inline void CommandContext::CopyCounter(D3DResource& Dest, size_t DestOffset, St
 
 inline void CommandContext::ResetCounter(StructuredBuffer& Buf, uint32_t Value)
 {
-    FillBuffer(Buf.GetCounterBuffer(), 0, Value, sizeof(uint32_t));
+    FillBuffer(Buf.GetCounterBuffer(), 0, (float)Value, sizeof(uint32_t));
     TransitionResource(Buf.GetCounterBuffer(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 }
 

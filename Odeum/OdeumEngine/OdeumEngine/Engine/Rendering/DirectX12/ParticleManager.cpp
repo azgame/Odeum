@@ -24,6 +24,9 @@ ParticleManager::~ParticleManager()
 
 void ParticleManager::Initialize(uint32_t Width, uint32_t Height)
 {
+	particleCount = new UINT;
+	*particleCount = 0;
+
 	// initialize root signature
 	m_rootSignature.Reset(5);
 	m_rootSignature[0].InitAsConstants(0, 1);

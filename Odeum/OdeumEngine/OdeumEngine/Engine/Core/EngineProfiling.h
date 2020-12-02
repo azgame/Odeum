@@ -57,6 +57,14 @@ public:
 		std::cout << m_profile + " took: " + std::to_string(elapsed.count() / 1000.0f) + " m/s." << std::endl;
 	}
 
+	float GetTime()
+	{
+		auto end = std::chrono::high_resolution_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - m_start);
+
+		return elapsed.count() / 1000.0f;
+	}
+
 private:
 	std::string m_fileName;
 	std::string m_profile;

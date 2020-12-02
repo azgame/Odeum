@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../stb_image/stb_image.h"
 
+#include <sstream>
+
 #include "D3DCore.h"
 #include "CommandContext.h"
 #include "Colour.h"
@@ -25,8 +27,8 @@ void Texture::Create(size_t pitch_, size_t width_, size_t height_, DXGI_FORMAT f
 
     D3D12_RESOURCE_DESC desc = {};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Width = width_;
-    desc.Height = height_;
+    desc.Width = (UINT)width_;
+    desc.Height = (UINT)height_;
     desc.DepthOrArraySize = 1;
     desc.MipLevels = 1;
     desc.Format = format_;
@@ -75,9 +77,10 @@ Texture* TextureManager::LoadFromFile(std::string textureName_)
 }
 
 // NYI
-Texture* TextureManager::CreateAndStore(Colour colour_)
+Texture* TextureManager::LoadColour(Colour colour_)
 {
-    return new Texture("Empty");
+    Texture* texture = GetColourTexture(colour_);
+    return texture;
 }
 
 void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format)
@@ -104,18 +107,21 @@ void TextureManager::FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI
 // Seperate function for threaded portion (because of mutex RAII)
 Texture* TextureManager::FindOrLoad(std::string textureName_)
 {
+    std::lock_guard<std::mutex> lg(sm_mutex);
+
 	auto iter = sm_textureMap.find(textureName_);
+
 	if (iter != sm_textureMap.end())
 	{
 		return iter->second.get();
 	}
 
+    Texture* newTexture = new Texture(textureName_);
+    // newTexture->SetToInvalidTexture();
+
 	FormattedRawTexture result = {};
 	UINT8* initialData = stbi_load((sm_rootDirectory + textureName_).c_str(), &result.width, &result.height, &result.stride, STBI_default);
-	
-    std::lock_guard<std::mutex> lg(sm_mutex);
 
-    Texture* newTexture = new Texture(textureName_);
     sm_textureMap[textureName_].reset(newTexture);
 
     if (initialData)
@@ -132,6 +138,32 @@ Texture* TextureManager::FindOrLoad(std::string textureName_)
 	return newTexture;
 }
 
+Texture* TextureManager::GetColourTexture(Colour colour)
+{
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2) << colour.GetR() << colour.GetG() << colour.GetB() << colour.GetA();
+    std::string colourName = stream.str();
+
+    Texture* colourTexture;
+
+    auto iter = sm_textureMap.find(colourName);
+    if (iter != sm_textureMap.end())
+    {
+        colourTexture = iter->second.get();
+        return colourTexture;
+    }
+    else
+    {
+        sm_mutex.lock();
+        colourTexture = new Texture(colourName);
+        sm_textureMap[colourName].reset(colourTexture);
+        sm_mutex.unlock();
+    }
+
+    colourTexture->Create(1, 1, DXGI_FORMAT_R32G32B32A32_FLOAT, colour.GetPtr());
+    return colourTexture;
+}
+
 Texture* TextureManager::GetInvalidTexture()
 {
     Texture* invalid;
@@ -144,8 +176,10 @@ Texture* TextureManager::GetInvalidTexture()
     }
     else
     {
+        sm_mutex.lock();
         invalid = new Texture("Invalid");
         sm_textureMap["Invalid"].reset(invalid);
+        sm_mutex.unlock();
     }
 
     uint32_t MagentaPixel = 0x00FF00FF;
