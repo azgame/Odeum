@@ -176,6 +176,7 @@
     <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
     <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
     <ClInclude Include="Engine\Math\Plane.h" />
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

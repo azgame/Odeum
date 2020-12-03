@@ -217,6 +217,7 @@
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
     <ClInclude Include="Engine\Math\Plane.h" />
     <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
     <ClInclude Include="Engine\DataStructures\RingBuffer.h" />

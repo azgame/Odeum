@@ -46,7 +46,7 @@ public:
 			states.clear();
 		}
 
-		std::map<T, bool> states; // TODO Aidan: too large, change this later
+		std::map<T, bool> states;
 	};
 
 private:

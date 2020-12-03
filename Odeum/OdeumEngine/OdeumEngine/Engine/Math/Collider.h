@@ -60,9 +60,9 @@ public:
 
 struct Collider2D
 {
-
 public:
 	Collider2D(std::vector<Vector2>& vertices) { c_vertices = s_vertices = vertices; };
+	Collider2D(std::initializer_list<Vector2> init) { c_vertices = s_vertices = init; }
 
 	// This returns the furthest point in a vector of vertices using a given direction
 	inline Vector2 FindFurthestPoint(Vector2 direction)

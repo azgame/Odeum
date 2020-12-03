@@ -9,7 +9,7 @@ class Plane;
 namespace NavMeshManager
 {
 	void Initialize();
-	void GenerateNavMesh( /*Smaller is more precise*/ uint32_t CellSize, Plane GroundPlane, std::vector<Collider2D> Obstacles);
+	void GenerateNavMesh( /*Smaller is more precise*/ float CellSize, Plane GroundPlane, std::vector<Collider2D> Obstacles);
 	void Uninitialize();
 }
 

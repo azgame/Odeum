@@ -91,6 +91,10 @@ public:
 	inline Vector2& operator -= (Vector2 v_) { *this = *this - v_; return *this; }
 	inline Vector2& operator *= (Vector2 v_) { *this = *this * v_; return *this; }
 	inline Vector2& operator /= (Vector2 v_) { *this = *this / v_; return *this; }
+
+	inline bool operator==(Vector2 v_) { return GetX() == v_.GetX() && GetY() == v_.GetY(); }
+	inline bool operator!=(Vector2 v_) { return GetX() != v_.GetX() || GetY() != v_.GetY(); }
+
 protected:
 	XMVECTOR vec;
 };
@@ -201,6 +205,8 @@ public:
 	inline Vector4& operator *= (float s_) { *this = *this * s_; return *this; }
 	inline Vector4& operator /= (Vector4 v_) { *this = *this / v_; return *this; }
 	inline Vector4& operator /= (float s_) { *this = *this / s_; return *this; }
+
+	inline bool operator==(Vector4 v_) { return GetX() == v_.GetX() && GetY() == v_.GetY() && GetZ() == v_.GetZ() && GetW() == v_.GetW(); }
 
 protected:
 	XMVECTOR vec;
