@@ -9,14 +9,14 @@ RobScene::RobScene() : Scene()
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 5.0f, 25.0f));
 	CollisionHandler::GetInstance()->Initialize(1000.0f);
 	object = new GameObject("Engine/Resources/Models/Cube.obj");
-	object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	//object->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	newObject = new GameObject("Engine/Resources/Models/Cube.obj");
-	newObject->SetPosition(Vector4(5.0f, 0.0f, 5.0f, 1.0f));
+	//newObject->SetPosition(Vector4(5.0f, 0.0f, 5.0f, 1.0f));
 	obstacle = new GameObject("Engine/Resources/Models/Cube.obj");
-	obstacle->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
+	//obstacle->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 1.0f));
 	object->AddComponent<Rigidbody>();
-	object->AddComponent <DynamicMovement>();
-	object->GetComponent<DynamicMovement>()->shouldAvoid = true;
+	//object->AddComponent <DynamicMovement>();
+	//object->GetComponent<DynamicMovement>()->shouldAvoid = true;
 
 	obstacle->SetTag("Obstacle");
 	object->SetTag("Player");
@@ -25,7 +25,7 @@ RobScene::RobScene() : Scene()
 	CollisionHandler::GetInstance()->AddObject(obstacle);
 
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
-	object->GetComponent<DynamicMovement>()->target = newObject;
+	//object->GetComponent<DynamicMovement>()->target = newObject;
 	object->GetComponent<Rigidbody>()->SetMass(1);
 
 
@@ -45,7 +45,7 @@ bool RobScene::Initialize()
 
 void RobScene::Update(const float deltaTime_)
 {
-	cout << object->GetPosition().GetX()<< " "<< object->GetPosition().GetY()<< " "<< object->GetPosition().GetZ() << std::endl;
+	//cout << object->GetPosition().GetX()<< " "<< object->GetPosition().GetY()<< " "<< object->GetPosition().GetZ() << std::endl;
 
 
 	object->Update(deltaTime_);
@@ -56,12 +56,12 @@ void RobScene::Update(const float deltaTime_)
 		if (swapped)
 		{
 			swapped = false;
-			newObject->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 1.0f));
+			//newObject->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 1.0f));
 		}
 		else
 		{
 			swapped = true;
-			newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
+			//newObject->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 1.0f));
 		}
 	}
 

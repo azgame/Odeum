@@ -1,17 +1,17 @@
 #ifndef NODE_H
 #define NODE_H
-
+enum NodeStates
+{
+	FAILURE,
+	SUCCESS,
+	RUNNING
+};
 class Node
 {
 public:
 	Node() {};
 	 ~Node() {}
-	enum NodeStates
-	{
-		FAILURE,
-		SUCCESS,
-		RUNNING
-	};
+	
 	inline NodeStates nodestate()
 	{
 		 return m_nodeState; 
@@ -19,7 +19,7 @@ public:
 	
 	//typedef NodeStates(*NodeReturn) (<< insert params here >> );
 	typedef NodeStates(*NodeReturn());
-	virtual NodeStates Evaluate() {};
+	virtual NodeStates Evaluate() { return m_nodeState; };
 	
 
 	
