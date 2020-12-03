@@ -185,6 +185,7 @@
     <ClInclude Include="Engine\AI\Sequence.h" />
     <ClInclude Include="Engine\AI\Inverter.h" />
     <ClInclude Include="Game\Components\Ai.h" />
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

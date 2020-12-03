@@ -22,6 +22,7 @@ enum ShapeTypes
 	NoShape = 0,
 	CubeShape,
 	SphereShape,
+	PlaneShape,
 
 	NumShapes
 };

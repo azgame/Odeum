@@ -243,7 +243,6 @@ void OctSpatialPartition::UpdatePartition()
 
 void OctSpatialPartition::AddObjectToCell(OctNode* cell_, GameObject* go_)
 {
-	// TODO - Aidan: Enter cell that object aabb intersects with, and if cell is a leaf node add object to cell, if not recursively call this on children
 	if (cell_->isLeaf())
 	{
 		if (go_->GetBoundingBox().Intersects(cell_->getBoundingBox()))
