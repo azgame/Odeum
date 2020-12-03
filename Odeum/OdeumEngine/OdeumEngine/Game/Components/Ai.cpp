@@ -2,8 +2,8 @@
 
 void Ai::OnAttach(GameObject* parent)
 {
-	
-	ActionNode* countUpNode = new ActionNode(CountTo200());
+	//Node* countUpNode = new ActionNode([this](auto&&...args)->decltype(auto) {return this->CountTo200(std::forward<decltype(args)>(args)...); });
+	Node* countUpNode = new ActionNode(std::bind(&Ai::CountTo200, this)); // if this doesn't work, use one above
 }
 
 void Ai::Update(float deltaTime)

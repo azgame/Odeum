@@ -1,10 +1,11 @@
 #include "ActionNode.h"
 
 
-ActionNode::ActionNode(ActionNodeDelegate action)
+ActionNode::ActionNode(const std::function<NodeStates(void)>& action) : m_action()
 {
 	m_action = action;
 }
+
 NodeStates ActionNode::Evaluate()
 {
 	switch (m_action())

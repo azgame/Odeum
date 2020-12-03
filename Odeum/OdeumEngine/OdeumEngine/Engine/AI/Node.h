@@ -18,7 +18,7 @@ public:
 	};
 	
 	//typedef NodeStates(*NodeReturn) (<< insert params here >> );
-	typedef NodeStates(*NodeReturn());
+	// typedef NodeStates(*NodeReturn());
 	virtual NodeStates Evaluate() { return m_nodeState; };
 	
 
