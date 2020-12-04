@@ -14,7 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
@@ -53,7 +52,6 @@
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
     <ClCompile Include="Engine\Core\TestRender.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
-    <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
@@ -74,9 +72,14 @@
     <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
     <ClCompile Include="Engine\NavMesh\NavMeshManager.cpp" />
+    <ClCompile Include="Game\Scenes\RobScene.cpp" />
+    <ClCompile Include="Engine\AI\Selector.cpp" />
+    <ClCompile Include="Engine\AI\ActionNode.cpp" />
+    <ClCompile Include="Engine\AI\Sequence.cpp" />
+    <ClCompile Include="Engine\AI\Inverter.cpp" />
+    <ClCompile Include="Game\Components\Ai.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\Components\DynamicMovement.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ImGui\imgui.h" />
@@ -142,7 +145,6 @@
     <ClInclude Include="Engine\Core\SystemStack.h" />
     <ClInclude Include="Engine\Core\TestRender.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
-    <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
@@ -176,6 +178,14 @@
     <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
     <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
     <ClInclude Include="Engine\Math\Plane.h" />
+    <ClInclude Include="Game\Scenes\RobScene.h" />
+    <ClInclude Include="Engine\AI\Node.h" />
+    <ClInclude Include="Engine\AI\Selector.h" />
+    <ClInclude Include="Engine\AI\ActionNode.h" />
+    <ClInclude Include="Engine\AI\Sequence.h" />
+    <ClInclude Include="Engine\AI\Inverter.h" />
+    <ClInclude Include="Game\Components\Ai.h" />
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

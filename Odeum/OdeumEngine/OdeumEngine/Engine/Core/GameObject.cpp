@@ -38,6 +38,11 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string ta
 		m_model.m_flatColour = colour;
 		break;
 	}
+	case ShapeTypes::PlaneShape:
+	{
+
+		break;
+	}
 	default:
 		break;
 	}

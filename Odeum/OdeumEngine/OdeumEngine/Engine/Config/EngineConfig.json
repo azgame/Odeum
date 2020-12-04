@@ -1,6 +1,6 @@
 {
 	"Config": {
-		"GameName": "OdeumEngine",
+		"GameName": "RobTest",
 		"WindowWidth": 1600,
 		"WindowHeight": 900,
 		"VSync": true,

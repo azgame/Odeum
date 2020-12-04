@@ -152,7 +152,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Components\Ai.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Engine\AI\ActionNode.cpp" />
+    <ClCompile Include="Engine\AI\Selector.cpp" />
+    <ClCompile Include="Engine\AI\Sequence.cpp" />
     <ClCompile Include="Engine\NavMesh\NavMeshManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
     <ClCompile Include="Game\Components\BoxCollider.cpp" />
@@ -162,7 +166,6 @@
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
-    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
@@ -193,6 +196,7 @@
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
+    <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
@@ -201,6 +205,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
     <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
+    <ClCompile Include="Engine\AI\Inverter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -210,13 +215,18 @@
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
     <ClCompile Include="Engine\Core\TestRender.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
-    <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\Ai.h" />
+    <ClInclude Include="Engine\AI\ActionNode.h" />
+    <ClInclude Include="Engine\AI\Node.h" />
+    <ClInclude Include="Engine\AI\Selector.h" />
+    <ClInclude Include="Engine\AI\Sequence.h" />
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
     <ClInclude Include="Engine\Math\Plane.h" />
     <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
     <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
@@ -238,7 +248,6 @@
     <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
     <ClInclude Include="Engine\Math\Ray.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
-    <ClInclude Include="Game\Components\DynamicMovement.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
@@ -296,6 +305,7 @@
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
+    <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
     <ClInclude Include="Game\Components\KinematicMovement.h" />
@@ -304,6 +314,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
     <ClInclude Include="Game\Scenes\GJKTestScene.h" />
+    <ClInclude Include="Engine\AI\Inverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
@@ -311,7 +322,6 @@
     <ClInclude Include="Engine\Core\SystemStack.h" />
     <ClInclude Include="Engine\Core\TestRender.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
-    <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />

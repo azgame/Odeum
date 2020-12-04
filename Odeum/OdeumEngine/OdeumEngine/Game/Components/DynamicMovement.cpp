@@ -16,12 +16,12 @@ void DynamicMovement::OnAttach(GameObject* parent)
 	//these are defaults 
 	maxAcceleration = 5;
 	maxSpeed = 5;
-	targetRadius = 2.0f;
+	targetRadius = 0.0f;
 	slowRadius = 4;
 	timeToTarget = 0.1f;
-	avoidDistance = 3.0f;
-	lookAhead = 5.0f;
-}    
+	avoidDistance = 2.3f;
+
+}
 
 void DynamicMovement::Update(float deltaTime)
 {
@@ -32,7 +32,7 @@ void DynamicMovement::Update(float deltaTime)
 
 		object->GetComponent<Rigidbody>()->SetAcceleration(GetSteering());
 
-
+		//object->GetComponent<Rigidbody>()->SetAcceleration(Vector4(0,0,0,0));
 
 	}
 }
@@ -45,49 +45,68 @@ Vector4 DynamicMovement::GetSteering()
 {
 	Vector3 temp;
 	Vector3 direction;
-	Vector4 targetPos = target->GetComponent<Rigidbody>()->GetPosition();
+	Vector4 targetPos = target->GetPosition();
 	if (shouldAvoid)
 	{
-		temp = Vector3(rb->GetVelocity());
-	
-		temp = temp.Normalize();
-		
-		temp = temp - rb->GetPosition();
-		temp=temp.Normalize();
 
-		Ray ray = Ray(Vector3(rb->GetPosition()), temp);
-		GameObject* objectHit = CollisionHandler::GetInstance()->RayGetFirstHit(ray, nullptr);
-		
-		if (obstacles.find(objectHit) != obstacles.end())
+
+		Ray forward = Ray(Vector3(object->GetPosition()), Vector3(rb->GetVelocity().Normalize()));
+		Vector4 intersectionPlane;
+
+		// Get a list of collided objects
+		std::vector<GameObject*> colliders = CollisionHandler::GetInstance()->RayGetList(forward);
+
+		// get the intersection plane from any of the objects that were collided with
+		for (auto obj : colliders)
 		{
-			//the normal is curently not working, need to get Plane to calculate the normal =(
-			 temp = Vector3( objectHit->GetComponent<Rigidbody>()->GetPosition());
-			 Vector3 t = Vector3(object->GetComponent<Rigidbody>()->GetPosition());
-			t = Math::Cross(t, Vector3(objectHit->GetComponent<Rigidbody>()->GetPosition()));
-			temp=temp.Normalize();
-			std::cout << "found" << std::endl;
-			targetPos = (temp * avoidDistance) + objectHit->GetComponent<Rigidbody>()->GetPosition();
+			if (obj->Tag() == "Obstacle")
+				 CollisionDetection::RayOBBIntersectionPlane(forward, obj->GetBoundingBox(),&intersectionPlane);
 		}
 		
+		// Get the first collided object
+		// If you pass in a Vector4*, it'll be filled with the intersection plane where the ray collided with the obb, if there was a collision
+		GameObject* newtarget = CollisionHandler::GetInstance()->RayGetFirstHit(forward, &intersectionPlane);
+		if(newtarget!=NULL)
+		std::cout << newtarget->Tag()<< std::endl;
+		if (newtarget!=NULL&&newtarget->Tag()== "Obstacle")
+		{
+			Vector3 normal = Vector3(intersectionPlane); // the normal is the first three components of the plane
+			std::cout << intersectionPlane.ToString() << std::endl;
+			//the normal is curently not working, need to get Plane to calculate the normal =(
+			//target = collision.position
+			//+collision.normal * avoidDistance
+			//	return Seek.getSteering()
+			temp = Vector3(newtarget->GetPosition() + normal * avoidDistance);
+			//std::cout << newtarget->GetPosition().ToString() << " " << normal.ToString() << std::endl;
+			//std::cout << "found" << std::endl;
+			targetPos = Vector4(temp);
+			//(5.000000, 0.000000, 0.000000, 1.000000) (-1.000000, 0.000000, 0.000000)
+		}
+		else
+		{
+			std::cout << "not found" << std::endl;
+		}
+
+
 	}
 
 	//direction=target position-object position
 	if (!shouldFlee)
 	{
 
-		direction.SetX(targetPos.GetX() - object->GetComponent<Rigidbody>()->GetPosition().GetX());
-		direction.SetY(targetPos.GetY() - object->GetComponent<Rigidbody>()->GetPosition().GetY());
-		direction.SetZ(targetPos.GetZ() - object->GetComponent<Rigidbody>()->GetPosition().GetZ());
+		direction.SetX(targetPos.GetX() - object->GetPosition().GetX());
+		direction.SetY(targetPos.GetY() - object->GetPosition().GetY());
+		direction.SetZ(targetPos.GetZ() - object->GetPosition().GetZ());
 	}
 	else
 	{
-		direction.SetX(object->GetComponent<Rigidbody>()->GetPosition().GetX() - targetPos.GetX());
-		direction.SetY(object->GetComponent<Rigidbody>()->GetPosition().GetY() - targetPos.GetY());
-		direction.SetZ(object->GetComponent<Rigidbody>()->GetPosition().GetZ() - targetPos.GetZ());
+		direction.SetX(object->GetPosition().GetX() - targetPos.GetX());
+		direction.SetY(object->GetPosition().GetY() - targetPos.GetY());
+		direction.SetZ(object->GetPosition().GetZ() - targetPos.GetZ());
 	}
 	float distance = direction.Mag();
-	
-	
+
+
 	//Ray ray (direction,Vector3())
 	float targetSpeed;
 
@@ -126,5 +145,6 @@ Vector4 DynamicMovement::GetSteering()
 		temp = temp * maxAcceleration;
 	}
 	//only using x and z
+	
 	return Vector4(temp.GetX(), 0.0f, temp.GetZ(), 0.0f);
 }
