@@ -10,12 +10,14 @@ class Ai :public Component
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
 	void Update(float deltaTime) override;
-	std::vector<Node> selectorNodes;
-	
+	std::vector<Node*> selectorNodes;
+	Node* countUpNode;
+	Node* countDownNode;
+	Node* countSelector;
 	NodeStates CountTo200();
 	int countTotal;
 	NodeStates CountDown();
-	
+	bool hitMax;
 };
 
 

@@ -5,10 +5,10 @@
 class Selector : public Node
 {
 protected:
-    std::vector<Node> m_nodes;
+    std::vector<Node*> m_nodes;
     
 public:
-    Selector(std::vector<Node> nodes);
+    Selector(std::vector<Node*> nodes);
     NodeStates Evaluate() override;
 
 

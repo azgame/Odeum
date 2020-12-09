@@ -1,13 +1,13 @@
 #include "Selector.h"
-Selector::Selector(std::vector<Node>  nodes)
+Selector::Selector(std::vector<Node*>  nodes)
 {
 	m_nodes = nodes;
 }
 NodeStates Selector::Evaluate()
 {
-	for  (Node node : m_nodes)
+	for  (Node* node : m_nodes)
 	{
-		switch (node.Evaluate())
+		switch (node->Evaluate())
 		{
 
 		case NodeStates::FAILURE:
