@@ -19,7 +19,7 @@ public:
 	float maxAcceleration;
 	float maxSpeed;
 	float avoidDistance;
-	float lookAhead;
+	
 	
 	 std::set<GameObject*> obstacles;
 	Rigidbody* rb;
