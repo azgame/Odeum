@@ -244,6 +244,11 @@ namespace Math
 		return retVal;
 	}
 
+	inline float PerpendicularDistance(const Vector2 Point, const Vector2 v1, const Vector2 v2)
+	{
+		return std::abs((v2.GetX() - v1.GetX()) * (v1.GetY() - Point.GetY()) - (v1.GetX() - Point.GetX()) * (v2.GetY() - v1.GetY())) / (sqrt(pow(v2.GetX() - v1.GetX(), 2) + pow(v2.GetY() - v1.GetY(), 2)));
+	}
+
 	inline Vector3 Cross(const Vector3 v1, const Vector3 v2)
 	{
 		return Vector3(v1.GetY() * v2.GetZ() - v1.GetZ() * v2.GetY(),

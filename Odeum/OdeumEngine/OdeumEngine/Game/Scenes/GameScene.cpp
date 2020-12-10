@@ -14,12 +14,15 @@
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
 	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
+
+	SCOPEDTIMER(timer);
+
 	object->AddComponent<Rigidbody>();
 	object->GetComponent<Rigidbody>()->SetPosition(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	/*ParticleInitProperties particleProps;
+	ParticleInitProperties particleProps;
 	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
 	particleProps.lifeTime = FLT_MAX;
@@ -36,14 +39,14 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 100000;
+	particleProps.lauchingData.maxParticles = 40000;
 	particleProps.lauchingData.spawnRate = 64.0f;
 	particleProps.lauchingData.speed = 1.0f;
 	particleProps.lauchingData.groundBounce = 1.02f;
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -0.1f, 0.0f));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
 
-	ParticleManager::Get().CreateEffect(particleProps);*/
+	ParticleManager::Get().CreateEffect(particleProps);
 
 	NavMeshManager::Initialize();
 
@@ -68,6 +71,8 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	NavMeshManager::GenerateNavMesh(1, groundPlane, obstacles);
 
 	SceneGraph::Get()->LoadObjectsIntoMemory();
+
+	timer.GetTime();
 }
 
 GameScene::~GameScene()
@@ -89,4 +94,7 @@ void GameScene::Update(const float deltaTime_)
 
 void GameScene::UIRender()
 {
+	ImGui::Begin("Game UI");
+	ImGui::Text("Enter game ui components here");
+	ImGui::End();
 }
