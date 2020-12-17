@@ -46,7 +46,7 @@ public:
 			states.clear();
 		}
 
-		std::map<T, bool> states; // TODO Aidan: too large, change this later
+		std::map<T, bool> states;
 	};
 
 private:
@@ -55,6 +55,7 @@ private:
 	static InputState<MouseCode> sm_mousePressed;
 
 	static Vector2 mousePos;
+	static Vector2 lastMousePos;
 
 	static std::unique_ptr<Input> sm_input;
 };

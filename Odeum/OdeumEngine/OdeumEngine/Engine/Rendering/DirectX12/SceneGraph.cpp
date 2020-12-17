@@ -20,6 +20,18 @@ void SceneGraph::RemoveGameObject(GameObject* go)
 		sm_sceneGameObjects.erase(it);
 }
 
+void SceneGraph::LoadObjectsIntoMemory()
+{
+	for (auto go : sm_sceneGameObjects)
+		go->GetModel().Load();
+}
+
+void SceneGraph::UpdateObjects(float deltaTime)
+{
+	for (auto go : sm_sceneGameObjects)
+		go->Update(deltaTime);
+}
+
 void SceneGraph::Uninitialize()
 {
 	for (auto go : sm_sceneGameObjects)

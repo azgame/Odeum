@@ -6,15 +6,12 @@
 #include "../Rendering/DirectX12/LightSource.h"
 #include "../Rendering/DirectX12/SceneGraph.h"
 #include "../Rendering/DirectX12/SamplerDesc.h"
+#include "../Rendering/DirectX12/ParticleManager.h"
 
 #include "OdeumEngine.h"
 
 TestRender::TestRender()
 {
-	m_eventFrameLimit = 16;
-	m_eventQueue.resize(m_eventFrameLimit);
-	m_bufferHead = 0;
-	m_bufferTail = 0;
 }
 
 TestRender::~TestRender()
@@ -58,6 +55,29 @@ void TestRender::Attach()
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
 
+	//ParticleManager::Get().Initialize(DXGraphics::m_presentBuffer.GetWidth(), DXGraphics::m_presentBuffer.GetHeight());
+
+	ParticleInitProperties particleProps;
+	particleProps.startColour = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	particleProps.lifeTime = 15.0f;
+	particleProps.minLife = 1.0f;
+	particleProps.maxLife = 10.0f;
+	particleProps.minMass = 1.0f;
+	particleProps.maxMass = 5.0f;
+	particleProps.rotationMax = 1.0f;
+	particleProps.minVelocity = Vector2(-1.0f, -1.0f);
+	particleProps.maxVelocity = Vector2(1.0f, 1.0f);
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
+	particleProps.lauchingData.maxParticles = 1000;
+	particleProps.lauchingData.spawnRate = 2.0f;
+	particleProps.lauchingData.speed = 3.0f;
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(4.0f, 0.0f, -5.0f));
+
+	ParticleManager::Get().CreateEffect(particleProps);
+
 	CreateUIResources();
 	InitializeUI();
 }
@@ -72,11 +92,14 @@ void TestRender::Detach()
 
 void TestRender::Update(float deltaTime_)
 {
-	while (m_bufferHead != m_bufferTail)
+	SCOPEDTIMER(timer);
+
+	Event* e;
+	while (!m_eventQueue.pop_front(e))
 	{
 		// Handle events here
-		m_bufferHead = (m_bufferHead + 1) % m_eventFrameLimit;
 	}
+	e = nullptr;
 
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -91,16 +114,6 @@ void TestRender::Update(float deltaTime_)
 	m_mainScissor.top = 0;
 	m_mainScissor.right = (LONG)DXGraphics::m_presentBuffer.GetWidth();
 	m_mainScissor.bottom = (LONG)DXGraphics::m_presentBuffer.GetHeight();
-
-	/*m_mainViewport.Width = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainViewport.Height = (float)OdeumEngine::Get().GetWindow().GetHeight();
-	m_mainViewport.MinDepth = -1.0f;
-	m_mainViewport.MaxDepth = 0.0f;
-
-	m_mainScissor.left = 0;
-	m_mainScissor.top = 0;
-	m_mainScissor.right = (float)OdeumEngine::Get().GetWindow().GetWidth();
-	m_mainScissor.bottom = (float)OdeumEngine::Get().GetWindow().GetHeight();*/
 
 	struct VSConstants
 	{
@@ -155,36 +168,33 @@ void TestRender::Update(float deltaTime_)
 	}
 
 	graphics.Finish();
+
+	if (frameCounter == 0)
+	{
+		averageFrameTime = frameTimeTotal / 120.0f;
+		frameTimeTotal = 0.0f;
+	}
+
+	frameTimeTotal += timer.GetTime();
+	frameCounter = (frameCounter + 1) % 120;	
 }
 
 void TestRender::UIRender()
 {
-	if (frameCounter == 5)
-	{
-		frameTime = DXGraphics::GetFrameTime();
-		frameRate = DXGraphics::GetFrameRate();
-	}
-
 	ImGui::Begin("Frame Profiling");
 
 	ImGui::Text("Frame time: %.2f ms/frame", DXGraphics::GetFrameTime());
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
+	ImGui::Text("Test Render frame time: %.2f ms/frame", averageFrameTime);
 
 	ImGui::End();
-
-	frameCounter = (frameCounter + 1) % 6;
 
 	UIRenderD3DResources();
 }
 
 void TestRender::HandleEvent(Event& event_) // Queue events
 {
-	if ((m_bufferTail + 1) % m_eventFrameLimit == m_bufferHead)
-		return;
-
-	m_eventQueue[m_bufferTail] = &event_;
-
-	m_bufferTail = (m_bufferTail + 1) % m_eventFrameLimit;
+	m_eventQueue.push_back(&event_);
 }
 
 void TestRender::CreateUIResources()

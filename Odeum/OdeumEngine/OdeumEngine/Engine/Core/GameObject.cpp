@@ -11,7 +11,7 @@ GameObject::GameObject(std::string fileName, std::string tag_)
 	tag = tag_;
 
 	m_model.SetParent(this);
-	m_model.Load(fileName);
+	m_model.m_details.fileName = fileName;
 
 	SceneGraph::Get()->AddGameObject(this);
 }
@@ -28,7 +28,19 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string ta
 	{
 	case ShapeTypes::CubeShape:
 	{
-		m_model.Load("Engine/Resources/Models/Cube.obj");
+		m_model.m_details.fileName = "Engine/Resources/Models/Cube.obj";
+		m_model.m_flatColour = colour;
+		break;
+	}
+	case ShapeTypes::SphereShape:
+	{
+		m_model.m_details.fileName = "Engine/Resources/Models/Sphere.obj";
+		m_model.m_flatColour = colour;
+		break;
+	}
+	case ShapeTypes::PlaneShape:
+	{
+
 		break;
 	}
 	default:
@@ -55,6 +67,7 @@ void GameObject::Initialize(std::string modelTextureLoadFile)
 
 void GameObject::Update(float deltaTime)
 {
+	
 	for (auto component : m_components)
 		component->Update(deltaTime);
 }

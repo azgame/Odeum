@@ -21,6 +21,10 @@ private:
 	GameObject* object;
 	float angle;
 	float direction;
+
+	uint16_t frameCounter;
+	float averageFrameTime;
+	float frameTimeTotal;
 };
 
 #endif

@@ -14,7 +14,7 @@ class Window
 {
 public:
 
-	void Initialize(uint32_t width, uint32_t height, bool vSync, bool ultraWide);
+	void Initialize(std::wstring WindowName, uint32_t width, uint32_t height, bool vSync, bool ultraWide);
 	void Update();
 	 LRESULT MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
@@ -24,9 +24,6 @@ public:
 
 	HWND GetHWND() { return m_hwnd; }
 	const HWND GetHWND() const { return m_hwnd; }
-
-	//HWND GetglfwHWND() { return glfwGetWin32Window(m_window); }
-	//const HWND GetglfwHWND() const { return glfwGetWin32Window(m_window); }
 
 	int GetWidth() { return m_data.width; }
 	int GetHeight() { return m_data.height; }
@@ -52,7 +49,7 @@ private:
 
 	WindowData m_data;
 
-	LPCWSTR				m_applicationName;
+	std::wstring			m_applicationName;
 	HINSTANCE				m_hInstance;
 	HWND					m_hwnd;
 

@@ -36,7 +36,7 @@ public:
 	virtual void ResetResource() override
 	{
 		D3DResource::ResetResource();
-		m_cpuDescHandle.ptr = 0;
+		//m_cpuDescHandle.ptr = 0;
 	}
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const { return m_cpuDescHandle; }
@@ -71,7 +71,7 @@ public:
 	}
 
 	Texture* LoadFromFile(std::string textureName_);
-	Texture* CreateAndStore(Colour colour_);
+	Texture* LoadColour(Colour colour_);
 
 	Texture* GetInvalidTexture();
 
@@ -93,6 +93,7 @@ private:
 
 	void FormatTexture(FormattedRawTexture& tex, UINT8* pixels, DXGI_FORMAT format);
 	Texture* FindOrLoad(std::string textureName_);
+	Texture* GetColourTexture(Colour colour);
 	
 	std::map<std::string, std::unique_ptr<Texture>> sm_textureMap;
 	std::mutex sm_mutex;

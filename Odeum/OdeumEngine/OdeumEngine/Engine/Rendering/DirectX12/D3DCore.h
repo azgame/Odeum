@@ -5,7 +5,6 @@
 
 #include "DescriptorAllocator.h"
 
-
 class CommandListManager;
 class ContextManager;
 class ColourBuffer;
@@ -43,11 +42,17 @@ namespace DXGraphics
 	extern CommandSignature DrawIndirectCommandSignature;
 
 	extern D3D12_BLEND_DESC alphaBlend;
+	extern D3D12_BLEND_DESC blendPreMultiplied;
 	extern D3D12_RASTERIZER_DESC rasterDesc;
+	extern D3D12_RASTERIZER_DESC rasterTwoSided;
 	extern D3D12_DEPTH_STENCIL_DESC depthReadWrite;
+	extern D3D12_DEPTH_STENCIL_DESC depthReadOnly;
+	extern D3D12_DEPTH_STENCIL_DESC depthDisabled;
 
 	float GetFrameRate();
 	float GetFrameTime();
+
+
 }
 
 #endif

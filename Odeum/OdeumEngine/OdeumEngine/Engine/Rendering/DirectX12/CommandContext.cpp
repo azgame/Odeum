@@ -13,6 +13,7 @@
 
 #include "Buffers/ColourBuffer.h"
 #include "Buffers/DepthBuffer.h"
+#include "Buffers/ReadbackBuffer.h"
 
 // TODO Aidan: Make comments
 
@@ -247,11 +248,38 @@ void CommandContext::InitializeTextureArraySlice(D3DResource& dest_, UINT sliceI
     Context.Finish(true);
 }
 
+void CommandContext::ReadbackTexture2D(D3DResource& readBackBuffer_, PixelBuffer& srcBuffer_)
+{
+    // The footprint may depend on the device of the resource, but we assume there is only one device.
+    D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint;
+    DXGraphics::m_device->GetCopyableFootprints(&srcBuffer_.GetResource()->GetDesc(), 0, 1, 0, &PlacedFootprint, nullptr, nullptr, nullptr);
+
+    // This very short command list only issues one API call and will be synchronized so we can immediately read
+    // the buffer contents.
+    CommandContext& Context = CommandContext::RequestContext(L"Copy texture to memory");
+
+    Context.TransitionResource(srcBuffer_, D3D12_RESOURCE_STATE_COPY_SOURCE, true);
+
+    Context.m_commandList->CopyTextureRegion(
+        &CD3DX12_TEXTURE_COPY_LOCATION(readBackBuffer_.GetResource(), PlacedFootprint), 0, 0, 0,
+        &CD3DX12_TEXTURE_COPY_LOCATION(srcBuffer_.GetResource(), 0), nullptr);
+
+    Context.Finish(true);
+}
+
 void CommandContext::WriteBuffer(D3DResource& dest_, size_t destOffset_, const void* pData_, size_t numBytes_)
 {
     ASSERT(pData_ != nullptr && Utility::isAligned(pData_, 16));
     BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
     memcpy(tempSpace.CpuAddress, pData_, (numBytes_ + 15) / 16);
+    CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
+}
+
+void CommandContext::FillBuffer(D3DResource& dest_, size_t destOffset_, float value_, size_t numBytes_)
+{
+    BufferEntry tempSpace = m_CpuBufferAllocator.Allocate(numBytes_, 512);
+    size_t alignedDivide = Utility::AlignedDivide(numBytes_, 16);
+    memset(tempSpace.CpuAddress, (int)value_, numBytes_);
     CopyBufferRegion(dest_, destOffset_, tempSpace.buffer, tempSpace.offset, numBytes_);
 }
 
@@ -324,7 +352,7 @@ void CommandContext::BeginTransitionResource(D3DResource& resource_, D3D12_RESOU
 void CommandContext::InsertUAVBarrier(D3DResource& resource_, bool flushNow)
 {
     ASSERT(m_numBarriersToFlush < 16, "Can't have more than 16 barriers");
-    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush];
+    D3D12_RESOURCE_BARRIER& barrierDesc = m_barrierBuffer[m_numBarriersToFlush++];
 
     barrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
     barrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

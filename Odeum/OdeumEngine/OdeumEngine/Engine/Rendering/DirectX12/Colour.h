@@ -12,11 +12,6 @@ public:
 		m_colourValue.v = DirectX::XMVectorSet(r_, g_, b_, a_);
 	}
 
-	void operator=(Colour& other_)
-	{
-		m_colourValue = other_.m_colourValue;
-	}
-
 	inline float GetR() { return DirectX::XMVectorGetX(m_colourValue); }
 	inline void SetR(float val_) { m_colourValue.f[0] = val_; }
 	inline float GetG() { return DirectX::XMVectorGetY(m_colourValue); }
@@ -27,6 +22,13 @@ public:
 	inline void SetA(float val_) { m_colourValue.f[3] = val_; }
 
 	float* GetPtr() { return reinterpret_cast<float*>(this); }
+
+	operator DirectX::XMVECTOR() const { return m_colourValue; }
+
+	inline uint32_t ConvertToBit()
+	{
+		return (uint32_t)((uint32_t)(GetR() * 32.0f) | ((uint32_t)(GetG() * 32.0f) << 8) | ((uint32_t)(GetB() * 32.0f) << 16) | ((uint32_t)(GetA() * 32.0f) << 24));
+	}
 
 private:
 	DirectX::XMVECTORF32 m_colourValue;

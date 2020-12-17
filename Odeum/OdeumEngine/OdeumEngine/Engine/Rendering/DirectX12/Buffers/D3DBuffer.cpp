@@ -25,6 +25,8 @@ void D3DBuffer::Create(std::string name_, uint32_t numElements_, uint32_t elemen
 
 	if (initialData_)
 		CommandContext::InitializeBuffer(*this, initialData_, allocatedSize);
+
+	CreateExtraViews();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE D3DBuffer::ConstantBufferView(uint32_t offset_, uint32_t size_) const
@@ -51,7 +53,7 @@ D3D12_VERTEX_BUFFER_VIEW D3DBuffer::VertexBufferView(size_t BaseVertexIndex) con
 
 	D3D12_VERTEX_BUFFER_VIEW vertBufferView;
 	vertBufferView.BufferLocation = m_gpuAddress + offset;
-	vertBufferView.SizeInBytes = size;
+	vertBufferView.SizeInBytes = (UINT)size;
 	vertBufferView.StrideInBytes = elementByteSize;
 	return vertBufferView;
 }
@@ -64,7 +66,7 @@ D3D12_INDEX_BUFFER_VIEW D3DBuffer::IndexBufferView(size_t StartIndex) const
 
 	D3D12_INDEX_BUFFER_VIEW indexBufferView;
 	indexBufferView.BufferLocation = m_gpuAddress + offset;
-	indexBufferView.SizeInBytes = size;
+	indexBufferView.SizeInBytes = (UINT)size;
 	indexBufferView.Format = b32bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 	return indexBufferView;
 }
@@ -87,7 +89,7 @@ D3D12_RESOURCE_DESC D3DBuffer::ResourceDescription()
 }
 
 // create views for uav and srv
-void ByteAddressedBuffer::CreateExtraViews()
+void ByteAddressBuffer::CreateExtraViews()
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;

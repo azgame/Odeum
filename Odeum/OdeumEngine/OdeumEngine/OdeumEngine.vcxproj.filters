@@ -5,10 +5,15 @@
     <FxCompile Include="Engine\Shaders\Present.hlsl" />
     <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
     <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleUpdateCS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleFinalDispatchArgs.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleSpawnCS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticleVS.hlsl" />
+    <FxCompile Include="Engine\Shaders\ParticlePS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Game\Components\DynamicMovement.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_draw.cpp" />
@@ -47,7 +52,6 @@
     <ClCompile Include="Engine\Core\SystemStack.cpp" />
     <ClCompile Include="Engine\Core\TestRender.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\SceneGraph.cpp" />
-    <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
@@ -60,14 +64,22 @@
     <ClCompile Include="Engine\Core\AudioHandler.cpp" />
     <ClCompile Include="Game\Components\AudioSource.cpp" />
     <ClCompile Include="Game\Components\KinematicMovement.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
+    <ClCompile Include="Engine\Rendering\DirectX12\D3DRenderer.cpp" />
+    <ClCompile Include="Engine\Core\JobSystem.cpp" />
     <ClCompile Include="Game\Components\BoxCollider.cpp" />
     <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
-    <ClCompile Include="Game\Components\Rigidbody2.cpp" />
-    <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
+    <ClCompile Include="Engine\NavMesh\NavMeshManager.cpp" />
+    <ClCompile Include="Game\Scenes\RobScene.cpp" />
+    <ClCompile Include="Engine\AI\Selector.cpp" />
+    <ClCompile Include="Engine\AI\ActionNode.cpp" />
+    <ClCompile Include="Engine\AI\Sequence.cpp" />
+    <ClCompile Include="Engine\AI\Inverter.cpp" />
+    <ClCompile Include="Game\Components\Ai.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\Components\DynamicMovement.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ImGui\imgui.h" />
@@ -133,7 +145,6 @@
     <ClInclude Include="Engine\Core\SystemStack.h" />
     <ClInclude Include="Engine\Core\TestRender.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SceneGraph.h" />
-    <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\TextureManager.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
@@ -150,17 +161,37 @@
     <ClInclude Include="Game\Components\AudioSource.h" />
     <ClInclude Include="Game\Components\KinematicMovement.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RadiometryUtility.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
+    <ClInclude Include="Engine\Core\EngineProfiling.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\ParticleStructs.h" />
+    <ClInclude Include="Engine\Rendering\Common\Renderer.h" />
+    <ClInclude Include="Engine\Rendering\DirectX12\D3DRenderer.h" />
+    <ClInclude Include="Engine\JSONUtility\json.hpp" />
+    <ClInclude Include="Engine\Core\JobSystem.h" />
+    <ClInclude Include="Engine\DataStructures\RingBuffer.h" />
     <ClInclude Include="Game\Components\BoxCollider.h" />
     <ClInclude Include="Engine\Math\EulerAngles.h" />
     <ClInclude Include="Engine\Math\Simplex.h" />
     <ClInclude Include="Engine\Math\Collider.h" />
     <ClInclude Include="Game\Scenes\GJKTestScene.h" />
     <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
-    <ClInclude Include="Game\Components\Rigidbody2.h" />
-    <ClInclude Include="Game\Scenes\PhysicsTestScene2.h" />
+    <ClInclude Include="Engine\NavMesh\NavMeshManager.h" />
+    <ClInclude Include="Engine\Math\Plane.h" />
+    <ClInclude Include="Game\Scenes\RobScene.h" />
+    <ClInclude Include="Engine\AI\Node.h" />
+    <ClInclude Include="Engine\AI\Selector.h" />
+    <ClInclude Include="Engine\AI\ActionNode.h" />
+    <ClInclude Include="Engine\AI\Sequence.h" />
+    <ClInclude Include="Engine\AI\Inverter.h" />
+    <ClInclude Include="Game\Components\Ai.h" />
+    <ClInclude Include="Engine\DataStructures\LinkedList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Engine\Shaders\ParticleCommon.hlsli" />
+    <None Include="Engine\Shaders\ParticleRS.hlsli" />
+    <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
