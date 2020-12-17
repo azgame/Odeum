@@ -25,6 +25,8 @@ public:
 	inline Vector4 GetVelocity() { return rb_totalVelocity; }
 	inline Vector4 GetAcceleration() { return rb_totalAcceleration; }
 	inline Vector4 GetScale() { return rb_scale; }
+	inline float GetRadius() { return rb_radius; }
+
 	// gotta change this
 	inline Vector4 GetRotation() { return Vector4(rb_orientation); }
 
@@ -38,6 +40,7 @@ public:
 	inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
 	inline void SetRotation(Quaternion rotationQuat, float rotSpeed) { rb_orientation = rotationQuat; rb_rotationSpeed = rotSpeed; } //UpdateTransform();}
 	inline void SetScale(Vector4 scale) { rb_scale = scale; }
+	inline void SetRadius(float radius) { rb_radius = radius; }
 	
 
 private:
@@ -50,6 +53,7 @@ private:
 	Vector4 rb_angularVelocity;
 	Vector4 rb_scale;
 	Quaternion rb_orientation;
+	float rb_radius;
 
 	float rb_mass;
 	float rb_angle;

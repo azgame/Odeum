@@ -67,7 +67,6 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
 }
 
 
-// might want to move parts of this to MathUtility.h
 void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
