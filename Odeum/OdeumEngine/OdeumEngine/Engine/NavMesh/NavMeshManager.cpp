@@ -5,6 +5,14 @@
 
 #include "../Math/CollisionDetection.h"
 
+#include "../DataStructures/Graph.h"
+
+#include "../Rendering/DirectX12/Model.h"
+
+#include "../Rendering/DirectX12/SceneGraph.h"
+
+#include "delaunator.hpp"
+
 #include <unordered_map>
 #include <list>
 #include <bitset>
@@ -90,13 +98,20 @@ namespace NavMeshManager
 	BitGrid m_binaryGrid(20, 20);
 	std::vector<uint16_t> m_marchingCells;
 	std::vector<std::vector<Vector2>> m_contourPoints;
-
 	std::unordered_map<uint16_t, Vector4> lookupMarchingSquares;
+	GameObject* navMesh;
+
+	float StartX, StartZ;
 
 	void GenerateBinaryImage(float CellSize, uint32_t NumColumns, uint32_t NumRows, Plane GroundPlane, std::vector<Collider2D> Obstacles);
-	void CreateContourPoints(uint32_t XIndex, uint32_t ZIndex);
 	void CreateContourPoints();
+	void RamerDouglasPeuckerPointReduction(std::vector<Vector2>& PointList, float Epsilon);
 	std::vector<Vector2> ReduceContourPointsRDP(std::vector<Vector2> PointList, float Epsilon);
+	std::vector<double> FormatPointsForTriangulation(std::vector<Vector2>& Points);
+	void ReTransformPoints(std::vector<Vector2>& PointList);
+	void CullObscuredTris(delaunator::Delaunator& Delauney);
+	Model* CreateNavMeshModel(delaunator::Delaunator& Delauney);
+	Graph<Vector2>& CreateNavigationData(delaunator::Delaunator& Delauney);
 }
 
 
@@ -140,9 +155,8 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 	totalWidth = (uint32_t)(GroundPlane.max.GetX() - GroundPlane.min.GetX());
 	totalHeight = (uint32_t)(GroundPlane.max.GetZ() - GroundPlane.min.GetZ());
 
-	float startX, startZ;
-	startX = GroundPlane.min.GetX();
-	startZ = GroundPlane.min.GetZ();
+	StartX = GroundPlane.min.GetX();
+	StartZ = GroundPlane.min.GetZ();
 
 	// Determine max extent via CellSize
 	uint32_t numColumns, numRows;
@@ -162,10 +176,10 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 		{
 			Collider2D cell = 
 			{ 
-				/*BL*/ Vector2(i * CellSize + startX, j * CellSize + startZ), 
-				/*BR*/ Vector2(i * CellSize + CellSize + startX, j * CellSize + startZ),
-				/*TL*/ Vector2(i * CellSize + startX, j * CellSize + CellSize + startZ),
-				/*TR*/ Vector2(i * CellSize + CellSize + startX, j * CellSize + CellSize + startZ)
+				/*BL*/ Vector2(i * CellSize + StartX, j * CellSize + StartZ), 
+				/*BR*/ Vector2(i * CellSize + CellSize + StartX, j * CellSize + StartZ),
+				/*TL*/ Vector2(i * CellSize + StartX, j * CellSize + CellSize + StartZ),
+				/*TR*/ Vector2(i * CellSize + CellSize + StartX, j * CellSize + CellSize + StartZ)
 			};
 
 			// If in the last loop we collided, we cache the collider we hit for faster lookup in the next frame 
@@ -210,11 +224,11 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 		{
 			if (m_binaryGrid.Check(i, j))
 			{
-				std::cout << "X";
+				std::cout << "O";
 			}
 			else
 			{
-				std::cout << "O";
+				std::cout << "*";
 			}
 		}
 		std::cout << "" << std::endl;
@@ -222,10 +236,34 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 
 	CreateContourPoints();
 
-	auto halfway = m_contourPoints[0].begin() + (m_contourPoints[0].size() / 2);
+	RamerDouglasPeuckerPointReduction(m_contourPoints[0], 1.5f);
 
-	std::vector<Vector2> firstHalf = ReduceContourPointsRDP(std::vector<Vector2>(m_contourPoints[0].begin(), halfway), 1.5f);
-	std::vector<Vector2> secondHalf = ReduceContourPointsRDP(std::vector<Vector2>(halfway, m_contourPoints[0].end() - 1), 1.5f);
+	ReTransformPoints(m_contourPoints[0]);
+
+	// Four Plane corners
+	m_contourPoints[0].push_back(Vector2(StartX, StartZ));
+	m_contourPoints[0].push_back(Vector2(StartX + (float)totalWidth, StartZ));
+	m_contourPoints[0].push_back(Vector2(StartX, StartZ + (float)totalHeight));
+	m_contourPoints[0].push_back(Vector2(StartX + (float)totalWidth, StartZ + (float)totalHeight));
+
+	// Add more connectivity data
+
+	std::vector<double> triangulationPoints = FormatPointsForTriangulation(m_contourPoints[0]);
+
+	delaunator::Delaunator delauney(triangulationPoints);
+
+	// Check if tris are inside object boundaries (check centroid against binary image) and cull if they are
+	CullObscuredTris(delauney);
+
+	Graph<Vector2> pathfindingData = CreateNavigationData(delauney);
+
+	// For pathfinding, will need to make sure destination lies within nav mesh, and if it does, find shortest path to point from nav data
+
+	Model* model = CreateNavMeshModel(delauney);
+
+	navMesh = new GameObject(model);
+
+	// SAFE_DELETE(model);
 
 	cachedCollider = nullptr;
 }
@@ -359,7 +397,17 @@ void NavMeshManager::CreateContourPoints()
 	}
 }
 
+void NavMeshManager::RamerDouglasPeuckerPointReduction(std::vector<Vector2>& PointList, float Epsilon)
+{
+	auto halfway = PointList.begin() + (PointList.size() / 2);
 
+	std::vector<Vector2> firstHalf = ReduceContourPointsRDP(std::vector<Vector2>(PointList.begin(), halfway), 1.5f);
+	std::vector<Vector2> secondHalf = ReduceContourPointsRDP(std::vector<Vector2>(halfway, PointList.end() - 1), 1.5f);
+
+	PointList.clear();
+	PointList.insert(PointList.end(), firstHalf.begin(), firstHalf.end());
+	PointList.insert(PointList.end(), secondHalf.begin(), secondHalf.end());
+}
 
 std::vector<Vector2> NavMeshManager::ReduceContourPointsRDP(std::vector<Vector2> PointList, float Epsilon)
 {
@@ -398,52 +446,207 @@ std::vector<Vector2> NavMeshManager::ReduceContourPointsRDP(std::vector<Vector2>
 	return finalList;
 }
 
+std::vector<double> NavMeshManager::FormatPointsForTriangulation(std::vector<Vector2>& Points)
+{
+	std::vector<double> coords;
+
+	for (auto Point : Points)
+	{
+		coords.push_back(Point.GetX());
+		coords.push_back(Point.GetY());
+	}
+
+	return coords;
+}
+
+void NavMeshManager::ReTransformPoints(std::vector<Vector2>& PointList)
+{
+	for (int i = 0; i < PointList.size(); i++)
+	{
+		PointList[i].SetX(PointList[i].GetX() + StartX);
+		PointList[i].SetY(PointList[i].GetY() + StartZ);
+	}
+}
+
+void NavMeshManager::CullObscuredTris(delaunator::Delaunator& Delauney)
+{
+	ASSERT(Delauney.triangles.size() % 3 == 0, "Just making sure our list of triangles is of base 3");
+
+	std::vector<size_t> trisToKeep;
+
+	for (int i = 0; i < Delauney.triangles.size(); i += 3)
+	{
+		double x0 = Delauney.coords[2 * Delauney.triangles[i]];			// x0
+		double y0 = Delauney.coords[2 * Delauney.triangles[i] + 1];		// y0
+		double x1 = Delauney.coords[2 * Delauney.triangles[i + 1]];		// x1
+		double y1 = Delauney.coords[2 * Delauney.triangles[i + 1] + 1];	// y1
+		double x2 = Delauney.coords[2 * Delauney.triangles[i + 2]];		// x2
+		double y2 = Delauney.coords[2 * Delauney.triangles[i + 2] + 1]; // y2
+
+		double centroidX = (x0 + x1 + x2) / 3.0; 
+		double centroidY = (y0 + y1 + y2) / 3.0;
+
+		if (!m_binaryGrid.Check((uint32_t)(centroidX - StartX), (uint32_t)(centroidY - StartZ)))
+		{
+
+			trisToKeep.push_back(Delauney.triangles[i]);
+			trisToKeep.push_back(Delauney.triangles[i + 1]);
+			trisToKeep.push_back(Delauney.triangles[i + 2]);
+		}
+	}
+
+	Delauney.triangles = trisToKeep;
+}
+
+Model* NavMeshManager::CreateNavMeshModel(delaunator::Delaunator& Delauney)
+{
+	Model* model = new Model();
+
+	model->m_details.meshCount = 1;
+	model->m_details.materialCount = 1;
+	model->m_pMaterials = new Model::Material[1];
+	model->m_pMesh = new Model::Mesh[1];
+
+	model->m_pVertexData = new Vertex[Delauney.coords.size() / 2];
+	model->m_vertexStride = sizeof(float) * 14;
+	model->m_details.vertexCount = Delauney.coords.size() / 2;
+
+	Vertex* vertex = model->m_pVertexData;
+
+	for (int i = 0; i < Delauney.coords.size(); i+=2)
+	{
+		// position - coords.x, 1, coords.z
+		vertex->position = DirectX::XMFLOAT3(Delauney.coords[i], -0.5f, Delauney.coords[i + 1]);
+		// normal - 0, 1, 0
+		vertex->normal = DirectX::XMFLOAT3(0, 1, 0);
+		// uv - 0, 1
+		vertex->uvcoords = DirectX::XMFLOAT2(0, 1);
+		// tangent - 1, 0, 0
+		vertex->tangent = DirectX::XMFLOAT3(1, 0, 0);
+		// bitangent - 0, 0, 1
+		vertex->bitangent = DirectX::XMFLOAT3(0, 0, 1);
+
+		vertex++;
+	}
+
+	model->m_pIndexData = new uint16_t[Delauney.triangles.size()];
+	model->m_details.indexCount = Delauney.triangles.size();
+
+	uint16_t* indice = model->m_pIndexData;
+
+	model->m_pMesh[0].indexCount = model->m_details.indexCount;
+	model->m_pMesh[0].indexOffset = 0;
+	model->m_pMesh[0].vertexCount = model->m_details.vertexCount;
+	model->m_pMesh[0].vertexStride = model->m_vertexStride;
+	model->m_pMesh[0].vertexOffset = 0;
+	model->m_pMesh[0].materialIndex = 0;
+
+	// indices (triangles)
+	for (int i = 0; i < Delauney.triangles.size(); i++)
+	{
+		*indice++ = Delauney.triangles[i];
+	}
+
+	model->m_vertexBuffer.Create("Vertex buffer", model->m_details.vertexCount, model->m_vertexStride, model->m_pVertexData);
+	model->m_indexBuffer.Create("Index buffer", model->m_details.indexCount, sizeof(uint16_t), model->m_pIndexData);
+	model->m_flatColour = Colour(0.2f, 0.2f, 1.0f);
+
+	// colour texture
+	model->LoadTextures();
+
+	model->isLoaded = true;
+
+	return model;
+}
+
+Graph<Vector2>& NavMeshManager::CreateNavigationData(delaunator::Delaunator& Delauney)
+{
+	Graph<Vector2> pathfindingData(Delauney.triangles.size() / 3);
+
+	// slow way
+	// for each triangle, calculate circumcircle
+	// if another triangle contains 2 of the same edges, they are neighbours
+	// Calculate circumcircle for that triangle, and add to connectivity graph
+
+	for (int index = 0; index < Delauney.triangles.size(); index += 3)
+	{
+		int foundCount = 0;
+
+		double x0 = Delauney.coords[2 * Delauney.triangles[index]];			// x0
+		double y0 = Delauney.coords[2 * Delauney.triangles[index] + 1];		// y0
+		double x1 = Delauney.coords[2 * Delauney.triangles[index + 1]];		// x1
+		double y1 = Delauney.coords[2 * Delauney.triangles[index + 1] + 1];	// y1
+		double x2 = Delauney.coords[2 * Delauney.triangles[index + 2]];		// x2
+		double y2 = Delauney.coords[2 * Delauney.triangles[index + 2] + 1]; // y2
+
+		// Determine three angles
+		Vector2 a = Vector2(x0, y0);
+		Vector2 b = Vector2(x1, y1);
+		Vector2 c = Vector2(x2, y2);
+
+		float angleA = acos(Math::Dot(b, c) / (b.Mag() * c.Mag()));
+		float angleB = acos(Math::Dot(a, c) / (a.Mag() * c.Mag()));
+		float angleC = acos(Math::Dot(a, b) / (a.Mag() * b.Mag()));
+
+		// Calculate circumcenter
+		Vector2 cCenter = Vector2((x0 * sin(2 * angleA) + x1 * sin(2 * angleB) + x2 * sin(2 * angleC)) / (sin(2 * angleA) + sin(2 * angleB) + sin(2 * angleC)),
+			(y0 * sin(2 * angleA) + y1 * sin(2 * angleB) + y2 * sin(2 * angleC)) / (sin(2 * angleA) + sin(2 * angleB) + sin(2 * angleC)));
+
+		if (!pathfindingData.contains(cCenter))
+			pathfindingData.push(cCenter);
+
+		for (int j = 0; j < Delauney.triangles.size(); j += 3)
+		{
+			if (index == j)
+				continue;
+
+			int similarVertices = 0;
+
+			// Create triangle vertices
+			x0 = Delauney.coords[2 * Delauney.triangles[j]];			// x0
+			y0 = Delauney.coords[2 * Delauney.triangles[j] + 1];		// y0
+			x1 = Delauney.coords[2 * Delauney.triangles[j + 1]];		// x1
+			y1 = Delauney.coords[2 * Delauney.triangles[j + 1] + 1];	// y1
+			x2 = Delauney.coords[2 * Delauney.triangles[j + 2]];		// x2
+			y2 = Delauney.coords[2 * Delauney.triangles[j + 2] + 1];	// y2
+
+			Vector2 otherA = Vector2(x0, y0);
+			Vector2 otherB = Vector2(x1, y1);
+			Vector2 otherC = Vector2(x2, y2);
+
+			// if two of the vertices match with "index", then these triangles are neighbours
+			if (a == otherA || a == otherB || a == otherC)
+				similarVertices++;
+
+			if (b == otherA || b == otherB || b == otherC)
+				similarVertices++;
+
+			if (c == otherA || c == otherB || c == otherC)
+				similarVertices++;
+
+			if (similarVertices < 2)
+				continue;
+
+			// Determine three angles
+			angleA = acos(Math::Dot(otherB, otherC) / (otherB.Mag() * otherC.Mag()));
+			angleB = acos(Math::Dot(otherA, otherC) / (otherA.Mag() * otherC.Mag()));
+			angleC = acos(Math::Dot(otherA, otherB) / (otherA.Mag() * otherB.Mag()));
+
+			// Calculate circumcenter
+			Vector2 otherCCenter = Vector2((x0 * sin(2 * angleA) + x1 * sin(2 * angleB) + x2 * sin(2 * angleC)) / (sin(2 * angleA) + sin(2 * angleB) + sin(2 * angleC)),
+				(y0 * sin(2 * angleA) + y1 * sin(2 * angleB) + y2 * sin(2 * angleC)) / (sin(2 * angleA) + sin(2 * angleB) + sin(2 * angleC)));
+			
+			// Add graph edge between two circumcenters
+			if (!pathfindingData.contains(otherCCenter))
+				pathfindingData.push(otherCCenter);
+
+			pathfindingData.attachEdge(cCenter, otherCCenter);
+		}
+	}
+
+	return pathfindingData;
+}
 
 void NavMeshManager::Uninitialize()
 {
-}
-
-void NavMeshManager::CreateContourPoints(uint32_t XIndex, uint32_t ZIndex)
-{
-	//ASSERT(XIndex > 0 && XIndex < m_binaryGrid.width && ZIndex > 0 && ZIndex < m_binaryGrid.height, "Trying to march outside the bounds of the grid, thats a paddlin");
-
-	//uint16_t bit = 0;
-
-	//uint32_t X, Z;
-	//X = XIndex - 1;
-	//Z = ZIndex - 1;
-
-	//bit |= m_binaryGrid.Check(X++, Z) ? 0 : 1UL << 3; // msb
-	//bit |= m_binaryGrid.Check(X, Z++) ? 0 : 1UL << 2;
-	//bit |= m_binaryGrid.Check(X--, Z) ? 0 : 1UL << 1;
-	//bit |= m_binaryGrid.Check(X, Z) ? 0 : 1UL; // lsb
-
-	//Vector4 vecPair = lookupMarchingSquares[bit];
-
-	//if (vecPair == Vector4(kZero))
-	//	return;
-
-	//Vector2 start = Vector2(vecPair.GetX() + XIndex - 1, vecPair.GetY() + ZIndex - 1);
-	//Vector2 end = Vector2(vecPair.GetZ() + XIndex - 1, vecPair.GetW() + ZIndex - 1);
-
-	//for (int i = 0; i < m_contourPoints.size(); i++)
-	//{
-	//	auto it = std::find(m_contourPoints[i].begin(), m_contourPoints[i].end(), start);
-	//	if (it != m_contourPoints[i].end())
-	//	{
-	//		m_contourPoints[i].push_back(end);
-	//		std::cout << "Found a continued line!" << std::endl;
-	//		return;
-	//	}
-
-	//	it = std::find(m_contourPoints[i].begin(), m_contourPoints[i].end(), end);
-	//	if (it != m_contourPoints[i].end())
-	//	{
-	//		m_contourPoints[i].push_front(start);
-	//		std::cout << "Found a continued line!" << std::endl;
-	//		return;
-	//	}
-	//}
-
-	//m_contourPoints.push_back({ start, end });
 }

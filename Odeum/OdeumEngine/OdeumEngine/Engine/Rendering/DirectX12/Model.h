@@ -60,6 +60,17 @@ public:
 
 	struct Material
 	{
+		Material()
+		{
+			strncpy_s(name, "", 0);
+			strncpy_s(diffuseTextureFile, "", 0);
+			strncpy_s(specularTextureFile, "", 0);
+			strncpy_s(emissiveTextureFile, "", 0);
+			strncpy_s(normalTextureFile, "", 0);
+			strncpy_s(lightmapTextureFile, "", 0);
+			strncpy_s(reflectionTextureFile, "", 0);
+		}
+
 		Vector3 diffuse;
 		Vector3 specular;
 		Vector3 ambient;
@@ -88,6 +99,8 @@ public:
 	Material*		m_pMaterials;
 
 	uint32_t		m_vertexStride;
+
+	bool			isLoaded = false;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE* GetSRVs(uint32_t mIndex) const
 	{

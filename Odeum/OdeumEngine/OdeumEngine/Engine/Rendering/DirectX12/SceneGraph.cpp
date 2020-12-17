@@ -23,7 +23,8 @@ void SceneGraph::RemoveGameObject(GameObject* go)
 void SceneGraph::LoadObjectsIntoMemory()
 {
 	for (auto go : sm_sceneGameObjects)
-		go->GetModel().Load();
+		if (!go->GetModel().isLoaded)
+			go->GetModel().Load();
 }
 
 void SceneGraph::UpdateObjects(float deltaTime)

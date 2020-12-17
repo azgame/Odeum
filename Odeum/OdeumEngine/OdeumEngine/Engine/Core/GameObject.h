@@ -16,6 +16,7 @@ class GameObject
 public:
 	GameObject(std::string fileName, std::string tag = "Default");
 	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f), std::string tag = "Default");
+	GameObject(Model* Model);
 	~GameObject();
 
 	void Initialize(std::string modelTextureLoadFile);

@@ -13,21 +13,19 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject("Engine/Resources/Models/Cottage_FREE.obj");
-
-	SCOPEDTIMER(timer);
+	object = new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 
 	object->AddComponent<Rigidbody>();
-	object->GetComponent<Rigidbody>()->SetPosition(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	object->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	ParticleInitProperties particleProps;
+	/*ParticleInitProperties particleProps;
 	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f);
 	particleProps.lifeTime = FLT_MAX;
-	particleProps.minLife = 10.0f;
-	particleProps.maxLife = 25.0f;
+	particleProps.minLife = 25.0f;
+	particleProps.maxLife = 50.0f;
 	particleProps.minMass = 0.1f;
 	particleProps.maxMass = 0.4f;
 	particleProps.rotationMax = 1.0f;
@@ -35,18 +33,18 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	particleProps.minVelocity = Vector2(0.4f, 0.6f);
 	particleProps.maxVelocity = Vector2(0.3f, 0.4f);
 	particleProps.minSize = Vector2(0.0050f, 0.0075f);
-	particleProps.maxSize = Vector2(0.01f, 0.0125f);
+	particleProps.maxSize = Vector2(0.01f, 0.025f);
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
-	particleProps.lauchingData.maxParticles = 40000;
-	particleProps.lauchingData.spawnRate = 64.0f;
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZero));
+	particleProps.lauchingData.maxParticles = 240000;
+	particleProps.lauchingData.spawnRate = 256.0f;
 	particleProps.lauchingData.speed = 1.0f;
 	particleProps.lauchingData.groundBounce = 1.02f;
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -0.1f, 0.0f));
-	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -10.0f));*/
 
-	ParticleManager::Get().CreateEffect(particleProps);
+	// ParticleManager::Get().CreateEffect(particleProps);
 
 	NavMeshManager::Initialize();
 
@@ -61,18 +59,22 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	t2.push_back(Vector2(10.0f, 2.0f));
 	t2.push_back(Vector2(7.0f, 3.0f));
 
-	std::vector<Collider2D> obstacles = { Collider2D(t1), Collider2D(t2) };
-
 	Plane groundPlane;
 	groundPlane.min = Vector3(-20.0f, 0.0f, -20.0f);
 	groundPlane.max = Vector3(20.0f, 0.0f, 20.0f);
 	groundPlane.normal = Vector3(kYUnitVector);
 
-	NavMeshManager::GenerateNavMesh(1, groundPlane, obstacles);
-
 	SceneGraph::Get()->LoadObjectsIntoMemory();
 
-	timer.GetTime();
+	std::vector<Vector2> objectOutline;
+	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMin().GetX(), object->GetBoundingBox().GetMin().GetZ()));
+	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMax().GetX(), object->GetBoundingBox().GetMin().GetZ()));
+	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMin().GetX(), object->GetBoundingBox().GetMax().GetZ()));
+	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMax().GetX(), object->GetBoundingBox().GetMax().GetZ()));
+
+	std::vector<Collider2D> obstacles = { Collider2D(t1), Collider2D(t2) };
+
+	NavMeshManager::GenerateNavMesh(1, groundPlane, obstacles);
 }
 
 GameScene::~GameScene()

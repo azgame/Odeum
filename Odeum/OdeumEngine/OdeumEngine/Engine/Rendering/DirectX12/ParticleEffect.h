@@ -43,6 +43,8 @@ struct ParticleInitProperties
 	Vector2 minSize;
 	Vector2 maxSize;
 	ParticleLaunchingData lauchingData;
+
+
 };
 
 class ParticleEffect
