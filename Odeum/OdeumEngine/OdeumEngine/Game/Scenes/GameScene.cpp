@@ -13,10 +13,18 @@
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	object = new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
+	for (int i = 0; i < 4; i++)
+	{
+		gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2)));
 
-	object->AddComponent<Rigidbody>();
-	object->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		gameObjects[i]->AddComponent<Rigidbody>();
+		gameObjects[i]->GetComponent<Rigidbody>()->SetPosition(Vector4(-16 + (i * 3), 0.0f, -16 + (i * 4), 1.0f));
+		gameObjects[i]->GetComponent<Rigidbody>()->SetRotation(Vector4(kYUnitVector), i * 45.0f);
+	}
+
+	gameObjects.push_back(new GameObject("Engine/Resources/Models/Cottage_FREE.obj"));
+	gameObjects[gameObjects.size() - 1]->AddComponent<Rigidbody>();
+	gameObjects[gameObjects.size() - 1]->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 0.0f, 6.0f, 1.0f));
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
@@ -46,8 +54,6 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	// ParticleManager::Get().CreateEffect(particleProps);
 
-	NavMeshManager::Initialize();
-
 	std::vector<Vector2> t1;
 	t1.push_back(Vector2(4.0f, 5.0f));
 	t1.push_back(Vector2(4.0f, 11.0f));
@@ -66,15 +72,33 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	SceneGraph::Get()->LoadObjectsIntoMemory();
 
-	std::vector<Vector2> objectOutline;
-	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMin().GetX(), object->GetBoundingBox().GetMin().GetZ()));
-	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMax().GetX(), object->GetBoundingBox().GetMin().GetZ()));
-	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMin().GetX(), object->GetBoundingBox().GetMax().GetZ()));
-	objectOutline.push_back(Vector2(object->GetBoundingBox().GetMax().GetX(), object->GetBoundingBox().GetMax().GetZ()));
+	std::vector<Collider2D> obstacles;
 
-	std::vector<Collider2D> obstacles = { Collider2D(t1), Collider2D(t2) };
+	for (auto go : gameObjects)
+	{
+		go->Update(0.0167f);
 
-	NavMeshManager::GenerateNavMesh(1, groundPlane, obstacles);
+		OrientedBoundingBox obb = go->GetBoundingBox();
+
+		Vector2 center = Vector2(obb.center.GetX(), obb.center.GetZ());
+		Vector2 minmin = center - Vector2(Vector2(obb.basis.GetX().GetX(), obb.basis.GetX().GetZ()) * obb.halfExtents.GetX()) - Vector2(Vector2(obb.basis.GetZ().GetX(), obb.basis.GetZ().GetZ()) * obb.halfExtents.GetZ());
+		Vector2 maxmin = center + Vector2(Vector2(obb.basis.GetX().GetX(), obb.basis.GetX().GetZ()) * obb.halfExtents.GetX()) - Vector2(Vector2(obb.basis.GetZ().GetX(), obb.basis.GetZ().GetZ()) * obb.halfExtents.GetZ());
+		Vector2 minmax = center - Vector2(Vector2(obb.basis.GetX().GetX(), obb.basis.GetX().GetZ()) * obb.halfExtents.GetX()) + Vector2(Vector2(obb.basis.GetZ().GetX(), obb.basis.GetZ().GetZ()) * obb.halfExtents.GetZ());
+		Vector2 maxmax = center + Vector2(Vector2(obb.basis.GetX().GetX(), obb.basis.GetX().GetZ()) * obb.halfExtents.GetX()) + Vector2(Vector2(obb.basis.GetZ().GetX(), obb.basis.GetZ().GetZ()) * obb.halfExtents.GetZ());
+
+		Vector3 min = go->GetBoundingBox().GetMin();
+		Vector3 max = go->GetBoundingBox().GetMax();
+
+		std::vector<Vector2> objectOutline;
+		objectOutline.push_back(minmin);
+		objectOutline.push_back(maxmin);
+		objectOutline.push_back(minmax);
+		objectOutline.push_back(maxmax);
+
+		obstacles.push_back(Collider2D(objectOutline));
+	}
+
+	NavMeshManager::GenerateNavMesh(0.25f, groundPlane, obstacles);
 }
 
 GameScene::~GameScene()
