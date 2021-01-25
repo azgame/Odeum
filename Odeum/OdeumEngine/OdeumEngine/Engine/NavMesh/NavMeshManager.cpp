@@ -171,7 +171,7 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 	m_binaryGrid.Reset(numColumns, numRows);
 	m_marchingCells.reserve((numRows - 1) * (numColumns - 1));
 
-	Collider2D* cachedCollider = nullptr;
+	// Collider2D* cachedCollider = nullptr;
 
 	// Start at 0, 0 in plane local space. Step +x CellSize. Create collider2D starting at Step position (min) and extent of cell (CellSize + x, CellSize + y)
 	// TODO Aidan: Parallelize this later
@@ -209,17 +209,17 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 
 				if (CollisionDetection::GJKCollisionDetection2D(&cell, &c))
 				{
-					cachedCollider = &c;
+					// cachedCollider = &c;
 					m_binaryGrid.Set(i, j);
 					collision = true;
 					break;
 				}
 			}
 
-			if (!collision)
+			/*if (!collision)
 			{
 				cachedCollider = nullptr;
-			}	
+			}	*/
 		}
 	}
 
@@ -268,17 +268,14 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 	// Check if tris are inside object boundaries (check centroid against binary image) and cull if they are
 	CullObscuredTris(delauney);
 
-	Graph<Vector2> pathfindingData = CreateNavigationData(delauney);
-
 	// For pathfinding, will need to make sure destination lies within nav mesh, and if it does, find shortest path to point from nav data
+	Graph<Vector2> pathfindingData = CreateNavigationData(delauney);
 
 	Model* model = CreateNavMeshModel(delauney);
 
 	navMesh = new GameObject(model);
 
-	// SAFE_DELETE(model);
-
-	cachedCollider = nullptr;
+	// cachedCollider = nullptr;
 }
 
 // For later
