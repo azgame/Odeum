@@ -118,10 +118,7 @@ void ParticleManager::Update(ComputeContext& Compute, float deltaTime)
 
 	Compute.TransitionResource(m_vertexBuffer.GetCounterBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE);
 	Compute.CopyBufferRegion(readBack, 0, m_vertexBuffer.GetCounterBuffer(), 0, 4);
-
 	particleCount = (UINT*)readBack.Map();
-	//if (particleCount != nullptr)
-	//	std::cout << "Number of particles: " << *particleCount << std::endl;
 	readBack.UnMap();
 }
 	

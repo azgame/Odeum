@@ -61,15 +61,6 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	// Pre fill the cbv with particle launching details (ie. spawn location, initial direction, speed, max particles, etc.)
 	// Transition the currently used particle buffer to a shader resource to get the state of each alive particle
 	// Set current particle buffer and spawn buffer as srvs
-
-	/*Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer].GetCounterBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE);
-	Compute.CopyBufferRegion(particleCountReadback, 0, m_particleBuffer[m_currentParticleBuffer].GetCounterBuffer(), 0, 4);
-
-	particleCount = (UINT*)particleCountReadback.Map();
-	if (particleCount != nullptr)
-		std::cout << "Number of particles: " << *particleCount << std::endl;
-	particleCountReadback.UnMap();*/
-
 	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
 
 	Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer], D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);

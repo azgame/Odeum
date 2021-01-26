@@ -223,6 +223,8 @@
     <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DataStructures\Graph.h" />
+    <ClInclude Include="Engine\NavMesh\delaunator.hpp" />
     <ClInclude Include="Game\Components\Ai.h" />
     <ClInclude Include="Engine\AI\ActionNode.h" />
     <ClInclude Include="Engine\AI\Node.h" />
