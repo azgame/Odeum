@@ -2,14 +2,20 @@
 #include "../Components/Rigidbody.h"
 #include "../Components/AudioSource.h"
 
+#include "../../Engine/Rendering/DirectX12/SceneGraph.h"
+
 PhysicsTestScene2::PhysicsTestScene2()
 {
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 15.0f, 40.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 15.0f, -20.0f));
 
-	go_s = new GameObject(CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	go_a = new GameObject(CubeShape, Colour(0.9f, 0.1f, 0.1f));
+	go_s = new GameObject(SphereShape, Colour(1.0f, 0.0f, 0.0f));
+	go_a = new GameObject(SphereShape, Colour(0.0f, 0.0f, 1.0f));
+
 	InitObjects();
 
+	SceneGraph::Get()->LoadObjectsIntoMemory();
+
+	SceneGraph::Get()->UpdateObjects(0.0167f);
 }
 
 PhysicsTestScene2::~PhysicsTestScene2()
@@ -29,8 +35,7 @@ bool PhysicsTestScene2::Initialize()
 
 void PhysicsTestScene2::Update(const float deltaTime_)
 {
-	go_s->Update(deltaTime_); 
-	go_a->Update(deltaTime_);
+	cameraController.UpdateMainCamera();
 
 	float distance = Vector3(go_s->GetComponent<Rigidbody>()->GetPosition() - go_a->GetComponent<Rigidbody>()->GetPosition()).Mag();
 	float radius = (go_s->GetComponent<Rigidbody>()->GetRadius() + go_a->GetComponent<Rigidbody>()->GetRadius()) / 2.0f;
@@ -41,6 +46,7 @@ void PhysicsTestScene2::Update(const float deltaTime_)
 		CollisionResponse();
 	}
 
+	SceneGraph::Get()->UpdateObjects(deltaTime_);
 }
 
 void PhysicsTestScene2::UIRender()
@@ -48,14 +54,11 @@ void PhysicsTestScene2::UIRender()
 	ImGui::Begin("Game UI");
 	if (ImGui::Button("Reset Position"))
 	{
-		go_s->GetComponent<Rigidbody>()->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 0.0f));
-		go_a->GetComponent<Rigidbody>()->SetPosition(Vector4(-2.0f, 0.0f, 0.0f, 0.0f));
+		go_s->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
+		go_a->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.0f, 0.0f, 0.0f, 1.0f));
 
 		go_s->GetComponent<Rigidbody>()->SetVelocity(Vector4());
 		go_a->GetComponent<Rigidbody>()->SetVelocity(Vector4());
-
-		go_s->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 0.0f, 0.0f), 0.0f);
-		go_a->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 0.0f, 0.0f), 0.0f);
 
 		isMoving = false;
 		isRotating = false;
@@ -64,6 +67,9 @@ void PhysicsTestScene2::UIRender()
 
 	if (ImGui::Button("Move Together"))
 	{
+		// velocity
+		go_a->GetComponent<Rigidbody>()->SetVelocity(Vector4(2.0f, 0.0f, 0.25f, 1.0f));
+
 		isMoving = true;
 	}
 
@@ -88,19 +94,20 @@ void PhysicsTestScene2::InitObjects()
 	go_s->AddComponent<AudioSource>();
 	
 	// mass
-	go_s->GetComponent<Rigidbody>()->SetMass(100.0f);
+	go_s->GetComponent<Rigidbody>()->SetMass(1.0f);
 	go_a->GetComponent<Rigidbody>()->SetMass(1.0f);
 
 	// position
-	go_s->GetComponent<Rigidbody>()->SetPosition(Vector4());
-	go_a->GetComponent<Rigidbody>()->SetPosition(Vector4(-50.0f, 25.0f, -50.0f, 1.0f));
+	go_s->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
+	go_a->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.0f, 0.0f, 0.0f, 1.0f));
 
 	// velocity
-	go_a->GetComponent<Rigidbody>()->SetVelocity(Vector4(20.0f, -10.0f, 20.0f, 1.0f));
+	go_a->GetComponent<Rigidbody>()->SetVelocity(Vector4(2.0f, 0.0f, 0.25f, 1.0f));
 
 	// radius
-	go_s->GetComponent<Rigidbody>()->SetRadius(3.0f);
-	go_a->GetComponent<Rigidbody>()->SetRadius(0.5f);
+	go_s->GetComponent<Rigidbody>()->SetRadius(5.0f);
+	go_a->GetComponent<Rigidbody>()->SetRadius(5.0f);
+
 }
 
 void PhysicsTestScene2::CollisionResponse() 
