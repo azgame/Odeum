@@ -8,6 +8,7 @@
 
 #include "Ray.h"
 #include "OctSpatialPartition.h"
+#include "../Game/Components/SphereCollider.h"
 
 class CollisionHandler
 {
@@ -29,6 +30,9 @@ public:
 	std::vector<GameObject*>& RayGetList(Ray& ray);
 	void Update();
 	void Uninitialize();
+
+	bool SphereSphereCollisionDetection(SphereCollider sc1, SphereCollider sc2); 
+	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, float e);
 
 private:
 	CollisionHandler();

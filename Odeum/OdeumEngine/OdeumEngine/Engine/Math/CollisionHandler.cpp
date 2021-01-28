@@ -121,3 +121,51 @@ void CollisionHandler::Uninitialize()
 		entry = nullptr;
 	previousCollisions.clear();
 }
+
+bool CollisionHandler::SphereSphereCollisionDetection(SphereCollider sc1, SphereCollider sc2)
+{
+	float distance = (sc1.GetPosition() - sc2.GetPosition()).Mag();
+
+	float sumOfRadius = sc1.GetRadius() + sc2.GetRadius();
+
+	if (distance < sumOfRadius)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, float e) {
+	// Setup Variables
+	float m1 = sc1.GetRigidbody()->GetMass();
+	float m2 = sc2.GetRigidbody()->GetMass();
+
+	Vector3 pos1 = sc1.GetPosition();
+	Vector3 pos2 = sc2.GetPosition();
+
+	Vector3 n = pos2 - pos1;
+
+	Vector3 vi1 = Vector3(sc1.GetRigidbody()->GetVelocity());
+	Vector3 vi2 = Vector3(sc2.GetRigidbody()->GetVelocity());
+
+	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
+	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
+	//Quaternion wi2 = sc2.GetRigidbody()->GetOrientation();
+	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetRotation());
+
+	// linear velocity
+	Vector3 vf1 = (m1 * vi1 + m2 * vi2 + m2 * e * (vi2 - vi1)) / (m1 + m2);
+	Vector3 vf2 = (m1 * vi1 + m2 * vi2 - m2 * e * (vi2 - vi1)) / (m1 + m2);
+
+	// Angular Velocity
+	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, vf2.GetY(), vf2.GetZ());
+	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, vf1.GetY(), vf1.GetZ());
+
+	// Update Spheres
+	sc1.GetRigidbody()->SetVelocity(Vector4(vf1));
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
+	sc2.GetRigidbody()->SetVelocity(Vector4(vf2));
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+}

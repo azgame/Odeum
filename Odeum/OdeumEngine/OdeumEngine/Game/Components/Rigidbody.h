@@ -29,10 +29,12 @@ public:
 
 	// gotta change this
 	inline Vector4 GetRotation() { return Vector4(rb_orientation); }
+	inline Quaternion GetOrientation() { return rb_orientation; }
 
 	// Setters
 	inline void SetMass(float mass) { rb_mass = mass; }
 	inline void SetVelocity(Vector4 velocity) { rb_totalVelocity = velocity; }
+	inline void SetAngularVelocity(Vector4 angularVelocity) { rb_angularVelocity = angularVelocity; }
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
 	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
 	inline void SetRotation(Vector4 rotation, float angle) { if(Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
