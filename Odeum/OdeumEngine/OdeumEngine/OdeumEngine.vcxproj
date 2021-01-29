@@ -198,6 +198,7 @@
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
+    <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
@@ -314,6 +315,7 @@
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
+    <ClInclude Include="Game\Scenes\GGJTestScene.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
     <ClInclude Include="Game\Scenes\StartScene.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Model.h" />
