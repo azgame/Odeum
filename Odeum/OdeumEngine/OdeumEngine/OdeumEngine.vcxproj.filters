@@ -82,6 +82,7 @@
     <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
     <ClCompile Include="Game\Components\SphereCollider.cpp" />
     <ClCompile Include="Game\Components\ComplexCollider.cpp" />
+    <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Utility.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Game\Components\SphereCollider.h" />
     <ClInclude Include="Game\Components\ComplexCollider.h" />
     <ClInclude Include="Engine\Math\CollisionPoints.h" />
+    <ClInclude Include="Game\Scenes\GGJTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

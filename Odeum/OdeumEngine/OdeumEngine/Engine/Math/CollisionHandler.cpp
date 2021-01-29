@@ -193,7 +193,7 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)));
 
 	Vector3 vf1 = vi1 + n * (j / m1);
-	Vector3 vf2 = vi2 + n * (j / m2);
+	Vector3 vf2 = vi2 - n * (j / m2);
 
 	cc1.GetRigidbody()->SetVelocity(Vector4(vf1, 1.0f));
 	cc2.GetRigidbody()->SetVelocity(Vector4(vf2, 1.0f));
