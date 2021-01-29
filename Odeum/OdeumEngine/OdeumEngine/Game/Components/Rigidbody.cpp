@@ -15,6 +15,7 @@ void Rigidbody::OnAttach(GameObject* parent)
 	rb_rotationSpeed = 0.0005f;
 
 	rb_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	rb_mass = 1.0f;
 }
 
 // update position based on acceleration and velocity

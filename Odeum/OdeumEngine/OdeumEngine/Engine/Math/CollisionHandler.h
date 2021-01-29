@@ -9,6 +9,8 @@
 #include "Ray.h"
 #include "OctSpatialPartition.h"
 #include "../Game/Components/SphereCollider.h"
+#include "../Game/Components/ComplexCollider.h"
+#include "CollisionPoints.h"
 
 class CollisionHandler
 {
@@ -31,8 +33,10 @@ public:
 	void Update();
 	void Uninitialize();
 
-	bool SphereSphereCollisionDetection(SphereCollider sc1, SphereCollider sc2); 
 	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, float e);
+	void SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc);
+	void OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2);
+	void GJKCollisionResponse(ComplexCollider& cc1, ComplexCollider& cc2, Simplex<Vector3>& simplex);
 
 private:
 	CollisionHandler();

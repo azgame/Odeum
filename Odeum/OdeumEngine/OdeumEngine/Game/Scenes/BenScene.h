@@ -18,10 +18,19 @@ public:
 
 private:
 	CameraController cameraController;
-	GameObject* object;
-	GameObject* object2;
+
+	//std::vector<GameObject*> gameObjects;
+
+	GameObject* go1;
+	GameObject* go2;
 	float angle;
 	float direction;
+
+	uint16_t frameCounter;
+	float averageFrameTime;
+	float frameTimeTotal;
+
+	Simplex<Vector3> simplex;
 };
 
 #endif

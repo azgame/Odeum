@@ -86,9 +86,9 @@ void PhysicsTestScene::Update(const float deltaTime_)
 	if (isRotating)
 	{
 		go_1->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 0.0f, 1.0f, 0.0f), 65.0f);
-		c_1->Rotate(Vector3(0.0f, 0.0f, 1.0f), 65.0f);
+		//c_1->Rotate(Vector3(0.0f, 0.0f, 1.0f), 65.0f);
 		go_2->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 0.0f, 1.0f, 0.0f), 45.0f);
-		c_2->Rotate(Vector3(0.0f, 0.0f, 1.0f), 45.0f);
+		//c_2->Rotate(Vector3(0.0f, 0.0f, 1.0f), 45.0f);
 		isRotating = false;
 		//rotationCounter += 0.005f;
 	}
@@ -100,14 +100,14 @@ void PhysicsTestScene::Update(const float deltaTime_)
 		go_2->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 1.0f, 0.0f), 0.001f);
 	}
 
-	if (CollisionDetection::GJKCollisionDetection(c_1, c_2))
+	/*(if (CollisionDetection::GJKCollisionDetection(c_1, c_2))
 	{
 		std::cout << "COLLISION DETECTED!!" << std::endl;
 	}
 	else
 	{
 		std::cout << "DID NOT COLLIDE!!" << std::endl;
-	}
+	}*/
 
 	go_1->Update(deltaTime_);
 	go_2->Update(deltaTime_);

@@ -145,6 +145,7 @@ public:
 	inline Vector3& operator += (Vector3 v_) { *this = *this + v_; return *this; }
 	inline Vector3& operator -= (Vector3 v_) { *this = *this - v_; return *this; }
 	inline Vector3& operator *= (Vector3 v_) { *this = *this * v_; return *this; }
+	inline Vector3& operator *= (float s_) { *this = *this * s_; return *this; }
 	inline Vector3& operator /= (Vector3 v_) { *this = *this / v_; return *this; }
 
 	inline bool operator==(Vector3 v_) { return GetX() == v_.GetX() && GetY() == v_.GetY() && GetZ() == v_.GetZ(); }
