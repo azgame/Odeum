@@ -403,7 +403,8 @@ namespace Math {
 			//minNormal = normals[minFace].xyz();
 			minNormal = Vector3(faceNormals.first[faceNormals.second]);
 			//minDistance = normals[minFace].w;
-			minDistance = faceNormals.second;
+			//minDistance = faceNormals.second; //testing
+			minDistance = faceNormals.first[faceNormals.second].GetW();
 
 			Vector3 supPoint = Math::Support(c1, c2, minNormal);
 			float sDistance = Math::Dot(minNormal, supPoint);

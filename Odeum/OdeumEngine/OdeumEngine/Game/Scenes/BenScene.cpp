@@ -19,7 +19,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), 45.0f);
 	//go1->GetComponent<Rigidbody>()->SetRadius(1.3f);
 	//go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
-	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 2.0f, 0.0f, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 0.2f, 0.0f, 1.0f));
 	//go1->AddComponent<SphereCollider>();
 	go1->AddComponent<ComplexCollider>();
 
@@ -29,7 +29,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go2->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), -45.0f);
 	//go2->GetComponent<Rigidbody>()->SetRadius(1.3f);
 	//go2->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
-	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -2.0f, 0.0f, 1.0f));
+	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -0.2f, 0.0f, 1.0f));
 	//go2->AddComponent<SphereCollider>();
 	go2->AddComponent<ComplexCollider>();
 	SceneGraph::Get()->LoadObjectsIntoMemory();
