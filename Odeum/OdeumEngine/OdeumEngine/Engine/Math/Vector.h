@@ -145,6 +145,7 @@ public:
 	inline Vector3& operator += (Vector3 v_) { *this = *this + v_; return *this; }
 	inline Vector3& operator -= (Vector3 v_) { *this = *this - v_; return *this; }
 	inline Vector3& operator *= (Vector3 v_) { *this = *this * v_; return *this; }
+	inline Vector3& operator *= (float s_) { *this = *this * s_; return *this; }
 	inline Vector3& operator /= (Vector3 v_) { *this = *this / v_; return *this; }
 
 	inline bool operator==(Vector3 v_) { return GetX() == v_.GetX() && GetY() == v_.GetY() && GetZ() == v_.GetZ(); }
@@ -242,6 +243,11 @@ namespace Math
 		retVal.SetY(v2.GetY() * ac - v1.GetY() * bc);
 		
 		return retVal;
+	}
+
+	inline float PerpendicularDistance(const Vector2 Point, const Vector2 v1, const Vector2 v2)
+	{
+		return std::abs((v2.GetX() - v1.GetX()) * (v1.GetY() - Point.GetY()) - (v1.GetX() - Point.GetX()) * (v2.GetY() - v1.GetY())) / (sqrt(pow(v2.GetX() - v1.GetX(), 2) + pow(v2.GetY() - v1.GetY(), 2)));
 	}
 
 	inline Vector3 Cross(const Vector3 v1, const Vector3 v2)

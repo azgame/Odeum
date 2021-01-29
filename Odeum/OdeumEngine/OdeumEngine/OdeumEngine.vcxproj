@@ -166,6 +166,8 @@
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
+    <ClCompile Include="Game\Components\ComplexCollider.cpp" />
+    <ClCompile Include="Game\Components\SphereCollider.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_demo.cpp" />
@@ -219,8 +221,13 @@
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
+    <ClCompile Include="Game\Components\Rigidbody2.cpp" />
+    <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DataStructures\Graph.h" />
+    <ClInclude Include="Engine\Math\CollisionPoints.h" />
+    <ClInclude Include="Engine\NavMesh\delaunator.hpp" />
     <ClInclude Include="Game\Components\Ai.h" />
     <ClInclude Include="Engine\AI\ActionNode.h" />
     <ClInclude Include="Engine\AI\Node.h" />
@@ -248,6 +255,8 @@
     <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
     <ClInclude Include="Engine\Math\Ray.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
+    <ClInclude Include="Game\Components\ComplexCollider.h" />
+    <ClInclude Include="Game\Components\SphereCollider.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
     <ClInclude Include="Engine\ImGui\imconfig.h" />
@@ -327,6 +336,8 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
+    <ClInclude Include="Game\Components\Rigidbody2.h" />
+    <ClInclude Include="Game\Scenes\PhysicsTestScene2.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">

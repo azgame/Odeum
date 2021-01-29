@@ -6,6 +6,7 @@
 #include "Scenes/BenScene.h"
 #include "Scenes/GJKTestScene.h"
 #include "Scenes/PhysicsTestScene.h"
+#include "Scenes/PhysicsTestScene2.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -62,6 +63,9 @@ void Game1::BuildScene()
 		break;
 	case 5:
 		m_currentScene = new PhysicsTestScene();
+		break;
+	case 6:
+		m_currentScene = new PhysicsTestScene2();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

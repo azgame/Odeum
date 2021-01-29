@@ -198,6 +198,8 @@ void Model::Load()
 	LoadTextures();
 
 	m_gameObject->SetBoundingBox(vMin, vMax);
+
+	isLoaded = true;
 }
 
 void Model::LoadTextures()

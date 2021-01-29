@@ -26,6 +26,7 @@ struct OrientedBoundingBox
 		center = halfExtents + min;
 	}
 
+	// obb vs obb collision detection
 	bool Intersects(OrientedBoundingBox& Box)
 	{
 		Vector3 RPos;

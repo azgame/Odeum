@@ -4,7 +4,6 @@
 #include "BoundingBox.h"
 #include "Simplex.h"
 #include "Collider.h"
-
 #include "../Core/OdeumEngine.h"
 
 #include <algorithm>
@@ -180,13 +179,14 @@ void CollisionDetection::RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& 
 	}
 }
 
-bool CollisionDetection::GJKCollisionDetection(Collider* c1, Collider* c2)
+bool CollisionDetection::GJKCollisionDetection(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& points)
 {
-	// Get initial point with any direction
-	Vector3 supPoint = Math::Support(c1, c2, Vector3(0.0f, 1.0f, 0.0f));
-	
 	// Simplex is stored as an arrary of points, maximum of 4
-	Simplex<Vector3> points;
+	// Get initial point with any direction
+	Vector3 supPoint = Math::Support(cc1->GetCollider(), cc2->GetCollider(), Vector3(1.0f, 0.0f, 0.0f));
+	
+	// Reset Simplex
+	points = Simplex<Vector3>();
 	// Add new point to the new simplex
 	points.Push_Front(supPoint);
 
@@ -195,7 +195,7 @@ bool CollisionDetection::GJKCollisionDetection(Collider* c1, Collider* c2)
 
 	while (true)
 	{
-		supPoint = Math::Support(c1, c2, direction);
+		supPoint = Math::Support(cc1->GetCollider(), cc2->GetCollider(), direction);
 
 		if (Math::Dot(supPoint, direction) <= 0.0f)
 		{
@@ -308,4 +308,28 @@ bool CollisionDetection::GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2)
 	}
 
 	return false;
+}
+
+bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2)
+{
+	float distance = (sc1->GetPosition() - sc2->GetPosition()).Mag();
+
+	float sumOfRadius = sc1->GetRadius() + sc2->GetRadius();
+
+	return distance < sumOfRadius;
+}
+
+bool CollisionDetection::SphereOBBCollisionDetection(SphereCollider* sc, BoxCollider* bc)
+{
+	// Get the box's closest point to sphere center
+	Vector3 closestPoint = Math::Max(bc->GetBoundingBox()->GetMin(), Math::Min(sc->GetPosition(), bc->GetBoundingBox()->GetMax()));
+	
+	float distance = (closestPoint - sc->GetPosition()).Mag();
+
+	return distance < sc->GetRadius();
+}
+
+bool CollisionDetection::OBBOBBBCollisionDetection(BoxCollider* bc1, BoxCollider* bc2)
+{
+	return bc1->GetBoundingBox()->Intersects(*bc2->GetBoundingBox());
 }

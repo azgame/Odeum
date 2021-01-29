@@ -18,7 +18,8 @@ public:
 
 private:
 	CameraController cameraController;
-	GameObject* object;
+
+	std::vector<GameObject*> gameObjects;
 	float angle;
 	float direction;
 

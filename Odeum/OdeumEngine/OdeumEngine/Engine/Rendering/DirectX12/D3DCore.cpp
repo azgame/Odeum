@@ -151,7 +151,7 @@ void DXGraphics::Initialize()
 
 		if (desc.Flags && DXGI_ADAPTER_FLAG_SOFTWARE)
 			continue;
-
+			
 		if (desc.DedicatedVideoMemory > maxSize && SUCCEEDED(D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_device))))
 		{
 			adapter->GetDesc1(&desc);

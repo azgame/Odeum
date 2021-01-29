@@ -4,14 +4,14 @@
 PhysicsTestScene::PhysicsTestScene()
 {
 	// First Cube -- Hardcoding collider for now, will move with visual gameobject
-	go_1 = new GameObject(CubeShape, Colour(0.3f, 0.2, 0.5f));
-	go_2 = new GameObject(CubeShape, Colour(0.4f, 0.8f, 0.1f));
+	go_1 = new GameObject(CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	go_2 = new GameObject(CubeShape, Colour(0.9f, 0.1f, 0.1f));
 
 	go_1->AddComponent<Rigidbody>();
 	go_2->AddComponent<Rigidbody>();
 
-	go_1->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 0.0f));
-	go_2->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
+	go_1->GetComponent<Rigidbody>()->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 0.0f));
+	go_2->GetComponent<Rigidbody>()->SetPosition(Vector4(-2.0f, 0.0f, 0.0f, 0.0f));
 
 	std::vector<Vector3> c1;
 	c1.push_back(Vector3(-1.0f, -1.0f, -1.0f));
@@ -78,16 +78,19 @@ void PhysicsTestScene::Update(const float deltaTime_)
 {
 	if (isMoving)
 	{
-		go_1->GetComponent<Rigidbody>()->Transpose(Vector4(-0.005f, 0.0f, 0.0f, 0.0f));
+		go_1->GetComponent<Rigidbody>()->Transpose(Vector4(-0.0005f, 0.0f, 0.0f, 0.0f));
 		c_1->Transpose(Vector3(go_1->GetComponent<Rigidbody>()->GetPosition()));
-		go_2->GetComponent<Rigidbody>()->Transpose(Vector4(0.005f, 0.0f, 0.0f, 0.0f));
+		go_2->GetComponent<Rigidbody>()->Transpose(Vector4(0.0005f, 0.0f, 0.0f, 0.0f));
 		c_2->Transpose(Vector3(go_2->GetComponent<Rigidbody>()->GetPosition()));
 	}
 	if (isRotating)
 	{
-		go_1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 0.0f, 0.0f), 45.0f);
-		go_2->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 0.0f, 1.0f, 0.0f), rotationCounter);
-		rotationCounter += 0.005f;
+		go_1->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 0.0f, 1.0f, 0.0f), 65.0f);
+		//c_1->Rotate(Vector3(0.0f, 0.0f, 1.0f), 65.0f);
+		go_2->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 0.0f, 1.0f, 0.0f), 45.0f);
+		//c_2->Rotate(Vector3(0.0f, 0.0f, 1.0f), 45.0f);
+		isRotating = false;
+		//rotationCounter += 0.005f;
 	}
 	if (isRotationalVelocity)
 	{
@@ -97,14 +100,14 @@ void PhysicsTestScene::Update(const float deltaTime_)
 		go_2->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 1.0f, 0.0f), 0.001f);
 	}
 
-	if (CollisionDetection::GJKCollisionDetection(c_1, c_2))
+	/*(if (CollisionDetection::GJKCollisionDetection(c_1, c_2))
 	{
 		std::cout << "COLLISION DETECTED!!" << std::endl;
 	}
 	else
 	{
 		std::cout << "DID NOT COLLIDE!!" << std::endl;
-	}
+	}*/
 
 	go_1->Update(deltaTime_);
 	go_2->Update(deltaTime_);
@@ -115,8 +118,8 @@ void PhysicsTestScene::UIRender()
 	ImGui::Begin("Game UI");
 	if (ImGui::Button("Reset Position"))
 	{
-		go_1->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 0.0f));
-		go_2->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
+		go_1->GetComponent<Rigidbody>()->SetPosition(Vector4(2.0f, 0.0f, 0.0f, 0.0f));
+		go_2->GetComponent<Rigidbody>()->SetPosition(Vector4(-2.0f, 0.0f, 0.0f, 0.0f));
 
 		go_1->GetComponent<Rigidbody>()->SetVelocity(Vector4());
 		go_2->GetComponent<Rigidbody>()->SetVelocity(Vector4());
@@ -140,9 +143,9 @@ void PhysicsTestScene::UIRender()
 		isRotating = true;
 	}
 
-	if (ImGui::Button("Rotational Velocity"))
+	/*if (ImGui::Button("Rotational Velocity"))
 	{		
 		isRotationalVelocity = true;
-	}
+	}*/
 	ImGui::End();
 }

@@ -3,6 +3,9 @@
 
 #include <memory>
 #include "../Core/Camera.h"
+#include "../Game/Components/SphereCollider.h"
+#include "../Game/Components/BoxCollider.h"
+#include "../Game/Components/ComplexCollider.h"
 
 struct Ray;
 struct BoundingBox;
@@ -26,8 +29,12 @@ public:
 	static void RayOBBIntersectionPlane(Ray& ray, OrientedBoundingBox& box, Vector4* IntersectionPlane);
 	// should update this so it takes in any object with at least 4 vertices
 
-	static bool GJKCollisionDetection(Collider* s1, Collider* s2);
+	static bool GJKCollisionDetection(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& points);
 	static bool GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2);
+	static bool SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2);
+	static bool SphereOBBCollisionDetection(SphereCollider* sc, BoxCollider* bc);
+	static bool OBBOBBBCollisionDetection(BoxCollider* bc1, BoxCollider* bc2);
+
 };
 
 #endif

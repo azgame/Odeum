@@ -2,15 +2,17 @@
 #define COLLIDER_H
 
 #include "D3DMath.h"
+#include "../Math/CollisionPoints.h"
 
 struct Collider
 {
 private:
 	std::vector<Vector3> c_vertices;
 	std::vector<Vector3> s_vertices;
+	std::vector<Vector3> r_vertices;
 
 public:
-	Collider(std::vector<Vector3>& vertices) { c_vertices = s_vertices = vertices; };
+	Collider(std::vector<Vector3>& vertices) { c_vertices = s_vertices = r_vertices = vertices; };
 	
 	// This returns the furthest point in a vector of vertices using a given direction
 	inline Vector3 FindFurthestPoint(Vector3 direction)
@@ -34,16 +36,26 @@ public:
 	inline void Transpose(Vector3 t) {
 		for (int i = 0; i < c_vertices.size(); i++)
 		{
-			c_vertices[i] = s_vertices[i] + t;
+			c_vertices[i] = r_vertices[i] + t;
 		}
 	}
 
-	inline void Rotate(Vector3 axis, float angle)
+	// this should be changed to update based on the rigibody's orientation
+	/*inline void Rotate(Vector3 axis, float angle)
 	{
 		Matrix3 rotationMat = Matrix3(XMMatrixRotationAxis(axis, angle));
 		for (int i = 0; i < c_vertices.size(); i++)
 		{
 			c_vertices[i] = rotationMat * c_vertices[i];
+		}
+	}*/
+	inline void Rotate(Quaternion q)
+	{
+		Matrix3 rotationMat = Matrix3(q);
+		for (int i = 0; i < c_vertices.size(); i++)
+		{
+			c_vertices[i] = rotationMat * c_vertices[i];
+			r_vertices[i] = rotationMat * s_vertices[i];
 		}
 	}
 
@@ -313,7 +325,7 @@ namespace Math {
 	{
 		switch (points.Size())
 		{
-		case 2: return Line(points, direction); // don't need this
+		case 2: return Line(points, direction); // might not need
 		case 3: return Triangle(points, direction);
 		case 4: return Tetrahedron(points, direction);
 		}
@@ -322,6 +334,146 @@ namespace Math {
 		return false;
 	}
 
+	// EPA Response Helpers
+
+	// HELPER FUNCTIONS FOR GJK RESPONSE
+	//https://blog.winter.dev/2020/epa-algorithm/ as reference
+
+	inline void AddIfUniqueEdge(std::vector<std::pair<size_t, size_t>>& edges, const std::vector<size_t>& faces, size_t a, size_t b)
+	{
+		auto reverse = std::find(edges.begin(), edges.end(), std::make_pair(faces[b], faces[a]));
+
+		if (reverse != edges.end()) {
+			edges.erase(reverse);
+		}
+
+		else {
+			edges.emplace_back(faces[a], faces[b]);
+		}
+	}
+
+	inline std::pair<std::vector<Vector4>, size_t> GetFaceNormals(const std::vector<Vector3>& polytope, const std::vector<size_t>& faces)
+	{
+		std::vector<Vector4> normals;
+		size_t minTriangle = 0;
+		float  minDistance = FLT_MAX;
+
+		for (size_t i = 0; i < faces.size(); i += 3) {
+			Vector3 a = polytope[faces[i]];
+			Vector3 b = polytope[faces[i + 1]];
+			Vector3 c = polytope[faces[i + 2]];
+
+			Vector3 normal = Math::Cross(b - a, c - a).Normalize();
+			float distance = Math::Dot(normal, a);
+
+			if (distance < 0) {
+				normal *= -1;
+				distance *= -1;
+			}
+
+			normals.emplace_back(normal, distance);
+
+			if (distance < minDistance) {
+				minTriangle = i / 3;
+				minDistance = distance;
+			}
+		}
+
+		return { normals, minTriangle };
+	}
+
+	inline CollisionPoints EPA(Collider* c1, Collider* c2, Simplex<Vector3>& simplex)
+	{
+		std::vector<Vector3> polytope(simplex.Begin(), simplex.End());
+		std::vector<size_t> faces = {
+			0, 1, 2,
+			0, 3, 1,
+			0, 2, 3,
+			1, 3, 2
+		};
+
+		// auto [normals, minFace] = GetFaceNormals(polytope, faces);
+		std::pair<std::vector<Vector4>, size_t> faceNormals = GetFaceNormals(polytope, faces);
+
+		Vector3 minNormal;
+		float minDistance = FLT_MAX;
+
+		while (minDistance == FLT_MAX)
+		{
+			//minNormal = normals[minFace].xyz();
+			minNormal = Vector3(faceNormals.first[faceNormals.second]);
+			//minDistance = normals[minFace].w;
+			//minDistance = faceNormals.second; //testing
+			minDistance = faceNormals.first[faceNormals.second].GetW();
+
+			Vector3 supPoint = Math::Support(c1, c2, minNormal);
+			float sDistance = Math::Dot(minNormal, supPoint);
+
+			if (abs(sDistance - minDistance) > 0.001f)
+			{
+				minDistance = FLT_MAX;
+
+				std::vector<std::pair<size_t, size_t>> uniqueEdges;
+
+				for (size_t i = 0; i < faceNormals.first.size(); i++) {
+					if (Math::SameDirection(Vector3(faceNormals.first[i]), supPoint)) {
+						size_t f = i * 3;
+
+						AddIfUniqueEdge(uniqueEdges, faces, f, f + 1);
+						AddIfUniqueEdge(uniqueEdges, faces, f + 1, f + 2);
+						AddIfUniqueEdge(uniqueEdges, faces, f + 2, f);
+
+						faces[f + 2] = faces.back(); faces.pop_back();
+						faces[f + 1] = faces.back(); faces.pop_back();
+						faces[f] = faces.back(); faces.pop_back();
+
+						faceNormals.first[i] = faceNormals.first.back(); faceNormals.first.pop_back();
+
+						i--;
+					}
+				}
+
+				std::vector<size_t> newFaces;
+				/* for(auto [edgeIndex1, edgeIndex2] : uniqueEdges){
+					newFaces.push_back(edgeIndex1);
+					newFaces.push_back(edgeIndex2);
+					newFaces.push_back(polytope.size());
+				}*/
+				for (std::pair<size_t, size_t>edgeIndex : uniqueEdges) {
+					newFaces.push_back(edgeIndex.first);
+					newFaces.push_back(edgeIndex.second);
+					newFaces.push_back(polytope.size());
+				}
+
+				polytope.push_back(supPoint);
+
+				//auto [newNormals, newMinFace] = GetFaceNormals(polytope, newFaces);
+				std::pair<std::vector<Vector4>, size_t> newFaceNormals = GetFaceNormals(polytope, newFaces);
+
+				float oldMinDistance = FLT_MAX;
+				for (size_t i = 0; i < faceNormals.first.size(); i++) {
+					if (faceNormals.first[i].GetW() < oldMinDistance) {
+						oldMinDistance = faceNormals.first[i].GetW();
+						faceNormals.second = i;
+					}
+				}
+
+				if (newFaceNormals.first[newFaceNormals.second].GetW() < oldMinDistance) {
+					faceNormals.second = newFaceNormals.second + faceNormals.first.size();
+				}
+
+				faces.insert(faces.end(), newFaces.begin(), newFaces.end());
+				faceNormals.first.insert(faceNormals.first.end(), newFaceNormals.first.begin(), newFaceNormals.first.end());
+			}
+		}
+
+		CollisionPoints points;
+		points.normal = minNormal;
+		points.penetrationDepth = minDistance + 0.001f;
+		points.hasCollision = true;
+
+		return points;
+	}
 }
 
 #endif

@@ -15,6 +15,7 @@ void Rigidbody::OnAttach(GameObject* parent)
 	rb_rotationSpeed = 0.0005f;
 
 	rb_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	rb_mass = 1.0f;
 }
 
 // update position based on acceleration and velocity
@@ -67,7 +68,6 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
 }
 
 
-// might want to move parts of this to MathUtility.h
 void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation

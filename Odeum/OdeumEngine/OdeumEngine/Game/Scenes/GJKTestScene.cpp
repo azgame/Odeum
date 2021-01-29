@@ -27,7 +27,7 @@ GJKTestScene::GJKTestScene()
 	c2->Print();
 	std::cout << std::endl;
 
-	if (CollisionDetection::GJKCollisionDetection(c1, c2))
+	/*if (CollisionDetection::GJKCollisionDetection(c1, c2))
 	{
 		std::cout << "COLLISION DETECTED!!" << std::endl;
 	}
@@ -35,7 +35,7 @@ GJKTestScene::GJKTestScene()
 	{
 		std::cout << "DID NOT COLLIDE!!" << std::endl;
 	}
-
+	*/
 	// Box Collision with GJK
 
 }

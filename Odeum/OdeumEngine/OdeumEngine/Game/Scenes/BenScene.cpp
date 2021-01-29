@@ -1,84 +1,73 @@
 #include "BenScene.h"
-#include "../Components/KinematicMovement.h"
-#include "../Components/DynamicMovement.h"
-#include "../Components/Rigidbody.h"
-#include "../../Engine/Math/CollisionHandler.h"
-#include "../Engine/Core/AudioHandler.h"
-#include "../Components/AudioSource.h"
 
+#include "../../Engine/Math/CollisionHandler.h"
+#include "../../Engine/Math/Collider.h"
+#include "../../Engine/Math/Plane.h"
+#include "../../Engine/NavMesh/NavMeshManager.h"
+#include "../../Engine/Rendering/DirectX12/ParticleManager.h"
+#include "../../Engine/Rendering/DirectX12/SceneGraph.h"
+
+#include "../Components/Rigidbody.h"
 
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {
-	// should pass in the camera pos
-	AudioHandler::GetInstance()->Initialize();
-	
-	object = new GameObject(CubeShape, Colour(1.0f, 1.0f, 1.0f, 1.0f));
-	object2 = new GameObject(CubeShape, Colour(0.1f, 0.3f, 0.4f, 1.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));	
 
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, 25.0f));
+	go1 = new GameObject(ShapeTypes::CubeShape, Colour(0.4, 0.7, 0.7));
+	go1->AddComponent<Rigidbody>();
+	go1->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), 45.0f);
+	//go1->GetComponent<Rigidbody>()->SetRadius(1.3f);
+	//go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 0.2f, 0.0f, 1.0f));
+	//go1->AddComponent<SphereCollider>();
+	go1->AddComponent<ComplexCollider>();
 
-	//Physics Test
-	object->AddComponent<Rigidbody>();
-	object->GetComponent<Rigidbody>()->SetPosition(Vector4(10.0f, 0.0f, 0.0f, 0.0f));
-	object->GetComponent<Rigidbody>()->AddVelocity(Vector4(-1.0f, 0.0f, 0.0f, 0.0f));
-	object->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 0.002f);
-
-	object2->AddComponent<Rigidbody>();
-	object2->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.0f, 0.0f, 0.0f, 0.0f));
-	object2->GetComponent<Rigidbody>()->AddVelocity(Vector4(1.0f, 0.0f, 0.0f, 0.0f));
-	object2->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 0.002f);
-
-	// AudioTest
-	object->AddComponent<AudioSource>();
-	object->GetComponent<AudioSource>()->Initialize("TestCoin.wav", false, true, false, 1.0f);
-	object->GetComponent<AudioSource>()->PlaySound();
-
-	CollisionHandler::GetInstance()->Initialize(1000.0f);
-
-	CollisionHandler::GetInstance()->AddObject(object);
-	CollisionHandler::GetInstance()->AddObject(object2);
+	go2 = new GameObject(ShapeTypes::CubeShape, Colour(0.7, 0.4, 0.7));
+	go2->AddComponent<Rigidbody>();
+	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(0.5f, 7.0f, 0.0f, 1.0f));
+	go2->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), -45.0f);
+	//go2->GetComponent<Rigidbody>()->SetRadius(1.3f);
+	//go2->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
+	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -0.2f, 0.0f, 1.0f));
+	//go2->AddComponent<SphereCollider>();
+	go2->AddComponent<ComplexCollider>();
+	SceneGraph::Get()->LoadObjectsIntoMemory();
 
 
-	Vector4 testIntersectionPlane;
-	Ray testRay = Ray(Vector3(), Vector3());
-	OrientedBoundingBox testObb;
-	CollisionDetection::RayOBBIntersection(testRay, testObb, &testIntersectionPlane);
 }
 
 BenScene::~BenScene()
 {
-	AudioHandler::GetInstance()->OnDestroy();
 }
 
 bool BenScene::Initialize()
 {
-	Debug::Info("Creating Game Scene", __FILENAME__, __LINE__);
-	return true;
+	LOG("Creating Game Scene")
+		return true;
 }
 
 void BenScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
+	SceneGraph::Get()->UpdateObjects(deltaTime_);
 
-	object->Update(deltaTime_);
-	object2->Update(deltaTime_);
+	/*if (CollisionDetection::SphereSphereCollisionDetection(go1->GetComponent<SphereCollider>(), go2->GetComponent<SphereCollider>()))
+	{
+		CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*go1->GetComponent<SphereCollider>(), *go2->GetComponent<SphereCollider>(), 1.0f);
+	}*/
 
-	CollisionHandler::GetInstance()->Update();
-	CollisionHandler::GetInstance()->MouseCollide();
-
-	if (Input::Get().isKeyPressed(Key::KeyCode::A)) {
-		Debug::Info("PLAY SOUND!", "BenScene.cpp", __LINE__);
-		object->GetComponent<AudioSource>()->PlaySound();
+	if (CollisionDetection::GJKCollisionDetection(go1->GetComponent<ComplexCollider>(), go2->GetComponent<ComplexCollider>(), simplex))
+	{
+		std::cout << "COLLISION! ";
+		CollisionHandler::GetInstance()->GJKCollisionResponse(*go1->GetComponent<ComplexCollider>(), *go2->GetComponent<ComplexCollider>(), simplex);
 	}
+
 }
 
 void BenScene::UIRender()
 {
 	ImGui::Begin("Game UI");
-	if (ImGui::Button("Reset Position"))
-	{
-		object->GetComponent<Rigidbody>()->SetPosition(Vector4(10.0f, 0.0f, 0.0f, 0.0f));
-		object2->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.0f, 0.0f, 0.0f, 0.0f));
-	}
+	ImGui::Text("Enter game UI components here");
 	ImGui::End();
 }

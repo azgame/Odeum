@@ -40,12 +40,21 @@ GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string ta
 	}
 	case ShapeTypes::PlaneShape:
 	{
-
 		break;
 	}
 	default:
 		break;
 	}
+
+	SceneGraph::Get()->AddGameObject(this);
+}
+
+GameObject::GameObject(Model* Model)
+{
+	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	m_model = *Model;
+	m_model.SetParent(this);
 
 	SceneGraph::Get()->AddGameObject(this);
 }
@@ -67,7 +76,6 @@ void GameObject::Initialize(std::string modelTextureLoadFile)
 
 void GameObject::Update(float deltaTime)
 {
-	
 	for (auto component : m_components)
 		component->Update(deltaTime);
 }
