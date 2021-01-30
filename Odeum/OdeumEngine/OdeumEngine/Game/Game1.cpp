@@ -4,11 +4,12 @@
 #include "Scenes/StartScene.h"
 #include "Scenes/RobScene.h"
 #include "Scenes/BenScene.h"
-#include "Scenes/GJKTestScene.h"
-#include "Scenes/PhysicsTestScene.h"
-#include "Scenes/PhysicsTestScene2.h"
 #include "Scenes/GGJTestScene.h"
 #include "Scenes/ButtonMashingScene.h"
+#include "Scenes/BombTossScene.h"
+
+#include "../Engine/Rendering/DirectX12/SceneGraph.h"
+#include "../Engine/Core/SceneObjects.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -35,6 +36,10 @@ void Game1::Update(const float deltaTime_)
 	}
 
 	m_currentScene->Update(deltaTime_);
+
+	SceneGraph::Get()->LoadGraphicsObjects();
+
+	SceneObjects::Get()->UpdateObjects(deltaTime_);
 }
 
 void Game1::UIRender()
@@ -61,19 +66,13 @@ void Game1::BuildScene()
 		m_currentScene = new BenScene();
 		break;
 	case 4:
-		m_currentScene = new GJKTestScene();
-		break;
-	case 5:
-		m_currentScene = new PhysicsTestScene();
-		break;
-	case 6:
-		m_currentScene = new PhysicsTestScene2();
-		break;
-	case 7:
 		m_currentScene = new GGJTestScene();
 		break;
-	case 8:
+	case 5:
 		m_currentScene = new ButtonMashingScene();
+		break;
+	case 6:
+		m_currentScene = new BombTossScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();
@@ -83,4 +82,8 @@ void Game1::BuildScene()
 	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
+
+	SceneGraph::Get()->LoadGraphicsObjects();
+
+	SceneObjects::Get()->UpdateObjects(0.0167f);
 }

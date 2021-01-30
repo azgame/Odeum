@@ -30,7 +30,7 @@ public:
 
 	static bool GJKCollisionDetection(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& points);
 	static bool GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2);
-	static bool SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2);
+	static bool SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2, float &t);
 	static bool SphereOBBCollisionDetection(SphereCollider* sc, BoxCollider* bc);
 	static bool OBBOBBBCollisionDetection(BoxCollider* bc1, BoxCollider* bc2);
 

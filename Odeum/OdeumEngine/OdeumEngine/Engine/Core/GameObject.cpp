@@ -1,62 +1,16 @@
 #include "GameObject.h"
 
-#include "../Rendering/DirectX12/SceneGraph.h"
+#include "SceneObjects.h"
 #include "Component.h"
 
-// Moving model loading to a graphics component
-GameObject::GameObject(std::string fileName, std::string tag_)
+
+GameObject::GameObject(std::string tag_)
 {
 	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	tag = tag_;
 
-	m_model.SetParent(this);
-	m_model.m_details.fileName = fileName;
-
-	SceneGraph::Get()->AddGameObject(this);
-}
-
-GameObject::GameObject(ShapeTypes preDefinedShape, Colour colour, std::string tag_)
-{
-	tag = tag_;
-
-	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	m_model.SetParent(this);
-
-	switch (preDefinedShape)
-	{
-	case ShapeTypes::CubeShape:
-	{
-		m_model.m_details.fileName = "Engine/Resources/Models/Cube.obj";
-		m_model.m_flatColour = colour;
-		break;
-	}
-	case ShapeTypes::SphereShape:
-	{
-		m_model.m_details.fileName = "Engine/Resources/Models/Sphere.obj";
-		m_model.m_flatColour = colour;
-		break;
-	}
-	case ShapeTypes::PlaneShape:
-	{
-		break;
-	}
-	default:
-		break;
-	}
-
-	SceneGraph::Get()->AddGameObject(this);
-}
-
-GameObject::GameObject(Model* Model)
-{
-	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	m_model = *Model;
-	m_model.SetParent(this);
-
-	SceneGraph::Get()->AddGameObject(this);
+	SceneObjects::Get()->AddGameObject(this);
 }
 
 GameObject::~GameObject()

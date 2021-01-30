@@ -3,8 +3,8 @@
 		"GameName": "Odeum Engine",
 		"WindowWidth": 1600,
 		"WindowHeight": 900,
-		"VSync": true,
+		"VSync": false,
 		"UltraWide": false,
-		"Scene": 8
+		"Scene": 5
 	}
 }

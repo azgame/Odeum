@@ -15,6 +15,7 @@ public:
 	// movement functions
 	void Transpose(Vector4 translate);
 	void ApplyForce(Vector4 force);
+	void ApplyTorque(Vector4 force);
 	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
 	void AddAngularVelocity(Vector4 velocity);
 	void AddAngularVelocity(Vector4 velocity, float angleSpeed);
@@ -23,9 +24,11 @@ public:
 	inline float GetMass() { return rb_mass; }
 	inline Vector4 GetPosition() { return rb_position; }
 	inline Vector4 GetVelocity() { return rb_totalVelocity; }
+	inline Vector4 GetAngularVelocity() { return rb_angularVelocity; }
 	inline Vector4 GetAcceleration() { return rb_totalAcceleration; }
 	inline Vector4 GetScale() { return rb_scale; }
 	inline float GetRadius() { return rb_radius; }
+
 
 	// gotta change this
 	inline Vector4 GetRotation() { return Vector4(rb_orientation); }
@@ -55,6 +58,11 @@ private:
 	Vector4 rb_angularVelocity;
 	Vector4 rb_scale;
 	Quaternion rb_orientation;
+
+	Matrix3 rb_inertiaTensor;
+	Matrix3 rb_inertiaTensorInv;
+	float rb_momentOfInertiaSphere;
+
 	float rb_radius;
 
 	float rb_mass;
@@ -64,8 +72,13 @@ private:
 	float rb_rotationSpeed;
 
 	float rb_speed;
+
+	float rb_massDensity;
+	float rb_volume;
 	
 	void UpdateOrientationQuaternion();
+
+	void UpdateInertiaTensor();
 	
 	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_angle, rb_rotation, m_gameObject->GetScale()); }
 	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, rb_scale); }

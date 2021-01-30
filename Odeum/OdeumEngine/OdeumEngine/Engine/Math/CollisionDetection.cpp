@@ -310,13 +310,42 @@ bool CollisionDetection::GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2)
 	return false;
 }
 
-bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2)
+bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2, float &t)
 {
 	float distance = (sc1->GetPosition() - sc2->GetPosition()).Mag();
 
 	float sumOfRadius = sc1->GetRadius() + sc2->GetRadius();
 
 	return distance < sumOfRadius;
+	
+	/*Vector3 pos = sc1->GetPosition() - sc2->GetPosition();
+	Vector3 vel = Vector3(sc1->GetRigidbody()->GetVelocity() - sc2->GetRigidbody()->GetVelocity());
+	float sumOfRadius = sc1->GetRadius() + sc2->GetRadius();
+
+	float dist = Math::Dot(pos, pos) - (sumOfRadius * sumOfRadius); // if negative, sphere's are overlapping
+
+	if (dist < 0.0f)
+	{
+		t = 0.0f;
+		return true;
+	}
+
+	float a = Math::Dot(vel, vel);
+	float b = Math::Dot(vel, pos);
+
+	if (b >= 0.0f)
+	{
+		return false; // do not move towards each other
+	}
+
+	float d = (b * b) - (a * dist);
+	if (d < 0.0f)
+	{
+		return false; // no collision
+	}
+
+	t = (-b - sqrt(d)) / a;
+	return true;*/
 }
 
 bool CollisionDetection::SphereOBBCollisionDetection(SphereCollider* sc, BoxCollider* bc)

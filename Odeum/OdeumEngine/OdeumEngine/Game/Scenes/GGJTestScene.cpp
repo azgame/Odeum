@@ -4,6 +4,7 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
 #include "../Components/Rigidbody.h"
+#include "../Components/RenderComponent.h"
 
 GGJTestScene::GGJTestScene()
 {
@@ -11,12 +12,12 @@ GGJTestScene::GGJTestScene()
 
 	for (int i = 0; i < 4; i++)
 	{
-		gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2)));
+		gameObjects.push_back(new GameObject());
 		gameObjects[i]->AddComponent<Rigidbody>();
 		gameObjects[i]->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 3, 0.0f, i * 4, 1.0f));
+		gameObjects[i]->AddComponent<RenderComponent>();
+		gameObjects[i]->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 	}
-
-	SceneGraph::Get()->LoadObjectsIntoMemory();
 }
 
 GGJTestScene::~GGJTestScene()
@@ -25,12 +26,11 @@ GGJTestScene::~GGJTestScene()
 
 bool GGJTestScene::Initialize()
 {
-	return false;
+	return true;
 }
 
 void GGJTestScene::Update(const float deltaTime_)
 {
-	SceneGraph::Get()->UpdateObjects(deltaTime_);
 }
 
 void GGJTestScene::UIRender()

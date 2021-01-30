@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\SceneObjects.cpp" />
     <ClCompile Include="Game\Components\Ai.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\AI\ActionNode.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Game\Components\ColliderComponent.cpp" />
     <ClCompile Include="Game\Components\ComplexCollider.cpp" />
+    <ClCompile Include="Game\Components\RenderComponent.cpp" />
     <ClCompile Include="Game\Components\SphereCollider.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
     <ClCompile Include="Engine\ImGui\imgui.cpp" />
@@ -198,6 +200,7 @@
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\BombTossScene.cpp" />
     <ClCompile Include="Game\Scenes\ButtonMashingScene.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
@@ -209,7 +212,6 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
-    <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
     <ClCompile Include="Engine\AI\Inverter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -223,11 +225,10 @@
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
-    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
-    <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\SceneObjects.h" />
     <ClInclude Include="Engine\DataStructures\Graph.h" />
     <ClInclude Include="Engine\Math\CollisionPoints.h" />
     <ClInclude Include="Engine\NavMesh\delaunator.hpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Game\Components\ColliderComponent.h" />
     <ClInclude Include="Game\Components\ComplexCollider.h" />
+    <ClInclude Include="Game\Components\RenderComponent.h" />
     <ClInclude Include="Game\Components\SphereCollider.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
     <ClInclude Include="Engine\Core\Utility.h" />
@@ -317,6 +319,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Game\Scenes\BombTossScene.h" />
     <ClInclude Include="Game\Scenes\ButtonMashingScene.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\GGJTestScene.h" />
@@ -328,7 +331,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
-    <ClInclude Include="Game\Scenes\GJKTestScene.h" />
     <ClInclude Include="Engine\AI\Inverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
@@ -341,9 +343,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
-    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
     <ClInclude Include="Game\Components\Rigidbody2.h" />
-    <ClInclude Include="Game\Scenes\PhysicsTestScene2.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">
