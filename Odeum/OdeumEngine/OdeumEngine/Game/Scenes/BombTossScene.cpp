@@ -8,10 +8,24 @@ BombTossScene::BombTossScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2)));
-	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 1.0, 0.2)));
+	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 1.0, 1.0)));
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10.0f, 0.1f, 10.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -1.0f, 0.0f, 0.0f));
+
+	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 1.0f)));
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
+
+	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 1.0f)));
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 0.0f));
+
+	//bomb
+	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 0.0f)));
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -0.4f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 0.6f, 0.6f, 0.0f));
 
 	SceneGraph::Get()->LoadObjectsIntoMemory();
 	SceneGraph::Get()->UpdateObjects(0.0167f);
