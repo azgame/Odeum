@@ -1,5 +1,5 @@
-#ifndef BOMBTOSS_H
-#define BOMBTOSS_H
+#ifndef BOMBTOSSSCENE_H
+#define BOMBTOSSSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
