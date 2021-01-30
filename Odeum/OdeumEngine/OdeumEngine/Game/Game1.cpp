@@ -9,6 +9,7 @@
 #include "Scenes/BombTossScene.h"
 
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
+#include "../Engine/Core/SceneObjects.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -36,9 +37,9 @@ void Game1::Update(const float deltaTime_)
 
 	m_currentScene->Update(deltaTime_);
 
-	SceneGraph::Get()->UpdateObjects(deltaTime_);
-
 	SceneGraph::Get()->LoadGraphicsObjects();
+
+	SceneObjects::Get()->UpdateObjects(deltaTime_);
 }
 
 void Game1::UIRender()
@@ -83,4 +84,6 @@ void Game1::BuildScene()
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
 
 	SceneGraph::Get()->LoadGraphicsObjects();
+
+	SceneObjects::Get()->UpdateObjects(0.0167f);
 }

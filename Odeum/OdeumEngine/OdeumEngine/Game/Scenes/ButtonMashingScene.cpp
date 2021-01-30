@@ -3,18 +3,20 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
 #include "../Components/Rigidbody.h"
+#include "../Components/RenderComponent.h"
 
 ButtonMashingScene::ButtonMashingScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2)));
-	gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 1.0, 0.2)));
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
+	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
-
-	SceneGraph::Get()->LoadGraphicsObjects();
-	SceneGraph::Get()->UpdateObjects(0.0167f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 1.0, 0.2));
 }
 
 ButtonMashingScene::~ButtonMashingScene()
@@ -23,13 +25,11 @@ ButtonMashingScene::~ButtonMashingScene()
 
 bool ButtonMashingScene::Initialize()
 {
-	return false;
+	return true;
 }
 
 void ButtonMashingScene::Update(const float deltaTime_)
 {
-	SceneGraph::Get()->UpdateObjects(deltaTime_);
-
 	if (Input::Get().isKeyPressed(Key::K))
 	{
 		gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(kYUnitVector));

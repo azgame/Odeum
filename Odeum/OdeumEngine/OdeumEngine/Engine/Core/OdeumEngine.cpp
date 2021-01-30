@@ -6,6 +6,7 @@
 #include "../Events/KeyEvent.h"
 #include "EngineProfiling.h"
 #include "JobSystem.h"
+#include "SceneObjects.h"
 
 #include <functional>
 
@@ -114,6 +115,8 @@ void OdeumEngine::Uninitialize()
 	SAFE_DELETE(m_window);
 
  	DXGraphics::Shutdown();
+
+	SceneObjects::Get()->Uninitialize();
 }
 
 bool OdeumEngine::Close(WindowCloseEvent& closeEvent)

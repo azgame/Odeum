@@ -34,16 +34,6 @@ void SceneGraph::LoadGraphicsObjects()
 	}
 }
 
-void SceneGraph::UpdateObjects(float deltaTime)
-{
-	for (auto go : sm_sceneGameObjects)
-		go->Update(deltaTime);
-}
-
 void SceneGraph::Uninitialize()
 {
-	for (auto go : sm_sceneGameObjects)
-		SAFE_DELETE(go);
-
-	sm_sceneGameObjects.clear();
 }

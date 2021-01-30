@@ -8,6 +8,7 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
 #include "../Components/Rigidbody.h"
+#include "../Components/RenderComponent.h"
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -42,16 +43,20 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	
 	for (int i = 0; i < 4; i++)
 	{
-		gameObjects.push_back(new GameObject(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2)));
+		gameObjects.push_back(new GameObject());
 
 		gameObjects[i]->AddComponent<Rigidbody>();
 		gameObjects[i]->GetComponent<Rigidbody>()->SetPosition(Vector4(-16 + (i * 3), 0.0f, -16 + (i * 4), 1.0f));
 		gameObjects[i]->GetComponent<Rigidbody>()->SetRotation(Vector4(kYUnitVector), i * 45.0f);
+		gameObjects[i]->AddComponent<RenderComponent>();
+		gameObjects[i]->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 	}
 
-	gameObjects.push_back(new GameObject("Engine/Resources/Models/Cottage_FREE.obj"));
+	gameObjects.push_back(new GameObject());
 	gameObjects[gameObjects.size() - 1]->AddComponent<Rigidbody>();
 	gameObjects[gameObjects.size() - 1]->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 0.0f, 6.0f, 1.0f));
+	gameObjects[gameObjects.size() - 1]->AddComponent<RenderComponent>();
+	gameObjects[gameObjects.size() - 1]->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cottage_FREE.obj");
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 
@@ -102,7 +107,6 @@ bool GameScene::Initialize()
 void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
-	SceneGraph::Get()->UpdateObjects(deltaTime_);
 }
 
 void GameScene::UIRender()

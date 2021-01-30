@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-#include "../Rendering/DirectX12/SceneGraph.h"
+#include "SceneObjects.h"
 #include "Component.h"
 
 
@@ -9,6 +9,8 @@ GameObject::GameObject(std::string tag_)
 	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	tag = tag_;
+
+	SceneObjects::Get()->AddGameObject(this);
 }
 
 GameObject::~GameObject()

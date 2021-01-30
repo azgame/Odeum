@@ -2,10 +2,7 @@
 #define SCENEGRAPH_H
 
 #include "../../../pch.h"
-#include "../../Core/GameObject.h"
-
 #include "../../../Game/Components/RenderComponent.h"
-
 #include <queue>
 
 class SceneGraph
@@ -26,7 +23,6 @@ public:
 	void AddRenderObject(RenderComponent* go);
 	void RemoveRenderObject(RenderComponent* go);
 	void LoadGraphicsObjects();
-	void UpdateObjects(float deltaTime);
 	void Uninitialize();
 
 	inline std::vector<RenderComponent*>& GetRenderObjects()

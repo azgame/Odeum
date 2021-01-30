@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\SceneObjects.cpp" />
     <ClCompile Include="Game\Components\Ai.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Engine\AI\ActionNode.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\SceneObjects.h" />
     <ClInclude Include="Engine\DataStructures\Graph.h" />
     <ClInclude Include="Engine\Math\CollisionPoints.h" />
     <ClInclude Include="Engine\NavMesh\delaunator.hpp" />
