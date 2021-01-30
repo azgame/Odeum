@@ -7,7 +7,7 @@
 #include "../../Math/D3DMath.h"
 #include "TextureManager.h"
 
-class GameObject;
+class RenderComponent;
 
 class Model
 {
@@ -113,8 +113,8 @@ public:
 
 	Matrix4 m_modelMatrix;
 
-	void SetParent(GameObject* parent) { m_gameObject = parent; }
-	GameObject* m_gameObject;
+	void SetParent(RenderComponent* parent) { m_renderComponent = parent; }
+	RenderComponent* m_renderComponent;
 };
 
 #endif

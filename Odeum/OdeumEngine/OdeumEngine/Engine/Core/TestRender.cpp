@@ -145,9 +145,9 @@ void TestRender::Update(float deltaTime_)
 
 	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
 
-	for (auto object : SceneGraph::Get()->GetGameObjects())
+	for (auto object : SceneGraph::Get()->GetRenderObjects())
 	{
-		vsConstants.model = object->GetTransform();
+		vsConstants.model = object->GetGameObject()->GetTransform();
 		graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
 
 		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());

@@ -2,13 +2,11 @@
 
 #include "../Math/Collider.h"
 #include "../Math/Plane.h"
-
 #include "../Math/CollisionDetection.h"
 
 #include "../DataStructures/Graph.h"
 
 #include "../Rendering/DirectX12/Model.h"
-
 #include "../Rendering/DirectX12/SceneGraph.h"
 
 #include "delaunator.hpp"
@@ -273,7 +271,8 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 
 	Model* model = CreateNavMeshModel(delauney);
 
-	navMesh = new GameObject(model);
+	navMesh = new GameObject();
+	navMesh->AddComponent<RenderComponent>();
 
 	// cachedCollider = nullptr;
 }

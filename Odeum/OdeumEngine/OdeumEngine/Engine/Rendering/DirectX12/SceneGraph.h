@@ -4,6 +4,10 @@
 #include "../../../pch.h"
 #include "../../Core/GameObject.h"
 
+#include "../../../Game/Components/RenderComponent.h"
+
+#include <queue>
+
 class SceneGraph
 {
 public:
@@ -19,13 +23,13 @@ public:
 		return sm_instance.get();
 	}
 
-	void AddGameObject(GameObject* go);
-	void RemoveGameObject(GameObject* go);
-	void LoadObjectsIntoMemory();
+	void AddRenderObject(RenderComponent* go);
+	void RemoveRenderObject(RenderComponent* go);
+	void LoadGraphicsObjects();
 	void UpdateObjects(float deltaTime);
 	void Uninitialize();
 
-	inline std::vector<GameObject*>& GetGameObjects() 
+	inline std::vector<RenderComponent*>& GetRenderObjects()
 	{
 		return sm_sceneGameObjects; 
 	}
@@ -38,7 +42,8 @@ private:
 	static std::unique_ptr<SceneGraph> sm_instance;
 	friend std::default_delete<SceneGraph>;
 
-	static std::vector<GameObject*> sm_sceneGameObjects;
+	static std::queue<RenderComponent*> sm_unloadedObjects;
+	static std::vector<RenderComponent*> sm_sceneGameObjects;
 	static std::mutex sm_mutex;
 };
 

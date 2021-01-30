@@ -4,7 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../../Core/GameObject.h"
+#include "../../../Game/Components/RenderComponent.h"
 
 #include <thread>
 
@@ -197,7 +197,7 @@ void Model::Load()
 
 	LoadTextures();
 
-	m_gameObject->SetBoundingBox(vMin, vMax);
+	m_renderComponent->SetBoundingBox(vMin, vMax);
 
 	isLoaded = true;
 }
