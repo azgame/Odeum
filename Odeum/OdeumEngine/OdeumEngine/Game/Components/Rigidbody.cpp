@@ -59,14 +59,22 @@ void Rigidbody::ApplyForce(Vector4 force)
 
 }
 
+void Rigidbody::ApplyTorque(Vector4 force)
+{
+	if (rb_mass > 0)
+	{
+
+	}
+}
+
 void Rigidbody::AddAngularVelocity(Vector4 velocity)
 {
-	rb_angularVelocity += velocity;
+	//rb_angularVelocity += velocity;
 }
 
 void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
 {
-	rb_angularVelocity += velocity;
+	//rb_angularVelocity += velocity;
 	rb_angleSpeed = angleSpeed;
 }
 

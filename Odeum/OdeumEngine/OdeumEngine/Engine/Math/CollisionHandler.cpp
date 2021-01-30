@@ -130,11 +130,35 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	Vector3 pos1 = sc1.GetPosition();
 	Vector3 pos2 = sc2.GetPosition();
 
-	Vector3 n = pos2 - pos1;
+	Vector3 n = (pos2 - pos1).Normalize();
 
 	Vector3 vi1 = Vector3(sc1.GetRigidbody()->GetVelocity());
 	Vector3 vi2 = Vector3(sc2.GetRigidbody()->GetVelocity());
 
+	Vector3 v = vi2 - vi1;
+
+	float fellingSpeed = Math::Dot(v, n);
+
+	// don't collide in this case
+	if (fellingSpeed >= 0) {
+		return;
+	}
+
+	float speed1 = (2 * m2 * fellingSpeed) / (m1 + m2);
+	float speed2 = (fellingSpeed * (m2 - m1)) / (m1 + m2);
+	sc1.GetRigidbody()->AddVelocity(Vector4(n * speed1));
+	sc2.GetRigidbody()->AddVelocity(Vector4(n * (speed2 - fellingSpeed)));
+
+	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
+	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetRotation());
+
+	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
+	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
+
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+
+	/*
 	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
 	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
 	//Quaternion wi2 = sc2.GetRigidbody()->GetOrientation();
@@ -153,6 +177,32 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
 	sc2.GetRigidbody()->SetVelocity(Vector4(vf2));
 	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+	*/
+	
+	/*
+	Vector3 U1x, U1y, U2x, U2y, V1x, V1y, V2x, V2y;
+
+
+	float m1, m2, x1, x2;
+	Vector3 v1temp, v1, v2, v1x, v2x, v1y, v2y, x(sc1.GetPosition()- sc2.GetPosition());
+
+	x.Normalize();
+	v1 = Vector3(sc1.GetRigidbody()->GetVelocity());
+	x1 = Math::Dot(x, v1);
+	v1x = x * x1;
+	v1y = v1 - v1x;
+	m1 = sc1.GetRigidbody()->GetMass();
+
+	x = x * -1;
+	v2 = Vector3(sc2.GetRigidbody()->GetVelocity());
+	x2 = Math::Dot(x, v2);
+	v2x = x * x2;
+	v2y = v2 - v2x;
+	m2 = sc2.GetRigidbody()->GetMass();
+
+	sc1.GetRigidbody()->SetVelocity(Vector4(v1x * (m1 - m2) / (m1 + m2) + v2x * (2 * m2) / (m1 + m2) + v1y) / 12);
+	sc2.GetRigidbody()->SetVelocity(Vector4(v1x * (2 * m1) / (m1 + m2) + v2x * (m2 - m1) / (m1 + m2) + v2y) / 12);
+	*/
 }
 
 void CollisionHandler::SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc)
@@ -201,8 +251,9 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	cc2.GetRigidbody()->SetVelocity(Vector4(vf2, 1.0f));
 
 	// with inertia?
-	/*Vector3 wf1 = wi1 + (Math::Dot(r1, j * n));
-	Vector3 wf2;
+	/*
+	Vector3 wf1 = wi1 + (Math::Dot(r1, j * n));
+	Vector3 wf2 = wi2 + (Math::Dot(r1, j * n));
 	cc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 1.0f));
 	cc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 1.0f));*/
 }

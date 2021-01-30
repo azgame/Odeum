@@ -15,6 +15,7 @@ public:
 	// movement functions
 	void Transpose(Vector4 translate);
 	void ApplyForce(Vector4 force);
+	void ApplyTorque(Vector4 force);
 	inline void AddVelocity(Vector4 velocity) { rb_totalVelocity += velocity; }
 	void AddAngularVelocity(Vector4 velocity);
 	void AddAngularVelocity(Vector4 velocity, float angleSpeed);

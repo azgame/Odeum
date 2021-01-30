@@ -31,6 +31,8 @@ private:
 	float frameTimeTotal;
 
 	Simplex<Vector3> simplex;
+
+	float t;
 };
 
 #endif
