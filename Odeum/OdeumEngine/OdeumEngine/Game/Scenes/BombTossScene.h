@@ -17,6 +17,9 @@ public:
 
 private:
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> playerObjects;
+
+	int bombTimer = 0;
 };
 
 #endif#pragma once
