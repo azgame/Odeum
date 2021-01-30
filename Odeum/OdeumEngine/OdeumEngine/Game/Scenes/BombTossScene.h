@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-// Scene index 9
+// Scene index 6
 class BombTossScene : public Scene
 {
 public:
