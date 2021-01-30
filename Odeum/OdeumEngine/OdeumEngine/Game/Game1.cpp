@@ -9,6 +9,8 @@
 #include "Scenes/PhysicsTestScene2.h"
 #include "Scenes/GGJTestScene.h"
 #include "Scenes/ButtonMashingScene.h"
+#include "Scenes/BombTossScene.h"
+
 
 
 Game1::Game1() : GameInterface()
@@ -75,6 +77,9 @@ void Game1::BuildScene()
 		break;
 	case 8:
 		m_currentScene = new ButtonMashingScene();
+		break;
+	case 9:
+		m_currentScene = new BombTossScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

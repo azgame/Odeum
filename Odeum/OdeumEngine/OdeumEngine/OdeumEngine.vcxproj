@@ -198,6 +198,7 @@
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\BombTossScene.cpp" />
     <ClCompile Include="Game\Scenes\ButtonMashingScene.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
@@ -314,6 +315,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Game\Scenes\BombTossScene.h" />
     <ClInclude Include="Game\Scenes\ButtonMashingScene.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\GGJTestScene.h" />
