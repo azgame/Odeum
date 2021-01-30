@@ -4,14 +4,9 @@
 #include "Scenes/StartScene.h"
 #include "Scenes/RobScene.h"
 #include "Scenes/BenScene.h"
-#include "Scenes/GJKTestScene.h"
-#include "Scenes/PhysicsTestScene.h"
-#include "Scenes/PhysicsTestScene2.h"
 #include "Scenes/GGJTestScene.h"
 #include "Scenes/ButtonMashingScene.h"
 #include "Scenes/BombTossScene.h"
-
-
 
 Game1::Game1() : GameInterface()
 {
@@ -64,21 +59,12 @@ void Game1::BuildScene()
 		m_currentScene = new BenScene();
 		break;
 	case 4:
-		m_currentScene = new GJKTestScene();
-		break;
-	case 5:
-		m_currentScene = new PhysicsTestScene();
-		break;
-	case 6:
-		m_currentScene = new PhysicsTestScene2();
-		break;
-	case 7:
 		m_currentScene = new GGJTestScene();
 		break;
-	case 8:
+	case 5:
 		m_currentScene = new ButtonMashingScene();
 		break;
-	case 9:
+	case 6:
 		m_currentScene = new BombTossScene();
 		break;
 	default: // case 0
