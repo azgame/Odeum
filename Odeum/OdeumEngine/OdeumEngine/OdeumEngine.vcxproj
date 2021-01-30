@@ -209,7 +209,6 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleEffect.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
-    <ClCompile Include="Game\Scenes\GJKTestScene.cpp" />
     <ClCompile Include="Engine\AI\Inverter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -223,9 +222,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\TextureManager.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
-    <ClCompile Include="Game\Scenes\PhysicsTestScene.cpp" />
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
-    <ClCompile Include="Game\Scenes\PhysicsTestScene2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -328,7 +325,6 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleEffect.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
-    <ClInclude Include="Game\Scenes\GJKTestScene.h" />
     <ClInclude Include="Engine\AI\Inverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
@@ -341,9 +337,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\SamplerDesc.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
-    <ClInclude Include="Game\Scenes\PhysicsTestScene.h" />
     <ClInclude Include="Game\Components\Rigidbody2.h" />
-    <ClInclude Include="Game\Scenes\PhysicsTestScene2.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">

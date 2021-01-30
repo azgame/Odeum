@@ -33,6 +33,7 @@ public:
 	static inline Matrix3 MakeScale(float scale_) { return Matrix3(XMMatrixScaling(scale_, scale_, scale_)); }
 	static inline Matrix3 MakeScale(float sx_, float sy_, float sz_) { return Matrix3(XMMatrixScaling(sx_, sy_, sz_)); }
 	static inline Matrix3 MakeScale(Vector3 scale_) { return Matrix3(XMMatrixScalingFromVector(scale_)); }
+	//static inline Matrix3 MakeInverse(Matrix3 m) { return Matrix3(XMMatrixInverse(nullptr, m)); }
 
 	inline operator XMMATRIX() const { return (const XMMATRIX&)mat; }
 
