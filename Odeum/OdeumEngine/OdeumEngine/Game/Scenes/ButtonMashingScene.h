@@ -11,7 +11,7 @@ public:
 	ButtonMashingScene();
 	virtual ~ButtonMashingScene();
 	int MaxPlayers;
-	 
+	float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
