@@ -28,4 +28,5 @@ private:
 
 	Collider* collider;
 };
+
 #endif
