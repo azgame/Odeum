@@ -5,8 +5,7 @@
 #include "../Components/Rigidbody.h"
 #include "../Components/RenderComponent.h"
 
-BombTossScene::BombTossScene()
-{
+BombTossScene::BombTossScene() {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
 	// floor (0)
@@ -45,17 +44,13 @@ BombTossScene::BombTossScene()
 	bombTimer = 100;
 }
 
-BombTossScene::~BombTossScene()
-{
-}
+BombTossScene::~BombTossScene(){}
 
-bool BombTossScene::Initialize()
-{
+bool BombTossScene::Initialize() {
 	return true;
 }
 
-void BombTossScene::Update(const float deltaTime_)
-{
+void BombTossScene::Update(const float deltaTime_) {
 	if (Input::Get().isKeyPressed(Key::L)) {
 		gameObjects.at(1)->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX(), 1.6f, playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetZ(), 0.0f));
 	}
