@@ -174,6 +174,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 
 	Vector3 vi1 = Vector3(cc1.GetRigidbody()->GetVelocity());
 	Vector3 vi2 = Vector3(cc2.GetRigidbody()->GetVelocity());
+	Vector3 wi1 = Vector3(cc1.GetRigidbody()->GetAngularVelocity());
+	Vector3 wi2 = Vector3(cc2.GetRigidbody()->GetAngularVelocity());
 
 	float m1 = cc1.GetRigidbody()->GetMass();
 	float m2 = cc2.GetRigidbody()->GetMass();
@@ -197,4 +199,10 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 
 	cc1.GetRigidbody()->SetVelocity(Vector4(vf1, 1.0f));
 	cc2.GetRigidbody()->SetVelocity(Vector4(vf2, 1.0f));
+
+	// with inertia?
+	/*Vector3 wf1 = wi1 + (Math::Dot(r1, j * n));
+	Vector3 wf2;
+	cc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 1.0f));
+	cc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 1.0f));*/
 }

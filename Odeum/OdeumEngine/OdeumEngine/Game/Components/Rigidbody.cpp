@@ -16,6 +16,9 @@ void Rigidbody::OnAttach(GameObject* parent)
 
 	rb_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	rb_mass = 1.0f;
+
+	rb_massDensity = 1.0f;
+	rb_volume = 1.0f;
 }
 
 // update position based on acceleration and velocity
@@ -87,4 +90,24 @@ void Rigidbody::UpdateOrientationQuaternion()
 
 	// update the orientation
 	rb_orientation = Quaternion(Vector4(rb_orientation + (rb_orientation * angVel * 0.5f * rb_angleSpeed)).Normalize());
+}
+
+// this should be changed to differ based on the shape - this is just a basic version
+void Rigidbody::UpdateInertiaTensor()
+{
+	rb_inertiaTensor.SetX(Vector3(
+		(rb_position.GetZ() * rb_position.GetZ() + rb_position.GetY() * rb_position.GetY()) * rb_massDensity * rb_volume,
+		-(rb_position.GetY() * rb_position.GetX()) * rb_massDensity * rb_volume,
+		-(rb_position.GetZ() * rb_position.GetX()) * rb_massDensity * rb_volume));
+	rb_inertiaTensor.SetY(Vector3(
+		-(rb_position.GetX() * rb_position.GetY()) * rb_massDensity * rb_volume,
+		(rb_position.GetZ() * rb_position.GetZ() + rb_position.GetX() * rb_position.GetX()) * rb_massDensity * rb_volume,
+		-(rb_position.GetZ() * rb_position.GetY()) * rb_massDensity * rb_volume));
+	rb_inertiaTensor.SetZ(Vector3(
+		-(rb_position.GetX() * rb_position.GetZ()) * rb_massDensity * rb_volume,
+		-(rb_position.GetY() * rb_position.GetZ()) * rb_massDensity * rb_volume,
+		(rb_position.GetX() * rb_position.GetX() + rb_position.GetY() * rb_position.GetY()) * rb_massDensity * rb_volume));
+
+	rb_inertiaTensorInv = Matrix3(DirectX::XMMatrixInverse(nullptr, rb_inertiaTensor));
+	rb_momentOfInertiaSphere = (2.0f / 5.0f) * rb_mass * rb_radius * rb_radius;
 }

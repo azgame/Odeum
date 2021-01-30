@@ -33,8 +33,6 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	//go2->AddComponent<SphereCollider>();
 	go2->AddComponent<ComplexCollider>();
 	SceneGraph::Get()->LoadObjectsIntoMemory();
-
-
 }
 
 BenScene::~BenScene()
