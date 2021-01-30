@@ -8,7 +8,6 @@
 #include "../Game/Components/ComplexCollider.h"
 
 struct Ray;
-struct BoundingBox;
 struct OrientedBoundingBox;
 struct Collider;
 struct Collider2D;

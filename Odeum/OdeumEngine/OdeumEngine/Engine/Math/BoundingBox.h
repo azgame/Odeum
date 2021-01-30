@@ -137,44 +137,44 @@ private:
 	}
 };
 
-struct BoundingBox
-{
-	Vector3 min, max;
-	Matrix4 transform;
-
-	BoundingBox()
-	{
-		min = Vector3(kZero);
-		max = Vector3(kIdentity);
-		transform = Matrix4(kIdentity);
-	}
-
-	BoundingBox(Vector3 Min, Vector3 Max, Matrix4 Transform)
-	{
-		min = Min;
-		max = Max;
-		transform = Transform;
-	}
-
-	bool Intersects(BoundingBox& bbox)
-	{
-		Vector3 minCorner = TransformPoint(min, transform);
-		Vector3 maxCorner = TransformPoint(max, transform);
-		Vector3 bMinCorner = TransformPoint(bbox.min, bbox.transform);
-		Vector3 bMaxCorner = TransformPoint(bbox.max, bbox.transform);
-
-		return (minCorner.GetX() <= bMaxCorner.GetX() && maxCorner.GetX() >= bMinCorner.GetX()) &&
-			(minCorner.GetY() <= bMaxCorner.GetY() && maxCorner.GetY() >= bMinCorner.GetY()) &&
-			(minCorner.GetZ() <= bMaxCorner.GetZ() && maxCorner.GetZ() >= bMinCorner.GetZ());
-	}
-
-	Vector3 TransformPoint(Vector3 Point, Matrix4 Transform)
-	{
-		Vector3 v(transform.GetX().GetW(), transform.GetY().GetW(), transform.GetZ().GetW());
-		return v + Point;
-	}
-
-private:
-};
+//struct BoundingBox
+//{
+//	Vector3 min, max;
+//	Matrix4 transform;
+//
+//	BoundingBox()
+//	{
+//		min = Vector3(kZero);
+//		max = Vector3(kIdentity);
+//		transform = Matrix4(kIdentity);
+//	}
+//
+//	BoundingBox(Vector3 Min, Vector3 Max, Matrix4 Transform)
+//	{
+//		min = Min;
+//		max = Max;
+//		transform = Transform;
+//	}
+//
+//	bool Intersects(BoundingBox& bbox)
+//	{
+//		Vector3 minCorner = TransformPoint(min, transform);
+//		Vector3 maxCorner = TransformPoint(max, transform);
+//		Vector3 bMinCorner = TransformPoint(bbox.min, bbox.transform);
+//		Vector3 bMaxCorner = TransformPoint(bbox.max, bbox.transform);
+//
+//		return (minCorner.GetX() <= bMaxCorner.GetX() && maxCorner.GetX() >= bMinCorner.GetX()) &&
+//			(minCorner.GetY() <= bMaxCorner.GetY() && maxCorner.GetY() >= bMinCorner.GetY()) &&
+//			(minCorner.GetZ() <= bMaxCorner.GetZ() && maxCorner.GetZ() >= bMinCorner.GetZ());
+//	}
+//
+//	Vector3 TransformPoint(Vector3 Point, Matrix4 Transform)
+//	{
+//		Vector3 v(transform.GetX().GetW(), transform.GetY().GetW(), transform.GetZ().GetW());
+//		return v + Point;
+//	}
+//
+//private:
+//};
 
 #endif

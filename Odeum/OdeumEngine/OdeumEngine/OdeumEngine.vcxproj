@@ -166,6 +166,7 @@
     <ClCompile Include="Engine\Math\CollisionHandler.cpp" />
     <ClCompile Include="Engine\Math\OctSpatialPartition.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
+    <ClCompile Include="Game\Components\ColliderComponent.cpp" />
     <ClCompile Include="Game\Components\ComplexCollider.cpp" />
     <ClCompile Include="Game\Components\SphereCollider.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Engine\Core\GameObject.cpp" />
     <ClCompile Include="Game\Components\Rigidbody.cpp" />
     <ClCompile Include="Game\Game1.cpp" />
+    <ClCompile Include="Game\Scenes\ButtonMashingScene.cpp" />
     <ClCompile Include="Game\Scenes\GameScene.cpp" />
     <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
@@ -256,6 +258,7 @@
     <ClInclude Include="Engine\Math\OctSpatialPartition.h" />
     <ClInclude Include="Engine\Math\Ray.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
+    <ClInclude Include="Game\Components\ColliderComponent.h" />
     <ClInclude Include="Game\Components\ComplexCollider.h" />
     <ClInclude Include="Game\Components\SphereCollider.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
@@ -314,6 +317,7 @@
     <ClInclude Include="Engine\Core\GameObject.h" />
     <ClInclude Include="Game\Components\Rigidbody.h" />
     <ClInclude Include="Game\Game1.h" />
+    <ClInclude Include="Game\Scenes\ButtonMashingScene.h" />
     <ClInclude Include="Game\Scenes\GameScene.h" />
     <ClInclude Include="Game\Scenes\GGJTestScene.h" />
     <ClInclude Include="Game\Scenes\RobScene.h" />
