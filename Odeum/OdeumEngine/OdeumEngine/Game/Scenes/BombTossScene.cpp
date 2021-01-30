@@ -35,7 +35,6 @@ BombTossScene::BombTossScene()
 	// bomb (1)
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.at(1)->GetComponent<Rigidbody>()->GetPosition().GetZ();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.at(0)->GetComponent<Rigidbody>()->GetPosition().GetX(), 1.6f, playerObjects.at(0)->GetComponent<Rigidbody>()->GetPosition().GetZ(), 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 0.6f, 0.6f, 0.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
