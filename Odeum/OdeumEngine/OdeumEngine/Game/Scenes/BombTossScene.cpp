@@ -14,9 +14,9 @@ BombTossScene::BombTossScene()
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10.0f, 0.1f, 10.0f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -1.0f, 0.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -1.0f, 0.0f, 0.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 1.0, 1.0));
+	gameObjects.back()->SetTag("Floor");
 
 	// p1 (0)
 	playerObjects.push_back(new GameObject());
@@ -24,6 +24,7 @@ BombTossScene::BombTossScene()
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
 	playerObjects.back()->AddComponent<RenderComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 1.0f));
+	playerObjects.back()->SetTag("Player");
 
 	// p2 (1)
 	playerObjects.push_back(new GameObject());
@@ -31,6 +32,7 @@ BombTossScene::BombTossScene()
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 0.0f, 0.0f));
 	playerObjects.back()->AddComponent<RenderComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 1.0f));
+	playerObjects.back()->SetTag("Player");
 
 	// bomb (1)
 	gameObjects.push_back(new GameObject());
@@ -39,7 +41,7 @@ BombTossScene::BombTossScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 0.6f, 0.6f, 0.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 0.0f));
-
+	gameObjects.back()->SetTag("Bomb");
 	bombTimer = 100;
 }
 
