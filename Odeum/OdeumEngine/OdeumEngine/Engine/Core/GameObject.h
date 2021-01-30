@@ -14,9 +14,7 @@ class GameObject
 	friend class Rigidbody;
 
 public:
-	GameObject(std::string fileName, std::string tag = "Default");
-	GameObject(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f), std::string tag = "Default");
-	GameObject(Model* Model);
+	GameObject(std::string tag_ = "Default");
 	~GameObject();
 
 	void Initialize(std::string modelTextureLoadFile);
@@ -37,7 +35,6 @@ public:
 	template<typename... Ts>
 	void RemoveComponents();
 
-	Model& GetModel() { return m_model; }
 	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
 	OrientedBoundingBox& GetBoundingBox() { return bbox; }
 	void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
@@ -52,8 +49,8 @@ public:
 
 protected:
 
-	Model m_model;
 	Matrix4 m_modelMatrix;
+	
 	OrientedBoundingBox bbox;
 	bool isHit;
 

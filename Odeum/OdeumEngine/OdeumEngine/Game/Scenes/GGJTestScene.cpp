@@ -15,8 +15,6 @@ GGJTestScene::GGJTestScene()
 		gameObjects[i]->AddComponent<Rigidbody>();
 		gameObjects[i]->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 3, 0.0f, i * 4, 1.0f));
 	}
-
-	SceneGraph::Get()->LoadObjectsIntoMemory();
 }
 
 GGJTestScene::~GGJTestScene()
@@ -30,7 +28,6 @@ bool GGJTestScene::Initialize()
 
 void GGJTestScene::Update(const float deltaTime_)
 {
-	SceneGraph::Get()->UpdateObjects(deltaTime_);
 }
 
 void GGJTestScene::UIRender()

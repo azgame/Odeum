@@ -32,7 +32,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -2.0f, 0.0f, 1.0f));
 	//go2->AddComponent<SphereCollider>();
 	go2->AddComponent<ComplexCollider>();
-	SceneGraph::Get()->LoadObjectsIntoMemory();
+	SceneGraph::Get()->LoadGraphicsObjects();
 
 
 }

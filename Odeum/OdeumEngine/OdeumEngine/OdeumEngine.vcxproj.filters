@@ -85,6 +85,7 @@
     <ClCompile Include="Game\Scenes\GGJTestScene.cpp" />
     <ClCompile Include="Game\Components\ColliderComponent.cpp" />
     <ClCompile Include="Game\Scenes\ButtonMashingScene.cpp" />
+    <ClCompile Include="Game\Components\RenderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Utility.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Game\Scenes\GGJTestScene.h" />
     <ClInclude Include="Game\Components\ColliderComponent.h" />
     <ClInclude Include="Game\Scenes\ButtonMashingScene.h" />
+    <ClInclude Include="Game\Components\RenderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

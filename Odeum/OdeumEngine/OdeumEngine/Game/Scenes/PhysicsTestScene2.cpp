@@ -13,7 +13,7 @@ PhysicsTestScene2::PhysicsTestScene2()
 
 	InitObjects();
 
-	SceneGraph::Get()->LoadObjectsIntoMemory();
+	SceneGraph::Get()->LoadGraphicsObjects();
 
 	SceneGraph::Get()->UpdateObjects(0.0167f);
 }

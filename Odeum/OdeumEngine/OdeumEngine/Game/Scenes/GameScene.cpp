@@ -53,7 +53,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	gameObjects[gameObjects.size() - 1]->AddComponent<Rigidbody>();
 	gameObjects[gameObjects.size() - 1]->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 0.0f, 6.0f, 1.0f));
 
-	SceneGraph::Get()->LoadObjectsIntoMemory();
+	SceneGraph::Get()->LoadGraphicsObjects();
 
 	std::vector<Collider2D> obstacles;
 

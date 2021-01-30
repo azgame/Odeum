@@ -10,6 +10,8 @@
 #include "Scenes/GGJTestScene.h"
 #include "Scenes/ButtonMashingScene.h"
 
+#include "../Engine/Rendering/DirectX12/SceneGraph.h"
+
 Game1::Game1() : GameInterface()
 {
 }
@@ -35,6 +37,10 @@ void Game1::Update(const float deltaTime_)
 	}
 
 	m_currentScene->Update(deltaTime_);
+
+	SceneGraph::Get()->UpdateObjects(deltaTime_);
+
+	SceneGraph::Get()->LoadGraphicsObjects();
 }
 
 void Game1::UIRender()
@@ -83,4 +89,6 @@ void Game1::BuildScene()
 	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
+
+	SceneGraph::Get()->LoadGraphicsObjects();
 }

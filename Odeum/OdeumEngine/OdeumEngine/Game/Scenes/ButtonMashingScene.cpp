@@ -13,7 +13,7 @@ ButtonMashingScene::ButtonMashingScene()
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
 
-	SceneGraph::Get()->LoadObjectsIntoMemory();
+	SceneGraph::Get()->LoadGraphicsObjects();
 	SceneGraph::Get()->UpdateObjects(0.0167f);
 }
 

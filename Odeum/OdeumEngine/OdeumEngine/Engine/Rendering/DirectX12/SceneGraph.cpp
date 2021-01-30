@@ -1,17 +1,18 @@
 #include "SceneGraph.h"
 
-std::vector<GameObject*> SceneGraph::sm_sceneGameObjects;
+std::queue<RenderComponent*> SceneGraph::sm_unloadedObjects;
+std::vector<RenderComponent*> SceneGraph::sm_sceneGameObjects;
 std::mutex SceneGraph::sm_mutex;
 std::unique_ptr<SceneGraph> SceneGraph::sm_instance = nullptr;
 
-void SceneGraph::AddGameObject(GameObject* go)
+void SceneGraph::AddRenderObject(RenderComponent* go)
 {
 	std::lock_guard<std::mutex> lg(sm_mutex);
 
-	sm_sceneGameObjects.push_back(go);
+	sm_unloadedObjects.push(go);
 }
 
-void SceneGraph::RemoveGameObject(GameObject* go)
+void SceneGraph::RemoveRenderObject(RenderComponent* go)
 {
 	std::lock_guard<std::mutex> lg(sm_mutex);
 
@@ -20,11 +21,17 @@ void SceneGraph::RemoveGameObject(GameObject* go)
 		sm_sceneGameObjects.erase(it);
 }
 
-void SceneGraph::LoadObjectsIntoMemory()
+void SceneGraph::LoadGraphicsObjects()
 {
-	for (auto go : sm_sceneGameObjects)
+	while (!sm_unloadedObjects.empty())
+	{
+		auto go = sm_unloadedObjects.front(); sm_unloadedObjects.pop();
+
 		if (!go->GetModel().isLoaded)
 			go->GetModel().Load();
+
+		sm_sceneGameObjects.push_back(go);
+	}
 }
 
 void SceneGraph::UpdateObjects(float deltaTime)
