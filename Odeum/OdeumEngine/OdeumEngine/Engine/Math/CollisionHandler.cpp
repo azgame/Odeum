@@ -211,49 +211,62 @@ void CollisionHandler::SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxC
 
 void CollisionHandler::OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2)
 {
-
 }
 
 void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollider& cc2, Simplex<Vector3>& simplex)
 {	
+	ASSERT(cc1.GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
+	ASSERT(cc2.GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
+
+	Rigidbody* r1 = cc1.GetGameObject()->GetComponent<Rigidbody>();
+	Rigidbody* r2 = cc2.GetGameObject()->GetComponent<Rigidbody>();
+
 	CollisionPoints collisionPoints = Math::EPA(cc1.GetCollider(), cc2.GetCollider(), simplex);
+
+	//Vector3 P = simplex.GetCentroid();
+
+	if (collisionPoints.penetrationDepth < 0.01f)
+		return;
 
 	Vector3 n = collisionPoints.normal;
 	// hardcoding coefficient of restitution for now - 0 is no bounce, 1 is super bounce
 	float e = 0.8f;
 
-	Vector3 vi1 = Vector3(cc1.GetRigidbody()->GetVelocity());
-	Vector3 vi2 = Vector3(cc2.GetRigidbody()->GetVelocity());
-	Vector3 wi1 = Vector3(cc1.GetRigidbody()->GetAngularVelocity());
-	Vector3 wi2 = Vector3(cc2.GetRigidbody()->GetAngularVelocity());
+	Vector3 vi1 = Vector3(r1->GetVelocity());
+	Vector3 vi2 = Vector3(r2->GetVelocity());
+	Vector3 wi1 = Vector3(r1->GetAngularVelocity());
+	Vector3 wi2 = Vector3(r2->GetAngularVelocity());
 
-	float m1 = cc1.GetRigidbody()->GetMass();
-	float m2 = cc2.GetRigidbody()->GetMass();
+	float m1 = r1->GetMass();
+	float m2 = r2->GetMass();
 
 	// want to try and find the point of intersection for more realistic 
 	// i'm just finding the middle of the distance between the centers of each body for now
 	// **** NEEDS TO BE CHANGED **** - this seems like the tough part
-	Vector3 p = (Vector3(cc1.GetRigidbody()->GetPosition()) + Vector3(cc2.GetRigidbody()->GetPosition())) / 2.0f;
 
-	Vector3 r1 = p - Vector3(cc1.GetRigidbody()->GetPosition());
-	Vector3 r2 = p - Vector3(cc2.GetRigidbody()->GetPosition());
+	Vector3 P = (cc1.GetPosition() + cc2.GetPosition()) / 2.0f;
+
+
+	Vector3 pos1 = P - cc1.GetPosition();
+	Vector3 pos2 = P - cc2.GetPosition();
 
 	Vector3 vi12 = vi1 - vi2;
 
-	// impulse without inertia (for now)
+	// with inertia?
+	float i1 = r1->GetMomentOfInertiaSphere();
+	float i2 = r2->GetMomentOfInertiaSphere();
 
-	float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)));
+	//float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)));
+	float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)) + (Math::Dot(pos1, n) * Math::Dot(pos1, n) / i1) + (Math::Dot(pos2, n) * Math::Dot(pos2, n) / i2));
 
 	Vector3 vf1 = vi1 + n * (j / m1);
 	Vector3 vf2 = vi2 - n * (j / m2);
 
-	cc1.GetRigidbody()->SetVelocity(Vector4(vf1, 1.0f));
-	cc2.GetRigidbody()->SetVelocity(Vector4(vf2, 1.0f));
+	r1->SetVelocity(Vector4(vf1, 1.0f));
+	r2->SetVelocity(Vector4(vf2, 1.0f));
 
-	// with inertia?
-	/*
-	Vector3 wf1 = wi1 + (Math::Dot(r1, j * n));
-	Vector3 wf2 = wi2 + (Math::Dot(r1, j * n));
-	cc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 1.0f));
-	cc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 1.0f));*/
+	Vector3 wf1 = wi1 + Math::Cross(pos1, n * j) / i1;
+	Vector3 wf2 = wi2 - Math::Cross(pos2, n * j) / i2;
+	r1->SetAngularVelocity(Vector4(wf1, 1.0f));
+	r2->SetAngularVelocity(Vector4(wf2, 1.0f));
 }

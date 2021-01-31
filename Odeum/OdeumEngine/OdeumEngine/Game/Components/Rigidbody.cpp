@@ -38,6 +38,9 @@ void Rigidbody::Update(float deltaTime)
 
 	// Update Transform
 	UpdateTransform();
+
+	// Update Inertia Tensor
+	UpdateInertiaTensor();
 }
 
 // translate the position
@@ -69,12 +72,12 @@ void Rigidbody::ApplyTorque(Vector4 force)
 
 void Rigidbody::AddAngularVelocity(Vector4 velocity)
 {
-	//rb_angularVelocity += velocity;
+	rb_angularVelocity += velocity;
 }
 
 void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
 {
-	//rb_angularVelocity += velocity;
+	rb_angularVelocity += velocity;
 	rb_angleSpeed = angleSpeed;
 }
 
@@ -82,8 +85,9 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
 void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
-	Vector3 axisOfRotation_ = Math::Cross(Vector3(rb_totalVelocity), Vector3(rb_angularVelocity));
-	
+	//Vector3 axisOfRotation_ = Math::Cross(Vector3(rb_totalVelocity), Vector3(rb_angularVelocity));
+	Vector3 axisOfRotation_ = Vector3(rb_angularVelocity);
+
 	// normalize
 	if (axisOfRotation_.Mag() == 0)
 	{
