@@ -11,7 +11,7 @@
 
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
 #include "../Engine/Core/SceneObjects.h"
-
+#include "Scenes/counting.h"
 Game1::Game1() : GameInterface()
 {
 }
@@ -77,6 +77,9 @@ void Game1::BuildScene()
 		break;
 	case 7:
 		m_currentScene = new QuickDrawScene();
+		break;
+	case 8:
+		m_currentScene = new Counting();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

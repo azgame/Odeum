@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Scenes\counting.cpp" />
     <ClCompile Include="Engine\Core\SceneObjects.cpp" />
     <ClCompile Include="Game\Components\Ai.cpp" />
     <ClCompile Include="App.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Scenes\counting.h" />
     <ClInclude Include="Engine\Core\SceneObjects.h" />
     <ClInclude Include="Engine\DataStructures\Graph.h" />
     <ClInclude Include="Engine\Math\CollisionPoints.h" />
