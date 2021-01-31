@@ -38,6 +38,23 @@ public:
 		s_points[i] = p;
 	}
 
+	inline T GetCentroid()
+	{
+		T sum;
+
+		for (int i = 0; i < s_size; i++)
+		{
+			sum += s_points[i];
+		}
+
+		return sum / 4.0f;
+	}
+
+	inline T GetClosestPoint ()
+	{
+
+	}
+
 	T& operator[] (int i) { return s_points[i]; }
 
 	size_t Size() const { return s_size; }

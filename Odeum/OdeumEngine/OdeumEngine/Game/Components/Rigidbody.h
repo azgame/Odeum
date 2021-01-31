@@ -28,6 +28,7 @@ public:
 	inline Vector4 GetAcceleration() { return rb_totalAcceleration; }
 	inline Vector4 GetScale() { return rb_scale; }
 	inline float GetRadius() { return rb_radius; }
+	inline float GetMomentOfInertiaSphere() { return rb_momentOfInertiaSphere; }
 
 
 	// gotta change this
