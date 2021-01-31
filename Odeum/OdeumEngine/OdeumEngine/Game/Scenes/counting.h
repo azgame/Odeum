@@ -25,6 +25,7 @@ private:
 	float timeToWin;
 	bool won;
 	int maxCount;
+	int count;
 	int MaxPlayers;
 };
 

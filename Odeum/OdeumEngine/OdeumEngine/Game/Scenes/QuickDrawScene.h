@@ -17,11 +17,13 @@ public:
 
 private:
 	std::vector<GameObject*> players;
+	std::vector<GameObject*> gameObjects;
 	std::vector<float> playerShootTimer;
 	std::vector<int> playerScore;
 	int maxScore;
 	int maxPlayers;
 	bool targetHit ;
+	bool won ;
 	float timeUntilTarget;
 	std::vector<Key::KeyCode> playerKeys;
 	

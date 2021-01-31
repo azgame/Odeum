@@ -5,12 +5,16 @@
 
 #include "../Components/Rigidbody.h"
 #include "../Components/RenderComponent.h"
-
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>  
 Counting::Counting()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 	MaxPlayers = 4;
-	maxCount = 15;
+	
+	srand(time(NULL));
+	maxCount = rand() % 40 + 20;
+	count = maxCount;
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		players.push_back(new GameObject());
@@ -46,17 +50,19 @@ void Counting::Update(const float deltaTime_)
 	if (!won)
 	{
 		timeToSpawn -= deltaTime_;
-		if (timeToSpawn <= 0&&maxCount>0)
+		if (timeToSpawn <= 0&&count>0)
 		{
-			timeToSpawn = 0.5f;
-			maxCount -= 1;
+			
+			
+			timeToSpawn = rand() % 1+0.4f;
+			count -= 1;
 			gameObjects.push_back(new GameObject());
 			gameObjects.back()->AddComponent<Rigidbody>();
-			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-1, 0, 0, 0));
-			gameObjects.back()->GetComponent<Rigidbody>()->SetVelocity(Vector4(2, 0, 0, 0));
+			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-30, 0, rand() % 14 , 0));
+			gameObjects.back()->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 16 + 2.2f, 0, 0, 0));
 			gameObjects.back()->AddComponent<RenderComponent>();
-			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.2f, 0.5f, 0.5f));
-			if (maxCount <= 0)
+			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 2, rand() % 2, rand() % 2));
+			if (count == 0)
 			{
 				timeToWin = 5.0f;
 			}
@@ -91,5 +97,11 @@ void Counting::UIRender()
 		ImGui::Text(textchar);
 		
 	}
+	std::string text = "MaxCount" + std::to_string(maxCount);
+	const char* textchar = text.c_str();
+	ImGui::Text(textchar);
+	text = "count" + std::to_string(count);
+	 textchar = text.c_str();
+	ImGui::Text(textchar);
 	ImGui::End();
 }
