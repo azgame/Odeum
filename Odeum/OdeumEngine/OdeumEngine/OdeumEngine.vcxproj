@@ -226,6 +226,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.cpp" />
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
+    <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\SceneObjects.h" />
@@ -344,6 +345,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\Buffers\ReadbackBuffer.h" />
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Components\Rigidbody2.h" />
+    <ClInclude Include="Game\Scenes\QuickDrawScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">

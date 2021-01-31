@@ -7,6 +7,7 @@
 #include "Scenes/GGJTestScene.h"
 #include "Scenes/ButtonMashingScene.h"
 #include "Scenes/BombTossScene.h"
+#include "Scenes/QuickDrawScene.h"
 
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
 #include "../Engine/Core/SceneObjects.h"
@@ -73,6 +74,9 @@ void Game1::BuildScene()
 		break;
 	case 6:
 		m_currentScene = new BombTossScene();
+		break;
+	case 7:
+		m_currentScene = new QuickDrawScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

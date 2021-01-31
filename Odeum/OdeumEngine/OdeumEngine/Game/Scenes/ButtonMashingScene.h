@@ -20,6 +20,7 @@ private:
 	std::vector<GameObject*> gameObjects;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;
+	bool won;
 };
 
 #endif

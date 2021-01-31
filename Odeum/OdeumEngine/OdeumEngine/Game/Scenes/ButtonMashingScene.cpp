@@ -1,7 +1,7 @@
 #include "ButtonMashingScene.h"
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
-
+#include <math.h>
 #include "../Components/Rigidbody.h"
 #include "../Components/RenderComponent.h"
 
@@ -40,27 +40,36 @@ void ButtonMashingScene::Update(const float deltaTime_)
 	timeToStart -= deltaTime_;
 	//gameObjects.back()->GetComponent<Rigidbody>()->
 	//gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(0, -0.05, 0, 0));
-	if(timeToStart<=0)
-	for (int i = 0; i < gameObjects.size(); i++)
+	if (!won)
 	{
-		if(gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
-		gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.002, 0, 0));
-		else
-			gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-		if (Input::Get().isKeyPressed(playerKeys.at(i)))
-		{
-			if (!playerPressed.at(i))
-				gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.5f, 0, 0));
-			playerPressed.at(i) = true;
-			
-		}
-		else
-		{
-			playerPressed.at(i) = false;
-		}
+		if (timeToStart <= 0)
+			for (int i = 0; i < gameObjects.size(); i++)
+			{
+				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
+					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.002, 0, 0));
+				else
+					gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+				if (Input::Get().isKeyPressed(playerKeys.at(i)))
+				{
+					if (!playerPressed.at(i))
+						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.5f, 0, 0));
+					playerPressed.at(i) = true;
 
+				}
+				else
+				{
+					playerPressed.at(i) = false;
+				}
+
+			}
 	}
-
+	else
+	{
+		for (int i = 0; i < gameObjects.size(); i++)
+		{
+			gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+		}
+	}
 	
 	
 
@@ -75,9 +84,9 @@ void ButtonMashingScene::UIRender()
 	{
 		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 15.0f)
 		{
-			std::string text = "Player "+i;
+			std::string text  = "Player"+std::to_string(i+1)+" Wins";
 			const char* textchar = text.c_str();
-			
+			won = true;
 			ImGui::Text(textchar);
 		}
 		
@@ -85,6 +94,11 @@ void ButtonMashingScene::UIRender()
 	if (timeToStart > 0)
 	{
 		ImGui::Text("wait for it");
+		
+		std::string timeText = std::to_string(ceil(timeToStart));
+		const char* timechar = timeText.c_str();
+		
+		ImGui::Text(timechar);
 	}
 	else
 	{ 
