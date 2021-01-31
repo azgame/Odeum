@@ -41,7 +41,7 @@ void Counting::Update(const float deltaTime_)
 {
 	if (timeToWin > 0)
 	{
-		timeToWin - deltaTime_;
+		timeToWin -= deltaTime_;
 	}
 	else
 	{
@@ -61,10 +61,11 @@ void Counting::Update(const float deltaTime_)
 			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-30, 0, rand() % 14 , 0));
 			gameObjects.back()->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 16 + 2.2f, 0, 0, 0));
 			gameObjects.back()->AddComponent<RenderComponent>();
-			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 2, rand() % 2, rand() % 2));
+			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
+			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(50, 250, 0.0));
 			if (count == 0)
 			{
-				timeToWin = 5.0f;
+				timeToWin = 10.0f;
 			}
 		}
 		for (int i = 0; i < players.size(); i++)
@@ -97,11 +98,18 @@ void Counting::UIRender()
 		ImGui::Text(textchar);
 		
 	}
+	if (won)
+	{
+
+	}
 	std::string text = "MaxCount" + std::to_string(maxCount);
 	const char* textchar = text.c_str();
 	ImGui::Text(textchar);
 	text = "count" + std::to_string(count);
 	 textchar = text.c_str();
+	ImGui::Text(textchar);
+	text = "time to win" + std::to_string(timeToWin);
+	textchar = text.c_str();
 	ImGui::Text(textchar);
 	ImGui::End();
 }
