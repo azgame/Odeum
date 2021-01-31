@@ -12,14 +12,18 @@ enum ColliderType
 	None
 };
 
-class ColliderComponent : Component
+class ColliderComponent : public Component
 {
 public:
+
+	void OnAttach(GameObject* parent) override;
+	void OnDetach() {};
+
 	ColliderType GetColliderType() { return m_type; }
 
 	bool isTrigger = false;
 
-private:
+protected:
 
 	ColliderType m_type = ColliderType::None;
 };

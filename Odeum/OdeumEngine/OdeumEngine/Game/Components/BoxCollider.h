@@ -2,22 +2,23 @@
 #define BOXCOLLIDER_H
 
 #include "../../pch.h"
-#include "../../Engine/Core/Component.h"
+#include "ColliderComponent.h"
 
-class BoxCollider : public Component
+class BoxCollider : public ColliderComponent
 {
 public:
-	// overridden functions
+	
+	BoxCollider();
+
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
-	//void Update(float deltaTime) override;
 
 	// Getters
 	inline OrientedBoundingBox* GetBoundingBox() { return obb; }
-
 	inline void SetBoundingBox(OrientedBoundingBox* obb_) { obb = obb_; }
 
 private:
 	OrientedBoundingBox* obb;
 };
+
 #endif

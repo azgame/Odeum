@@ -23,9 +23,13 @@ public:
 	OrientedBoundingBox& GetBoundingBox() { return modelOBB; }
 	void SetBoundingBox(Vector3 Min, Vector3 Max) { modelOBB = OrientedBoundingBox(Min, Max); }
 
+	bool IsRendered() { return isRendered; }
+	void ToggleRender() { isRendered != isRendered; }
+
 private:
 	Model m_model;
 	OrientedBoundingBox modelOBB;
+	bool isRendered;
 };
 
 #endif

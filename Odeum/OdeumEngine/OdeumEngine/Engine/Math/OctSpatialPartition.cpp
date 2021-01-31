@@ -296,7 +296,12 @@ void OctSpatialPartition::UpdatePartitionCell(OctNode* cell_)
 				std::remove(cell_->m_objectList.begin(), cell_->m_objectList.end(), go);
 				AddObject(go);
 			}
+
+			// Check if object collides with other objects in list using simple colliders
+			// if they do, check to see if either have complex colliders
+			// if they do, do gjk
 		}
+
 		return;
 	}
 

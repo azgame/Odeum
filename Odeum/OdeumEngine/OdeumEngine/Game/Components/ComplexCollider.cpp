@@ -1,10 +1,14 @@
 #include "ComplexCollider.h"
 
-void ComplexCollider::OnAttach(GameObject* parent) {
-	m_gameObject = parent;
-	rb = parent->GetComponent<Rigidbody>();
-	cc_position = Vector3(rb->GetPosition());
-	
+ComplexCollider::ComplexCollider()
+{
+	m_type = ColliderType::Complex;
+}
+
+void ComplexCollider::OnAttach(GameObject* parent) 
+{	
+	BoxCollider::OnAttach(parent);
+
 	// default to box collider for now
 	std::vector<Vector3> vertices;
 	Vector3 nextVertex = Vector3(-1.0f, -1.0f, -1.0f);
@@ -27,17 +31,14 @@ void ComplexCollider::OnAttach(GameObject* parent) {
 	collider = new Collider(vertices); 
 
 	// make sure they are up to date with the rigidbody position and orientatino
-	collider->Rotate(rb->GetOrientation()); 
-	collider->Transpose(cc_position);
-	
-
+	collider->Rotate(Quaternion(m_gameObject->GetTransform().Get3x3()));
+	collider->Transpose(Vector3(m_gameObject->GetTransform().GetW()));
 }
 
-void ComplexCollider::Update(float deltaTime) {
-	cc_position = Vector3(rb->GetPosition());
-	
+void ComplexCollider::Update(float deltaTime) 
+{
 	// this should keep the colliders up to date
-	collider->Rotate(rb->GetOrientation()); 
-	collider->Transpose(cc_position);
+	collider->Rotate(Quaternion(m_gameObject->GetTransform().Get3x3()));
+	collider->Transpose(Vector3(m_gameObject->GetTransform().GetW()));
 	
 }

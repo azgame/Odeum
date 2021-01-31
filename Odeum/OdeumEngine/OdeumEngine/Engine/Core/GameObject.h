@@ -35,9 +35,9 @@ public:
 	template<typename... Ts>
 	void RemoveComponents();
 
-	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
-	OrientedBoundingBox& GetBoundingBox() { return bbox; }
-	void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
+	Matrix4 GetTransform() { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
+	//OrientedBoundingBox& GetBoundingBox() { return bbox; }
+	//void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
 
 	void SetHit(bool hit) 
 	{ 
@@ -51,7 +51,7 @@ protected:
 
 	Matrix4 m_modelMatrix;
 	
-	OrientedBoundingBox bbox;
+	//OrientedBoundingBox bbox;
 	bool isHit;
 
 	// add transform
