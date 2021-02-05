@@ -8,7 +8,8 @@
 #include "Scenes/ButtonMashingScene.h"
 #include "Scenes/BombTossScene.h"
 #include "Scenes/QuickDrawScene.h"
-
+#include "Scenes/BattleScene.h"
+#include "Components/Stats.h"
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
 #include "../Engine/Core/SceneObjects.h"
 #include "Scenes/counting.h"
@@ -80,6 +81,9 @@ void Game1::BuildScene()
 		break;
 	case 8:
 		m_currentScene = new Counting();
+		break;
+	case 9:
+		m_currentScene = new BattleScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

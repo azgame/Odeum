@@ -36,11 +36,11 @@ void Stats::SetSpeed(float staticSpeedIncrease_, float speedModifier_)
 void Stats::SetAttack(float staticAttackIncrease_, float attackModifier_, float rockModifier_, float scissorsModifier_, float paperModifier_)
 {
 	if (rockModifier_ != 0)
-		rockModifier *= rockModifier_;
+		rockModifier += rockModifier_;
 	if (paperModifier_ != 0)
-		paperModifier *= paperModifier_;
+		paperModifier += paperModifier_;
 	if (scissorsModifier_ != 0)
-		scissorsModifier *= scissorsModifier_;
+		scissorsModifier += scissorsModifier_;
 	currentAttack += staticAttackIncrease_;
 	currentAttack *= attackModifier_;
 }
