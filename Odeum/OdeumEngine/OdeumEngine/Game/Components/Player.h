@@ -4,7 +4,8 @@
 #include "../../pch.h"
 #include "../../Engine/Core/Component.h"
 
-Class Player : public Component{
+class Player : public Component{
 
 }
+
 #endif
