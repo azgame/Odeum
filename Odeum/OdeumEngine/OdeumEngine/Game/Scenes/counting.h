@@ -1,26 +1,32 @@
-#ifndef BUTTONMASHINGSCENE_H
-#define BUTTONMASHINGSCENE_H
+#ifndef COUNTING_H
+#define OUNTING_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-// Scene index 8
-class ButtonMashingScene : public Scene
+
+class Counting : public Scene
 {
 public:
-	ButtonMashingScene();
-	virtual ~ButtonMashingScene();
-	int MaxPlayers;
-	float timeToStart;
+	Counting();
+	virtual ~Counting();
+
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 
 private:
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> players;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;
+	std::vector<int> playerCount;
+	float timeToSpawn;
+	float timeToWin;
 	bool won;
+	int maxCount;
+	int count;
+	int MaxPlayers;
 };
 
 #endif

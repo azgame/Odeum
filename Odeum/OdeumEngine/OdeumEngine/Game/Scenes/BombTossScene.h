@@ -1,10 +1,10 @@
-#ifndef BOMBTOSS_H
-#define BOMBTOSS_H
+#ifndef BOMBTOSSSCENE_H
+#define BOMBTOSSSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-// Scene index 9
+// Scene index 6
 class BombTossScene : public Scene
 {
 public:

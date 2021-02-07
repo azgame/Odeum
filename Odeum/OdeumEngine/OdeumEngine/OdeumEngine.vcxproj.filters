@@ -85,6 +85,11 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
     <ClCompile Include="Engine\Core\SceneObjects.cpp" />
+    <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
+    <ClCompile Include="Game\Scenes\counting.cpp" />
+    <ClCompile Include="Game\Components\Stats.cpp" />
+    <ClCompile Include="Game\Scenes\BattleScene.cpp" />
+    <ClCompile Include="Game\Components\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -203,6 +208,11 @@
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Components\Rigidbody2.h" />
     <ClInclude Include="Engine\Core\SceneObjects.h" />
+    <ClInclude Include="Game\Scenes\QuickDrawScene.h" />
+    <ClInclude Include="Game\Scenes\counting.h" />
+    <ClInclude Include="Game\Components\Stats.h" />
+    <ClInclude Include="Game\Scenes\BattleScene.h" />
+    <ClInclude Include="Game\Components\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
