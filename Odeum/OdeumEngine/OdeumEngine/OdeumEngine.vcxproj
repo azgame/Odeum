@@ -171,6 +171,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\CommandSignature.cpp" />
     <ClCompile Include="Game\Components\ColliderComponent.cpp" />
     <ClCompile Include="Game\Components\ComplexCollider.cpp" />
+    <ClCompile Include="Game\Components\Player.cpp" />
     <ClCompile Include="Game\Components\RenderComponent.cpp" />
     <ClCompile Include="Game\Components\SphereCollider.cpp" />
     <ClCompile Include="Game\Scenes\BenScene.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\CommandSignature.h" />
     <ClInclude Include="Game\Components\ColliderComponent.h" />
     <ClInclude Include="Game\Components\ComplexCollider.h" />
+    <ClInclude Include="Game\Components\Player.h" />
     <ClInclude Include="Game\Components\RenderComponent.h" />
     <ClInclude Include="Game\Components\SphereCollider.h" />
     <ClInclude Include="Game\Scenes\BenScene.h" />
