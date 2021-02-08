@@ -216,6 +216,7 @@
     <ClCompile Include="Engine\Rendering\DirectX12\ParticleManager.cpp" />
     <ClCompile Include="Engine\Core\JobSystem.cpp" />
     <ClCompile Include="Engine\AI\Inverter.cpp" />
+    <ClCompile Include="Game\Scenes\MultiTaskingScene.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -340,6 +341,7 @@
     <ClInclude Include="Engine\Rendering\DirectX12\ParticleManager.h" />
     <ClInclude Include="Engine\Core\JobSystem.h" />
     <ClInclude Include="Engine\AI\Inverter.h" />
+    <ClInclude Include="Game\Scenes\MultiTaskingScene.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Rendering\DirectX12\RootSignature.h" />
