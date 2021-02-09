@@ -17,6 +17,7 @@ MultiTaskingScene::MultiTaskingScene()
 		gameObjectsA.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 10-15, -10, 0, 0));
 		gameObjectsA.back()->AddComponent<RenderComponent>();
 		gameObjectsA.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+		playerScores.push_back(0);
 		playerPressedA.push_back(false);
 	}
 	for (int i = 0; i < MaxPlayers; i++)
@@ -49,6 +50,24 @@ MultiTaskingScene::MultiTaskingScene()
 	playerKeysC.push_back(Key::K);
 	playerKeysC.push_back(Key::K);
 	playerKeysC.push_back(Key::K);
+	targetHeights.push_back(-4);
+	targetHeights.push_back(2);
+	targetHeights.push_back(8);
+	targetObjects.push_back(new GameObject());
+	targetObjects.back()->AddComponent<Rigidbody>();
+	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, -4, 0, 0));
+	targetObjects.back()->AddComponent<RenderComponent>();
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
+	targetObjects.push_back(new GameObject());
+	targetObjects.back()->AddComponent<Rigidbody>();
+	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, 2, 0, 0));
+	targetObjects.back()->AddComponent<RenderComponent>();
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
+	targetObjects.push_back(new GameObject());
+	targetObjects.back()->AddComponent<Rigidbody>();
+	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, 8, 0, 0));
+	targetObjects.back()->AddComponent<RenderComponent>();
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
 	//playerKeys.push_back(Key::L);
 }
 
@@ -64,8 +83,8 @@ bool MultiTaskingScene::Initialize()
 void MultiTaskingScene::Update(const float deltaTime_)
 {
 	timeToStart -= deltaTime_;
-	UpdateObjectsB();
-	UpdateObjectsC();
+	UpdateObjectsB( deltaTime_);
+	UpdateObjectsC( deltaTime_);
 	//gameObjects.back()->GetComponent<Rigidbody>()->
 	//gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(0, -0.05, 0, 0));
 	if (!won)
@@ -92,6 +111,12 @@ void MultiTaskingScene::Update(const float deltaTime_)
 				}
 				if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsA.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
+				if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(0)-1.5f&& gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(0) + 2.5f)
+				{
+					playerScores.at(i) += deltaTime_;
+				}
+
+
 			}
 		
 	}
@@ -107,7 +132,7 @@ void MultiTaskingScene::Update(const float deltaTime_)
 
 
 }
-void MultiTaskingScene::UpdateObjectsB()
+void MultiTaskingScene::UpdateObjectsB(const float deltaTime_)
 {
 	if (!won)
 	{
@@ -133,6 +158,10 @@ void MultiTaskingScene::UpdateObjectsB()
 				}
 				if (gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsB.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
+				if (gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(1) - 1.5f && gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(1) + 2.5f)
+				{
+					playerScores.at(i) += deltaTime_;
+				}
 			}
 
 	}
@@ -144,7 +173,7 @@ void MultiTaskingScene::UpdateObjectsB()
 		}
 	}
 }
-void MultiTaskingScene::UpdateObjectsC()
+void MultiTaskingScene::UpdateObjectsC(const float deltaTime_)
 {
 	if (!won)
 	{
@@ -170,6 +199,10 @@ void MultiTaskingScene::UpdateObjectsC()
 				}
 				if (gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsC.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
+				if (gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(2) - 1.5f && gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(2) + 2.5f)
+				{
+					playerScores.at(i) += deltaTime_;
+				}
 			}
 
 	}
@@ -193,7 +226,11 @@ void MultiTaskingScene::UIRender()
 			const char* textchar = text.c_str();
 			won = true;
 			ImGui::Text(textchar);
+
 		}
+		std::string text = "Player Score" + std::to_string(playerScores.at(i));
+		const char* textchar = text.c_str();
+		ImGui::Text(textchar);
 
 	}
 	if (timeToStart > 0)
