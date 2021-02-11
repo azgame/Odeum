@@ -149,14 +149,15 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	sc1.GetRigidbody()->AddVelocity(Vector4(n * speed1));
 	sc2.GetRigidbody()->AddVelocity(Vector4(n * (speed2 - fellingSpeed)));
 
-	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
-	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetRotation());
+	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetAngularVelocity());
+	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetAngularVelocity());
 
+	// look into this
 	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
 	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
 
-	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
-	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), sc1.GetRigidbody()->GetRotationSpeed());
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2), sc2.GetRigidbody()->GetRotationSpeed());
 
 	/*
 	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
@@ -250,6 +251,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	// with inertia?
 	float i1 = cc1.GetRigidbody()->GetMomentOfInertiaSphere();
 	float i2 = cc2.GetRigidbody()->GetMomentOfInertiaSphere();
+	//Matrix3 i1 = cc1.GetRigidbody()->GetInvInertiaTensor();
+	//Matrix3 i2 = cc2.GetRigidbody()->GetInvInertiaTensor();
 
 	//float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)));
 	float j = (-(1.0f + e) * (Math::Dot(vi12, n))) / (Math::Dot(n, n) * ((1.0f / m1) + (1.0f / m2)) + (Math::Dot(r1, n) * Math::Dot(r1, n) / i1) + (Math::Dot(r2, n) * Math::Dot(r2, n) / i2));
@@ -260,8 +263,21 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	cc1.GetRigidbody()->SetVelocity(Vector4(vf1, 1.0f));
 	cc2.GetRigidbody()->SetVelocity(Vector4(vf2, 1.0f));
 
-	Vector3 wf1 = wi1 + Math::Cross(r1, n * j) / i1;
-	Vector3 wf2 = wi2 - Math::Cross(r2, n * j) / i2;
-	cc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 1.0f));
-	cc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 1.0f));
+	std::cout << "vel1: ";
+	cc1.GetRigidbody()->GetVelocity().Print();
+	std::cout << "vel2: ";
+	cc2.GetRigidbody()->GetVelocity().Print();
+
+	Vector3 wf1 = wi1 + Math::Cross(r1, n * j) * i1;
+	Vector3 wf2 = wi2 - Math::Cross(r2, n * j) * i2;
+	// need to figure out how what speed to rotate the new angular velocity with
+	cc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 1.0f), wf1.Mag());
+	cc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 1.0f), wf2.Mag());
+
+	std::cout << "angVel1: ";
+	cc1.GetRigidbody()->GetAngularVelocity().Print();
+	std::cout << std::endl;
+	std::cout << "angVel2: ";
+	cc2.GetRigidbody()->GetAngularVelocity().Print();
+	std::cout << std::endl;
 }

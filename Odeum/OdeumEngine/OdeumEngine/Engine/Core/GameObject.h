@@ -12,6 +12,7 @@ class Component;
 class GameObject
 {
 	friend class Rigidbody;
+	friend class Rigidbody2;
 
 public:
 	GameObject(std::string tag_ = "Default");
@@ -65,6 +66,7 @@ protected:
 	void CreateAttachedComponent(Component* pAttachedComponent);
 	
 	void UpdateTransform(Vector4 position, float angle, Vector4 rotation, Vector4 scale);
+	void UpdateTransform(Vector4 position, Matrix4 rotation, Vector4 scale);
 	void UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale);
 	
 	// Matrix math -- THIS WILL BE MOVED

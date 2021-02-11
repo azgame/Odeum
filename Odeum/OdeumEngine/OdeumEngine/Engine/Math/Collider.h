@@ -59,6 +59,16 @@ public:
 		}
 	}
 
+	inline void Rotate(Matrix4 m)
+	{
+
+		for (int i = 0; i < c_vertices.size(); i++)
+		{
+			c_vertices[i] = Vector3(m * c_vertices[i]);
+			r_vertices[i] = Vector3(m * s_vertices[i]);
+		}
+	}
+
 	// testing
 	inline void Print()
 	{

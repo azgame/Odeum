@@ -50,6 +50,15 @@ void GameObject::UpdateTransform(Vector4 position, float angle, Vector4 rotation
 	bbox.center = Vector3(position);
 }
 
+void GameObject::UpdateTransform(Vector4 position, Matrix4 rotation, Vector4 scale)
+{
+	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * rotation * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
+	// update bounding box
+	bbox.basis = Matrix3(m_modelMatrix);
+	bbox.center = Vector3(position);
+}
+
+
 void GameObject::UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale)
 {
 	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * GetRotationMatrix(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
