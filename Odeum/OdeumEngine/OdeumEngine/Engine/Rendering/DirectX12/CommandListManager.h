@@ -16,6 +16,8 @@
 #include <stdint.h>
 #include <queue>
 
+// Comments by Aidan Zizys, 2020
+
 class CommandAllocatorPool
 {
 public:

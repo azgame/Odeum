@@ -35,7 +35,7 @@ public:
 	template<typename... Ts>
 	void RemoveComponents();
 
-	template<typename... T>
+	template<typename T>
 	bool HasComponent();
 
 	Matrix4 GetTransform() { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
@@ -137,7 +137,7 @@ inline void GameObject::RemoveComponents()
 	(void)unpacking; // suppress unused variable warning
 }
 
-template<typename ...T>
+template<typename T>
 inline bool GameObject::HasComponent()
 {
 	for (auto c : m_components)

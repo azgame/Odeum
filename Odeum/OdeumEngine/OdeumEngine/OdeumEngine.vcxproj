@@ -230,7 +230,7 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Components\Rigidbody2.cpp" />
     <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
-    <ClCompile Include="Game\Components\Stats.cpp" />
+    <ClCompile Include="Game\Components\StatComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Scenes\BattleScene.h" />
@@ -353,7 +353,7 @@
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Components\Rigidbody2.h" />
     <ClInclude Include="Game\Scenes\QuickDrawScene.h" />
-    <ClInclude Include="Game\Components\Stats.h" />
+    <ClInclude Include="Game\Components\StatComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">
@@ -438,6 +438,7 @@
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
+    <None Include="Game\GameAssets\PlayerStats.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

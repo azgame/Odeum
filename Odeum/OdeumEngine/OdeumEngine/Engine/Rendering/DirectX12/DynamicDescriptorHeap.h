@@ -9,6 +9,7 @@
 //
 // Author:  James Stanard 
 
+// Comments by Aidan Zizys, 2020
 
 #ifndef DYNAMICDESCRIPTORHEAP_H
 #define DYNAMICDESCRIPTORHEAP_H

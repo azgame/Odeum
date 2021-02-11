@@ -1,8 +1,60 @@
-#ifndef STATS_H
-#define STATS_H
+#ifndef STATCOMPONENT_H
+#define STATCOMPONENT_H
+
 #include "../../pch.h"
 #include "../../Engine/Core/Component.h"
-class Stats : public Component
+
+#include <unordered_map>
+
+enum class PlayerStatTypes
+{
+	Health,
+	Defense,
+	Speed,
+	Attack,
+	RockAttack,
+	PaperAttack,
+	ScissorsAttack,
+	Count,
+	None
+};
+
+struct PlayerStat
+{
+	PlayerStatTypes type;
+	uint32_t baseValue;
+	uint32_t maxValue;
+	uint32_t currentValue;
+};
+
+struct PlayerStatMod
+{
+	PlayerStatTypes type;
+	UINT16 id;
+	double value;
+	bool isUnique;
+};
+
+// Testing --------------------------
+class StatComponent;
+
+class PlayerStatEvent
+{
+public:
+
+	void Assign(StatComponent* Owner) { owner = Owner; }
+	virtual void Execute() = 0;
+
+	PlayerStatTypes type;
+	UINT16 id;
+
+private:
+
+	StatComponent* owner;
+};
+// ----------------------------------
+
+class StatComponent : public Component
 {
 public:
 	void OnAttach(GameObject* parent) override;
@@ -33,6 +85,21 @@ public:
 	inline float GetBaseAttack() { return baseAttack; };
 	inline float GetCurrentAttack() { return currentAttack; };
 	void TakeDamage(float damage_);
+
+	bool HasModifier(UINT16 Id, PlayerStatTypes Type = PlayerStatTypes::None);
+
+	void RegisterLinearModifier(PlayerStatMod Mod);
+	void RegisterMulModifier(PlayerStatMod Mod);
+
+	double GetModifier(UINT16 Id, PlayerStatTypes Type = PlayerStatTypes::None);
+	PlayerStat GetStat(PlayerStatTypes Type); // returns modified stat
+
+	void SetStat(PlayerStatTypes Type, uint32_t NewValue); // sets stat to given value
+	void ModifyStat(PlayerStatTypes Type, uint32_t Value); // modifies stat by given value
+	void ResetStat(PlayerStatTypes Type);
+
+	void RecalculateStat();
+
 private:
 	//Health
 	float baseHealth;
@@ -55,7 +122,10 @@ private:
 	float scissorsModifier;
 	float currentAttack;
 	
+	std::vector<PlayerStat> m_statData; // default stat data, including current and max values
+	std::unordered_map<PlayerStatTypes, std::vector<PlayerStatMod>> m_linModifiers; // modifiers which affect stats linearly, eg. +2 to attack from weapon, +4 to health passive
+	std::unordered_map<PlayerStatTypes, std::vector<PlayerStatMod>> m_mulModifiers; // modifiers which affect stats multiplicatively, eg. 10% more attack, 25% damage on certain attack
+	// proc effects
 };
 
 #endif
-

@@ -6,6 +6,8 @@
 #include "RootSignature.h"
 #include "../../Core/Camera.h"
 
+// Comments by Aidan Zizys, 2020
+
 #define MAX_PARTICLES 0x40000
 
 ParticleManager* ParticleManager::sm_instance = nullptr;

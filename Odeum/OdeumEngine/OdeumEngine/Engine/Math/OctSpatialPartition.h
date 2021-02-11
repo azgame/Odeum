@@ -4,6 +4,7 @@
 #include "../../pch.h"
 #include "Ray.h"
 #include "../Core/GameObject.h"
+#include "../../Game/Components/BoxCollider.h"
 
 #define CHILD_COUNT 8
 #define SPATIAL_DEPTH 3
@@ -28,7 +29,7 @@ struct OctNode
 	void Octify(int depth_);
 	OctNode* getParent();
 	OctNode* getChild(OctChildren childPos_);
-	void addCollisionObject(GameObject* go_);
+	void addCollisionObject(BoxCollider* go_);
 	size_t getObjectCount() const;
 	bool isLeaf() const;
 	OrientedBoundingBox& getBoundingBox();
@@ -39,7 +40,7 @@ private:
 	OctNode* parent;
 	OctNode* children[CHILD_COUNT];
 
-	std::vector<GameObject*> m_objectList;
+	std::vector<BoxCollider*> m_objectList;
 	float sz;
 };
 
@@ -51,19 +52,19 @@ public:
 
 	void Uninitialize();
 
-	void AddObject(GameObject* go_);
-	GameObject* GetCollision(Ray& ray_, Vector4* IntersectionPlane);
-	std::vector<GameObject*> GetCollisions(Ray& ray);
+	void AddObject(BoxCollider* go_);
+	BoxCollider* GetCollision(Ray& ray_, Vector4* IntersectionPlane);
+	std::vector<BoxCollider*> GetCollisions(Ray& ray);
 	void UpdatePartition();
 
 private:
 
 	OctNode* root;
 	std::vector<OctNode*> m_rayIntersectionList;
-	void AddObjectToCell(OctNode* cell_, GameObject* go_);
+	void AddObjectToCell(OctNode* cell_, BoxCollider* go_);
 	void PrepareCollisionQuery(OctNode* cell_, Ray ray_);
 	void UpdatePartitionCell(OctNode* cell_);
-	void RemoveObjectFromCell(OctNode* cell_, GameObject* go_);
+	void RemoveObjectFromCell(OctNode* cell_, BoxCollider* go_);
 };
 
 #endif

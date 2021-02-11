@@ -15,7 +15,7 @@
 #include "Buffers/DepthBuffer.h"
 #include "Buffers/ReadbackBuffer.h"
 
-// TODO Aidan: Make comments
+// Comments by Aidan Zizys, 2020
 
 // Get a new context
 CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type_)

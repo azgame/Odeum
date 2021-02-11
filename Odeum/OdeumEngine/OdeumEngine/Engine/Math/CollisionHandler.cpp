@@ -3,8 +3,10 @@
 #include "CollisionDetection.h"
 #include "../Core/OdeumEngine.h"
 
+#include "../../Game/Components/BoxCollider.h"
+
 std::unique_ptr<CollisionHandler> CollisionHandler::collisionInstance = nullptr;
-std::vector<GameObject*> CollisionHandler::previousCollisions = std::vector<GameObject*>();
+std::vector<BoxCollider*> CollisionHandler::previousCollisions = std::vector<BoxCollider*>();
 OctSpatialPartition* CollisionHandler::m_scenePartition = nullptr;
 
 CollisionHandler::CollisionHandler()
@@ -30,7 +32,7 @@ void CollisionHandler::Initialize(float worldsz_)
 	m_scenePartition = new OctSpatialPartition(worldsz_);
 }
 
-void CollisionHandler::AddObject(GameObject* go_)
+void CollisionHandler::AddObject(BoxCollider* go_)
 {
 	m_scenePartition->AddObject(go_);
 }
@@ -41,7 +43,7 @@ bool CollisionHandler::MouseCollide()
 	{
 		Ray mouseRay = GetMouseRay();
 
-		GameObject* hit = RayGetFirstHit(mouseRay, nullptr);
+		BoxCollider* hit = RayGetFirstHit(mouseRay, nullptr);
 
 		if (hit)
 			return true;
@@ -64,16 +66,7 @@ void CollisionHandler::RayQueryFirst(Ray& ray, Vector4* IntersectionPlane)
 {
 	if (m_scenePartition == nullptr) return;
 	
-	GameObject* hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
-
-	if (hitResult)
-		hitResult->SetHit(true);
-
-	for (auto c : previousCollisions)
-	{
-		if (c != hitResult && c != nullptr)
-			c->SetHit(false);
-	}
+	BoxCollider* hitResult = m_scenePartition->GetCollision(ray, IntersectionPlane);
 
 	previousCollisions.clear();
 
@@ -81,14 +74,14 @@ void CollisionHandler::RayQueryFirst(Ray& ray, Vector4* IntersectionPlane)
 		previousCollisions.push_back(hitResult);
 }
 
-void CollisionHandler::RayQueryList(Ray& ray, std::vector<GameObject*>& IntersectedObjects)
+void CollisionHandler::RayQueryList(Ray& ray, std::vector<BoxCollider*>& IntersectedObjects)
 {
 	if (m_scenePartition == nullptr) return;
 
 	IntersectedObjects = m_scenePartition->GetCollisions(ray);
 }
 
-GameObject* CollisionHandler::RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane)
+BoxCollider* CollisionHandler::RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane)
 {
 	RayQueryFirst(ray, IntersectionPlane);
 	
@@ -99,9 +92,9 @@ GameObject* CollisionHandler::RayGetFirstHit(Ray& ray, Vector4* IntersectionPlan
 	return nullptr;
 }
 
-std::vector<GameObject*>& CollisionHandler::RayGetList(Ray& ray)
+std::vector<BoxCollider*>& CollisionHandler::RayGetList(Ray& ray)
 {
-	std::vector<GameObject*> collisions;
+	std::vector<BoxCollider*> collisions;
 
 	RayQueryList(ray, collisions);
 

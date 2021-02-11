@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "../../Engine/Core/Component.h"
 
-enum ColliderType
+enum class ColliderType
 {
 	Box,
 	Sphere,
@@ -16,8 +16,9 @@ class ColliderComponent : public Component
 {
 public:
 
-	void OnAttach(GameObject* parent) override;
-	void OnDetach() {};
+	virtual void OnAttach(GameObject* parent) override;
+	virtual void OnDetach() {};
+	virtual void Update(float deltaTime) {};
 
 	ColliderType GetColliderType() { return m_type; }
 

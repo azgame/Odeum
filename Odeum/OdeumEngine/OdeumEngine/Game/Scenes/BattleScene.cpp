@@ -3,10 +3,10 @@
 #include <time.h>  
 BattleScene::BattleScene()
 {
-    player1 =  Stats();
+    player1 = StatComponent();
     player1.SetAttack(20, 1, 1, 1, 1);
     player2.SetAttack(20, 1, 1, 1, 1);
-    player2 =  Stats();
+    player2 = StatComponent();
     player1Keys.push_back(Key::J);
     player1Keys.push_back(Key::K);
     player1Keys.push_back(Key::L);
@@ -83,7 +83,7 @@ void BattleScene::UIRender()
     ImGui::Text(textchar);
     ImGui::End();
  }
-void  BattleScene::DamageCalculation(Stats*attacker_,Stats*defender_, int attackType,int defenceType)
+void  BattleScene::DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType,int defenceType)
 { //1=rock 2=paper 3= scissors;
     bool miss = false;
     float damage = 0;
@@ -149,7 +149,7 @@ void  BattleScene::DamageCalculation(Stats*attacker_,Stats*defender_, int attack
        // std::string string = defender_->GetCurrentHealth()->toString();
         Debug::Warning("combat", __FILENAME__, __LINE__);
 }
-void BattleScene::DecideFirstTurn(Stats* player1_, Stats* player2_)
+void BattleScene::DecideFirstTurn(StatComponent* player1_, StatComponent* player2_)
 {
     float randomNumber = rand() % 100;
     float p1chance =50+ player1_->GetCurrentSpeed() - player2_->GetCurrentSpeed();

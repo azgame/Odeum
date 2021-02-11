@@ -7,6 +7,8 @@
 
 #include "ParticleManager.h"
 
+// Comments by Aidan Zizys, 2020
+
 void ParticleEffect::Initialize()
 {
 	// create a vector of spawn data to be passed into the spawn particle buffer

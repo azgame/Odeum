@@ -7,11 +7,9 @@
 class BoxCollider : public ColliderComponent
 {
 public:
-	
-	BoxCollider();
-
 	void OnAttach(GameObject* parent) override;
-	void OnDetach() {};
+	void OnDetach() override {};
+	void Update(float deltaTime) override;
 
 	// Getters
 	inline OrientedBoundingBox* GetBoundingBox() { return obb; }

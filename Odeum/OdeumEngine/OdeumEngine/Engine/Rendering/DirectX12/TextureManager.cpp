@@ -10,6 +10,8 @@
 #include "Colour.h"
 #include "RadiometryUtility.h"
 
+// Comments by Aidan Zizys, 2020
+
 std::unique_ptr<TextureManager> TextureManager::m_instance = nullptr;
 
 TextureManager* TextureManager::Get()

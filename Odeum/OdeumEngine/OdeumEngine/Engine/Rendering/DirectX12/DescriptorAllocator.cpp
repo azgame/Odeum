@@ -15,6 +15,8 @@
 
 #include "D3DCore.h"
 
+// Comments by Aidan Zizys, 2020
+
 using namespace DXGraphics;
 
 std::mutex DescriptorAllocator::m_allocatorMutex; // thread lock
