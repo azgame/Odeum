@@ -41,33 +41,36 @@ MultiTaskingScene::MultiTaskingScene()
 	playerKeysA.push_back(Key::H);
 	playerKeysA.push_back(Key::H);
 	playerKeysA.push_back(Key::H);
-	playerKeysA.push_back(Key::H);
+	playerKeysA.push_back(Key::A);
 	playerKeysB.push_back(Key::J);
 	playerKeysB.push_back(Key::J);
 	playerKeysB.push_back(Key::J);
-	playerKeysB.push_back(Key::J);
+	playerKeysB.push_back(Key::S);
 	playerKeysC.push_back(Key::K);
 	playerKeysC.push_back(Key::K);
 	playerKeysC.push_back(Key::K);
-	playerKeysC.push_back(Key::K);
+	playerKeysC.push_back(Key::D);
 	targetHeights.push_back(-4);
 	targetHeights.push_back(2);
 	targetHeights.push_back(8);
 	targetObjects.push_back(new GameObject());
 	targetObjects.back()->AddComponent<Rigidbody>();
-	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, -4, 0, 0));
+	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, -4, 2, 0));
 	targetObjects.back()->AddComponent<RenderComponent>();
-	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+	targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(100, 1, 1, 1));
 	targetObjects.push_back(new GameObject());
 	targetObjects.back()->AddComponent<Rigidbody>();
 	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, 2, 0, 0));
 	targetObjects.back()->AddComponent<RenderComponent>();
-	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1.4, 0));
+	targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(100, 1, 1, 1));
 	targetObjects.push_back(new GameObject());
 	targetObjects.back()->AddComponent<Rigidbody>();
-	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, 8, 0, 0));
+	targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17.5, 8, 2, 0));
 	targetObjects.back()->AddComponent<RenderComponent>();
-	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.2, 0, 1.4));
+	targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.4, 0, 0));
+	targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(100, 1, 1, 1));
 	//playerKeys.push_back(Key::L);
 }
 
@@ -83,6 +86,7 @@ bool MultiTaskingScene::Initialize()
 void MultiTaskingScene::Update(const float deltaTime_)
 {
 	timeToStart -= deltaTime_;
+	
 	UpdateObjectsB( deltaTime_);
 	UpdateObjectsC( deltaTime_);
 	//gameObjects.back()->GetComponent<Rigidbody>()->
@@ -111,7 +115,7 @@ void MultiTaskingScene::Update(const float deltaTime_)
 				}
 				if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsA.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
-				if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(0)-1.5f&& gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(0) + 2.5f)
+				if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(0)-1.5f&& gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(0) + 2.25f)
 				{
 					playerScores.at(i) += deltaTime_;
 				}
@@ -158,7 +162,7 @@ void MultiTaskingScene::UpdateObjectsB(const float deltaTime_)
 				}
 				if (gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsB.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
-				if (gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(1) - 1.5f && gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(1) + 2.5f)
+				if (gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(1) - 1.5f && gameObjectsB.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(1) + 2.25f)
 				{
 					playerScores.at(i) += deltaTime_;
 				}
@@ -199,7 +203,7 @@ void MultiTaskingScene::UpdateObjectsC(const float deltaTime_)
 				}
 				if (gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 10.50f)
 					gameObjectsC.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -1, 0, 0));
-				if (gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(2) - 1.5f && gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(2) + 2.5f)
+				if (gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > targetHeights.at(2) - 1.5f && gameObjectsC.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < targetHeights.at(2) + 2.25f)
 				{
 					playerScores.at(i) += deltaTime_;
 				}
@@ -218,9 +222,9 @@ void MultiTaskingScene::UIRender()
 {
 	ImGui::Begin("Game UI");
 	ImGui::Text("Enter game UI components here");
-	for (int i = 0; i < gameObjectsA.size(); i++)
+	for (int i = 0; i < playerScores.size(); i++)
 	{
-		if (gameObjectsA.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 15.0f)
+		if (playerScores.at(i) >= 15.0f)
 		{
 			std::string text = "Player" + std::to_string(i + 1) + " Wins";
 			const char* textchar = text.c_str();

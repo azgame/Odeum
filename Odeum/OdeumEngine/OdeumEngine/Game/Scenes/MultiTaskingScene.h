@@ -1,5 +1,5 @@
-#ifndef MULTITASKING_H
-#define MULTITASKING_H
+#ifndef MULTITASKINGSCENE_H
+#define MULTITASKINGSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
