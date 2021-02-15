@@ -2,9 +2,9 @@
 #define RENDERCOMPONENT_H
 
 #include "../../pch.h"
-#include "../../Engine/Core/Component.h"
-#include "../../Engine/Rendering/DirectX12/Model.h"
-#include "../../Engine/Math/BoundingBox.h"
+#include "../Core/Component.h"
+#include "../Rendering/DirectX12/Model.h"
+#include "../Math/BoundingBox.h"
 
 class RenderComponent : public Component
 {
@@ -12,6 +12,7 @@ public:
 	
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 
 	void LoadModelFromFile(std::string fileName);

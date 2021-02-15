@@ -1,16 +1,16 @@
 #ifndef DynamicMovement_H
 #define DynamicMovement_H
 
-
-
 #include "Rigidbody.h"
 #include <algorithm>
 #include <set>
+
 class DynamicMovement : public Component
 {
 public:
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 	void SetAll(float maxAcceleration_, float maxSpeed_, float targetRadius_, float slowRadius_, float timeToTarget_);
 	GameObject* object;

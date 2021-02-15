@@ -2,7 +2,7 @@
 #define RIGIDBODY_H
 
 #include "../../pch.h"
-#include "../../Engine/Core/Component.h"
+#include "../Core/Component.h"
 
 class Rigidbody : public Component
 {
@@ -10,6 +10,7 @@ public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 
 	// movement functions

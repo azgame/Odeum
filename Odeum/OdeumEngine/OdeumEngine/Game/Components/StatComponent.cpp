@@ -26,112 +26,95 @@ void StatComponent::Update(float deltaTime)
 {
 }
 
-void StatComponent::SetHealth(float staticHealthIncrease_, float healthModifier_)
-{
-	float oldBasehealth = CurrentMaxHealth;
-	CurrentMaxHealth += staticHealthIncrease_;
-	CurrentMaxHealth *= healthModifier_;
-	//set current health based on the diffrence between the two values
-	if (oldBasehealth < CurrentMaxHealth)
-	{
-		currentHealth += (CurrentMaxHealth - oldBasehealth);
-	}
-	 if(currentHealth> CurrentMaxHealth)
-	{
-		 currentHealth= CurrentMaxHealth;
-	}
-}
-
-void StatComponent::SetDefence(float staticDefenceIncrease_, float defenceModifier_)
-{
-	CurrentMaxDefence += staticDefenceIncrease_;
-	CurrentMaxDefence *= defenceModifier_;
-}
-
-void StatComponent::SetSpeed(float staticSpeedIncrease_, float speedModifier_)
-{
-	currentSpeed += staticSpeedIncrease_;
-	currentSpeed *= speedModifier_;
-}
-
-void StatComponent::SetAttack(float staticAttackIncrease_, float attackModifier_, float rockModifier_, float scissorsModifier_, float paperModifier_)
-{
-	if (rockModifier_ != 0)
-		rockModifier += rockModifier_;
-	if (paperModifier_ != 0)
-		paperModifier += paperModifier_;
-	if (scissorsModifier_ != 0)
-		scissorsModifier += scissorsModifier_;
-	currentAttack += staticAttackIncrease_;
-	currentAttack *= attackModifier_;
-}
-
-void StatComponent::TakeDamage(float damage_)
-{
-	if (currentDefence > 0)
-	{
-		currentDefence -= damage_;
-		if (currentDefence < 0)
-			currentHealth += currentDefence;
-	}
-	else
-	{
-		currentHealth -= damage_;
-	}
-}
-
-bool StatComponent::HasModifier(UINT16 Id, PlayerStatTypes Type)
+bool StatComponent::HasModifier(uint32_t Id, PlayerStatTypes Type)
 {
 	if (Type != PlayerStatTypes::None)
 	{
-
+		for (auto mod : m_modifiers[Type])
+		{
+			if (mod.id == Id)
+				return true;
+		}
 	}
 	else
 	{
-
+		for (auto modtypes : m_modifiers)
+		{
+			for (auto mod : modtypes.second)
+				if (mod.id == Id)
+					return true;
+		}
 	}
 
 	return false;
 }
 
-void StatComponent::RegisterLinearModifier(PlayerStatMod Mod)
+void StatComponent::AddModifier(PlayerStatMod Mod)
 {
+	if (Mod.isMultiplicative)
+		m_modifiers[Mod.type].push_back(Mod);
+	else
+		m_modifiers[Mod.type].insert(m_modifiers[Mod.type].begin(), Mod);
+
+	RecalculateStat(Mod.type);
 }
 
-void StatComponent::RegisterMulModifier(PlayerStatMod Mod)
-{
-}
-
-double StatComponent::GetModifier(UINT16 Id, PlayerStatTypes Type)
+PlayerStatMod StatComponent::GetModifier(uint32_t Id, PlayerStatTypes Type)
 {
 	if (Type != PlayerStatTypes::None)
 	{
-
+		for (auto mod : m_modifiers[Type])
+		{
+			if (mod.id == Id)
+				return mod;
+		}
 	}
 	else
 	{
-
+		for (auto modtypes : m_modifiers)
+		{
+			for (auto mod : modtypes.second)
+				if (mod.id == Id)
+					return mod;
+		}
 	}
+
+	PlayerStatMod noMod;
+	noMod.id = -1;
+	noMod.value = -1;
+	noMod.type = PlayerStatTypes::None;
+
+	return noMod;
 }
 
 PlayerStat StatComponent::GetStat(PlayerStatTypes Type)
 {
-	return PlayerStat();
+	return m_statData[(int)Type];
 }
 
-void StatComponent::SetStat(PlayerStatTypes Type, uint32_t NewValue)
+void StatComponent::SetCurrentStat(double Value, PlayerStatTypes Type)
 {
+	m_statData[(int)Type].currentValue = Value;
 }
 
-void StatComponent::ModifyStat(PlayerStatTypes Type, uint32_t Value)
+void StatComponent::ModifyCurrentStat(double Value, PlayerStatTypes Type)
 {
+	m_statData[(int)Type].currentValue += Value;
 }
 
-void StatComponent::ResetStat(PlayerStatTypes Type)
+void StatComponent::RecalculateStat(PlayerStatTypes Type)
 {
-}
+	double ratio = (double)m_statData[(int)Type].currentValue / (double)m_statData[(int)Type].maxValue;
 
-void StatComponent::RecalculateStat()
-{
-}
+	m_statData[(int)Type].maxValue = m_statData[(int)Type].baseValue;
 
+	for (auto mod : m_modifiers[Type])
+	{
+		if (!mod.isMultiplicative)
+			m_statData[(int)Type].maxValue += mod.value;
+		else
+			m_statData[(int)Type].maxValue *= mod.value;
+	}
+
+	m_statData[(int)Type].currentValue = ratio * m_statData[(int)Type].maxValue;
+}

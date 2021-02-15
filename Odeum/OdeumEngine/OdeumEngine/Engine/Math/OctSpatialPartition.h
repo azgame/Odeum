@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "Ray.h"
 #include "../Core/GameObject.h"
-#include "../../Game/Components/BoxCollider.h"
+#include "../CoreComponents/BoxCollider.h"
 
 #define CHILD_COUNT 8
 #define SPATIAL_DEPTH 3

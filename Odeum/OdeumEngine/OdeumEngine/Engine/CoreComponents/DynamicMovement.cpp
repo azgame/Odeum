@@ -1,7 +1,7 @@
 #include "DynamicMovement.h"
-#include "../Engine/Math/CollisionDetection.h"
-#include "../Engine/Math/CollisionHandler.h"
-#include "../Engine/Math/Ray.h"
+#include "../Math/CollisionDetection.h"
+#include "../Math/CollisionHandler.h"
+#include "../Math/Ray.h"
 void DynamicMovement::OnAttach(GameObject* parent)
 {
 	object = parent;

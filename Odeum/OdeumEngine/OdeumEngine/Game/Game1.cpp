@@ -94,6 +94,8 @@ void Game1::BuildScene()
 	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
 
+	SceneObjects::Get()->InitializeObjects();
+
 	SceneGraph::Get()->LoadGraphicsObjects();
 
 	SceneObjects::Get()->UpdateObjects(0.0167f);
