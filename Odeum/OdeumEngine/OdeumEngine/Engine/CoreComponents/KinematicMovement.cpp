@@ -51,7 +51,8 @@ Vector4 KinematicMovement::GetSteering()
 	else
 	{
 		// JUST GOTTA FIGURE OUT HOW TO GET THIS FROM QUATERNION INSTEAD
-		rotation = object->GetComponent<Rigidbody>()->GetRotation().GetY();
+		// rotation is now a matrix3, not a quaternion - might change still
+		//rotation = object->GetComponent<Rigidbody>()->GetRotation().GetY();
 	}
 	
 	return Vector4(velocity, rotation);

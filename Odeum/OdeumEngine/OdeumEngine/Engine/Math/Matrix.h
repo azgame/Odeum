@@ -39,6 +39,7 @@ public:
 
 	// Operator Overloading
 	inline Vector3 operator* (Vector3 vec_) const { return Vector3(XMVector3TransformNormal(vec_, *this)); }
+	inline Vector3 MultiplyWithVec(Vector3 vec_) const { return Vector3(XMVector3Transform(vec_, *this)); }
 	inline Matrix3 operator* (const Matrix3& mat_) const { return Matrix3(*this * mat_.GetX(), *this * mat_.GetY(), *this * mat_.GetZ()); }
 
 private:
@@ -49,7 +50,7 @@ private:
 _declspec(align(16)) class Matrix4
 {
 public:
-	inline Matrix4() {}
+	inline Matrix4() { mat = XMMatrixIdentity(); }
 	inline Matrix4(Vector3 x_, Vector3 y_, Vector3 z_, Vector3 w_)
 	{
 		mat.r[0] = SetWToZero(x_); mat.r[1] = SetWToZero(y_);

@@ -7,12 +7,13 @@ void Rigidbody::OnAttach(GameObject* parent)
 	rb_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	rb_angle = 0.0f;
-	rb_orientation = Quaternion();
-	rb_angularVelocity = Vector4();
+	//rb_orientation = Quaternion();
+	rb_rotation = Matrix4();
+	rb_totalAngularVelocity = Vector4();
 	rb_totalVelocity = Vector4();
 	rb_speed = 2.0f;
-	rb_angleSpeed = 0.0005f;
-	rb_rotationSpeed = 0.0005f;
+	rb_angleSpeed = 1.0f;
+	rb_rotationSpeed = 1.0f;
 
 	rb_scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	rb_mass = 1.0f;
@@ -24,17 +25,25 @@ void Rigidbody::OnAttach(GameObject* parent)
 // update position based on acceleration and velocity
 void Rigidbody::Update(float deltaTime)
 {
-	
 	// update velocity
 	rb_totalVelocity += rb_totalAcceleration * deltaTime;
-	
+
 	//update position
 	rb_position += rb_totalVelocity * deltaTime + rb_totalAcceleration * 0.5f * deltaTime * deltaTime;
-	
-	rb_angle += rb_angleSpeed;
 
+	rb_angle += rb_rotationSpeed;
+
+	// Angular Velocity stuff
+	//rb_totalAngularVelocity += Vector4(rb_inertiaTensorInv.MultiplyWithVec(Vector3(rb_totalTorque)));
+	
+	if (Vector3(rb_totalAngularVelocity).Mag() > 0) {
+		rb_rotation = rb_rotation * Matrix4(DirectX::XMMatrixRotationAxis(Vector3(rb_totalAngularVelocity), rb_rotationSpeed * deltaTime));
+		// try multiplying by 3 matrices
+		//rb_rotation = rb_rotation * Matrix4(DirectX::XMMatrixRotationAxis(Vector3(rb_totalAngularVelocity), rb_rotationSpeed * deltaTime));
+	}
+	
 	// update orientation
-	UpdateOrientationQuaternion();
+	//UpdateOrientationQuaternion();
 
 	// Update Transform
 	UpdateTransform();
@@ -64,25 +73,22 @@ void Rigidbody::ApplyForce(Vector4 force)
 
 void Rigidbody::ApplyTorque(Vector4 force)
 {
-	if (rb_mass > 0)
-	{
-
-	}
+	rb_totalTorque += force;
 }
 
 void Rigidbody::AddAngularVelocity(Vector4 velocity)
 {
-	rb_angularVelocity += velocity;
+	rb_totalAngularVelocity += velocity;
 }
 
-void Rigidbody::AddAngularVelocity(Vector4 velocity, float angleSpeed)
+void Rigidbody::AddAngularVelocity(Vector4 velocity, float rotationSpeed)
 {
-	rb_angularVelocity += velocity;
-	rb_angleSpeed = angleSpeed;
+	rb_totalAngularVelocity += velocity;
+	rb_rotationSpeed = rotationSpeed;
 }
 
 
-void Rigidbody::UpdateOrientationQuaternion()
+/*void Rigidbody::UpdateOrientationQuaternion()
 {
 	// use cross product of the up vector vv (STILL NEED TO GET THIS) velocity to find axis of rotation
 	//Vector3 axisOfRotation_ = Math::Cross(Vector3(rb_totalVelocity), Vector3(rb_angularVelocity));
@@ -94,7 +100,7 @@ void Rigidbody::UpdateOrientationQuaternion()
 		return;
 	}
 	axisOfRotation_ = axisOfRotation_.Normalize();
-	
+
 	// calculate the magnitude of the angular velocity vector
 	Vector3 angularVelocity_ = Vector3(axisOfRotation_ * rb_angularVelocity.Mag());
 
@@ -102,7 +108,7 @@ void Rigidbody::UpdateOrientationQuaternion()
 
 	// update the orientation
 	rb_orientation = Quaternion(Vector4(rb_orientation + (rb_orientation * angVel * 0.5f * rb_angleSpeed)).Normalize());
-}
+}*/
 
 // this should be changed to differ based on the shape - this is just a basic version
 void Rigidbody::UpdateInertiaTensor()
