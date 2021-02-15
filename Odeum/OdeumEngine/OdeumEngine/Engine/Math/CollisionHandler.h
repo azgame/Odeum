@@ -8,9 +8,9 @@
 
 #include "Ray.h"
 #include "OctSpatialPartition.h"
-#include "../Game/Components/SphereCollider.h"
+#include "../CoreComponents/SphereCollider.h"
 
-#include "../Game/Components/ComplexCollider.h"
+#include "../CoreComponents/ComplexCollider.h"
 #include "CollisionPoints.h"
 
 class CollisionHandler

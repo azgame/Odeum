@@ -3,8 +3,8 @@
 #include "../../Engine/Math/Plane.h"
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
-#include "../Components/Rigidbody.h"
-#include "../Components/RenderComponent.h"
+#include "../../Engine/CoreComponents/Rigidbody.h"
+#include "../../Engine/CoreComponents/RenderComponent.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
 Counting::Counting()

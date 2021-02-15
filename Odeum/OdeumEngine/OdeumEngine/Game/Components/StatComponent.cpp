@@ -22,6 +22,10 @@ void StatComponent::OnAttach(GameObject* parent)
 	}
 }
 
+void StatComponent::OnStart()
+{
+}
+
 void StatComponent::Update(float deltaTime)
 {
 }

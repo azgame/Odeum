@@ -3,7 +3,7 @@
 #include "CollisionDetection.h"
 #include "../Core/OdeumEngine.h"
 
-#include "../../Game/Components/BoxCollider.h"
+#include "../Engine/CoreComponents/BoxCollider.h"
 
 std::unique_ptr<CollisionHandler> CollisionHandler::collisionInstance = nullptr;
 std::vector<BoxCollider*> CollisionHandler::previousCollisions = std::vector<BoxCollider*>();

@@ -7,9 +7,8 @@
 #include "../../Engine/Rendering/DirectX12/ParticleManager.h"
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
-#include "../Components/Rigidbody.h"
-#include "../Components/Rigidbody2.h"
-#include "../Components/RenderComponent.h"
+#include "../../Engine/CoreComponents/Rigidbody.h"
+#include "../../Engine/CoreComponents/RenderComponent.h"
 
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {

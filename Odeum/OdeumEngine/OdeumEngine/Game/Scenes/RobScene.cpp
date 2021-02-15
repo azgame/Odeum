@@ -1,10 +1,10 @@
 #include "RobScene.h"
-#include "../Components/KinematicMovement.h"
-#include "../Components/DynamicMovement.h"
-#include "../Components/Rigidbody.h"
-#include "../Components/Ai.h"
-#include "../Engine/Math/CollisionHandler.h"
-#include "../Components/RenderComponent.h"
+#include "../../Engine/CoreComponents/KinematicMovement.h"
+#include "../../Engine/CoreComponents/DynamicMovement.h"
+#include "../../Engine/CoreComponents/Rigidbody.h"
+#include "../../Engine/CoreComponents/Ai.h"
+#include "../../Engine/Math/CollisionHandler.h"
+#include "../../Engine/CoreComponents/RenderComponent.h"
 using namespace std;
 RobScene::RobScene() : Scene()
 {
