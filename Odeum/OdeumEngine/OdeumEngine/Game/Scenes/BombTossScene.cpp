@@ -41,6 +41,7 @@ BombTossScene::BombTossScene() {
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Bomb");
+
 	bombTimer = 100;
 }
 
