@@ -51,8 +51,8 @@ void GameObject::UpdateTransform(Vector4 position, Matrix4 rotation, Vector4 sca
 {
 	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * rotation * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 	// update bounding box
-	bbox.basis = Matrix3(m_modelMatrix);
-	bbox.center = Vector3(position);
+	//bbox.basis = Matrix3(m_modelMatrix);
+	//bbox.center = Vector3(position);
 }
 
 

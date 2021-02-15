@@ -112,6 +112,7 @@ double StatComponent::GetModifier(UINT16 Id, PlayerStatTypes Type)
 	{
 
 	}
+	return 0.0;
 }
 
 PlayerStat StatComponent::GetStat(PlayerStatTypes Type)

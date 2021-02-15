@@ -22,7 +22,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	//go1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), 20.0f);
 	go1->GetComponent<Rigidbody>()->SetRadius(1.3f);
 	//go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
-	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 0.5f, 0.0f, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 1.5f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->ApplyTorque(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->SetAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 5.0f);
 	//go1->GetComponent<Rigidbody>()->ApplyTorque(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -33,12 +33,12 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	
 	go2 = new GameObject();
 	go2->AddComponent<Rigidbody>();
-	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(1.8f, 7.0f, 0.0f, 1.0f));
+	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(1.5f, 7.0f, 0.0f, 1.0f));
 	go2->GetComponent<Rigidbody>()->SetMass(1.0f);
-	//go2->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), -45.0f);
+	go2->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), -45.0f);
 	go2->GetComponent<Rigidbody>()->SetRadius(1.3f);
 	//go2->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
-	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -0.5f, 0.0f, 1.0f));
+	//go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -0.5f, 0.0f, 1.0f));
 	//go2->GetComponent<Rigidbody>()->SetAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 5.0f);
 	go2->AddComponent<RenderComponent>();
 	go2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.7, 0.4, 0.7));
@@ -70,7 +70,8 @@ void BenScene::Update(const float deltaTime_)
 	if (CollisionDetection::GJKCollisionDetection(go1->GetComponent<ComplexCollider>(), go2->GetComponent<ComplexCollider>(), simplex))
 	{
 		std::cout << "COLLISION! ";
-		CollisionHandler::GetInstance()->GJKCollisionResponse(*go1->GetComponent<ComplexCollider>(), *go2->GetComponent<ComplexCollider>(), simplex);
+		std::cout << std::endl;
+		CollisionHandler::GetInstance()->GJKCollisionResponse(go1->GetComponent<ComplexCollider>(), go2->GetComponent<ComplexCollider>(), simplex);
 	}
 
 	//go1->GetComponent<Rigidbody>()->AddAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 10.0f);

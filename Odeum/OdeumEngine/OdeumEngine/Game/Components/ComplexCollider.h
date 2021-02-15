@@ -18,7 +18,7 @@ public:
 	void OnDetach() {};
 	void Update(float deltaTime) override;
 
-	inline Vector3 GetPosition() { return Vector3(m_gameObject->GetTransform().GetW()); }
+	inline Vector3 GetPosition() { return Vector3(m_gameObject->GetPosition()); }
 	inline Collider* GetCollider() { return collider; }
 
 private:
