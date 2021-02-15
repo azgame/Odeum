@@ -142,14 +142,14 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	sc1.GetRigidbody()->AddVelocity(Vector4(n * speed1));
 	sc2.GetRigidbody()->AddVelocity(Vector4(n * (speed2 - fellingSpeed)));
 
-	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
-	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetRotation());
+	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetAngularVelocity());
+	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetAngularVelocity());
 
 	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
 	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
 
-	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
-	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), sc1.GetRigidbody()->GetRotationSpeed());
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf1), sc2.GetRigidbody()->GetRotationSpeed());
 
 	/*
 	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
@@ -206,20 +206,20 @@ void CollisionHandler::OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc
 {
 }
 
-void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollider& cc2, Simplex<Vector3>& simplex)
+void CollisionHandler::GJKCollisionResponse(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& simplex)
 {	
-	ASSERT(cc1.GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
-	ASSERT(cc2.GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
+	ASSERT(cc1->GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
+	ASSERT(cc2->GetGameObject()->HasComponent<Rigidbody>(), "Component/GameObject must have a Rigidbody... you ape");
 
-	Rigidbody* r1 = cc1.GetGameObject()->GetComponent<Rigidbody>();
-	Rigidbody* r2 = cc2.GetGameObject()->GetComponent<Rigidbody>();
+	Rigidbody* r1 = cc1->GetGameObject()->GetComponent<Rigidbody>();
+	Rigidbody* r2 = cc2->GetGameObject()->GetComponent<Rigidbody>();
 
-	CollisionPoints collisionPoints = Math::EPA(cc1.GetCollider(), cc2.GetCollider(), simplex);
+	CollisionPoints collisionPoints = Math::EPA(cc1->GetCollider(), cc2->GetCollider(), simplex);
 
 	//Vector3 P = simplex.GetCentroid();
 
-	if (collisionPoints.penetrationDepth < 0.01f)
-		return;
+	//if (collisionPoints.penetrationDepth < 0.001f)
+	//	return;
 
 	Vector3 n = collisionPoints.normal;
 	// hardcoding coefficient of restitution for now - 0 is no bounce, 1 is super bounce
@@ -237,11 +237,11 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	// i'm just finding the middle of the distance between the centers of each body for now
 	// **** NEEDS TO BE CHANGED **** - this seems like the tough part
 
-	Vector3 P = (cc1.GetPosition() + cc2.GetPosition()) / 2.0f;
+	Vector3 P = (Vector3(cc1->GetPosition()) + Vector3(cc2->GetPosition())) / 2.0f;
 
 
-	Vector3 pos1 = P - cc1.GetPosition();
-	Vector3 pos2 = P - cc2.GetPosition();
+	Vector3 pos1 = P - cc1->GetPosition();
+	Vector3 pos2 = P - cc2->GetPosition();
 
 	Vector3 vi12 = vi1 - vi2;
 
@@ -259,7 +259,7 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider& cc1, ComplexCollide
 	r2->SetVelocity(Vector4(vf2, 1.0f));
 
 	Vector3 wf1 = wi1 + Math::Cross(pos1, n * j) / i1;
-	Vector3 wf2 = wi2 - Math::Cross(pos2, n * j) / i2;
-	r1->SetAngularVelocity(Vector4(wf1, 1.0f));
-	r2->SetAngularVelocity(Vector4(wf2, 1.0f));
+	Vector3 wf2 = wi2 + Math::Cross(pos2, n * -j) / i2;
+	r1->SetAngularVelocity(Vector4(wf1, 1.0f), wf1.Mag());
+	r2->SetAngularVelocity(Vector4(wf2, 1.0f), wf2.Mag());
 }

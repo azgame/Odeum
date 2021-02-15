@@ -30,15 +30,14 @@ void ComplexCollider::OnAttach(GameObject* parent)
 	
 	collider = new Collider(vertices); 
 
-	// make sure they are up to date with the rigidbody position and orientatino
+	// make sure they are up to date with the rigidbody position and orientation
 	collider->Rotate(Quaternion(m_gameObject->GetTransform().Get3x3()));
-	collider->Transpose(Vector3(m_gameObject->GetTransform().GetW()));
+	collider->Transpose(Vector3(m_gameObject->GetPosition()));
 }
 
 void ComplexCollider::Update(float deltaTime) 
 {
 	// this should keep the colliders up to date
 	collider->Rotate(Quaternion(m_gameObject->GetTransform().Get3x3()));
-	collider->Transpose(Vector3(m_gameObject->GetTransform().GetW()));
-	
+	collider->Transpose(Vector3(m_gameObject->GetPosition()));	
 }

@@ -42,6 +42,7 @@ public:
 	Matrix4 GetTransform() { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
 	//OrientedBoundingBox& GetBoundingBox() { return bbox; }
 	//void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
+	Vector3 GetPosition() { return Vector3(GetTransform().GetX().GetW(), GetTransform().GetY().GetW(), GetTransform().GetZ().GetW()); }
 
 	void SetHit(bool hit) 
 	{ 

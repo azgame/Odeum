@@ -7,6 +7,7 @@
 struct Collider
 {
 private:
+	// fix this
 	std::vector<Vector3> c_vertices;
 	std::vector<Vector3> s_vertices;
 	std::vector<Vector3> r_vertices;
@@ -54,7 +55,7 @@ public:
 		Matrix3 rotationMat = Matrix3(q);
 		for (int i = 0; i < c_vertices.size(); i++)
 		{
-			c_vertices[i] = rotationMat * c_vertices[i];
+			//c_vertices[i] = rotationMat * c_vertices[i];
 			r_vertices[i] = rotationMat * s_vertices[i];
 		}
 	}
