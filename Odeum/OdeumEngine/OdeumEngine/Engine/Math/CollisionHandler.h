@@ -9,6 +9,7 @@
 #include "Ray.h"
 #include "OctSpatialPartition.h"
 #include "../Game/Components/SphereCollider.h"
+
 #include "../Game/Components/ComplexCollider.h"
 #include "CollisionPoints.h"
 
@@ -23,13 +24,13 @@ public:
 	static CollisionHandler* GetInstance();
 
 	void Initialize(float worldsz_);
-	void AddObject(GameObject* go_);
+	void AddObject(BoxCollider* go_);
 	bool MouseCollide();
 	Ray GetMouseRay();
 	void RayQueryFirst(Ray& ray, Vector4* IntersectionPlane);
-	void RayQueryList(Ray& ray, std::vector<GameObject*>& IntersectedObjects);
-	GameObject* RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane = nullptr);
-	std::vector<GameObject*>& RayGetList(Ray& ray);
+	void RayQueryList(Ray& ray, std::vector<BoxCollider*>& IntersectedObjects);
+	BoxCollider* RayGetFirstHit(Ray& ray, Vector4* IntersectionPlane = nullptr);
+	std::vector<BoxCollider*>& RayGetList(Ray& ray);
 	void Update();
 	void Uninitialize();
 
@@ -45,7 +46,7 @@ private:
 	static std::unique_ptr<CollisionHandler>			collisionInstance;
 	friend std::default_delete<CollisionHandler>;
 
-	static std::vector<GameObject*>						previousCollisions;
+	static std::vector<BoxCollider*>						previousCollisions;
 
 	static OctSpatialPartition*							m_scenePartition;
 };

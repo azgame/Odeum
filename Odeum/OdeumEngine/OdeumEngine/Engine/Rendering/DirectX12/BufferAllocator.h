@@ -9,6 +9,10 @@
 //
 // Author:  James Stanard 
 
+// Comments by Aidan Zizys, 2020
+
+// Allocator allocates pages/entries into a "book", pages are cycled out frequently to keep memory "fresh" 
+
 #ifndef BUFFERALLOCATOR_H
 #define BUFFERALLOCATOR_H
 

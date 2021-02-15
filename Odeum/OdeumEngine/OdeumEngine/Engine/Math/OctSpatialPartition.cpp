@@ -2,7 +2,7 @@
 #include <algorithm>
 
 OctNode::OctNode(Vector3 pos_, float sz_, OctNode* parent_)
-	: octBounds(nullptr), parent(nullptr), children(), m_objectList(std::vector<GameObject*>())
+	: octBounds(nullptr), parent(nullptr), children(), m_objectList(std::vector<BoxCollider*>())
 {
 	m_objectList.reserve(10);
 	octBounds = new OrientedBoundingBox(pos_, pos_ + Vector3(sz_, sz_, sz_));
@@ -105,7 +105,7 @@ OctNode* OctNode::getChild(OctChildren childPos_)
 	return children[static_cast<int>(childPos_)];
 }
 
-void OctNode::addCollisionObject(GameObject* go_)
+void OctNode::addCollisionObject(BoxCollider* go_)
 {
 	m_objectList.push_back(go_);
 }
@@ -152,13 +152,13 @@ void OctSpatialPartition::Uninitialize()
 	SAFE_DELETE(root);
 }
 
-void OctSpatialPartition::AddObject(GameObject* go_)
+void OctSpatialPartition::AddObject(BoxCollider* go_)
 {
 	ASSERT(root != nullptr, "Spatial partition has not been initialized and you're trying to add objects to it.");
 	AddObjectToCell(root, go_);
 }
 
-GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPlane)
+BoxCollider* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPlane)
 {
 	if (m_rayIntersectionList.size() > 0)
 	{
@@ -169,7 +169,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPl
 		
 	PrepareCollisionQuery(root, ray_);
 
-	GameObject* result = nullptr;
+	BoxCollider* result = nullptr;
 	OctNode* node = nullptr;
 	float shortestDistance = FLT_MAX;
 
@@ -177,7 +177,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPl
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray_.IsColliding(object->GetBoundingBox(), IntersectionPlane))
+			if (ray_.IsColliding(*object->GetBoundingBox(), IntersectionPlane))
 			{
 				if (ray_.t < shortestDistance)
 				{
@@ -198,7 +198,7 @@ GameObject* OctSpatialPartition::GetCollision(Ray& ray_, Vector4* IntersectionPl
 	return nullptr;
 }
 
-std::vector<GameObject*> OctSpatialPartition::GetCollisions(Ray& ray)
+std::vector<BoxCollider*> OctSpatialPartition::GetCollisions(Ray& ray)
 {
 	if (m_rayIntersectionList.size() > 0)
 	{
@@ -209,17 +209,17 @@ std::vector<GameObject*> OctSpatialPartition::GetCollisions(Ray& ray)
 
 	PrepareCollisionQuery(root, ray);
 
-	GameObject* result = nullptr;
+	BoxCollider* result = nullptr;
 	OctNode* node = nullptr;
 	float shortestDistance = FLT_MAX;
 
-	std::vector<GameObject*> collisions;
+	std::vector<BoxCollider*> collisions;
 
 	for (auto cell : m_rayIntersectionList)
 	{
 		for (auto object : cell->m_objectList)
 		{
-			if (ray.IsColliding(object->GetBoundingBox(), nullptr))
+			if (ray.IsColliding(*object->GetBoundingBox(), nullptr))
 			{
 				if (ray.t < shortestDistance)
 				{
@@ -241,24 +241,24 @@ void OctSpatialPartition::UpdatePartition()
 	UpdatePartitionCell(root);
 }
 
-void OctSpatialPartition::AddObjectToCell(OctNode* cell_, GameObject* go_)
+void OctSpatialPartition::AddObjectToCell(OctNode* cell_, BoxCollider* go_)
 {
 	if (cell_->isLeaf())
 	{
-		if (go_->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+		if (go_->GetBoundingBox()->Intersects(cell_->getBoundingBox()))
 			cell_->addCollisionObject(go_);
 		return;
 	}
 
 	for (auto cell : cell_->children)
 	{
-		if (cell->isLeaf() && go_->GetBoundingBox().Intersects(cell->getBoundingBox()))
+		if (cell->isLeaf() && go_->GetBoundingBox()->Intersects(cell->getBoundingBox()))
 		{
 			cell->addCollisionObject(go_);
 			return;
 		}
 
-		if (go_->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+		if (go_->GetBoundingBox()->Intersects(cell_->getBoundingBox()))
 			AddObjectToCell(cell, go_);
 	}
 }
@@ -291,12 +291,17 @@ void OctSpatialPartition::UpdatePartitionCell(OctNode* cell_)
 	{
 		for (auto go : cell_->m_objectList)
 		{
-			if (!go->GetBoundingBox().Intersects(cell_->getBoundingBox()))
+			if (!go->GetBoundingBox()->Intersects(cell_->getBoundingBox()))
 			{
 				std::remove(cell_->m_objectList.begin(), cell_->m_objectList.end(), go);
 				AddObject(go);
 			}
+
+			// Check if object collides with other objects in list using simple colliders
+			// if they do, check to see if either have complex colliders
+			// if they do, do gjk
 		}
+
 		return;
 	}
 
@@ -304,6 +309,6 @@ void OctSpatialPartition::UpdatePartitionCell(OctNode* cell_)
 		UpdatePartitionCell(cell);
 }
 
-void OctSpatialPartition::RemoveObjectFromCell(OctNode* cell_, GameObject* go_)
+void OctSpatialPartition::RemoveObjectFromCell(OctNode* cell_, BoxCollider* go_)
 {
 }

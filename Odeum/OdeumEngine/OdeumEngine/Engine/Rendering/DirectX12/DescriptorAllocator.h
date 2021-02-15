@@ -14,6 +14,8 @@
 
 #include "D3DIncludes.h"
 
+// Comments by Aidan Zizys, 2020
+
 // Acts as a place for allocating cpu visible descriptors, not for gpu use. Allocated handles will later be bound to gpu visible heaps
 // Has a pool of descriptors and can, in a thread safe way, allocate descriptors into that heap for use by other objects
 class DescriptorAllocator

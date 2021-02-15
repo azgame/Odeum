@@ -9,7 +9,7 @@
 #include "Scenes/BombTossScene.h"
 #include "Scenes/QuickDrawScene.h"
 #include "Scenes/BattleScene.h"
-#include "Components/Stats.h"
+#include "Components/StatComponent.h"
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
 #include "../Engine/Core/SceneObjects.h"
 #include "Scenes/counting.h"

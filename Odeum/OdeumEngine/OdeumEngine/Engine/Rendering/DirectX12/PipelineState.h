@@ -1,6 +1,8 @@
 #ifndef PIPELINESTATE_H
 #define PIPELINESTATE_H
 
+// Comments by Aidan Zizys, 2020
+
 #include "D3DIncludes.h"
 
 class RootSignature;

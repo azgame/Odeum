@@ -5,6 +5,8 @@
 void RenderComponent::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
+
+	isRendered = true;
 }
 
 void RenderComponent::Update(float deltaTime)

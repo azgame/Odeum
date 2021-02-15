@@ -2,7 +2,8 @@
 #define BATTLESCENE_H
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
-#include "../Components/Stats.h"
+#include "../Components/StatComponent.h"
+
 class BattleScene : public Scene
 {
 public:
@@ -12,12 +13,12 @@ public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
-	void DamageCalculation(Stats* attacker_, Stats* defender_, int attackType, int defenceType);
-	void DecideFirstTurn(Stats* player1_, Stats* player2_);
+	void DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType, int defenceType);
+	void DecideFirstTurn(StatComponent* player1_, StatComponent* player2_);
 	// 1 rock 2 paper 3 scissors
 private:
-	Stats player1;
-	Stats player2;
+	StatComponent player1;
+	StatComponent player2;
 	bool player1Turn;
 	bool NPCBattle;
 	int player1Choice;

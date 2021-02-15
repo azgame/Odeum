@@ -15,7 +15,7 @@
 
 #include "D3DCore.h"
 
-
+// Comments by Aidan Zizys, 2020
 
 namespace DXGraphics
 {

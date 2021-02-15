@@ -1,6 +1,8 @@
 #ifndef ROOTSIGNATURE_H
 #define ROOTSIGNATURE_H
 
+// Comments by Aidan Zizys, 2020
+
 #include "D3DIncludes.h"
 
 #define D3D12_ROOT_PARAMETER_NULL (D3D12_ROOT_PARAMETER_TYPE)0xFFFFFFFF

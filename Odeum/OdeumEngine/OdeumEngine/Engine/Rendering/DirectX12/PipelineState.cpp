@@ -3,6 +3,8 @@
 #include "RootSignature.h"
 #include "D3DCore.h"
 
+// Comments by Aidan Zizys, 2020
+
 #ifdef _MSC_VER
 #pragma comment(lib, "d3dcompiler") // Automatically link with d3dcompiler.lib as we are using D3DCompile() below.
 #endif

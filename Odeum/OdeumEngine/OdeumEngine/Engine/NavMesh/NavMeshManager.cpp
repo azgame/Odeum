@@ -273,6 +273,7 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 
 	navMesh = new GameObject();
 	navMesh->AddComponent<RenderComponent>();
+	navMesh->GetComponent<RenderComponent>()->CreateFromExistingModel(model);
 
 	// cachedCollider = nullptr;
 }

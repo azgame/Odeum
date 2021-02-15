@@ -31,6 +31,8 @@ class CommandContext;
 class GraphicsContext;
 class ComputeContext;
 
+// Comments by Aidan Zizys, 2020
+
 /*
 The idea of the context is to extrapolate all of the functions needed for setting up and drawing a rendering state.
 

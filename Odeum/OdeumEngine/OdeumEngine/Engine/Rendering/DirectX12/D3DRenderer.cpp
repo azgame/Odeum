@@ -108,24 +108,27 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 	for (auto object : SceneGraph::Get()->GetRenderObjects())
 	{
-		vsConstants.model = object->GetGameObject()->GetTransform();
-		graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
-
-		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
-		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
-
-		for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
+		if (object->IsRendered())
 		{
-			Model::Mesh& mesh = object->GetModel().GetMesh(i);
-			uint32_t vertexStride = object->GetModel().m_vertexStride;
-			uint32_t indexCount = mesh.indexCount;
-			uint32_t startIndex = mesh.indexOffset;
-			uint32_t baseVertex = mesh.vertexOffset;
+			vsConstants.model = object->GetGameObject()->GetTransform();
+			graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
 
-			graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+			graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
+			graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
 
-			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
-		}
+			for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
+			{
+				Model::Mesh& mesh = object->GetModel().GetMesh(i);
+				uint32_t vertexStride = object->GetModel().m_vertexStride;
+				uint32_t indexCount = mesh.indexCount;
+				uint32_t startIndex = mesh.indexOffset;
+				uint32_t baseVertex = mesh.vertexOffset;
+
+				graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+
+				graphics.DrawIndexed(indexCount, startIndex, baseVertex);
+			}
+		}	
 	}
 
 	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);

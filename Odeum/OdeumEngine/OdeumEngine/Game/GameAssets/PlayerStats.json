@@ -1,0 +1,28 @@
+{
+  "Stats": {
+    "Health": {
+      "EnumID": 0,
+      "BaseValue": 5,
+      "BaseIncreases": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "Modifiers": {}
+    },
+    "Defense": {
+      "EnumID": 1,
+      "BaseValue": 5,
+      "BaseIncreases": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "Modifiers": {}
+    },
+    "Speed": {
+      "EnumID": 2,
+      "BaseValue": 5,
+      "BaseIncreases": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "Modifiers": {}
+    },
+    "Attack": {
+      "EnumID": 3,
+      "BaseValue": 5,
+      "BaseIncreases": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "Modifiers": {}
+    }
+  }
+}

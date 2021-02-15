@@ -32,7 +32,7 @@ RobScene::RobScene() : Scene()
 	object->SetTag("Player");
 	//CollisionHandler::GetInstance()->AddObject(object);
 	//CollisionHandler::GetInstance()->AddObject(newObject);
-	CollisionHandler::GetInstance()->AddObject(obstacle);
+	//CollisionHandler::GetInstance()->AddObject(obstacle);
 
 	Debug::Info("Creating rob", __FILENAME__, __LINE__);
 	//object->GetComponent<DynamicMovement>()->target = newObject;

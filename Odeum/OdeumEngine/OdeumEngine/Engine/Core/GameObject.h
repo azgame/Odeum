@@ -35,9 +35,12 @@ public:
 	template<typename... Ts>
 	void RemoveComponents();
 
-	const Matrix4 GetTransform() const { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
-	OrientedBoundingBox& GetBoundingBox() { return bbox; }
-	void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
+	template<typename T>
+	bool HasComponent();
+
+	Matrix4 GetTransform() { return Matrix4(DirectX::XMMatrixTranspose(m_modelMatrix)); }
+	//OrientedBoundingBox& GetBoundingBox() { return bbox; }
+	//void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
 
 	void SetHit(bool hit) 
 	{ 
@@ -51,7 +54,7 @@ protected:
 
 	Matrix4 m_modelMatrix;
 	
-	OrientedBoundingBox bbox;
+	//OrientedBoundingBox bbox;
 	bool isHit;
 
 	// add transform
@@ -132,6 +135,16 @@ inline void GameObject::RemoveComponents()
 {
 	int unpacking[] = { 0, (RemoveComponent<Ts>(), 0)... }; // pack expansion trick. function call is a side effect of the initializer list being initialized to 0s, but is used for all va args, so we accomplish add component for all without recursively calling it
 	(void)unpacking; // suppress unused variable warning
+}
+
+template<typename T>
+inline bool GameObject::HasComponent()
+{
+	for (auto c : m_components)
+		if (dynamic_cast<T*>(c))
+			return true;
+
+	return false;
 }
 
 #endif

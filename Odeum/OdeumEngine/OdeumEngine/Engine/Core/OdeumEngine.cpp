@@ -10,8 +10,9 @@
 
 #include <functional>
 
-#include "../JSONUtility/json.hpp"
 #include "Utility.h"
+
+#include "../JSONUtility/json.hpp"
 
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
