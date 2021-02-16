@@ -54,8 +54,9 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 		gameObjects[i]->AddComponent<RenderComponent>();
 		gameObjects[i]->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 		gameObjects[i]->AddComponent<BoxCollider>();
-		gameObjects[i]->AddComponent<StatComponent>();
 	}
+
+	gameObjects[gameObjects.size() - 1]->AddComponent<StatComponent>();
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 

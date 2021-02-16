@@ -14,10 +14,21 @@ void StatComponent::OnAttach(GameObject* parent)
 
 	for (const auto& item : jsonReader.items())
 	{
-		std::cout << item.key() << "\n";
+		std::cout << item.value().size();
+		m_statData = std::vector<PlayerStat>(item.value().size());
+
 		for (const auto& val : item.value().items())
 		{
-			std::cout << "  " << val.key() << ": " << val.value() << "\n";
+			PlayerStat newStat;
+			newStat.type = (PlayerStatTypes)val.value()["EnumID"].get<int>();
+			newStat.baseValue = val.value()["BaseValue"].get<int>();
+
+			// can load any saved modifiers here
+
+			newStat.maxValue = newStat.baseValue;
+			newStat.currentValue = newStat.maxValue;
+
+			m_statData[val.value()["EnumID"].get<int>()] = newStat;
 		}
 	}
 }
