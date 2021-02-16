@@ -2,8 +2,8 @@
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 #include <math.h>
-#include "../Components/Rigidbody.h"
-#include "../Components/RenderComponent.h"
+#include "../Engine/CoreComponents/Rigidbody.h"
+#include "../Engine/CoreComponents/RenderComponent.h"
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  

@@ -3,10 +3,14 @@
 #include <time.h>  
 BattleScene::BattleScene()
 {
-    player1 = StatComponent();
+    player1Object = new GameObject();
+    player1Object->AddComponent<StatComponent>();
+    player1=player1Object->GetComponent<StatComponent>();
+    player2Object = new GameObject();
+    player2Object->AddComponent<StatComponent>();
+    player2 = player1Object->GetComponent<StatComponent>();
     //player1.SetAttack(20, 1, 1, 1, 1);
     //player2.SetAttack(20, 1, 1, 1, 1);
-    player2 = StatComponent();
     player1Keys.push_back(Key::J);
     player1Keys.push_back(Key::K);
     player1Keys.push_back(Key::L);
@@ -14,7 +18,8 @@ BattleScene::BattleScene()
     player2Keys.push_back(Key::S);
     player2Keys.push_back(Key::D);
     srand(time(NULL));
-    DecideFirstTurn(&player1, &player2);
+    DecideFirstTurn(player1, player2);
+  //  double defense = player1->GetStat(PlayerStatTypes::Defense).currentValue;
 }
 BattleScene::~BattleScene()
 {
@@ -50,6 +55,7 @@ void BattleScene::Update(const float deltaTime_)
                     if (Input::Get().isKeyPressed(player2Keys.at(i)))
                     {
                         player2Choice = i + 1;
+                       
                     }
                 }
             }
@@ -58,12 +64,12 @@ void BattleScene::Update(const float deltaTime_)
                 Debug::Warning("combat", __FILENAME__, __LINE__);
                 if (player1Turn)
                 {
-                    DamageCalculation(&player1, &player2, player1Choice, player2Choice);
+                    DamageCalculation(player1, player2, player1Choice, player2Choice);
                     player1Turn = false;
                 }
                 else
                 {
-                    DamageCalculation(&player2, &player1, player2Choice, player1Choice);
+                    DamageCalculation(player2, player1, player2Choice, player1Choice);
                     player1Turn = true;
                 }
                 player1Choice = player2Choice = 0;
@@ -77,8 +83,9 @@ void BattleScene::UIRender()
 {
     ImGui::Begin("Game UI");
     ImGui::Text("Enter game UI components here");
-
-    //std::string text = "p1health " + std::to_string(player1.GetCurrentHealth());
+    
+    
+    
     /*const char* textchar = text.c_str();
     ImGui::Text(textchar);*/
     ImGui::End();

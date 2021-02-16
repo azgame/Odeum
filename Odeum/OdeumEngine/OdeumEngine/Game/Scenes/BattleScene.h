@@ -2,7 +2,9 @@
 #define BATTLESCENE_H
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
-#include "../Components/StatComponent.h"
+
+#include "../Components/Player.h"
+
 
 class BattleScene : public Scene
 {
@@ -17,8 +19,11 @@ public:
 	void DecideFirstTurn(StatComponent* player1_, StatComponent* player2_);
 	// 1 rock 2 paper 3 scissors
 private:
-	StatComponent player1;
-	StatComponent player2;
+	StatComponent* player1;
+	StatComponent* player2;
+
+	GameObject* player1Object;
+	GameObject* player2Object;
 	bool player1Turn;
 	bool NPCBattle;
 	int player1Choice;
