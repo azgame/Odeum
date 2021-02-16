@@ -19,7 +19,8 @@ private:
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> playerObjects;
 
-	int bombTimer = 0;
+	int bombTimer = 100;
+	bool gameOver = false;
 };
 
 #endif#pragma once
