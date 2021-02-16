@@ -3,25 +3,25 @@
     "Health": {
       "EnumID": 0,
       "BaseValue": 5,
-      "LinModifiers": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "LinModifiers": {},
       "MulModifiers": {}
     },
     "Defense": {
       "EnumID": 1,
       "BaseValue": 5,
-      "LinModifiers": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "LinModifiers": {},
       "MulModifiers": {}
     },
     "Speed": {
       "EnumID": 2,
       "BaseValue": 5,
-      "LinModifiers": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "LinModifiers": {},
       "MulModifiers": {}
     },
     "Attack": {
       "EnumID": 3,
       "BaseValue": 5,
-      "LinModifiers": {"LevelPoints": 0, "Gear_01": 0, "Gear_02": 0, "Gear_03": 0},
+      "LinModifiers": {},
       "MulModifiers": {}
     }
   }
