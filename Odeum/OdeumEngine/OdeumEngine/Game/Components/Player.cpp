@@ -23,22 +23,22 @@ void Player::Update(float deltaTime)
 
 void Player::TakeDamage(double Damage)
 {
-	double defense = stats->GetStat(PlayerStatTypes::Defense).currentValue;
+	double defense = stats->GetStat(CombatStatTypes::Defense).currentValue;
 
 	if (Damage > defense)
 	{
-		stats->SetCurrentStat(0, PlayerStatTypes::Defense);
+		stats->SetCurrentStat(0, CombatStatTypes::Defense);
 		Damage -= defense;
-		stats->ModifyCurrentStat(-Damage, PlayerStatTypes::Health);
+		stats->ModifyCurrentStat(-Damage, CombatStatTypes::Health);
 
-		if (stats->GetStat(PlayerStatTypes::Health).currentValue <= 0)
+		if (stats->GetStat(CombatStatTypes::Health).currentValue <= 0)
 		{
 			// die
 		}
 	}
 	else
 	{
-		stats->ModifyCurrentStat(-Damage, PlayerStatTypes::Defense);
+		stats->ModifyCurrentStat(-Damage, CombatStatTypes::Defense);
 	}
 
 }

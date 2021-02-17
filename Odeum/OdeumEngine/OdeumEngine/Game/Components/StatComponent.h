@@ -6,7 +6,7 @@
 
 #include <unordered_map>
 
-enum class PlayerStatTypes
+enum class CombatStatTypes
 {
 	Health,
 	Defense,
@@ -21,7 +21,7 @@ enum class PlayerStatTypes
 
 struct PlayerStat
 {
-	PlayerStatTypes type;
+	CombatStatTypes type;
 	uint32_t baseValue;
 	uint32_t maxValue;
 	uint32_t currentValue;
@@ -29,7 +29,7 @@ struct PlayerStat
 
 struct PlayerStatMod
 {
-	PlayerStatTypes type;
+	CombatStatTypes type;
 	uint32_t id;
 	double value;
 	uint8_t duration;
@@ -47,7 +47,7 @@ public:
 	void Assign(StatComponent* Owner) { owner = Owner; }
 	virtual void Execute() = 0;
 
-	PlayerStatTypes type;
+	CombatStatTypes type;
 	UINT16 id;
 
 private:
@@ -64,22 +64,23 @@ public:
 	void OnStart() override;
 	void Update(float deltaTime) override;
 
-	bool HasModifier(uint32_t Id, PlayerStatTypes Type = PlayerStatTypes::None);
+	bool HasModifier(uint32_t Id, CombatStatTypes Type = CombatStatTypes::None);
 
-	PlayerStatMod GetModifier(uint32_t Id, PlayerStatTypes Type = PlayerStatTypes::None);
-	PlayerStat GetStat(PlayerStatTypes Type); // returns modified stat
+	PlayerStatMod GetModifier(uint32_t Id, CombatStatTypes Type = CombatStatTypes::None);
+	PlayerStat GetStat(CombatStatTypes Type); // returns modified stat
 
 	void AddModifier(PlayerStatMod Mod);
 
-	void SetCurrentStat(double Value, PlayerStatTypes Type);
-	void ModifyCurrentStat(double Value, PlayerStatTypes Type);
+	void SetCurrentStat(double Value, CombatStatTypes Type);
+	void ModifyCurrentStat(double Value, CombatStatTypes Type);
 
 private:
 
-	void RecalculateStat(PlayerStatTypes Type);
+	void RecalculateStat(CombatStatTypes Type);
+	void RecalculateAttackStat(CombatStatTypes Type);
 	
 	std::vector<PlayerStat> m_statData; // default stat data, including current and max values
-	std::unordered_map<PlayerStatTypes, std::vector<PlayerStatMod>> m_modifiers; // modifiers which affect stats
+	std::unordered_map<CombatStatTypes, std::vector<PlayerStatMod>> m_modifiers; // modifiers which affect stats
 	
 	// proc effects
 };
