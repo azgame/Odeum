@@ -23,6 +23,24 @@
       "BaseValue": 5,
       "LinModifiers": {},
       "MulModifiers": {}
+    },
+    "RockAttack": {
+      "EnumID": 4,
+      "BaseValue": 5,
+      "LinModifiers": {},
+      "MulModifiers": {}
+    },
+    "PaperAttack": {
+      "EnumID": 5,
+      "BaseValue": 5,
+      "LinModifiers": {},
+      "MulModifiers": {}
+    },
+    "ScissorAttack": {
+      "EnumID": 6,
+      "BaseValue": 5,
+      "LinModifiers": {},
+      "MulModifiers": {}
     }
   }
 }
