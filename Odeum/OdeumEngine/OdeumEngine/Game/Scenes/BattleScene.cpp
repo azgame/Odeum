@@ -19,7 +19,7 @@ BattleScene::BattleScene()
     player2Keys.push_back(Key::D);
     srand(time(NULL));
     DecideFirstTurn(player1, player2);
-  //  double defense = player1->GetStat(PlayerStatTypes::Defense).currentValue;
+    float test = player1->GetStat(PlayerStatTypes::Attack).currentValue * player1->GetStat(PlayerStatTypes::PaperAttack).currentValue;;
 }
 BattleScene::~BattleScene()
 {
@@ -93,67 +93,71 @@ void BattleScene::UIRender()
 void  BattleScene::DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType,int defenceType)
 { //1=rock 2=paper 3= scissors;
     bool miss = false;
-    float damage = 0;
-        //switch (attackType) {
-        //case 1: 
-        //    switch (defenceType)
-        //    {
-        //    case 1:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetRockModifier();
-        //        break;
-        //    case 2:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetRockModifier() * lessDamageModifier;
-        //        break;
-        //    case 3:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetRockModifier() * extraDamageModifier;
-        //        break;
-        //    default:
-        //        break;
-        //    }
-        //    break;
-        //case 2: 
-        //    switch (defenceType)
-        //    {
-        //    case 1:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetpaperModifier() * extraDamageModifier;
-        //        break;
-        //    case 2:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetpaperModifier();
-        //        break;
-        //    case 3:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetpaperModifier() * lessDamageModifier;
-        //        break;
-        //    default:
-        //        break;
-        //    }
-        //    break;
-        //case 3:
-        //    switch (defenceType)
-        //    {
-        //    case 1:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetScissorsModifier() * lessDamageModifier;
-        //        break;
-        //    case 2:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetScissorsModifier() * extraDamageModifier;
-        //        break;
-        //    case 3:
-        //         damage = attacker_->GetCurrentAttack() * attacker_->GetScissorsModifier();
-        //    default:
-        //        break;
-        //    }
-        //    break;
-        //default:
-        //    break;
-        //}
-        //if (!miss)
-        //{
-        //    defender_->TakeDamage(damage);
-        //    if (defender_->GetCurrentHealth() <= 0)
-        //    {
-        //        //die and end combat
-        //    }
-        // }
-       // std::string string = defender_->GetCurrentHealth()->toString();
+    double damage = 0;
+        switch (attackType) {
+        case 1: 
+            switch (defenceType)
+            {
+            case 1:
+                
+                damage = attacker_->GetStat(PlayerStatTypes::Attack).currentValue* attacker_->GetStat(PlayerStatTypes::RockAttack).currentValue;
+                break;
+            case 2:
+                damage = attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::RockAttack).currentValue * lessDamageModifier;
+                break;
+            case 3:
+                damage = attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::RockAttack).currentValue * extraDamageModifier;
+                break;
+            default:
+                break;
+            }
+            break;
+        case 2: 
+            switch (defenceType)
+            {
+            case 1:
+                damage = attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::PaperAttack).currentValue * extraDamageModifier;
+                break;
+           case 2:
+                damage = attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::PaperAttack).currentValue;
+                break;
+            case 3:
+                attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::PaperAttack).currentValue * lessDamageModifier;
+                break;
+            default:
+                break;
+            }
+            break;
+        case 3:
+            switch (defenceType)
+            {
+            case 1:
+                attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::ScissorsAttack).currentValue * lessDamageModifier;
+                break;
+            case 2:
+                attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::ScissorsAttack).currentValue * extraDamageModifier;
+                break;
+            case 3:
+                attacker_->GetStat(PlayerStatTypes::Attack).currentValue * attacker_->GetStat(PlayerStatTypes::ScissorsAttack).currentValue;
+           default:
+                break;
+            }
+           break;
+        default:
+           break;
+        }
+        if (!miss)
+        {
+            //defender_->TakeDamage(damage);
+            if (defender_->GetStat(PlayerStatTypes::Health).currentValue <= 0)
+            {
+                //die and end combat
+            }
+         }
+       // float e = defender_->GetStat(PlayerStatTypes::Health).currentValue;
+      //  std::string string = std::to_string(e);
+     //   const char* textchar = string.c_str();
+     //   ImGui::Text(textchar);
         Debug::Warning("combat", __FILENAME__, __LINE__);
 }
 void BattleScene::DecideFirstTurn(StatComponent* player1_, StatComponent* player2_)
