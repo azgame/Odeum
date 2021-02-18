@@ -170,4 +170,24 @@ void StatComponent::RecalculateAttackStat(CombatStatTypes Type)
 	m_statData[(int)Type].currentValue = baseAttack;
 	m_statData[(int)Type].maxValue = baseAttack;
 }
+void StatComponent::TakeDamage(double Damage)
+{
+	double defense = m_statData[(int)CombatStatTypes::Defense].currentValue;
 
+	if (Damage > defense)
+	{
+		SetCurrentStat(0, CombatStatTypes::Defense);
+		Damage -= defense;
+		ModifyCurrentStat(-Damage, CombatStatTypes::Health);
+
+		if (GetStat(CombatStatTypes::Health).currentValue <= 0)
+		{
+			// die
+		}
+	}
+	else
+	{
+		ModifyCurrentStat(-Damage, CombatStatTypes::Defense);
+	}
+
+}

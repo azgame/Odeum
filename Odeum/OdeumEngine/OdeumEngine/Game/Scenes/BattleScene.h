@@ -21,7 +21,7 @@ public:
 private:
 	StatComponent* player1;
 	StatComponent* player2;
-
+	int damageFlux=10.0f;
 	GameObject* player1Object;
 	GameObject* player2Object;
 	bool player1Turn;
@@ -33,6 +33,7 @@ private:
 	std::vector<Key::KeyCode> player2Keys;
 	float extraDamageModifier=1.5f;
 	float lessDamageModifier=0.5f;
+	
 };
 
 

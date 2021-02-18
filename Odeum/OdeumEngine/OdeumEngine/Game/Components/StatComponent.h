@@ -63,7 +63,7 @@ public:
 	void OnDetach() {};
 	void OnStart() override;
 	void Update(float deltaTime) override;
-
+	void TakeDamage(double Damage);
 	bool HasModifier(uint32_t Id, CombatStatTypes Type = CombatStatTypes::None);
 
 	PlayerStatMod GetModifier(uint32_t Id, CombatStatTypes Type = CombatStatTypes::None);
