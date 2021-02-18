@@ -17,6 +17,7 @@ public:
 	virtual void UIRender();
 	void DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType, int defenceType);
 	void DecideFirstTurn(StatComponent* player1_, StatComponent* player2_);
+	void TakeDamage(double Damage, StatComponent* defender_);
 	// 1 rock 2 paper 3 scissors
 private:
 	StatComponent* player1;

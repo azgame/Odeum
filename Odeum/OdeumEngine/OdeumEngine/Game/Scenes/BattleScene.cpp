@@ -8,7 +8,7 @@ BattleScene::BattleScene()
     player1=player1Object->GetComponent<StatComponent>();
     player2Object = new GameObject();
     player2Object->AddComponent<StatComponent>();
-    player2 = player1Object->GetComponent<StatComponent>();
+    player2 = player2Object->GetComponent<StatComponent>();
     //player1.SetAttack(20, 1, 1, 1, 1);
     //player2.SetAttack(20, 1, 1, 1, 1);
     player1Keys.push_back(Key::J);
@@ -19,7 +19,7 @@ BattleScene::BattleScene()
     player2Keys.push_back(Key::D);
     srand(time(NULL));
     DecideFirstTurn(player1, player2);
-    
+    player1->SetCurrentStat(3, CombatStatTypes::Health);
 }
 BattleScene::~BattleScene()
 {
@@ -90,18 +90,31 @@ void BattleScene::UIRender()
     
     const char* textchar = text.c_str();
     ImGui::Text(textchar);
+    test = player1->GetStat(CombatStatTypes::Defense).currentValue;
+    text = std::to_string(test);
+
+    textchar = text.c_str();
+    ImGui::Text(textchar);
+
+
      test = player2->GetStat(CombatStatTypes::Health).currentValue;
      text = std::to_string(test);
 
      textchar = text.c_str();
     ImGui::Text(textchar);
+    test = player2->GetStat(CombatStatTypes::Defense).currentValue;
+    text = std::to_string(test);
+
+    textchar = text.c_str();
+    ImGui::Text(textchar);
     ImGui::End();
  }
 void  BattleScene::DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType,int defenceType)
 { //1=rock 2=paper 3= scissors;
+    srand(time(NULL));
     bool miss = false;
     double damage = rand() % damageFlux;
-    damage = damage / 100 + 1;
+    damage = (damage / 100) + 1;
         switch (attackType) {
         case 1: 
            damage*= attacker_->GetStat(CombatStatTypes::RockAttack).currentValue;
@@ -164,13 +177,9 @@ void  BattleScene::DamageCalculation(StatComponent* attacker_, StatComponent* de
                 damage = 1;
                 Debug::Warning("small dmg", __FILENAME__, __LINE__);
             }
-            if (damage >= 10)
-            {
-                damage = 1;
-                Debug::Warning("big dmg", __FILENAME__, __LINE__);
-            }
-            damage = 1;
-            defender_->TakeDamage(damage);
+         
+            //defender_->TakeDamage(damage);
+            TakeDamage(damage, defender_);
             if (defender_->GetStat(CombatStatTypes::Health).currentValue <= 0)
             {
                 //die and end combat
@@ -199,4 +208,31 @@ void BattleScene::DecideFirstTurn(StatComponent* player1_, StatComponent* player
         player1Turn = true;
     }*/
     //1 extra point in speed is 1%chance to go first caps at 80%
+}
+void BattleScene::TakeDamage(double Damage, StatComponent* defender_)
+{
+    double defense = defender_->GetStat(CombatStatTypes::Defense).currentValue;
+
+    if (Damage > defense)
+    {
+        defender_->SetCurrentStat(0, CombatStatTypes::Defense);
+
+        Damage -= defense;
+        if(defender_->GetStat(CombatStatTypes::Health).currentValue> Damage)
+        defender_->ModifyCurrentStat(-Damage, CombatStatTypes::Health);
+        else
+        {
+            defender_->SetCurrentStat(0, CombatStatTypes::Health);
+        }
+
+        if (defender_->GetStat(CombatStatTypes::Health).currentValue <= 0)
+        {
+            // die
+        }
+    }
+    else
+    {
+        defender_->ModifyCurrentStat(-Damage, CombatStatTypes::Defense);
+    }
+
 }
