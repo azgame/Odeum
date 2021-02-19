@@ -92,7 +92,8 @@ void GuessScene::Update(const float deltaTime_) {
 		if (playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() == -5.0f) {
 
 		} else {
-			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() - 5.0f, 0.0f, -4.0f, 0.0f) );
+			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>
+				()->GetPosition().GetX() - 5.0f, 0.0f, -4.0f, 0.0f) );
 		}
 	}
 	if (Input::Get().isKeyPressed(Key::D)) {
@@ -100,12 +101,21 @@ void GuessScene::Update(const float deltaTime_) {
 
 		}
 		else {
-			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() + 5.0f, 0.0f, -4.0f, 0.0f));
+			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>
+				()->GetPosition().GetX() + 5.0f, 0.0f, -4.0f, 0.0f));
 		}
 	}
 
 	if (Input::Get().isKeyPressed(Key::E)) {
-		
+		for (int i = 0; i < 3; i++)
+		{
+			if (gameObjects.at(i)->GetComponent<Rigidbody>
+				()->GetPosition().GetX() == playerObjects.back()->GetPosition().GetX()){
+			
+				gameObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4())
+
+			}
+		}
 	}
 
 }
@@ -117,10 +127,7 @@ void GuessScene::UIRender()
 	ImGui::Begin("Game UI");
 	ImGui::Text("Enter game UI components here");
 
-	if (gameObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetY() > 25.0f)
-	{
-		ImGui::Text("You win!");
-	}
+
 
 	ImGui::End();
 }
