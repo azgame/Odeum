@@ -23,7 +23,7 @@ private:
 
 	std::vector<GameObject*> playerObjects;
 
-	std::vector<bool> PLayerPushedButtonForDoorChoice;
+	std::vector<bool> PlayerPushedButtonForDoorChoice;
 
 };
 

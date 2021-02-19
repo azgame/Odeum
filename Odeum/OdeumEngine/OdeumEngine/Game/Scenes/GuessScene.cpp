@@ -1,15 +1,15 @@
-#include "DiegoGuessScene.h"
+#include "GuessScene.h"
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
-#include "../Components/Rigidbody.h"
-#include "../Components/RenderComponent.h"
+#include "../../Engine/CoreComponents/Rigidbody.h"
+#include "../../Engine/CoreComponents/RenderComponent.h"
 #include <random>
 #include <algorithm>
 
 using std::shuffle;
 
-DiegoGuessScene::DiegoGuessScene()
+GuessScene::GuessScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
@@ -78,15 +78,19 @@ DiegoGuessScene::DiegoGuessScene()
 }
 
 
-DiegoGuessScene::~DiegoGuessScene() {
+GuessScene::~GuessScene() {
 };
 
-bool DiegoGuessScene::Initialize()
+bool GuessScene::Initialize()
 {
 	return true;
 }
 
-void DiegoGuessScene::Update(const float deltaTime_) {
+void GuessScene::Update(const float deltaTime_) {
+	
+	if (Input::Get().isKeyPressed(Key::A)) {
+		
+	}
 
 
 
@@ -94,8 +98,8 @@ void DiegoGuessScene::Update(const float deltaTime_) {
 
 
 
-void DiegoGuessScene::UIRender()
-{
+void GuessScene::UIRender()
+{ 
 	ImGui::Begin("Game UI");
 	ImGui::Text("Enter game UI components here");
 
