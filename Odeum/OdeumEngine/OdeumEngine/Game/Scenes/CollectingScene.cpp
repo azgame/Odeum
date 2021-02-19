@@ -21,7 +21,7 @@ CollectingScene::CollectingScene()
         OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
         playerObjects.push_back(new GameObject());
         playerObjects.back()->AddComponent<Rigidbody>();
-        playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 2,0, 0, 0));
+        playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4-6, rand()%3-1, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
@@ -156,7 +156,7 @@ bool CollectingScene::Initialize()
               objectSpawnTimes.at(i) -= deltaTime_;
               if (objectSpawnTimes.at(i) <= 0)
               {
-                  objectSpawnTimes.at(i)= rand() % 4 + 1.5f;
+                  objectSpawnTimes.at(i)= rand() % 2 + 0.5f;
                   objectSpawned.at(i) = true;
                   targetObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % (int)maxRight*2+minRight, rand() % (int)maxHeight, 0, 0));
               }
