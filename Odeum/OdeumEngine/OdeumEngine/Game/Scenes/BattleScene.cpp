@@ -86,24 +86,24 @@ void BattleScene::UIRender()
     ImGui::Begin("Game UI");
     ImGui::Text("Enter game UI components here");
     float test = player1->GetStat(CombatStatTypes::Health).currentValue;
-    std::string text = std::to_string(test);
+    std::string text = "player1 health: "+std::to_string(test);
     
     const char* textchar = text.c_str();
     ImGui::Text(textchar);
     test = player1->GetStat(CombatStatTypes::Defense).currentValue;
-    text = std::to_string(test);
+    text = "player1 defence: " + std::to_string(test);
 
     textchar = text.c_str();
     ImGui::Text(textchar);
 
 
      test = player2->GetStat(CombatStatTypes::Health).currentValue;
-     text = std::to_string(test);
+     text = "player2 health: " + std::to_string(test);
 
      textchar = text.c_str();
     ImGui::Text(textchar);
     test = player2->GetStat(CombatStatTypes::Defense).currentValue;
-    text = std::to_string(test);
+    text = "player2 defence: " + std::to_string(test);
 
     textchar = text.c_str();
     ImGui::Text(textchar);
@@ -179,6 +179,7 @@ void  BattleScene::DamageCalculation(StatComponent* attacker_, StatComponent* de
             }
          
             //defender_->TakeDamage(damage);
+            Debug::Warning("damage: "+std::to_string(damage), __FILENAME__, __LINE__);
             TakeDamage(damage, defender_);
             if (defender_->GetStat(CombatStatTypes::Health).currentValue <= 0)
             {

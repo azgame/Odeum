@@ -83,19 +83,7 @@ bool CollectingScene::Initialize()
                  }
              }
             
-             for (int x = 0; x < targetObjects.size(); x++)
-             {
-                 if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), targetObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
-                 {
-                     // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
-                     Debug::Warning("overlap", __FILENAME__, __LINE__);
-                     targetObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                     objectSpawned.at(x) = false;
-                     UpdateScore(i, 1);
-                 }
-
-
-             }
+             
 
 
              playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.03, 0, 0));
@@ -133,19 +121,55 @@ bool CollectingScene::Initialize()
              {
                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-5, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 0, 0));
              }
+             for (int x = 0; x < targetObjects.size(); x++)
+             {
+                 if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), targetObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
+                 {
+                     // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
+                     Debug::Warning("overlap", __FILENAME__, __LINE__);
+                     targetObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
+                     objectSpawned.at(x) = false;
+                     UpdateScore(i, 1);
+                 }
+
+
+             }
          }
      }
 }
 
   void CollectingScene::UIRender()
 {
+      ImGui::Begin("Game UI");
+      ImGui::Text("Enter game UI components here");
+      for (int i = 0; i < playerScores.size(); i++)
+      {
+          float test = playerScores.at(i);
+          std::string text = "player "+ std::to_string(i) + " score: " + std::to_string(test);
 
+          const char* textchar = text.c_str();
+          ImGui::Text(textchar);
+          if (test >= maxScore)
+          {
+              text = "player " + std::to_string(i) + " wins";
+              textchar = text.c_str();
+              ImGui::Text(textchar);
+          }
+      }
+      ImGui::End();
 }
   void CollectingScene::UpdateScore(int scorePosition_, int score_)
   {
       playerScores.at(scorePosition_) += score_;
       if (playerScores.at(scorePosition_) >= maxScore)
+      {
           won = true;
+          for (int i = 0; i < playerObjects.size(); i++)
+          {
+              playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+          }
+      }
+
   }
   void CollectingScene::spawnObjects(float deltaTime_)
   {

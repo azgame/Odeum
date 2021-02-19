@@ -1,14 +1,14 @@
-#ifndef DODGESCENE_H
-#define DODGESCENE_H
+#ifndef DODGEFLYSCENE_H
+#define DODGEFLYSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-class DodgeScene : public Scene
+class DodgeFlyScene : public Scene
 {
 public:
-	DodgeScene();
-	virtual ~DodgeScene();
+	DodgeFlyScene();
+	virtual ~DodgeFlyScene();
 	int MaxPlayers;
 	int MaxObstacles = 10;
 	//float timeToStart;
@@ -31,14 +31,14 @@ private:
 	Simplex<Vector3> simplex;
 	//these ensure the player may not hold the button
 
-	
+
 	//targetHeights is the three difrent heights the player needs to maintain.
 	float maxVelocity = 7;
 	float maxHeight = 9;
 	float minHeight = -9;
 	float minRight = -17.5;
 	float maxRight = 17.5;
-	bool currentDeadPlayers;
+	int currentDeadPlayers=0;
 	bool won;
 };
 

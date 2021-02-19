@@ -1,4 +1,5 @@
-#include "DodgeScene.h"
+#include "DodgeFlyScene.h"
+
 
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
@@ -13,7 +14,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
 
-DodgeScene::DodgeScene()
+DodgeFlyScene::DodgeFlyScene()
 {
     MaxPlayers = 4;
     srand(time(NULL));
@@ -34,12 +35,12 @@ DodgeScene::DodgeScene()
     {
         obstacleObjects.push_back(new GameObject());
         obstacleObjects.back()->AddComponent<Rigidbody>();
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20, 0, 0, 0));
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
-        
+
         objectSpawned.push_back(false);
     }
     playerKeysLeft.push_back(Key::A);
@@ -57,16 +58,16 @@ DodgeScene::DodgeScene()
     playerKeysUp.push_back(Key::U);
 
 }
- DodgeScene::~DodgeScene()
+DodgeFlyScene::~DodgeFlyScene()
 {
 
 }
 //float timeToStart;
-bool DodgeScene::Initialize()
+bool DodgeFlyScene::Initialize()
 {
     return true;
 }
-void DodgeScene::Update(const float deltaTime_)
+void DodgeFlyScene::Update(const float deltaTime_)
 {
     if (!won)
     {
@@ -87,7 +88,7 @@ void DodgeScene::Update(const float deltaTime_)
                     }
                 }
 
-                
+
 
 
                 playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.03, 0, 0));
@@ -130,12 +131,13 @@ void DodgeScene::Update(const float deltaTime_)
                     if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), obstacleObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
                     {
 
-                        Debug::Warning("overlap", __FILENAME__, __LINE__);
+                        Debug::Warning("overlap"+ std::to_string(currentDeadPlayers), __FILENAME__, __LINE__);
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
-                        if (currentDeadPlayers >= MaxPlayers - 1)
+                        
+                        if (currentDeadPlayers >= MaxPlayers-1)
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);
@@ -158,12 +160,12 @@ void DodgeScene::Update(const float deltaTime_)
     }
 }
 
-void DodgeScene::UIRender()
+void DodgeFlyScene::UIRender()
 {
 
 }
 
-void DodgeScene::spawnObjects(float deltaTime_)
+void DodgeFlyScene::spawnObjects(float deltaTime_)
 {
 
     for (int i = 0; i < obstacleObjects.size(); i++)
@@ -178,7 +180,7 @@ void DodgeScene::spawnObjects(float deltaTime_)
         {
             objectSpawnTimes.at(i) = rand() % 3 + 0.5f;
             objectSpawned.at(i) = true;
-            obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(minRight, rand() % (int)maxHeight*2+minHeight, 0, 0));
+            obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(minRight, rand() % (int)maxHeight * 2 + minHeight, 0, 0));
             obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 6 + 2.5f, 0, 0, 0));
         }
     }
