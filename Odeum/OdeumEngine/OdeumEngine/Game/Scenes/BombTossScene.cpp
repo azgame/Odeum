@@ -66,6 +66,7 @@ void BombTossScene::Update(const float deltaTime_) {
 		gameOver = true;
 	}
 	else {
+		//Ideally we'd have the bomb flash red faster and faster whenever its about to explode. 
 		bombTimer--;
 	}
 	//OdeumEngine::Get().GetCamera().SetPosition(Vector3(gameObjects.back()->GetComponent<Rigidbody>()->GetPosition()) + Vector3(0.0f, 10.0f, -25.0f));
@@ -78,6 +79,8 @@ void BombTossScene::Update(const float deltaTime_) {
 void BombTossScene::UIRender()
 {
 	ImGui::Begin("Game UI");
+	ImGui::Text("Player 1 controls: L");
+	ImGui::Text("Player 2 controls: A");
 
 	if (gameOver == true) {
 		if (gameObjects.at(1)->Tag() == "p1") {
