@@ -89,10 +89,24 @@ bool GuessScene::Initialize()
 void GuessScene::Update(const float deltaTime_) {
 	
 	if (Input::Get().isKeyPressed(Key::A)) {
-		
+		if (playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() == -5.0f) {
+
+		} else {
+			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() - 5.0f, 0.0f, -4.0f, 0.0f) );
+		}
+	}
+	if (Input::Get().isKeyPressed(Key::D)) {
+		if (playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() == 5.0f) {
+
+		}
+		else {
+			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() + 5.0f, 0.0f, -4.0f, 0.0f));
+		}
 	}
 
-
+	if (Input::Get().isKeyPressed(Key::E)) {
+		
+	}
 
 }
 
