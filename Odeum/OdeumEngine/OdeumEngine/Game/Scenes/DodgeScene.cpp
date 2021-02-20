@@ -34,7 +34,7 @@ DodgeScene::DodgeScene()
     {
         obstacleObjects.push_back(new GameObject());
         obstacleObjects.back()->AddComponent<Rigidbody>();
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20, 0, 0, 0));
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));

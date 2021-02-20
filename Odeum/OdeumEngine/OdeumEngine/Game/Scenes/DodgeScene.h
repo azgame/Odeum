@@ -38,7 +38,7 @@ private:
 	float minHeight = -9;
 	float minRight = -17.5;
 	float maxRight = 17.5;
-	bool currentDeadPlayers;
+	int currentDeadPlayers;
 	bool won;
 };
 
