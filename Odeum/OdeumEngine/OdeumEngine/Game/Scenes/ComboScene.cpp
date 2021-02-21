@@ -89,7 +89,6 @@ ComboScene::ComboScene(){
 }
 
 ComboScene::~ComboScene(){
-
 }
 
 bool ComboScene::Initialize()
