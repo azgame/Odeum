@@ -15,7 +15,7 @@ public:
 
 private:
 	std::vector<GameObject*> gameObjects;
-
+	std::vector<GameObject*> playerObjects;
 	std::vector<int> combo;
 };
 
