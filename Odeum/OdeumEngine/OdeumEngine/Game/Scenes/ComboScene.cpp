@@ -56,6 +56,36 @@ ComboScene::ComboScene(){
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5, 1.0, 0.5));
 	playerObjects.back()->SetTag("Player 1");
 
+
+	// push back 4 sets of numbers to the combo (we want multiple uses of 1 key)
+	combo.push_back(0);
+	combo.push_back(1);
+	combo.push_back(2);
+	combo.push_back(3);
+	combo.push_back(0);
+	combo.push_back(1);
+	combo.push_back(2);
+	combo.push_back(3);
+	combo.push_back(0);
+	combo.push_back(1);
+	combo.push_back(2);
+	combo.push_back(3);
+	combo.push_back(0);
+	combo.push_back(1);
+	combo.push_back(2);
+	combo.push_back(3);
+
+	std::random_device rd;
+	std::default_random_engine rng(rd());
+
+	shuffle(combo.begin(), combo.end(), rng);
+
+
+	//adding key commands
+	playerKeysUp.push_back(Key::W);
+	playerKeysLeft.push_back(Key::A);
+	playerKeysDown.push_back(Key::S);
+	playerKeysRight.push_back(Key::D);
 }
 
 ComboScene::~ComboScene(){
@@ -73,6 +103,16 @@ void ComboScene::Update(const float deltaTime_){
 
 void ComboScene::UIRender(){
 	ImGui::Begin("Game UI");
+
+	ImGui::Text("Controls:");
+	ImGui::Text("Left = 0, right = 1, up = 2, down = 3");
+
+
+	std::string text = "Combo is: " + std::to_string(combo.at(0)) + " " + std::to_string(combo.at(1)) + " " + std::to_string(combo.at(2)) + " " + std::to_string(combo.at(3));
+
+	const char* textchar = text.c_str();
+	ImGui::Text(textchar);
+
 
 	ImGui::End();
 }
