@@ -9,11 +9,12 @@
 #include <time.h>  
 CollectingScene::CollectingScene()
 {
+    OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
+
     MaxPlayers = 4;
     srand(time(NULL));
     for (int i = 0; i < MaxPlayers; i++)
     {
-        OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
         playerObjects.push_back(new GameObject());
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 2,0, 0, 0));
@@ -23,6 +24,7 @@ CollectingScene::CollectingScene()
         playerScores.push_back(0);
 
     }
+
     for (int i = 0; i < MaxTargets; i++)
     {
         targetObjects.push_back(new GameObject());
@@ -31,8 +33,9 @@ CollectingScene::CollectingScene()
         targetObjects.back()->AddComponent<RenderComponent>();
         targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
         objectSpawnTimes.push_back(0);
-            objectSpawned.push_back(false);
+        objectSpawned.push_back(false);
     }
+
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::S);
 

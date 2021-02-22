@@ -93,6 +93,8 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	groundPlane.normal = Vector3(kYUnitVector);
 
 	NavMeshManager::GenerateNavMesh(0.25f, groundPlane, obstacles);*/
+
+	frameTimeTotal = 0.0;
 }
 
 GameScene::~GameScene()
@@ -108,6 +110,13 @@ bool GameScene::Initialize()
 void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
+
+	frameTimeTotal += deltaTime_;
+
+	if (frameTimeTotal > 10.0)
+	{
+		OdeumEngine::Get().SetCurrentScene(8);
+	}
 }
 
 void GameScene::UIRender()

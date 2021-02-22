@@ -3,6 +3,7 @@
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
+#include "../../Engine/Core/CameraController.h"
 
 // Scene index 8
 class ButtonMashingScene : public Scene
@@ -17,6 +18,9 @@ public:
 	virtual void UIRender();
 
 private:
+
+	CameraController cameraController;
+
 	std::vector<GameObject*> gameObjects;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;

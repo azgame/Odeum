@@ -34,6 +34,7 @@ Counting::~Counting()
 
 bool Counting::Initialize()
 {
+	LOG("Creating Counting Scene")
 	return true;
 }
 
@@ -85,6 +86,8 @@ void Counting::Update(const float deltaTime_)
 			}
 		}
 	}
+
+	__debugbreak;
 }
 
 void Counting::UIRender()

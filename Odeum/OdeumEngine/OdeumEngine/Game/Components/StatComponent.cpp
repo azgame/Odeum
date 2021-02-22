@@ -134,7 +134,7 @@ void StatComponent::ModifyCurrentStat(double Value, CombatStatTypes Type)
 
 void StatComponent::RecalculateStat(CombatStatTypes Type)
 {
-	if ((int)Type > 3)
+	if ((int)Type > (int)CombatStatTypes::Attack)
 	{
 		RecalculateAttackStat(Type);
 		return;

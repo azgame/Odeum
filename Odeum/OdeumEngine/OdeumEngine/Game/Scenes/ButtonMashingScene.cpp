@@ -37,6 +37,8 @@ bool ButtonMashingScene::Initialize()
 
 void ButtonMashingScene::Update(const float deltaTime_)
 {
+	//cameraController.UpdateMainCamera();
+
 	timeToStart -= deltaTime_;
 	//gameObjects.back()->GetComponent<Rigidbody>()->
 	//gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(0, -0.05, 0, 0));

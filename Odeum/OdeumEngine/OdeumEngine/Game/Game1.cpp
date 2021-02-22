@@ -58,6 +58,11 @@ void Game1::BuildScene()
 
 	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to a negative number!");
 
+	SceneObjects::Get()->UnloadCurrentScene();
+
+	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
+	SceneObjects::Get()->SetCurrentScene(m_currentSceneNum);
+
 	switch (OdeumEngine::Get().GetCurrentScene())
 	{
 	case 1:
@@ -98,13 +103,9 @@ void Game1::BuildScene()
 		break;
 	}
 
-	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
-	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
 
 	SceneObjects::Get()->InitializeObjects();
-
 	SceneGraph::Get()->LoadGraphicsObjects();
-
 	SceneObjects::Get()->UpdateObjects(0.0167f);
 }
