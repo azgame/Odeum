@@ -170,4 +170,3 @@ void StatComponent::RecalculateAttackStat(CombatStatTypes Type)
 	m_statData[(int)Type].currentValue = baseAttack;
 	m_statData[(int)Type].maxValue = baseAttack;
 }
-

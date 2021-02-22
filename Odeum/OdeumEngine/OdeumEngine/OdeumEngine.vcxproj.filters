@@ -91,6 +91,9 @@
     <ClCompile Include="Game\Scenes\MultiTaskingScene.cpp" />
     <ClCompile Include="Game\Scenes\CollectingScene.cpp" />
     <ClCompile Include="Engine\CoreComponents\Ai.cpp" />
+    <ClCompile Include="Game\Scenes\DodgeScene.cpp" />
+    <ClCompile Include="Game\Scenes\DodgeFlyScene.cpp" />
+    <ClCompile Include="Game\Scenes\Collecting3DScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -215,6 +218,9 @@
     <ClInclude Include="Game\Components\StatComponent.h" />
     <ClInclude Include="Game\Scenes\MultiTaskingScene.h" />
     <ClInclude Include="Game\Scenes\CollectingScene.h" />
+    <ClInclude Include="Game\Scenes\DodgeScene.h" />
+    <ClInclude Include="Game\Scenes\DodgeFlyScene.h" />
+    <ClInclude Include="Game\Scenes\Collecting3DScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
