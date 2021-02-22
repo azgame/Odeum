@@ -1,18 +1,16 @@
-#ifndef DODGEFLYSCENE_H
-#define DODGEFLYSCENE_H
+#ifndef COLLECTING3DSCENE_H
+#define COLLECTING3DSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-class DodgeFlyScene : public Scene
+class Collecting3DScene : public Scene
 {
 public:
-	DodgeFlyScene();
-	virtual ~DodgeFlyScene();
+	Collecting3DScene();
+	virtual ~Collecting3DScene();
 	int MaxPlayers;
-	int MaxObstaclesLeft = 10;
-	int MaxObstaclesRight = 10;
-	int MaxObstaclesUp = 20;
+	int MaxCollectables=10;
 	//float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
@@ -22,15 +20,15 @@ public:
 private:
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
-	std::vector<GameObject*> obstacleObjects;
+	std::vector<GameObject*> collectableObjects;
 	//lane 1 = left 
 	//lane 2 = right 
 	//lane 3 = up
-	std::vector<int> obstacleLane;
+	
 	std::vector<GameObject*> backgroundObjects;
 	std::vector<float> objectSpawnTimes;
 	std::vector<bool> objectSpawned;
-	std::vector<bool> playerDead;
+	std::vector<int> playerScore;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;
 	std::vector<Key::KeyCode> playerKeysRight;
@@ -49,7 +47,7 @@ private:
 	float maxRight = 17.5;
 	float minUp = -10;
 	float maxUp = 0;
-	int currentDeadPlayers=0;
+	int maxScore=10;
 	bool won;
 };
 

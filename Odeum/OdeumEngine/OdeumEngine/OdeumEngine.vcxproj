@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Scenes\Collecting3DScene.cpp" />
     <ClCompile Include="Game\Scenes\DodgeFlyScene.cpp" />
     <ClCompile Include="Game\Scenes\DodgeScene.cpp" />
     <ClCompile Include="Game\Scenes\CollectingScene.cpp" />
@@ -236,6 +237,7 @@
     <ClCompile Include="Game\Components\StatComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Scenes\Collecting3DScene.h" />
     <ClInclude Include="Game\Scenes\DodgeFlyScene.h" />
     <ClInclude Include="Game\Scenes\DodgeScene.h" />
     <ClInclude Include="Game\Scenes\CollectingScene.h" />

@@ -1,4 +1,5 @@
-#include "DodgeFlyScene.h"
+#include "Collecting3DScene.h"
+
 
 
 
@@ -14,7 +15,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
 
-DodgeFlyScene::DodgeFlyScene()
+Collecting3DScene::Collecting3DScene()
 {
     MaxPlayers = 4;
     srand(time(NULL));
@@ -22,7 +23,7 @@ DodgeFlyScene::DodgeFlyScene()
     OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0f, 45.0f, 0.0f), Vector3(0.0f, 1, 0.0f));
     for (int i = 0; i < MaxPlayers; i++)
     {
-        
+
         playerObjects.push_back(new GameObject());
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4 - 6, rand() % 4 - 1, 0, 0));
@@ -30,7 +31,7 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-        playerDead.push_back(false);
+        playerScore.push_back(0);
 
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
@@ -40,43 +41,20 @@ DodgeFlyScene::DodgeFlyScene()
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-    
-    for (int i = 0; i < MaxObstaclesLeft; i++)
+
+    for (int i = 0; i < MaxCollectables; i++)
     {
-        obstacleObjects.push_back(new GameObject());
-        obstacleObjects.back()->AddComponent<Rigidbody>();
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
-        obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
-        obstacleObjects.back()->AddComponent<ComplexCollider>();
-        objectSpawnTimes.push_back(rand() % 13 + 1.8f);
+        collectableObjects.push_back(new GameObject());
+        collectableObjects.back()->AddComponent<Rigidbody>();
+        collectableObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
+        collectableObjects.back()->AddComponent<RenderComponent>();
+        collectableObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
+        collectableObjects.back()->AddComponent<ComplexCollider>();
+        objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
-        obstacleLane.push_back(1);
+        
     }
-    for (int i = 0; i < MaxObstaclesRight; i++)
-    {
-        obstacleObjects.push_back(new GameObject());
-        obstacleObjects.back()->AddComponent<Rigidbody>();
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
-        obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
-        obstacleObjects.back()->AddComponent<ComplexCollider>();
-        objectSpawnTimes.push_back(rand() % 13 + 1.8f);
-        objectSpawned.push_back(false);
-        obstacleLane.push_back(2);
-    }
-    for (int i = 0; i < MaxObstaclesUp; i++)
-    {
-        obstacleObjects.push_back(new GameObject());
-        obstacleObjects.back()->AddComponent<Rigidbody>();
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
-        obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
-        obstacleObjects.back()->AddComponent<ComplexCollider>();
-        objectSpawnTimes.push_back(rand() % 13 + 1.8f);
-        objectSpawned.push_back(false);
-        obstacleLane.push_back(3);
-    }
+   
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::D);
     playerKeysDown.push_back(Key::S);
@@ -100,16 +78,16 @@ DodgeFlyScene::DodgeFlyScene()
     playerKeysUp.push_back(Key::U);
 
 }
-DodgeFlyScene::~DodgeFlyScene()
+Collecting3DScene::~Collecting3DScene()
 {
 
 }
 //float timeToStart;
-bool DodgeFlyScene::Initialize()
+bool Collecting3DScene::Initialize()
 {
     return true;
 }
-void DodgeFlyScene::Update(const float deltaTime_)
+void Collecting3DScene::Update(const float deltaTime_)
 {
     if (!won)
     {
@@ -117,14 +95,13 @@ void DodgeFlyScene::Update(const float deltaTime_)
 
         for (int i = 0; i < playerObjects.size(); i++)
         {
-            if (!playerDead.at(i))
-            {
-                
+            
+
 
 
 
                 playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0, 0.03, 0));
-                
+
                 if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
@@ -140,15 +117,15 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 }
                 if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                 {
-                    if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < maxVelocity)
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.1, 0, 0));
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < maxVelocity)
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.1, 0, 0));
                 }
                 else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -maxVelocity)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.1, 0, 0));
                 }
-                if (!Input::Get().isKeyPressed(playerKeysDown.at(i))&&!Input::Get().isKeyPressed(playerKeysUp.at(i))&& !Input::Get().isKeyPressed(playerKeysLeft.at(i))&& !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
+                if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() >= 0)
                     {
@@ -165,7 +142,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)
                 {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 2, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                   
+
                 }
                 else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight)
                 {
@@ -193,36 +170,34 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
                     }
                 }
-               
+
                 for (int z = 0; z < playerObjects.size(); z++)
                 {
                     if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
                     {
-                        if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ()-0.1)
+                        if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ() - 0.1)
                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 10, 0));
                         else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() < playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ())
                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
                     }
                 }
-                for (int x = 0; x < obstacleObjects.size(); x++)
+                for (int x = 0; x < collectableObjects.size(); x++)
                 {
-                    if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), obstacleObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
+                    if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), collectableObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
                     {
 
-                        Debug::Warning("overlap"+ std::to_string(currentDeadPlayers), __FILENAME__, __LINE__);
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-                        playerDead.at(i) = true;
-                        currentDeadPlayers += 1;
                         
-                        if (currentDeadPlayers >= MaxPlayers-1)
+                       
+                       // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                        playerScore.at(i) += 1;
+                        collectableObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
+                        objectSpawnTimes.at(x) = rand() % 2 + 0.5f;
+                           
+                        objectSpawned.at(x) = false;
+                        if (maxScore <= playerScore.at(i))
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);
-                            for (int t = 0; t < obstacleObjects.size(); t++)
-                            {
-                                obstacleObjects.at(t)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-                            }
                             for (int w = 0; w < playerObjects.size(); w++)
                             {
                                 playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
@@ -233,70 +208,28 @@ void DodgeFlyScene::Update(const float deltaTime_)
 
 
                 }
-            }
+            
         }
     }
 }
 
-void DodgeFlyScene::UIRender()
+void Collecting3DScene::UIRender()
 {
 
 }
 
-void DodgeFlyScene::spawnObjects(float deltaTime_)
+void Collecting3DScene::spawnObjects(float deltaTime_)
 {
-    
-    for (int i = 0; i < obstacleObjects.size(); i++)
+
+    for (int i = 0; i < collectableObjects.size(); i++)
     {
-       
-        switch (obstacleLane.at(i))
-        {
-        case 1:
-            if (obstacleObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > 25)
-            {
-                objectSpawned.at(i) = false;
-            }
-            break;
-        case 2:
-            if (obstacleObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < -25)
-            {
-                objectSpawned.at(i) = false;
-            }
-            break;
-        case 3:
-            if (obstacleObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < -25)
-            {
-                objectSpawned.at(i) = false;
-            }
-            break;
-        default:
-            break;
-        }
-       
         if (objectSpawned.at(i) == false)
             objectSpawnTimes.at(i) -= deltaTime_;
         if (objectSpawnTimes.at(i) <= 0)
         {
-            objectSpawnTimes.at(i) = rand() % 3 + 0.5f;
+            objectSpawnTimes.at(i) = rand() % 2 + 0.5f;
             objectSpawned.at(i) = true;
-           
-            switch (obstacleLane.at(i))
-            {
-            case 1:
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(minRight - 10, rand() % (int)maxHeight * 2.05f + (minHeight*1.05f), 0, 0));
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 8 + 2.5f, 0, 0, 0));
-                break;
-            case 2:
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(maxRight + 10, rand() % (int)maxHeight * 2.05f + (minHeight * 1.05f), 0, 0));
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-rand() % 8 - 2.5f, 0, 0, 0));
-                break;
-            case 3:
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % (int)maxRight * 2.05f + (minRight * 1.05f), maxHeight+10, 0, 0));
-                obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -rand() % 8 - 2.5f, 0, 0));
-                break;
-            default:
-                break;
-            }
+            collectableObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % (int)maxRight * 2+ (minRight*1), rand() % (int)maxHeight * 2 + (minHeight * 1), rand() % (int)minUp*-0.6f-2 , 0));
         }
     }
 }

@@ -17,6 +17,7 @@
 #include "Scenes/CollectingScene.h"
 #include "Scenes/DodgeScene.h"
 #include "Scenes/DodgeFlyScene.h"
+#include "Scenes/Collecting3DScene.h"
 Game1::Game1() : GameInterface()
 {
 }
@@ -100,6 +101,9 @@ void Game1::BuildScene()
 		break;
 	case 13:
 		m_currentScene = new DodgeFlyScene();
+		break;
+	case 14:
+		m_currentScene = new Collecting3DScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();
