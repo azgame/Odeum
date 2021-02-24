@@ -1,14 +1,15 @@
 #ifndef AI_H
 #define AI_H
-#include "../Engine/Core/Component.h"
-#include "../Engine/AI/ActionNode.h"
-#include "../Engine/AI/Inverter.h"
-#include "../Engine/AI/Selector.h"
-#include "../Engine/AI/Sequence.h"
+#include "../Core/Component.h"
+#include "../AI/ActionNode.h"
+#include "../AI/Inverter.h"
+#include "../AI/Selector.h"
+#include "../AI/Sequence.h"
 class Ai :public Component
 {
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 	std::vector<Node*> selectorNodes;
 	Node* countUpNode;

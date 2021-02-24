@@ -2,8 +2,8 @@
 #define SPHERECOLLIDER_H
 
 #include "../../pch.h"
-#include "../../Engine/Core/Component.h"
-#include "../Game/Components/Rigidbody.h"
+#include "../Core/Component.h"
+#include "Rigidbody.h"
 
 class SphereCollider : public Component
 {
@@ -11,6 +11,7 @@ public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 
 	// Getters

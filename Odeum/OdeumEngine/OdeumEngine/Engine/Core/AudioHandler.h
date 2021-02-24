@@ -8,7 +8,7 @@
 #include <fmod.hpp>
 #include "../Math/Vector.h"
 // might not need this here vv
-#include "../Game/Components/AudioSource.h"
+#include "../CoreComponents/AudioSource.h"
 
 #define MAX_AUDIO_CHANNELS 10
 

@@ -20,6 +20,12 @@ void SceneObjects::RemoveGameObject(GameObject* go)
 		sm_sceneGameObjects.erase(it);
 }
 
+void SceneObjects::InitializeObjects()
+{
+	for (auto go : sm_sceneGameObjects)
+		go->OnStart();
+}
+
 void SceneObjects::UpdateObjects(float deltaTime)
 {
 	for (auto go : sm_sceneGameObjects)

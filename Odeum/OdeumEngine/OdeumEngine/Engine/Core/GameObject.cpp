@@ -23,9 +23,10 @@ GameObject::~GameObject()
 	m_components.clear();
 }
 
-void GameObject::Initialize(std::string modelTextureLoadFile)
+void GameObject::OnStart()
 {
-	fileName = modelTextureLoadFile;
+	for (auto component : m_components)
+		component->OnStart();
 }
 
 void GameObject::Update(float deltaTime)

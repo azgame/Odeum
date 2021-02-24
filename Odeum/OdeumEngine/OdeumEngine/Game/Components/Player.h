@@ -5,11 +5,14 @@
 #include "../../Engine/Core/Component.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
+#include "StatComponent.h"
+
 class Player : public Component {
 public:
 	// overridden functions
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() override;
 	void Update(float deltaTime) override;
 
 	// getters
@@ -18,8 +21,12 @@ public:
 	// setters
 	inline void AddKey(Key::KeyCode key) { playerKeys.push_back(key); };
 
+	void TakeDamage(double Damage);
+
 private:
 	std::vector<Key::KeyCode> playerKeys;
+
+	StatComponent* stats;
 };
 
 #endif

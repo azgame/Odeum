@@ -2,8 +2,8 @@
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
-#include "../Components/Rigidbody.h"
-#include "../Components/RenderComponent.h"
+#include "../../Engine/CoreComponents/Rigidbody.h"
+#include "../../Engine/CoreComponents/RenderComponent.h"
 
 BombTossScene::BombTossScene() {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
@@ -41,6 +41,7 @@ BombTossScene::BombTossScene() {
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Bomb");
+
 	bombTimer = 100;
 }
 

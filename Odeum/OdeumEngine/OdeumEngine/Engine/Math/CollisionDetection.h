@@ -3,9 +3,9 @@
 
 #include <memory>
 #include "../Core/Camera.h"
-#include "../Game/Components/SphereCollider.h"
-#include "../Game/Components/BoxCollider.h"
-#include "../Game/Components/ComplexCollider.h"
+#include "../CoreComponents/SphereCollider.h"
+#include "../CoreComponents/BoxCollider.h"
+#include "../CoreComponents/ComplexCollider.h"
 
 struct Ray;
 struct OrientedBoundingBox;

@@ -2,7 +2,7 @@
 #define SCENEGRAPH_H
 
 #include "../../../pch.h"
-#include "../../../Game/Components/RenderComponent.h"
+#include "../../CoreComponents/RenderComponent.h"
 #include <queue>
 
 class SceneGraph

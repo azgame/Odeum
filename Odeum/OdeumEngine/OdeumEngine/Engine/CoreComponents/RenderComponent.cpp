@@ -1,6 +1,6 @@
 #include "RenderComponent.h"
 
-#include "../../Engine/Rendering/DirectX12/SceneGraph.h"
+#include "../Rendering/DirectX12/SceneGraph.h"
 
 void RenderComponent::OnAttach(GameObject* parent)
 {

@@ -13,6 +13,8 @@
 #include "../Engine/Rendering/DirectX12/SceneGraph.h"
 #include "../Engine/Core/SceneObjects.h"
 #include "Scenes/counting.h"
+#include "Scenes/MultiTaskingScene.h"
+#include "Scenes/CollectingScene.h"
 Game1::Game1() : GameInterface()
 {
 }
@@ -85,6 +87,12 @@ void Game1::BuildScene()
 	case 9:
 		m_currentScene = new BattleScene();
 		break;
+	case 10:
+		m_currentScene = new MultiTaskingScene();
+		break;
+	case 11:
+		m_currentScene = new CollectingScene();
+		break;
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;
@@ -93,6 +101,8 @@ void Game1::BuildScene()
 	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
+
+	SceneObjects::Get()->InitializeObjects();
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 

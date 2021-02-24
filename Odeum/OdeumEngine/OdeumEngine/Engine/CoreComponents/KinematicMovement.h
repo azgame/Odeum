@@ -8,6 +8,7 @@ class KinematicMovement : public Component
 public:
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 	GameObject* object;
 	//target is what we are moving towards

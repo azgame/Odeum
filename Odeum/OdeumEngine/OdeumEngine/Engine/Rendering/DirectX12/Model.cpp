@@ -4,7 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../../../Game/Components/RenderComponent.h"
+#include "../../CoreComponents/RenderComponent.h"
 
 #include <thread>
 

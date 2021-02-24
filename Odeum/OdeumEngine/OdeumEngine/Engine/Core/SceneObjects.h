@@ -21,6 +21,7 @@ public:
 
 	void AddGameObject(GameObject* go);
 	void RemoveGameObject(GameObject* go);
+	void InitializeObjects();
 	void UpdateObjects(float deltaTime);
 
 	void Uninitialize();

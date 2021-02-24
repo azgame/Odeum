@@ -18,7 +18,7 @@ public:
 	GameObject(std::string tag_ = "Default");
 	~GameObject();
 
-	void Initialize(std::string modelTextureLoadFile);
+	void OnStart();
 	virtual void Update(float deltaTime);
 
 	template<typename T>

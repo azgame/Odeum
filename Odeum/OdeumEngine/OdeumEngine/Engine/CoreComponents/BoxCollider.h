@@ -9,6 +9,7 @@ class BoxCollider : public ColliderComponent
 public:
 	void OnAttach(GameObject* parent) override;
 	void OnDetach() override {};
+	void OnStart() {};
 	void Update(float deltaTime) override;
 
 	// Getters

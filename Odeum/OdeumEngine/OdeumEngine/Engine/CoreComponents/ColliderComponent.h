@@ -2,7 +2,7 @@
 #define COLLIDERCOMPONENT_H
 
 #include "../../pch.h"
-#include "../../Engine/Core/Component.h"
+#include "../Core/Component.h"
 
 enum class ColliderType
 {
@@ -18,6 +18,7 @@ public:
 
 	virtual void OnAttach(GameObject* parent) override;
 	virtual void OnDetach() {};
+	virtual void OnStart() {};
 	virtual void Update(float deltaTime) {};
 
 	ColliderType GetColliderType() { return m_type; }
