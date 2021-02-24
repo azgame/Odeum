@@ -227,8 +227,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider* cc1, ComplexCollide
 
 	Vector3 vi1 = Vector3(r1->GetVelocity());
 	Vector3 vi2 = Vector3(r2->GetVelocity());
-	Vector3 wi1 = Vector3(r1->GetAngularVelocity());
-	Vector3 wi2 = Vector3(r2->GetAngularVelocity());
+	Vector4 wi1 = Vector4(r1->GetAngularVelocity());
+	Vector4 wi2 = Vector4(r2->GetAngularVelocity());
 
 	float m1 = r1->GetMass();
 	float m2 = r2->GetMass();
@@ -260,6 +260,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider* cc1, ComplexCollide
 
 	Vector3 wf1 = wi1 + Math::Cross(pos1, n * j) / i1;
 	Vector3 wf2 = wi2 + Math::Cross(pos2, n * -j) / i2;
-	r1->SetAngularVelocity(Vector4(wf1, 1.0f), wf1.Mag());
-	r2->SetAngularVelocity(Vector4(wf2, 1.0f), wf2.Mag());
+	float mag1 = wf1.Mag(); //* 0.0167;
+	float mag2 = wf2.Mag(); //* 0.0167;
+	r1->SetAngularVelocity(Vector4(wf1, 0.0f), 0.0005f);
+	r2->SetAngularVelocity(Vector4(wf2, 0.0f), 0.0005f);
 }

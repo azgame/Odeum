@@ -44,8 +44,8 @@ public:
 	inline void SetAngularVelocity(Vector4 angularVelocity, float rotationSpeed) { rb_totalAngularVelocity = angularVelocity; rb_rotationSpeed = rotationSpeed; }
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
 	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
-	inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_rotation = Matrix4(DirectX::XMMatrixRotationAxis(rotation, angle)); } //UpdateTransform(); }
-	//inline void SetRotation(Vector4 rotation, float angle, float rotSpeed) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); rb_rotationSpeed = rotSpeed; } //UpdateTransform(); }
+	//inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_rotation = Matrix4(DirectX::XMMatrixRotationAxis(rotation, angle)); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
 	//inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
 	//inline void SetRotation(Quaternion rotationQuat, float rotSpeed) { rb_orientation = rotationQuat; rb_rotationSpeed = rotSpeed; } //UpdateTransform();}
 	inline void SetScale(Vector4 scale) { rb_scale = scale; }
@@ -65,7 +65,7 @@ private:
 	Vector4 rb_totalVelocity;
 	Vector4 rb_totalAngularVelocity;
 	Vector4 rb_scale;
-	//Quaternion rb_orientation;
+	Quaternion rb_orientation;
 
 	Matrix3 rb_inertiaTensor;
 	Matrix3 rb_inertiaTensorInv;
@@ -86,11 +86,13 @@ private:
 
 	//void UpdateOrientationQuaternion();
 
+	void UpdateOrientation(float deltaTime);
+
 	void UpdateInertiaTensor();
 
 	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_angle, rb_rotation, rb_scale); }
-	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_rotation, rb_scale); }
-	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, rb_scale); }
+	//inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_rotation, rb_scale); }
+	inline void UpdateTransform() { m_gameObject->UpdateTransform(rb_position, rb_orientation, rb_scale); }
 };
 
 #endif
