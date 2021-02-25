@@ -310,7 +310,7 @@ bool CollisionDetection::GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2)
 	return false;
 }
 
-bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2, float &t)
+bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2)
 {
 	float distance = (sc1->GetPosition() - sc2->GetPosition()).Mag();
 

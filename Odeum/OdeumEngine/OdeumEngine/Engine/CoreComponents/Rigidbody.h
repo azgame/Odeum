@@ -35,7 +35,7 @@ public:
 
 	// gotta change this
 	//inline Vector4 GetRotation() { return Vector4(rb_orientation); }
-	//inline Quaternion GetOrientation() { return rb_orientation; }
+	inline Quaternion GetOrientation() { return rb_orientation; }
 	inline Matrix4 GetRotation() { return rb_rotation; }
 	inline Matrix3 GetInvInertiaTensor() { return rb_inertiaTensorInv; }
 

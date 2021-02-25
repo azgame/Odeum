@@ -34,7 +34,7 @@ public:
 	void Update();
 	void Uninitialize();
 
-	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, float e);
+	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2);
 	void SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc);
 	void OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2);
 	void GJKCollisionResponse(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& simplex);
