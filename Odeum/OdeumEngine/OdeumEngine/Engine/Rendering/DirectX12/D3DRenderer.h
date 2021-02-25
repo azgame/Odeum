@@ -5,6 +5,8 @@
 #include "CommandContext.h"
 #include "Model.h"
 
+#include "../../Core/Camera.h"
+
 class D3DRenderer : public AbstractRenderer
 {
 public:
@@ -18,6 +20,8 @@ public:
 	virtual void Uninitialize() override;
 
 private:
+
+	Camera mainCamera;
 
 	RootSignature m_rootSig;
 	GraphicsPSO m_colourPSO;
