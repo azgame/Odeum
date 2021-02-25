@@ -86,8 +86,6 @@ void Counting::Update(const float deltaTime_)
 			}
 		}
 	}
-
-	__debugbreak;
 }
 
 void Counting::UIRender()
