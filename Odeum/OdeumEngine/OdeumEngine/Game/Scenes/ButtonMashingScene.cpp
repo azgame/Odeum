@@ -9,7 +9,8 @@ ButtonMashingScene::ButtonMashingScene()
 {
 	MaxPlayers = 4;
 	timeToStart = 4;
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
+	OdeumEngine::Get().GetCamera().SetRotation(Quaternion());
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		gameObjects.push_back(new GameObject());
@@ -38,7 +39,7 @@ bool ButtonMashingScene::Initialize()
 void ButtonMashingScene::Update(const float deltaTime_)
 {
 	//cameraController.UpdateMainCamera();
-
+	cameraController.UpdateMainCamera();
 	timeToStart -= deltaTime_;
 	//gameObjects.back()->GetComponent<Rigidbody>()->
 	//gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(0, -0.05, 0, 0));
