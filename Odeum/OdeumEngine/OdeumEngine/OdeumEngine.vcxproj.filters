@@ -92,6 +92,7 @@
     <ClCompile Include="Game\Scenes\CollectingScene.cpp" />
     <ClCompile Include="Engine\CoreComponents\Ai.cpp" />
     <ClCompile Include="Game\Scenes\GuessScene.cpp" />
+    <ClCompile Include="Game\Scenes\Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Game\Scenes\MultiTaskingScene.h" />
     <ClInclude Include="Game\Scenes\CollectingScene.h" />
     <ClInclude Include="Game\Scenes\GuessScene.h" />
+    <ClInclude Include="Game\Scenes\Map.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
