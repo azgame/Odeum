@@ -97,9 +97,22 @@ public:
 		private:
 
 			CameraController cameraController;
-			typedef UndirectedGraph<Room*>::Node RoomNode;
+			typedef UndirectedGraph<Spaces*>::Node SpaceNode;
+			
+
+			UndirectedGraph<Spaces*> graph;
+
+			SpaceNode *loc;
+
+			stack<SpaceNode*> visitted;
+
+			Spaces *findSpace(const std::string& name);
+			Spaces *addSpace(const std::string& name);
+
+
 			std::vector<GameObject*> gameObjects;
-			std::vector<Spaces*>  *spaces;
+			std::vector<Spaces*>  spaces;
+			std::vector<Node*> nodes;
 
 
 

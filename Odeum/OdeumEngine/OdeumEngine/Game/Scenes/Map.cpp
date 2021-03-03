@@ -12,6 +12,11 @@
 MAPScene::MAPScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+
+	//were gonna tag all your nodes aka game objects via tag to work with our graph.
+
+
+
 	/*
 	// NODE1
 	gameObjects.push_back(new GameObject());
@@ -20,7 +25,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5, 0.5, 0.5));
-
+	playerObjects.back()->SetTag("Node1");
 	*/
 	
 
@@ -58,6 +63,32 @@ void MAPScene::Update(const float deltaTime_) {
 	*/ //later input stuff
 
 	//later inputstuff
+
+
+
+
+}
+
+////we need to change the name part logic for our tag system.
+//also we need to figure out the connecting spaces logic like the rooms loc.
+
+Spaces* MAPScene::findSpace(const std::string& name) {
+	for (size_t i = 0; i < spaces.size(); ++i)
+		if (spaces[i]->name == name)
+			return spaces[i];
+
+	return NULL;
+}
+
+
+
+Spaces* MAPScene::addSpace(const std::string& name) {
+	Spaces *spaceNode = new Spaces(name);
+
+	spaces.push_back(spaceNode);
+	graph.addNode(spaceNode);
+
+	return spaceNode;
 }
 
 

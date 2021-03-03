@@ -9,6 +9,9 @@
 
 struct Spaces {
 
+	Spaces(){};
+
+
 	void enter()
 	{
 		list<Trigger*>::iterator t = triggers.begin();
@@ -44,7 +47,7 @@ struct Spaces {
 
 private:
 
-	std::vector<Node*> nodes;
+	
 	list<Trigger*> triggers;
 
 	
