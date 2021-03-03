@@ -198,8 +198,19 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	*/
 }
 
+void CollisionHandler::SpherePlaneCollisionResponse(SphereCollider& sc, Plane p)
+{
+	Vector3 reflected = Math::Reflect(Vector3(sc.GetRigidbody()->GetVelocity()), p.normal);
+	sc.GetRigidbody()->SetVelocity(Vector4(reflected, 0.0f));
+}
+
 void CollisionHandler::SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc)
 {
+}
+
+void CollisionHandler::SphereOBBCollisionResponse(SphereCollider& sc, BoxCollider& bc)
+{
+
 }
 
 void CollisionHandler::OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2)

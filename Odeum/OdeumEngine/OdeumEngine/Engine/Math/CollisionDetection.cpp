@@ -1,6 +1,7 @@
 #include "CollisionDetection.h"
 
 #include "Ray.h"
+#include "Plane.h"
 #include "BoundingBox.h"
 #include "Simplex.h"
 #include "Collider.h"
@@ -308,6 +309,14 @@ bool CollisionDetection::GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2)
 	}
 
 	return false;
+}
+
+bool CollisionDetection::SpherePlaneCollisionDetection(SphereCollider* sc, Plane p)
+{
+	// i = Ax + By + Cz + D
+	float i = Math::Dot(sc->GetPosition(), p.normal) + p.d;
+	// if i <= sphere radius then there's a collision
+	return i <= sc->GetRadius();
 }
 
 bool CollisionDetection::SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2)

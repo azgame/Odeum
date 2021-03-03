@@ -7,6 +7,7 @@
 #include "../Core/Input.h"
 
 #include "Ray.h"
+#include "Plane.h"
 #include "OctSpatialPartition.h"
 #include "../CoreComponents/SphereCollider.h"
 
@@ -35,7 +36,9 @@ public:
 	void Uninitialize();
 
 	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2);
+	void SpherePlaneCollisionResponse(SphereCollider& sc, Plane p);
 	void SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc);
+	void SphereOBBCollisionResponse(SphereCollider& sc, BoxCollider& bc);
 	void OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2);
 	void GJKCollisionResponse(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& simplex);
 

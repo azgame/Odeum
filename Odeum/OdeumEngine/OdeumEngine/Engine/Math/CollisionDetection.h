@@ -11,6 +11,7 @@ struct Ray;
 struct OrientedBoundingBox;
 struct Collider;
 struct Collider2D;
+struct Plane;
 
 class CollisionDetection
 {
@@ -30,6 +31,7 @@ public:
 
 	static bool GJKCollisionDetection(ComplexCollider* cc1, ComplexCollider* cc2, Simplex<Vector3>& points);
 	static bool GJKCollisionDetection2D(Collider2D* s1, Collider2D* s2);
+	static bool SpherePlaneCollisionDetection(SphereCollider* sc, Plane p);
 	static bool SphereSphereCollisionDetection(SphereCollider* sc1, SphereCollider* sc2);
 	static bool SphereOBBCollisionDetection(SphereCollider* sc, BoxCollider* bc);
 	static bool OBBOBBBCollisionDetection(BoxCollider* bc1, BoxCollider* bc2);
