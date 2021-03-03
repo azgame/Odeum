@@ -69,7 +69,7 @@ void MAPScene::Update(const float deltaTime_) {
 
 }
 
-////we need to change the name part logic for our tag system.
+////we need to change the name part logic for our tag system or a number thing idea which ever works.
 //also we need to figure out the connecting spaces logic like the rooms loc.
 
 Spaces* MAPScene::findSpace(const std::string& name) {
