@@ -67,9 +67,11 @@ void GameObject::UpdateTransform(Vector4 position, Matrix4 rotation, Vector4 sca
 
 void GameObject::UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale)
 {
-	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * GetRotationMatrix(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
+	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * DirectX::XMMatrixRotationQuaternion(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 }
 
+// DirectX::XMMatrixRotationQuaternion already does this hahahaa
+// vv                                                         vv
 Matrix4 GameObject::GetRotationMatrix(Quaternion quat)
 {
 	
