@@ -112,7 +112,7 @@ void GuessScene::Update(const float deltaTime_) {
 			if (gameObjects.at(i)->GetComponent<Rigidbody>
 				()->GetPosition().GetX() == playerObjects.back()->GetPosition().GetX()){
 			
-				gameObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4())
+				gameObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4());
 
 			}
 		}

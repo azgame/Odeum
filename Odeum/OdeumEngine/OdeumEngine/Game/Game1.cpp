@@ -14,6 +14,7 @@
 #include "../Engine/Core/SceneObjects.h"
 #include "Scenes/counting.h"
 #include "Scenes/MultiTaskingScene.h"
+#include "Scenes/Map.h"
 #include "Scenes/CollectingScene.h"
 Game1::Game1() : GameInterface()
 {
@@ -92,6 +93,9 @@ void Game1::BuildScene()
 		break;
 	case 11:
 		m_currentScene = new CollectingScene();
+		break;
+	case 12:
+		m_currentScene = new MAPScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

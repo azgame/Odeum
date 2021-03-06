@@ -17,7 +17,9 @@ public:
 	virtual void UIRender();
 
 private:
+	Graph<GameObject*> map = Graph<GameObject*>(20, false);
 
+	std::vector<GameObject*> gameObjects;
 	CameraController cameraController;
 	float angle;
 	float direction;

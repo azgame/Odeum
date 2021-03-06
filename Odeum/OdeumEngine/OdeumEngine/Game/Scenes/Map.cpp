@@ -11,9 +11,50 @@
 MAPScene::MAPScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
-
 	//were gonna tag all your nodes aka game objects via tag to work with our graph.
 
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 1.0f, 1.0f));
+	gameObjects.back()->SetTag("Start");
+
+	map.push(gameObjects.back());
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+	map.push(gameObjects.back());
+
+	map.attachEdge(0, 1, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, -3.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(0, 2, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(1, 3, 0);
 	// NODE1
 	/*gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
