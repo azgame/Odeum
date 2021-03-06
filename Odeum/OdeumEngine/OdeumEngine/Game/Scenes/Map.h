@@ -4,9 +4,6 @@
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
-#include <vector>
-#include <list>
-#include "Spaces.h"
 
 class MAPScene : public Scene
 {
@@ -18,114 +15,9 @@ public:
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 
-	
-
-
-	public:
-		
-
-		template <class T>
-		class UndirectedGraph
-		{
-		public:
-			class Node
-			{
-				friend UndirectedGraph;
-
-			public:
-				Node(const T& data) : data(data)
-				{ }
-
-				T& getData()
-				{
-					return data;
-				}
-
-				std::vector<Node*>& getNeighbours()
-				{
-					return neighbours;
-				}
-
-			private:
-				T data;
-				std::vector<Node*> neighbours;
-			};
-
-			Node *addNode(const T& data)
-			{
-				Node *node = new Node(data);
-				nodes.push_back(node);
-				return node;
-			}
-
-			Node *findNode(const T& data)
-			{
-				for (unsigned i = 0; i < nodes.size(); i++)
-					if (nodes[i]->getData() == data)
-						return nodes[i];
-
-				return NULL;
-			}
-			//to get neighbour
-			void addEdge(Node *node1, Node *node2)
-			{
-				if (!node1 || !node2)
-					return;
-				node1->getNeighbours().push_back(node2);
-				node2->getNeighbours().push_back(node1);
-			}
-
-			void addEdge(const T& node1, const T& node2)
-			{
-				addEdge(findNode(node1), findNode(node2));
-			}
-
-
-
-
-
-
-
-
-		};
-
-
-
-
-
-
-		private:
-
-			CameraController cameraController;
-			typedef UndirectedGraph<Spaces*>::Node SpaceNode;
-			
-
-			UndirectedGraph<Spaces*> graph;
-
-			SpaceNode *loc;
-
-			stack<SpaceNode*> visitted;
-
-			Spaces *findSpace(const std::string& name);
-			Spaces *addSpace(const std::string& name);
-
-
-			std::vector<GameObject*> gameObjects;
-			std::vector<Spaces*>  spaces;
-			std::vector<Node*> nodes;
-
-
-
-			float angle;
-			float direction;
-
-		}
-	
-
-
-
-
-
-
-
+private:
+	CameraController cameraController;
+	float angle;
+	float direction;
+}
 #endif
