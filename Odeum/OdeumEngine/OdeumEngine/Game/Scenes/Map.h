@@ -18,7 +18,6 @@ public:
 
 private:
 
-	Graph<GameObject> g;
 	CameraController cameraController;
 	float angle;
 	float direction;
