@@ -21,5 +21,5 @@ private:
 	CameraController cameraController;
 	float angle;
 	float direction;
-}
+};
 #endif
