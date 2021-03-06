@@ -93,7 +93,6 @@
     <ClCompile Include="Engine\CoreComponents\Ai.cpp" />
     <ClCompile Include="Game\Scenes\GuessScene.cpp" />
     <ClCompile Include="Game\Scenes\Map.cpp" />
-    <ClCompile Include="Game\Scenes\Spaces.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />

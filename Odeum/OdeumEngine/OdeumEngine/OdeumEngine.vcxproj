@@ -211,7 +211,6 @@
     <ClCompile Include="Game\Scenes\GuessScene.cpp" />
     <ClCompile Include="Game\Scenes\Map.cpp" />
     <ClCompile Include="Game\Scenes\RobScene.cpp" />
-    <ClCompile Include="Game\Scenes\Spaces.h" />
     <ClCompile Include="Game\Scenes\StartScene.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\Model.cpp" />
     <ClCompile Include="Engine\CoreComponents\KinematicMovement.cpp" />
