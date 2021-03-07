@@ -95,6 +95,8 @@
     <ClCompile Include="Game\Scenes\DodgeFlyScene.cpp" />
     <ClCompile Include="Game\Scenes\Collecting3DScene.cpp" />
     <ClCompile Include="Game\GameObjects\Action.cpp" />
+    <ClCompile Include="Game\Scenes\ComboScene.cpp" />
+    <ClCompile Include="Game\Scenes\SpherePushingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -223,6 +225,8 @@
     <ClInclude Include="Game\Scenes\DodgeFlyScene.h" />
     <ClInclude Include="Game\Scenes\Collecting3DScene.h" />
     <ClInclude Include="Game\GameObjects\Action.h" />
+    <ClInclude Include="Game\Scenes\ComboScene.h" />
+    <ClInclude Include="Game\Scenes\SpherePushingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />

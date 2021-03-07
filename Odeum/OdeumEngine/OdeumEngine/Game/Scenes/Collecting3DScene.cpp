@@ -173,12 +173,15 @@ void Collecting3DScene::Update(const float deltaTime_)
 
                 for (int z = 0; z < playerObjects.size(); z++)
                 {
-                    if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                    if (z != i)
                     {
-                        if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ() - 0.1)
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 10, 0));
-                        else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() < playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ())
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
+                        if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                        {
+                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ() - 0.1)
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 10, 0));
+                            else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() < playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ())
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
+                        }
                     }
                 }
                 for (int x = 0; x < collectableObjects.size(); x++)

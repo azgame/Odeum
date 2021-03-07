@@ -15,14 +15,14 @@ ButtonMashingScene::ButtonMashingScene()
 	testObject2->AddComponent<Rigidbody>();
 	testObject2->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
 	testObject2->AddComponent<RenderComponent>();
-	//testObject2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
-	testObject2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0));
+	testObject2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+	//testObject2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0));
 	testObject = new GameObject();
 	testObject->AddComponent<Rigidbody>();
 	testObject->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
 	testObject->AddComponent<RenderComponent>();
 	testObject->AddComponent<AudioSource>();
-	testObject->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
+	testObject->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
 	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),45.6f);
 	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 0, -1, 0),10);
 	testObject2->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),90);
@@ -38,8 +38,8 @@ ButtonMashingScene::ButtonMashingScene()
 		gameObjects.back()->AddComponent<Rigidbody>();
 		gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i*5, -10, 0, 0));
 		gameObjects.back()->AddComponent<RenderComponent>();
-		gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
-		//gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
+		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
+		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
 	}
 	
