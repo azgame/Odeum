@@ -20,6 +20,7 @@ public:
 private:
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
+	std::vector<bool> playerDead;
 	
 
 
@@ -29,7 +30,6 @@ private:
 	std::vector<Key::KeyCode> playerKeysRight;
 	std::vector<Key::KeyCode> playerKeysUp;
 	std::vector<Key::KeyCode> playerKeysDown;
-	std::vector<Key::KeyCode> playerKeysJump;
 	Simplex<Vector3> simplex;
 
 
@@ -39,8 +39,6 @@ private:
 	float minHeight = -9;
 	float minRight = -17.5;
 	float maxRight = 17.5;
-	float minUp = -10;
-	float maxUp = 0;
 	int maxScore = 10;
 	bool won;
 };
