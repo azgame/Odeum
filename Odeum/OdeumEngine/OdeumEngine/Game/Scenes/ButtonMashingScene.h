@@ -4,7 +4,7 @@
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
-
+#include"../../Engine/Core/AudioHandler.h"
 // Scene index 8
 class ButtonMashingScene : public Scene
 {
@@ -20,7 +20,9 @@ public:
 private:
 
 	CameraController cameraController;
-
+	GameObject* testObject;
+	GameObject* testObject2;
+	
 	std::vector<GameObject*> gameObjects;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;

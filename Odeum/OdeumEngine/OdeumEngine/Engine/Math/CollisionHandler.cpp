@@ -115,7 +115,7 @@ void CollisionHandler::Uninitialize()
 	previousCollisions.clear();
 }
 
-void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, float e) {
+void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2) {
 	// Setup Variables
 	float m1 = sc1.GetRigidbody()->GetMass();
 	float m2 = sc2.GetRigidbody()->GetMass();
@@ -148,14 +148,14 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
 	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
 
-	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), sc1.GetRigidbody()->GetRotationSpeed());
-	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf1), sc2.GetRigidbody()->GetRotationSpeed());
-
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), wf1.Mag() * 0.0167f);
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2), wf2.Mag() * 0.0167f);
+	
 	/*
 	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
-	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetRotation());
 	//Quaternion wi2 = sc2.GetRigidbody()->GetOrientation();
-	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetRotation());
+	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetAngularVelocity());
+	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetAngularVelocity());
 
 	// linear velocity
 	Vector3 vf1 = (m1 * vi1 + m2 * vi2 + m2 * e * (vi2 - vi1)) / (m1 + m2);
@@ -167,9 +167,9 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 
 	// Update Spheres
 	sc1.GetRigidbody()->SetVelocity(Vector4(vf1));
-	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1));
+	sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1, 0.0f), wf1.Mag());
 	sc2.GetRigidbody()->SetVelocity(Vector4(vf2));
-	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2));
+	sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2, 0.0f), wf2.Mag());
 	*/
 	
 	/*
@@ -198,8 +198,19 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	*/
 }
 
+void CollisionHandler::SpherePlaneCollisionResponse(SphereCollider& sc, Plane p)
+{
+	Vector3 reflected = Math::Reflect(Vector3(sc.GetRigidbody()->GetVelocity()), p.normal);
+	sc.GetRigidbody()->SetVelocity(Vector4(reflected, 0.0f));
+}
+
 void CollisionHandler::SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc)
 {
+}
+
+void CollisionHandler::SphereOBBCollisionResponse(SphereCollider& sc, BoxCollider& bc)
+{
+
 }
 
 void CollisionHandler::OBBOBBCollisionRespones(BoxCollider& bc1, BoxCollider& bc2)
@@ -227,8 +238,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider* cc1, ComplexCollide
 
 	Vector3 vi1 = Vector3(r1->GetVelocity());
 	Vector3 vi2 = Vector3(r2->GetVelocity());
-	Vector3 wi1 = Vector3(r1->GetAngularVelocity());
-	Vector3 wi2 = Vector3(r2->GetAngularVelocity());
+	Vector4 wi1 = Vector4(r1->GetAngularVelocity());
+	Vector4 wi2 = Vector4(r2->GetAngularVelocity());
 
 	float m1 = r1->GetMass();
 	float m2 = r2->GetMass();
@@ -260,6 +271,8 @@ void CollisionHandler::GJKCollisionResponse(ComplexCollider* cc1, ComplexCollide
 
 	Vector3 wf1 = wi1 + Math::Cross(pos1, n * j) / i1;
 	Vector3 wf2 = wi2 + Math::Cross(pos2, n * -j) / i2;
-	r1->SetAngularVelocity(Vector4(wf1, 1.0f), wf1.Mag());
-	r2->SetAngularVelocity(Vector4(wf2, 1.0f), wf2.Mag());
+	float mag1 = wf1.Mag(); //* 0.0167;
+	float mag2 = wf2.Mag(); //* 0.0167;
+	r1->SetAngularVelocity(Vector4(wf1, 0.0f), 0.0005f);
+	r2->SetAngularVelocity(Vector4(wf2, 0.0f), 0.0005f);
 }

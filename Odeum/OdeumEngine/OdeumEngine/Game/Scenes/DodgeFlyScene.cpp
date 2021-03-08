@@ -215,7 +215,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
                         
-                        if (currentDeadPlayers >= MaxPlayers-1)
+                        if (currentDeadPlayers >= MaxPlayers)
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);

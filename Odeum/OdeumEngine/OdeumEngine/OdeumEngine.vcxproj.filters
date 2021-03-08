@@ -98,6 +98,8 @@
     <ClCompile Include="Game\GameObjects\ActionQueue.cpp" />
     <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
     <ClCompile Include="Game\GameObjects\Item.cpp" />
+    <ClCompile Include="Game\Scenes\ComboScene.cpp" />
+    <ClCompile Include="Game\Scenes\SpherePushingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -231,6 +233,8 @@
     <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
     <ClInclude Include="Game\GameObjects\Item.h" />
     <ClInclude Include="Game\GameObjects\GameTypes.h" />
+    <ClInclude Include="Game\Scenes\ComboScene.h" />
+    <ClInclude Include="Game\Scenes\SpherePushingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />

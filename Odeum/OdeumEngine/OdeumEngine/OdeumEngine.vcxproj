@@ -161,6 +161,7 @@
     <ClCompile Include="Game\Scenes\DodgeScene.cpp" />
     <ClCompile Include="Game\Scenes\CollectingScene.cpp" />
     <ClCompile Include="Game\Scenes\BattleScene.cpp" />
+    <ClCompile Include="Game\Scenes\ComboScene.cpp" />
     <ClCompile Include="Game\Scenes\counting.cpp" />
     <ClCompile Include="Engine\Core\SceneObjects.cpp" />
     <ClCompile Include="Engine\CoreComponents\Ai.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="Engine\Math\Transform.cpp" />
     <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
     <ClCompile Include="Game\Components\StatComponent.cpp" />
+    <ClCompile Include="Game\Scenes\SpherePushingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
@@ -252,6 +254,7 @@
     <ClInclude Include="Game\Scenes\DodgeScene.h" />
     <ClInclude Include="Game\Scenes\CollectingScene.h" />
     <ClInclude Include="Game\Scenes\BattleScene.h" />
+    <ClInclude Include="Game\Scenes\ComboScene.h" />
     <ClInclude Include="Game\Scenes\counting.h" />
     <ClInclude Include="Engine\Core\SceneObjects.h" />
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -372,6 +375,7 @@
     <ClInclude Include="Engine\Math\Transform.h" />
     <ClInclude Include="Game\Scenes\QuickDrawScene.h" />
     <ClInclude Include="Game\Components\StatComponent.h" />
+    <ClInclude Include="Game\Scenes\SpherePushingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">
