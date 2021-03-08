@@ -29,6 +29,7 @@ public:
 
 private:
 	Model m_model;
+	Matrix4 m_modelMatrix;
 	OrientedBoundingBox modelOBB;
 	bool isRendered;
 };

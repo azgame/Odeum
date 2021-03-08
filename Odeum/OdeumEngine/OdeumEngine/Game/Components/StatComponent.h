@@ -4,20 +4,9 @@
 #include "../../pch.h"
 #include "../../Engine/Core/Component.h"
 
-#include <unordered_map>
+#include "../GameObjects/GameTypes.h"
 
-enum class CombatStatTypes
-{
-	Health,
-	Defense,
-	Speed,
-	Attack,
-	RockAttack,
-	PaperAttack,
-	ScissorsAttack,
-	Count,
-	None
-};
+#include <unordered_map>
 
 struct PlayerStat
 {

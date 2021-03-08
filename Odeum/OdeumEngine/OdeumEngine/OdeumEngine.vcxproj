@@ -152,7 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
     <ClCompile Include="Game\GameObjects\Action.cpp" />
+    <ClCompile Include="Game\GameObjects\ActionQueue.cpp" />
+    <ClCompile Include="Game\GameObjects\Item.cpp" />
     <ClCompile Include="Game\Scenes\Collecting3DScene.cpp" />
     <ClCompile Include="Game\Scenes\DodgeFlyScene.cpp" />
     <ClCompile Include="Game\Scenes\DodgeScene.cpp" />
@@ -238,7 +241,12 @@
     <ClCompile Include="Game\Components\StatComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
     <ClInclude Include="Game\GameObjects\Action.h" />
+    <ClInclude Include="Game\GameObjects\ActionQueue.h" />
+    <ClInclude Include="Game\GameObjects\Item.h" />
+    <ClInclude Include="Game\GameObjects\Observer.h" />
+    <ClInclude Include="Game\GameObjects\GameTypes.h" />
     <ClInclude Include="Game\Scenes\Collecting3DScene.h" />
     <ClInclude Include="Game\Scenes\DodgeFlyScene.h" />
     <ClInclude Include="Game\Scenes\DodgeScene.h" />
