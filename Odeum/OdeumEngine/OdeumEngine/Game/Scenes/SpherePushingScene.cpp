@@ -22,7 +22,7 @@ SpherePushingScene::SpherePushingScene()
 
         playerObjects.push_back(new GameObject());
         playerObjects.back()->AddComponent<Rigidbody>();
-        playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 6 - 10, rand() % 4 - 1, 0, 0));
+        playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 6 - 10, 0, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetMass(1.0f);
         
@@ -33,16 +33,17 @@ SpherePushingScene::SpherePushingScene()
         
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
         playerDead.push_back(false);
+        playerLastVelocity.push_back(Vector4(0,0,0,0));
 
     }
    
-   /* backgroundObjects.push_back(new GameObject());
+    backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17.5, 9, 1, 0));
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-    */
+    
 
 
 playerKeysLeft.push_back(Key::A);
@@ -85,12 +86,9 @@ void SpherePushingScene::Update(const float deltaTime_)
             Debug::Warning("collision", __FILENAME__, __LINE__);
        }*/
     }
-    if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(0)->GetComponent<SphereCollider>(), playerObjects.at(1)->GetComponent<SphereCollider>()))
+    for (int i = 0; i < playerObjects.size(); i++)
     {
-        Vector4 V1 = playerObjects.at(0)->GetComponent<Rigidbody>()->GetVelocity();
-        playerObjects.at(0)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(1)->GetComponent<Rigidbody>()->GetVelocity());
-        playerObjects.at(1)->GetComponent<Rigidbody>()->SetVelocity(V1 );
-       
+        playerLastVelocity.at(i)=playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity();
     }
     for (int i = 0; i < playerObjects.size(); i++)
     {
@@ -104,19 +102,19 @@ void SpherePushingScene::Update(const float deltaTime_)
 
             if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-0.01, 0, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-6*deltaTime_, 0, 0, 0));
             }
             else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0.01, 0, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(6*deltaTime_, 0, 0, 0));
             }
             if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.01, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 6* deltaTime_, 0, 0));
             }
             else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.01, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -6* deltaTime_, 0, 0));
             }
 
             /* if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
@@ -136,8 +134,8 @@ void SpherePushingScene::Update(const float deltaTime_)
             if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < minRight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > maxRight)
             {
                 playerDead.at(i) = true;
-                playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity()+ Vector4(0, 0, 10, 0));
                 for (int E = 0; E < playerDead.size(); E++)
                 {
                     if (playerDead.at(E) == false)
@@ -155,20 +153,34 @@ void SpherePushingScene::Update(const float deltaTime_)
                 
 
 
-                /*for (int z = 0; z < playerObjects.size(); z++)
+                for (int z = 0; z < playerObjects.size(); z++)
                 {
                     if (z != i)
                     {
                         if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
                         {
-                            Debug::Warning("collision", __FILENAME__, __LINE__);
+                            
+                            Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
                             //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(playerObjects.at(z)->GetComponent<Rigidbody>()->GetVelocity());
+                            
+
+                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
+                            
+                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
+                           // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
                             //won = true;
+                            
+
                         }
                     }
-                } */
+                } 
+                /*if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(0)->GetComponent<SphereCollider>(), playerObjects.at(1)->GetComponent<SphereCollider>()))
+                {
+                    Vector4 V1 = playerObjects.at(0)->GetComponent<Rigidbody>()->GetVelocity();
+                    playerObjects.at(0)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(1)->GetComponent<Rigidbody>()->GetVelocity() * 1.1f);
+                    playerObjects.at(1)->GetComponent<Rigidbody>()->SetVelocity(V1 * 1.1f);
 
+                }*/
 
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
                 {
