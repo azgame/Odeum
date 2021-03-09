@@ -10,11 +10,11 @@ public:
 	TreadmillScene();
 	virtual ~TreadmillScene();
 	int MaxPlayers;
-
+	int MaxObstacles = 14;
 	//float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
-
+	void spawnObjects(float deltaTime_);
 	virtual void UIRender();
 
 private:
@@ -23,17 +23,19 @@ private:
 	std::vector<bool> playerDead;
 	std::vector<Vector4> playerLastVelocity;
 
-
+	float timeToStart;
 
 	std::vector<GameObject*> backgroundObjects;
+	std::vector<GameObject*> obstacleObjects;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;
 	std::vector<Key::KeyCode> playerKeysRight;
 	std::vector<Key::KeyCode> playerKeysUp;
 	std::vector<Key::KeyCode> playerKeysDown;
 	Simplex<Vector3> simplex;
-
-
+	std::vector<float> objectSpawnTimes;
+	std::vector<bool> objectSpawned;
+	int currentDeadPlayers;
 
 	float maxVelocity = 7;
 	float maxHeight = 9;
