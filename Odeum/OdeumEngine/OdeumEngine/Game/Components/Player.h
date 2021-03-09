@@ -27,8 +27,14 @@ public:
 	inline void SetJump(Key::KeyCode key) { jump = key; };
 	inline void SetInteract(Key::KeyCode key) { interact = key; };
 
-	void TakeDamage(double Damage);
+	inline Key::KeyCode GetUp() { return up; };
+	inline Key::KeyCode GetDown() { return down; };
+	inline Key::KeyCode GetRight() { return right; };
+	inline Key::KeyCode GetLeft() { return left; };
+	inline Key::KeyCode GetJump() { return jump; };
+	inline Key::KeyCode GetInteract() { return interact; };
 
+	void TakeDamage(double Damage);
 private:
 	std::vector<Key::KeyCode> playerKeys;
 
