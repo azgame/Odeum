@@ -131,7 +131,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 9, 0);
+	map.attachEdge(0, 10, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -142,7 +142,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 10, 0);
+	map.attachEdge(0, 11, 0);
 
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 11, 0);
+	map.attachEdge(0, 12, 0);
 
 
 
@@ -174,7 +174,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 12, 0);
+	map.attachEdge(0, 15, 0);
 	
 	///far right in square
 	
@@ -202,6 +202,55 @@ MAPScene::MAPScene()
 	map.attachEdge(0, 14, 0);
 
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	//middle stretch where brown and blue connect
+
+	//now this is the connecting side to middle but on brown steps
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13.3f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(0, 16, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.1f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(0, 19, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-7.1f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(0, 17, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.9f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(0, 18, 0);
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +266,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 	map.push(gameObjects.back());
 
-	map.attachEdge(0, 1, 0);
+	map.attachEdge(1, 1, 0);
 
 
 
@@ -349,7 +398,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 13, 0);
+	map.attachEdge(1, 15, 0);
 	
 
 	// far right side in square 
@@ -363,7 +412,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 12, 0);
+	map.attachEdge(1, 13, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -374,7 +423,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 12, 0);
+	map.attachEdge(1, 14, 0);
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	//middle stretch where brown and blue connect
@@ -390,7 +439,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 13, 0);
+	map.attachEdge(1, 16, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -401,7 +450,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 14, 0);
+	map.attachEdge(1, 17, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -412,7 +461,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 15, 0);
+	map.attachEdge(1, 18, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -423,57 +472,8 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Item");
 
 	map.push(gameObjects.back());
-	map.attachEdge(1, 16, 0);
+	map.attachEdge(1, 19, 0);
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	//middle stretch where brown and blue connect
-
-	//now this is the connecting side to middle but on brown steps
-
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13.3f, -0.4f, 26.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachEdge(0, 15, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.1f, -0.4f, 26.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachEdge(0, 16, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-7.1f, -0.4f, 26.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachEdge(0, 17, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.9f, -0.4f, 26.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachEdge(0, 18, 0);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////middle white block
