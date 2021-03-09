@@ -19,6 +19,7 @@
 #include "Scenes/DodgeFlyScene.h"
 #include "Scenes/Collecting3DScene.h"
 #include "Scenes/SpherePushingScene.h"
+#include "Scenes/TreadmillScene.h"
 Game1::Game1() : GameInterface()
 {
 }
@@ -113,6 +114,8 @@ void Game1::BuildScene()
 		break;
 	case 15:
 		m_currentScene = new SpherePushingScene();
+	case 16:
+		m_currentScene = new TreadmillScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

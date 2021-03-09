@@ -162,9 +162,25 @@ void SpherePushingScene::Update(const float deltaTime_)
                             
                             Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
                             //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
-                            
+                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
+                            {
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(3,0,0,0)+ playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                            }
+                            else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
+                            {
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-3, 0, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
 
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
+                            }
+                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                            {
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                            }
+                            else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                            {
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+
+                            }
+                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
                             
                             //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
                            // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
