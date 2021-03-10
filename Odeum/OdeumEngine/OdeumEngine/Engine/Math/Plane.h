@@ -1,5 +1,5 @@
 #ifndef PLANE_H
-#define PLANE_h
+#define PLANE_H
 
 #include "Vector.h"
 
