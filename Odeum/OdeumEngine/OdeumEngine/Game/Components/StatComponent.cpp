@@ -14,10 +14,36 @@ void StatComponent::OnAttach(GameObject* parent)
 
 	for (const auto& item : jsonReader.items())
 	{
-		std::cout << item.key() << "\n";
+		std::cout << item.value().size();
+		m_statData = std::vector<PlayerStat>(item.value().size());
+
 		for (const auto& val : item.value().items())
 		{
-			std::cout << "  " << val.key() << ": " << val.value() << "\n";
+			PlayerStat newStat;
+			newStat.type = (CombatStatTypes)val.value()["EnumID"].get<int>();
+			newStat.baseValue = val.value()["BaseValue"].get<int>();
+
+			// can load any saved modifiers here
+			auto linMods = val.value()["LinModifiers"];
+
+			for (const auto& lin : linMods.items())
+			{
+				PlayerStatMod mod;
+				// nyi -- load mods
+			}
+
+			auto mulMods = val.value()["mulModifiers"];
+
+			for (const auto& mul : mulMods.items())
+			{
+				PlayerStatMod mod;
+				// nyi -- load mods
+			}
+
+			newStat.maxValue = newStat.baseValue;
+			newStat.currentValue = newStat.maxValue;
+
+			m_statData[val.value()["EnumID"].get<int>()] = newStat;
 		}
 	}
 }
@@ -30,9 +56,9 @@ void StatComponent::Update(float deltaTime)
 {
 }
 
-bool StatComponent::HasModifier(uint32_t Id, PlayerStatTypes Type)
+bool StatComponent::HasModifier(uint32_t Id, CombatStatTypes Type)
 {
-	if (Type != PlayerStatTypes::None)
+	if (Type != CombatStatTypes::None)
 	{
 		for (auto mod : m_modifiers[Type])
 		{
@@ -63,9 +89,9 @@ void StatComponent::AddModifier(PlayerStatMod Mod)
 	RecalculateStat(Mod.type);
 }
 
-PlayerStatMod StatComponent::GetModifier(uint32_t Id, PlayerStatTypes Type)
+PlayerStatMod StatComponent::GetModifier(uint32_t Id, CombatStatTypes Type)
 {
-	if (Type != PlayerStatTypes::None)
+	if (Type != CombatStatTypes::None)
 	{
 		for (auto mod : m_modifiers[Type])
 		{
@@ -86,28 +112,34 @@ PlayerStatMod StatComponent::GetModifier(uint32_t Id, PlayerStatTypes Type)
 	PlayerStatMod noMod;
 	noMod.id = -1;
 	noMod.value = -1;
-	noMod.type = PlayerStatTypes::None;
+	noMod.type = CombatStatTypes::None;
 
 	return noMod;
 }
 
-PlayerStat StatComponent::GetStat(PlayerStatTypes Type)
+PlayerStat StatComponent::GetStat(CombatStatTypes Type)
 {
 	return m_statData[(int)Type];
 }
 
-void StatComponent::SetCurrentStat(double Value, PlayerStatTypes Type)
+void StatComponent::SetCurrentStat(double Value, CombatStatTypes Type)
 {
 	m_statData[(int)Type].currentValue = Value;
 }
 
-void StatComponent::ModifyCurrentStat(double Value, PlayerStatTypes Type)
+void StatComponent::ModifyCurrentStat(double Value, CombatStatTypes Type)
 {
 	m_statData[(int)Type].currentValue += Value;
 }
 
-void StatComponent::RecalculateStat(PlayerStatTypes Type)
+void StatComponent::RecalculateStat(CombatStatTypes Type)
 {
+	if ((int)Type > (int)CombatStatTypes::Attack)
+	{
+		RecalculateAttackStat(Type);
+		return;
+	}
+
 	double ratio = (double)m_statData[(int)Type].currentValue / (double)m_statData[(int)Type].maxValue;
 
 	m_statData[(int)Type].maxValue = m_statData[(int)Type].baseValue;
@@ -121,4 +153,20 @@ void StatComponent::RecalculateStat(PlayerStatTypes Type)
 	}
 
 	m_statData[(int)Type].currentValue = ratio * m_statData[(int)Type].maxValue;
+}
+
+void StatComponent::RecalculateAttackStat(CombatStatTypes Type)
+{
+	uint32_t baseAttack = m_statData[(int)CombatStatTypes::Attack].maxValue;
+
+	for (auto mod : m_modifiers[Type])
+	{
+		if (!mod.isMultiplicative)
+			baseAttack += mod.value;
+		else
+			baseAttack *= mod.value;
+	}
+
+	m_statData[(int)Type].currentValue = baseAttack;
+	m_statData[(int)Type].maxValue = baseAttack;
 }

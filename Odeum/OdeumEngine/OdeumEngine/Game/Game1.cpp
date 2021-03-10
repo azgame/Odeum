@@ -15,6 +15,10 @@
 #include "Scenes/counting.h"
 #include "Scenes/MultiTaskingScene.h"
 #include "Scenes/CollectingScene.h"
+#include "Scenes/DodgeScene.h"
+#include "Scenes/DodgeFlyScene.h"
+#include "Scenes/Collecting3DScene.h"
+#include "Scenes/SpherePushingScene.h"
 Game1::Game1() : GameInterface()
 {
 }
@@ -58,6 +62,11 @@ void Game1::BuildScene()
 
 	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to a negative number!");
 
+	SceneObjects::Get()->UnloadCurrentScene();
+
+	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
+	SceneObjects::Get()->SetCurrentScene(m_currentSceneNum);
+
 	switch (OdeumEngine::Get().GetCurrentScene())
 	{
 	case 1:
@@ -93,18 +102,26 @@ void Game1::BuildScene()
 	case 11:
 		m_currentScene = new CollectingScene();
 		break;
+	case 12:
+		m_currentScene = new DodgeScene();
+		break;
+	case 13:
+		m_currentScene = new DodgeFlyScene();
+		break;
+	case 14:
+		m_currentScene = new Collecting3DScene();
+		break;
+	case 15:
+		m_currentScene = new SpherePushingScene();
+		break;
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;
 	}
 
-	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
-	
 	if(!m_currentScene->Initialize()) Debug::FatalError("Could not change scenes", __FILENAME__, __LINE__);
 
 	SceneObjects::Get()->InitializeObjects();
-
 	SceneGraph::Get()->LoadGraphicsObjects();
-
 	SceneObjects::Get()->UpdateObjects(0.0167f);
 }

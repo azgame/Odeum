@@ -9,6 +9,8 @@ GameObject::GameObject(std::string tag_)
 	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	tag = tag_;
+	isInitialized = false;
+	isPersistent = false;
 
 	SceneObjects::Get()->AddGameObject(this);
 }
@@ -17,6 +19,7 @@ GameObject::~GameObject()
 {
 	for (int i = 0; i < m_components.size(); i++)
 	{
+		m_components[i]->OnDetach();
 		delete m_components[i];
 	}
 
@@ -25,8 +28,13 @@ GameObject::~GameObject()
 
 void GameObject::OnStart()
 {
-	for (auto component : m_components)
-		component->OnStart();
+	if (!isInitialized)
+	{
+		for (auto component : m_components)
+			component->OnStart();
+	}
+	
+	isInitialized = true;
 }
 
 void GameObject::Update(float deltaTime)

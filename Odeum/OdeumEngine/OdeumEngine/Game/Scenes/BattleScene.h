@@ -2,7 +2,9 @@
 #define BATTLESCENE_H
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
-#include "../Components/StatComponent.h"
+
+#include "../Components/Player.h"
+
 
 class BattleScene : public Scene
 {
@@ -15,10 +17,14 @@ public:
 	virtual void UIRender();
 	void DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType, int defenceType);
 	void DecideFirstTurn(StatComponent* player1_, StatComponent* player2_);
+	void TakeDamage(double Damage, StatComponent* defender_);
 	// 1 rock 2 paper 3 scissors
 private:
-	StatComponent player1;
-	StatComponent player2;
+	StatComponent* player1;
+	StatComponent* player2;
+	int damageFlux=10.0f;
+	GameObject* player1Object;
+	GameObject* player2Object;
 	bool player1Turn;
 	bool NPCBattle;
 	int player1Choice;
@@ -28,6 +34,7 @@ private:
 	std::vector<Key::KeyCode> player2Keys;
 	float extraDamageModifier=1.5f;
 	float lessDamageModifier=0.5f;
+	
 };
 
 

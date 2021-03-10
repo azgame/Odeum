@@ -10,7 +10,11 @@
 #include "../../Engine/CoreComponents/Rigidbody.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
 #include "../../Engine/CoreComponents/BoxCollider.h"
+
 #include "../Components/StatComponent.h"
+#include "../Components/PlayerEffectsComponent.h"
+
+#include <stdlib.h>
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -54,8 +58,11 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 		gameObjects[i]->AddComponent<RenderComponent>();
 		gameObjects[i]->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 		gameObjects[i]->AddComponent<BoxCollider>();
-		gameObjects[i]->AddComponent<StatComponent>();
 	}
+
+	gameObjects[gameObjects.size() - 1]->AddComponent<PlayerEffectsComponent>();
+	gameObjects[gameObjects.size() - 1]->AddComponent<StatComponent>();
+	gameObjects[gameObjects.size() - 1]->SetTag("Player1");
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 
@@ -92,6 +99,16 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	groundPlane.normal = Vector3(kYUnitVector);
 
 	NavMeshManager::GenerateNavMesh(0.25f, groundPlane, obstacles);*/
+
+	frameTimeTotal = 0.0;
+
+	ItemEffect* procEffect = new ItemEffect();
+
+	helmet = new Item(procEffect);
+	chest = new Item(procEffect);
+
+	gameObjects[gameObjects.size() - 1]->GetComponent<PlayerEffectsComponent>()->AddObserver(helmet->GetItemEffect()->GetProc());
+	gameObjects[gameObjects.size() - 1]->GetComponent<PlayerEffectsComponent>()->AddObserver(chest->GetItemEffect()->GetProc());
 }
 
 GameScene::~GameScene()
@@ -107,6 +124,14 @@ bool GameScene::Initialize()
 void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
+
+	frameTimeTotal += deltaTime_;
+
+	if (Input::Get().isKeyPressed(Key::C))
+	{
+		Action* move = new MoveAction(gameObjects[gameObjects.size() - 1], Vector2((rand() % 7 - 3), (rand() % 7 - 3)));
+		move->Execute();
+	}
 }
 
 void GameScene::UIRender()

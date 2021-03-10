@@ -20,6 +20,7 @@ private:
 	std::vector<GameObject*> gameObjects;
 	std::vector<float> playerShootTimer;
 	std::vector<int> playerScore;
+	Vector4 objectPos=Vector4(0,0,-5,0);
 	int maxScore;
 	int maxPlayers;
 	bool targetHit ;
