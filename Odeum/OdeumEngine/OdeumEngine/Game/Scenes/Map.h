@@ -17,7 +17,7 @@ public:
 	virtual void UIRender();
 
 private:
-	Graph<GameObject*> map = Graph<GameObject*>(20, false);
+	Graph<GameObject*> map = Graph<GameObject*>(80, false);
 
 	std::vector<GameObject*> gameObjects;
 	CameraController cameraController;
