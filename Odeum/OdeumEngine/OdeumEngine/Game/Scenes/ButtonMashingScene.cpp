@@ -26,7 +26,7 @@ ButtonMashingScene::ButtonMashingScene()
 	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),45.6f);
 	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 0, -1, 0),10);
 	testObject2->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),90);
-	testObject->GetComponent<AudioSource>()->Initialize("TestCoin.wav", true, false, false, 1.0f);
+	testObject->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
 	testObject->GetComponent<AudioSource>()->PlaySound();
 	
 	
@@ -60,6 +60,7 @@ bool ButtonMashingScene::Initialize()
 
 void ButtonMashingScene::Update(const float deltaTime_)
 {
+	
 	//cameraController.UpdateMainCamera();
 	cameraController.UpdateMainCamera();
 	timeToStart -= deltaTime_;
@@ -90,6 +91,7 @@ void ButtonMashingScene::Update(const float deltaTime_)
 	}
 	else
 	{
+		
 		for (int i = 0; i < gameObjects.size(); i++)
 		{
 			gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));

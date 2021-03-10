@@ -190,7 +190,18 @@ public:
 	inline void SetW(float w_) { vec = XMVectorSetW(vec, w_); }
 	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)+pow(XMVectorGetW(vec),2)); }
 	inline Vector4 Normalize() { return vec / sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
-
+	//float Dot(Vector a, Vector b)
+	//{
+	//	return a.x * b.x + a.y * b.y /*+ a.z * b.z*/;
+	//}
+	inline float Dot(Vector4 B) { return XMVectorGetX(vec)*B.GetX() + XMVectorGetY(vec) * B.GetY() + XMVectorGetZ(vec) * B.GetZ(); }
+	//return Mult(Normalize(a), Dot(v, a)   / Norm(a));
+	inline Vector4 Project(Vector4 B) { return Normalize()*Dot(B)/Mag(); }
+	//Vector Bounce(Vector v, Vector n)
+	//{
+	//	return Add(v, Mult(Project(v, n), -2));
+	//}
+	inline Vector4 Bounce(Vector4 B) { return vec + Project(B) * -2; }
 	// Operator Overloads
 	inline Vector4 operator- () const { return Vector4(XMVectorNegate(vec)); }
 	inline Vector4 operator+ (Vector4 v2_) const { return Vector4(XMVectorAdd(vec, v2_.GetVec())); }
