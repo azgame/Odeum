@@ -9,6 +9,8 @@
 
 #include "../../Engine/CoreComponents/Rigidbody.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
+#include "../../Engine/Core/AudioHandler.h"
 
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -20,7 +22,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go1->GetComponent<Rigidbody>()->SetMass(1.0f);
 	//go1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), 20.0f);
 	go1->GetComponent<Rigidbody>()->SetRadius(1.3f);
-	//go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
 	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 1.5f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->ApplyTorque(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->SetAngularVelocity(Vector4(1.0f, 0.0f, 0.0f, 0.0f), 0.005f);
@@ -36,14 +38,18 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go2->GetComponent<Rigidbody>()->SetMass(1.0f);
 	//go2->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), -45.0f);
 	go2->GetComponent<Rigidbody>()->SetRadius(1.3f);
-	//go2->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
+	go2->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
 	go2->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, -0.5f, 0.0f, 1.0f));
 	//go2->GetComponent<Rigidbody>()->SetAngularVelocity(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 0.0005f);
 	go2->AddComponent<RenderComponent>();
 	go2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0.7, 0.4, 0.7));
 	go2->AddComponent<SphereCollider>();
 	//go2->AddComponent<ComplexCollider>();
-	
+
+	//setup audiohandler
+	AudioHandler::GetInstance()->Initialize();
+	go1->AddComponent<AudioSource>();
+	go1->GetComponent<AudioSource>()->Initialize("TextCoin.wav");
 }
 
 BenScene::~BenScene()

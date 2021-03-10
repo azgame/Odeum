@@ -243,6 +243,7 @@
     <ClCompile Include="Game\Scenes\QuickDrawScene.cpp" />
     <ClCompile Include="Game\Components\StatComponent.cpp" />
     <ClCompile Include="Game\Scenes\SpherePushingScene.cpp" />
+    <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Components\InventoryComponent.h" />
@@ -381,6 +382,7 @@
     <ClInclude Include="Game\Scenes\QuickDrawScene.h" />
     <ClInclude Include="Game\Components\StatComponent.h" />
     <ClInclude Include="Game\Scenes\SpherePushingScene.h" />
+    <ClInclude Include="Game\Scenes\TreadmillScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\ParticleDispatchArgs.hlsl">
