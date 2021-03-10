@@ -159,8 +159,8 @@ void SpherePushingScene::Update(const float deltaTime_)
                     {
                         if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
                         {
-                            
-                            Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
+                            CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>());
+                          /*  Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
                             //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
                             if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
                             {
@@ -185,7 +185,7 @@ void SpherePushingScene::Update(const float deltaTime_)
                             //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
                            // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
                             //won = true;
-                            
+                            */
 
                         }
                     }
@@ -198,7 +198,7 @@ void SpherePushingScene::Update(const float deltaTime_)
 
                 }*/
 
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
+               if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
                 {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
                 }

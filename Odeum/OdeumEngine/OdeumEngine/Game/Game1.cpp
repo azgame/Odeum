@@ -114,6 +114,7 @@ void Game1::BuildScene()
 		break;
 	case 15:
 		m_currentScene = new SpherePushingScene();
+		break;
 	case 16:
 		m_currentScene = new TreadmillScene();
 		break;
