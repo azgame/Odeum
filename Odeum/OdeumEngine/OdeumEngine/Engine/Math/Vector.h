@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define DEGREES_TO_RADIANS * PI / 180
+
 #include "../Rendering/DirectX12/D3DIncludes.h"
 
 using namespace DirectX;
