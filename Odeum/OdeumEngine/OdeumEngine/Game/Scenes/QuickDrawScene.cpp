@@ -12,16 +12,22 @@ QuickDrawScene::QuickDrawScene()
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 30, 0, 0));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2, 1, 0));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cake.obj");
 	
 	maxPlayers = 4;
 	maxScore = 3;
 	for (int i = 0; i < maxPlayers; i++)
 	{
 		players.push_back(new GameObject());
+		players.back()->AddComponent<Rigidbody>();
+		players.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, -15, 0));
+		players.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
+		players.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 0.1, 0, 0),-0.8);
+		players.back()->AddComponent<RenderComponent>();
+		players.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cakeSlicer.obj");
 		playerScore.push_back(0);
 		playerShootTimer.push_back(0);
 	}
@@ -48,7 +54,7 @@ void QuickDrawScene::Update(const float deltaTime_)
 	{ 
 		if (timeUntilTarget <= 0)
 		{
-			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
+			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(objectPos);
 		}
 	timeUntilTarget -= deltaTime_;
 	for (int i = 0; i < players.size(); i++)

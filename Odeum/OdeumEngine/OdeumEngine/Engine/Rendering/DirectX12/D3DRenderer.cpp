@@ -9,7 +9,6 @@
 #include "ParticleManager.h"
 #include "RootSignature.h"
 
-#include "../../Core/Camera.h"
 #include "../../Core/Window.h"
 
 void D3DRenderer::Initialize(Window& Window)
@@ -58,6 +57,8 @@ void D3DRenderer::Update(float deltaTime)
 void D3DRenderer::Render(Camera& Camera, float deltaTime)
 {
 	SCOPEDTIMER(timer);
+
+	mainCamera = Camera;
 
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -156,6 +157,8 @@ void D3DRenderer::UIRender()
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
 	ImGui::Text("Render Pass frame time: %.2f ms/frame", averageFrameTime);
 	ImGui::Text("Total Number of Particles: %.0f", averageNumParticles);
+	ImGui::Text("Camera Pos: %.0f, %.0f, %.0f", mainCamera.GetPosition().GetX(), mainCamera.GetPosition().GetY(), mainCamera.GetPosition().GetZ());
+	ImGui::Text("Camera Look at: %.0f, %.0f, %.0f", mainCamera.LookAt().GetX(), mainCamera.LookAt().GetY(), mainCamera.LookAt().GetZ());
 
 	ImGui::End();
 

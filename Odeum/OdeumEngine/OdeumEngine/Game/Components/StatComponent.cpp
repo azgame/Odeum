@@ -81,12 +81,55 @@ bool StatComponent::HasModifier(uint32_t Id, CombatStatTypes Type)
 
 void StatComponent::AddModifier(PlayerStatMod Mod)
 {
+	if (Mod.isUnique)
+	{
+		if (HasModifier(Mod.id, Mod.type))
+			return;
+	}
+
 	if (Mod.isMultiplicative)
 		m_modifiers[Mod.type].push_back(Mod);
 	else
 		m_modifiers[Mod.type].insert(m_modifiers[Mod.type].begin(), Mod);
 
 	RecalculateStat(Mod.type);
+}
+
+void StatComponent::RemoveModifier(PlayerStatMod Mod)
+{
+	if (Mod.type != CombatStatTypes::None)
+	{
+		auto iter = m_modifiers[Mod.type].begin();
+
+		while (iter != m_modifiers[Mod.type].end())
+		{
+			if ((*iter).id == Mod.id)
+			{
+				m_modifiers[Mod.type].erase(iter);
+				return;
+			}
+
+			iter++;
+		}
+	}
+	else
+	{
+		for (auto modtypes : m_modifiers)
+		{
+			auto iter = modtypes.second.begin();
+
+			while (iter != modtypes.second.end())
+			{
+				if ((*iter).id == Mod.id)
+				{
+					modtypes.second.erase(iter);
+					return;
+				}
+
+				iter++;
+			}
+		}
+	}
 }
 
 PlayerStatMod StatComponent::GetModifier(uint32_t Id, CombatStatTypes Type)
@@ -134,7 +177,7 @@ void StatComponent::ModifyCurrentStat(double Value, CombatStatTypes Type)
 
 void StatComponent::RecalculateStat(CombatStatTypes Type)
 {
-	if ((int)Type > 3)
+	if ((int)Type > (int)CombatStatTypes::Attack)
 	{
 		RecalculateAttackStat(Type);
 		return;
@@ -170,4 +213,3 @@ void StatComponent::RecalculateAttackStat(CombatStatTypes Type)
 	m_statData[(int)Type].currentValue = baseAttack;
 	m_statData[(int)Type].maxValue = baseAttack;
 }
-

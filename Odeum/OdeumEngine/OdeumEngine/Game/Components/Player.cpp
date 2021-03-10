@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#include "StatComponent.h"
+
 void Player::OnAttach(GameObject* parent) 
 {
 	

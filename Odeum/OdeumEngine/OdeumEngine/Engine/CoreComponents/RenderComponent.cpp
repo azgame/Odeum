@@ -9,6 +9,11 @@ void RenderComponent::OnAttach(GameObject* parent)
 	isRendered = true;
 }
 
+void RenderComponent::OnDetach()
+{
+	SceneGraph::Get()->RemoveRenderObject(this);
+}
+
 void RenderComponent::Update(float deltaTime)
 {
 }

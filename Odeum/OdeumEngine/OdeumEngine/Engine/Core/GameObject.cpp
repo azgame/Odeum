@@ -9,6 +9,8 @@ GameObject::GameObject(std::string tag_)
 	UpdateTransform(Vector4(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, Vector4(kYUnitVector), Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	tag = tag_;
+	isInitialized = false;
+	isPersistent = false;
 
 	SceneObjects::Get()->AddGameObject(this);
 }
@@ -17,6 +19,7 @@ GameObject::~GameObject()
 {
 	for (int i = 0; i < m_components.size(); i++)
 	{
+		m_components[i]->OnDetach();
 		delete m_components[i];
 	}
 
@@ -25,8 +28,13 @@ GameObject::~GameObject()
 
 void GameObject::OnStart()
 {
-	for (auto component : m_components)
-		component->OnStart();
+	if (!isInitialized)
+	{
+		for (auto component : m_components)
+			component->OnStart();
+	}
+	
+	isInitialized = true;
 }
 
 void GameObject::Update(float deltaTime)
@@ -59,9 +67,11 @@ void GameObject::UpdateTransform(Vector4 position, Matrix4 rotation, Vector4 sca
 
 void GameObject::UpdateTransform(Vector4 position, Quaternion rotationQuat, Vector4 scale)
 {
-	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * GetRotationMatrix(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
+	m_modelMatrix = Matrix4(DirectX::XMMatrixScalingFromVector(scale.GetVec()) * DirectX::XMMatrixRotationQuaternion(rotationQuat) * DirectX::XMMatrixTranslationFromVector(position.GetVec()));
 }
 
+// DirectX::XMMatrixRotationQuaternion already does this hahahaa
+// vv                                                         vv
 Matrix4 GameObject::GetRotationMatrix(Quaternion quat)
 {
 	

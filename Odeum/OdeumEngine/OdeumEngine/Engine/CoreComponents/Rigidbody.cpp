@@ -7,9 +7,9 @@ void Rigidbody::OnAttach(GameObject* parent)
 	rb_position = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	rb_angle = 0.0f;
-	//rb_orientation = Quaternion();
+	rb_orientation = Quaternion();
 	rb_rotation = Matrix4();
-	rb_totalAngularVelocity = Vector4();
+	rb_totalAngularVelocity = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 	rb_totalVelocity = Vector4();
 	rb_speed = 2.0f;
 	rb_angleSpeed = 1.0f;
@@ -36,15 +36,18 @@ void Rigidbody::Update(float deltaTime)
 	// Angular Velocity stuff
 	//rb_totalAngularVelocity += Vector4(rb_inertiaTensorInv.MultiplyWithVec(Vector3(rb_totalTorque)));
 	
-	if (Vector3(rb_totalAngularVelocity).Mag() > 0) {
+	/*if (Vector3(rb_totalAngularVelocity).Mag() > 0) {
 		rb_rotation = rb_rotation * Matrix4(DirectX::XMMatrixRotationAxis(Vector3(rb_totalAngularVelocity), rb_rotationSpeed * deltaTime));
 		// try multiplying by 3 matrices
 		//rb_rotation = rb_rotation * Matrix4(DirectX::XMMatrixRotationAxis(Vector3(rb_totalAngularVelocity), rb_rotationSpeed * deltaTime));
-	}
+	}*/
 	
 	// update orientation
 	//UpdateOrientationQuaternion();
-
+	if (rb_totalAngularVelocity.Mag() > 0.0f)
+	{
+		UpdateOrientation(deltaTime);
+	}
 	// Update Transform
 	UpdateTransform();
 
@@ -52,6 +55,16 @@ void Rigidbody::Update(float deltaTime)
 	UpdateInertiaTensor();
 }
 
+
+void Rigidbody::UpdateOrientation(float deltaTime)
+{
+	//rb_orientation = Quaternion(rb_orientation * deltaTime + (deltaTime / 2) * rb_totalAngularVelocity * rb_orientation * deltaTime);
+	//rb_orientation = Quaternion(rb_orientation + (rb_totalAngularVelocity / 2) * rb_orientation);
+	//rb_orientation = Quaternion(rb_orientation.GetVector4().Normalize());
+	
+	rb_orientation = rb_orientation * Quaternion(rb_totalAngularVelocity, rb_rotationSpeed);
+	rb_orientation = Quaternion(rb_orientation.GetVector4().Normalize());
+}
 // translate the position
 void Rigidbody::Transpose(Vector4 translate)
 {
@@ -109,6 +122,7 @@ void Rigidbody::AddAngularVelocity(Vector4 velocity, float rotationSpeed)
 	// update the orientation
 	rb_orientation = Quaternion(Vector4(rb_orientation + (rb_orientation * angVel * 0.5f * rb_angleSpeed)).Normalize());
 }*/
+
 
 // this should be changed to differ based on the shape - this is just a basic version
 void Rigidbody::UpdateInertiaTensor()

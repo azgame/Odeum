@@ -140,7 +140,7 @@ bool AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool
 	// if the sound was created successfully add it to the soundMap
 	std::string s = "Engine/Resources/Audio/" + soundName;
 	FMOD_RESULT r;
-	//r = system->createSound(s.c_str(), mode, nullptr, &sound);
+	r = system->createSound(s.c_str(), mode, nullptr, &sound);
 	// ^^ r = FMOD_ERR_FILE_NOTFOUND
 
 	if (system->createSound(s.c_str(), mode, nullptr, &sound) != FMOD_OK)
@@ -179,7 +179,7 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 
 	}
 
-	FMOD_MODE* mode;
+	/*FMOD_MODE* mode;
 	mode = new FMOD_MODE(FMOD_3D);
 	// I feel like there is a better way for me to do this without having to create a mode pointer
 	if (soundMap.at(soundName)->getMode(mode) == FMOD_OK)
@@ -192,9 +192,11 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 			return -1;
 		}
 	} 
+	
 	else {
 		Debug::Info(soundName + " was not found. Creating the sound with default parameters now.", "AudioHandler.cpp", __LINE__);
 	}
+	*/
 
 	// set volume of the channel
 	if (channel->setVolume(volume) != FMOD_OK)

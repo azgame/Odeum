@@ -44,23 +44,18 @@ public:
 	//void SetBoundingBox(Vector3 Min, Vector3 Max) { bbox = OrientedBoundingBox(Min, Max); }
 	Vector3 GetPosition() { return Vector3(GetTransform().GetX().GetW(), GetTransform().GetY().GetW(), GetTransform().GetZ().GetW()); }
 
-	void SetHit(bool hit) 
-	{ 
-		isHit = hit;
-	}
-
 	void SetTag(std::string Tag) { tag = Tag; }
 	std::string Tag() { return tag; }
+
+	void SetPersistence(bool Persistent) { isPersistent = Persistent; }
+	bool IsPersistent() { return isPersistent; }
 
 protected:
 
 	Matrix4 m_modelMatrix;
-	
-	//OrientedBoundingBox bbox;
-	bool isHit;
 
-	// add transform
-
+	bool isPersistent;
+	bool isInitialized;
 
 	std::string fileName;
 	std::string tag;

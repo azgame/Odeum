@@ -10,7 +10,12 @@
 #include "../../Engine/CoreComponents/Rigidbody.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
 #include "../../Engine/CoreComponents/BoxCollider.h"
+
 #include "../Components/StatComponent.h"
+#include "../Components/PlayerEffectsComponent.h"
+#include "../Components/InventoryComponent.h"
+
+#include <stdlib.h>
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 {
@@ -44,7 +49,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	ParticleManager::Get().CreateEffect(particleProps);*/
 	
-	for (int i = 0; i < 4; i++)
+	/*for (int i = 0; i < 4; i++)
 	{
 		gameObjects.push_back(new GameObject());
 
@@ -54,9 +59,20 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 		gameObjects[i]->AddComponent<RenderComponent>();
 		gameObjects[i]->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0, 0.2, 0.2));
 		gameObjects[i]->AddComponent<BoxCollider>();
-	}
+	}*/
 
-	gameObjects[gameObjects.size() - 1]->AddComponent<StatComponent>();
+	gameObjects.push_back(new GameObject());
+
+	gameObjects[0]->AddComponent<Rigidbody>();
+	gameObjects[0]->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
+	gameObjects[0]->GetComponent<Rigidbody>()->SetRotation(Vector4(kZUnitVector), 1.57f);
+	gameObjects[0]->AddComponent<RenderComponent>();
+	gameObjects[0]->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
+	gameObjects[0]->AddComponent<BoxCollider>();
+	gameObjects[0]->AddComponent<PlayerEffectsComponent>();
+	gameObjects[0]->AddComponent<StatComponent>();
+	gameObjects[0]->AddComponent<InventoryComponent>();
+	gameObjects[0]->SetTag("Player1");
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 
@@ -93,6 +109,19 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	groundPlane.normal = Vector3(kYUnitVector);
 
 	NavMeshManager::GenerateNavMesh(0.25f, groundPlane, obstacles);*/
+
+	frameTimeTotal = 0.0;
+
+	ItemEffect* procEffect = new ItemEffect(new Proc(25.0));
+	ItemEffect* procEffect2 = new ItemEffect(new Proc(25.0));
+
+	helmet = new Item();
+	helmet->Initialize("Helmet", "Shit Helm", 1, ItemTypes::Helmet, procEffect);
+	chest = new Item();
+	chest->Initialize("Chest", "Shit Chest", 1, ItemTypes::Chest, procEffect2);
+
+	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(helmet);
+	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(chest);
 }
 
 GameScene::~GameScene()
@@ -108,6 +137,14 @@ bool GameScene::Initialize()
 void GameScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
+
+	frameTimeTotal += deltaTime_;
+
+	if (Input::Get().isKeyPressed(Key::C))
+	{
+		Action* move = new MoveAction(gameObjects[gameObjects.size() - 1], Vector2((rand() % 7 - 3), (rand() % 7 - 3)));
+		move->Execute();
+	}
 }
 
 void GameScene::UIRender()

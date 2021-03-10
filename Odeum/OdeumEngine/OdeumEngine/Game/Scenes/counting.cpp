@@ -34,6 +34,7 @@ Counting::~Counting()
 
 bool Counting::Initialize()
 {
+	LOG("Creating Counting Scene")
 	return true;
 }
 

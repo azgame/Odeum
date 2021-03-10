@@ -11,7 +11,7 @@ class RenderComponent : public Component
 public:
 	
 	void OnAttach(GameObject* parent) override;
-	void OnDetach() {};
+	void OnDetach();
 	void OnStart() {};
 	void Update(float deltaTime) override;
 
@@ -29,6 +29,7 @@ public:
 
 private:
 	Model m_model;
+	Matrix4 m_modelMatrix;
 	OrientedBoundingBox modelOBB;
 	bool isRendered;
 };

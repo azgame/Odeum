@@ -5,6 +5,8 @@
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
 
+#include "../GameObjects/Action.h"
+
 // Scene index 1
 class GameScene : public Scene
 {
@@ -26,6 +28,9 @@ private:
 	uint16_t frameCounter;
 	float averageFrameTime;
 	float frameTimeTotal;
+
+	Item* helmet;
+	Item* chest;
 };
 
 #endif

@@ -28,7 +28,7 @@ private:
 	std::vector<Key::KeyCode> playerKeysLeft;
 	std::vector<Key::KeyCode> playerKeysRight;
 	std::vector<Key::KeyCode> playerKeysUp;
-	
+	Simplex<Vector3> simplex;
 	//these ensure the player may not hold the button
 	
 	std::vector<float> playerScores;
