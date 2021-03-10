@@ -1,6 +1,10 @@
 #include "BattleScene.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
+#include "../GameObjects/GameTypes.h"
+
+
+
 BattleScene::BattleScene()
 {
     player1Object = new GameObject();

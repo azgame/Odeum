@@ -4,7 +4,7 @@
 #include "../../Engine/Core/OdeumEngine.h"
 
 #include "../Components/Player.h"
-
+#include "../Components/StatComponent.h"
 
 class BattleScene : public Scene
 {

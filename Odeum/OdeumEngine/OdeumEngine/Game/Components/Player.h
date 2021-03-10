@@ -5,7 +5,7 @@
 #include "../../Engine/Core/Component.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
-#include "StatComponent.h"
+class StatComponent;
 
 class Player : public Component {
 public:

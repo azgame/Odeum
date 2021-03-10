@@ -29,12 +29,16 @@ private:
 	double m_chanceToProc;
 };
 
+class Item;
+
 class ItemEffect
 {
+	friend class Item;
 public:
-	ItemEffect();
+	ItemEffect(Proc* ProcEffect);
 
 	Proc* GetProc() { return proc; }
+	PlayerStatMod GetStat() { return mod; }
 
 private:
 
@@ -42,12 +46,17 @@ private:
 	void ChanceToActivate(GameObject& GameObject, GameEvent& Event);
 
 	Proc* proc;
+	PlayerStatMod mod;
+
+	Item* parent;
 };
 
 class Item
 {
 public:
-	Item(ItemEffect* Effect);
+	Item();
+	
+	void Initialize(std::string Name, std::string Description, UINT Cost, ItemTypes Type, ItemEffect* Effect);
 
 	std::string GetName() { return m_name; }
 	std::string GetDescription() { return m_description; }

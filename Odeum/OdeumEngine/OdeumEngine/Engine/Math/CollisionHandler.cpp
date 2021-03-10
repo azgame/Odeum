@@ -115,7 +115,8 @@ void CollisionHandler::Uninitialize()
 	previousCollisions.clear();
 }
 
-void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2) {
+void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2) 
+{
 	// Setup Variables
 	float m1 = sc1.GetRigidbody()->GetMass();
 	float m2 = sc2.GetRigidbody()->GetMass();

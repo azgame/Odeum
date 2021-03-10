@@ -8,43 +8,6 @@
 
 #include <unordered_map>
 
-struct PlayerStat
-{
-	CombatStatTypes type;
-	uint32_t baseValue;
-	uint32_t maxValue;
-	uint32_t currentValue;
-};
-
-struct PlayerStatMod
-{
-	CombatStatTypes type;
-	uint32_t id;
-	double value;
-	uint8_t duration;
-	bool isUnique;
-	bool isMultiplicative;
-};
-
-// Testing --------------------------
-class StatComponent;
-
-class PlayerStatEvent
-{
-public:
-
-	void Assign(StatComponent* Owner) { owner = Owner; }
-	virtual void Execute() = 0;
-
-	CombatStatTypes type;
-	UINT16 id;
-
-private:
-
-	StatComponent* owner;
-};
-// ----------------------------------
-
 class StatComponent : public Component
 {
 public:
@@ -59,6 +22,7 @@ public:
 	PlayerStat GetStat(CombatStatTypes Type); // returns modified stat
 
 	void AddModifier(PlayerStatMod Mod);
+	void RemoveModifier(PlayerStatMod Mod);
 
 	void SetCurrentStat(double Value, CombatStatTypes Type);
 	void ModifyCurrentStat(double Value, CombatStatTypes Type);

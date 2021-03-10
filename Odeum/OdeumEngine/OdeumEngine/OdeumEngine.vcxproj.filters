@@ -100,6 +100,8 @@
     <ClCompile Include="Game\GameObjects\Item.cpp" />
     <ClCompile Include="Game\Scenes\ComboScene.cpp" />
     <ClCompile Include="Game\Scenes\SpherePushingScene.cpp" />
+    <ClCompile Include="Game\Components\InventoryComponent.cpp" />
+    <ClCompile Include="Game\GameObjects\ItemRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -235,6 +237,9 @@
     <ClInclude Include="Game\GameObjects\GameTypes.h" />
     <ClInclude Include="Game\Scenes\ComboScene.h" />
     <ClInclude Include="Game\Scenes\SpherePushingScene.h" />
+    <ClInclude Include="Game\GameObjects\GameManager.h" />
+    <ClInclude Include="Game\Components\InventoryComponent.h" />
+    <ClInclude Include="Game\GameObjects\ItemRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
