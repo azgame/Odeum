@@ -140,7 +140,7 @@ bool AudioHandler::LoadSound(std::string soundName, bool isLoop, bool is3D, bool
 	// if the sound was created successfully add it to the soundMap
 	std::string s = "Engine/Resources/Audio/" + soundName;
 	FMOD_RESULT r;
-	//r = system->createSound(s.c_str(), mode, nullptr, &sound);
+	r = system->createSound(s.c_str(), mode, nullptr, &sound);
 	// ^^ r = FMOD_ERR_FILE_NOTFOUND
 
 	if (system->createSound(s.c_str(), mode, nullptr, &sound) != FMOD_OK)

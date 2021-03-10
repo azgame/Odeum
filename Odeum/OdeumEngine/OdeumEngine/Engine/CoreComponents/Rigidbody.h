@@ -46,7 +46,7 @@ public:
 	inline void SetAcceleration(Vector4 acceleration) { rb_totalAcceleration = acceleration; }
 	inline void SetPosition(Vector4 position) { rb_position = position; }//UpdateTransform(); }
 	//inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_rotation = Matrix4(DirectX::XMMatrixRotationAxis(rotation, angle)); } //UpdateTransform(); }
-	inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle); } //UpdateTransform(); }
+	inline void SetRotation(Vector4 rotation, float angle) { if (Vector3(rotation).Mag() > 0.0f) rb_orientation = Quaternion(Vector3(rotation), angle * PI / 180.0f); } //UpdateTransform(); }
 	//inline void SetRotation(Quaternion rotationQuat) { rb_orientation = rotationQuat; } //UpdateTransform();}
 	//inline void SetRotation(Quaternion rotationQuat, float rotSpeed) { rb_orientation = rotationQuat; rb_rotationSpeed = rotSpeed; } //UpdateTransform();}
 	inline void SetScale(Vector4 scale) { rb_scale = scale; }
