@@ -42,6 +42,7 @@
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
 #define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define BIND_STATIC_FN(fn) (auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
 
 #define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull

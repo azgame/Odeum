@@ -15,6 +15,8 @@
 #include "../Components/PlayerEffectsComponent.h"
 #include "../Components/InventoryComponent.h"
 
+#include "../GameObjects/ItemRegistry.h"
+
 #include <stdlib.h>
 
 GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
@@ -112,13 +114,8 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	frameTimeTotal = 0.0;
 
-	ItemEffect* procEffect = new ItemEffect(new Proc(25.0));
-	ItemEffect* procEffect2 = new ItemEffect(new Proc(25.0));
-
-	helmet = new Item();
-	helmet->Initialize("Helmet", "Shit Helm", 1, ItemTypes::Helmet, procEffect);
-	chest = new Item();
-	chest->Initialize("Chest", "Shit Chest", 1, ItemTypes::Chest, procEffect2);
+	helmet = ItemBuilder::GenerateGoldOnMovePassive();
+	chest = ItemBuilder::GenerateGoldOnMovePassive();
 
 	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(helmet);
 	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(chest);
