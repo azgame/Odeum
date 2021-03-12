@@ -916,8 +916,14 @@ void MAPScene::UIRender()
 }
 
 // simple dice rolling function, can change the dice size and how many dice with parameter (supports up to 6 die.)
-int MAPScene::RollDice(int size_, int numDie = 1){
+int MAPScene::RollDice(int size_ = 6, int numDie = 1){
 	int min = 1;
+
+	// make sure size is higher than 1
+	if (size_ < 1) {
+		//make size the default
+		size_ = 6;
+	}
 	int max = size_;
 	int totalRoll = 1;
 	switch (numDie) {
