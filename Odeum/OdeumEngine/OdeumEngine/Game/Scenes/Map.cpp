@@ -821,24 +821,43 @@ void MAPScene::Update(const float deltaTime_) {
 		}
 	}*/
 
+	int tempTurn = 1;
 	// choose to move left, right, up or down based on the node they're standing on
 	// uncomment playerTurn to turn on multiplayer
 	switch (playerTurn) {
 	case 1:
-		if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
+		if (tempTurn != turn && numMoves == 0) {
+			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
+				// logic here to find the gameobject the player is standing on
 
-		} 
-		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetRight()) && numMoves > 0) {
+				// once the gameobject is found, go to the spot in the graph (the index should be the same) 
 
+				// check for edges and check if the player can move left
+
+				// move the player to the next node. (later on can pick up an item or something from a node)
+
+				numMoves--;
+				tempTurn--;
+			}
+			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetRight()) && numMoves > 0) {
+
+				tempTurn--;
+			}
+			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetUp()) && numMoves > 0) {
+
+				tempTurn--;
+			}
+			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetDown()) && numMoves > 0) {
+
+				tempTurn--;
+			}
+			else if (numMoves <= 0) {
+				//playerTurn = 2;
+				tempTurn = turn + 1;
+			}
 		}
-		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetUp()) && numMoves > 0) {
-
-		}
-		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetDown()) && numMoves > 0) {
-
-		}
-		else if (numMoves <= 0) {
-			//playerTurn = 2;
+		else {
+			RollDice(6);
 		}
 		break;
 	case 2:
@@ -853,9 +872,11 @@ void MAPScene::Update(const float deltaTime_) {
 		break;
 	case 4:
 
-		//playerTurn = 1;
+		//playerTurn = 5;
 		break;
 	default:
+		playerTurn = 1;
+		turn++;
 		break;
 	};
 	if (Input::Get().isKeyPressed(Key::A)) {
