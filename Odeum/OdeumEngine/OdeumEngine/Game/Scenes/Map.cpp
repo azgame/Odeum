@@ -5,6 +5,8 @@
 #include "../../Engine/CoreComponents/Rigidbody.h"
 //#include "../Components/PlayerEffectsComponent.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
+#include "../Game/Components/Player.h"
+
 
 
 
@@ -18,9 +20,29 @@ MAPScene::MAPScene()
 	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
 	playerObjects.back()->AddComponent<RenderComponent>(); 
+	playerObjects.back()->AddComponent<Player>(); 
 	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
 	playerObjects.back()->SetTag("Player1");
+	playerObjects.back()->GetComponent<Player>()->SetUp(Key::W);
+	playerObjects.back()->GetComponent<Player>()->SetDown(Key::A);
+	playerObjects.back()->GetComponent<Player>()->SetLeft(Key::S);
+	playerObjects.back()->GetComponent<Player>()->SetRight(Key::D);
+
+	playerObjects.push_back(new GameObject());
+	playerObjects.back()->AddComponent<Rigidbody>();
+	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
+	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+	playerObjects.back()->AddComponent<RenderComponent>();
+	playerObjects.back()->AddComponent<Player>();
+	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
+	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 1.0f));
+	playerObjects.back()->SetTag("Player2");
+	playerObjects.back()->GetComponent<Player>()->SetUp(Key::I);
+	playerObjects.back()->GetComponent<Player>()->SetDown(Key::K);
+	playerObjects.back()->GetComponent<Player>()->SetLeft(Key::J);
+	playerObjects.back()->GetComponent<Player>()->SetRight(Key::L);
+	
 
 
 	//were gonna tag all your nodes aka game objects via tag to work with our graph.
@@ -800,6 +822,42 @@ void MAPScene::Update(const float deltaTime_) {
 	}*/
 
 	// choose to move left, right, up or down based on the node they're standing on
+	// uncomment playerTurn to turn on multiplayer
+	switch (playerTurn) {
+	case 1:
+		if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
+
+		} 
+		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetRight()) && numMoves > 0) {
+
+		}
+		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetUp()) && numMoves > 0) {
+
+		}
+		else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetDown()) && numMoves > 0) {
+
+		}
+		else if (numMoves <= 0) {
+			//playerTurn = 2;
+		}
+		break;
+	case 2:
+
+		if (numMoves <= 0) {
+			//playerTurn = 3;
+		}
+		break;
+	case 3:
+
+		//playerTurn = 4;
+		break;
+	case 4:
+
+		//playerTurn = 1;
+		break;
+	default:
+		break;
+	};
 	if (Input::Get().isKeyPressed(Key::A)) {
 
 
@@ -836,4 +894,14 @@ void MAPScene::UIRender()
 	ImGui::Text("Map");
 
 	ImGui::End();
+}
+
+void MAPScene::RollDice(int size){
+	int min = 1;
+	int max = size;
+	int dieRoll;
+
+	dieRoll = rand() % (max - min + 1) + min;
+	
+	numMoves = dieRoll;
 }
