@@ -89,11 +89,11 @@ bool CollectingScene::Initialize()
              
 
 
-             playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.03, 0, 0));
+             playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -10*deltaTime_, 0, 0));
              if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
              {
                  if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-0.1, 0, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10*deltaTime_, 0, 0, 0));
 
 
 
@@ -101,7 +101,7 @@ bool CollectingScene::Initialize()
              else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
              {
                  if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0.1, 0, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(10* deltaTime_, 0, 0, 0));
              }
 
              if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)

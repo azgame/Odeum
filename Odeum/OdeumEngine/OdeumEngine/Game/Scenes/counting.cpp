@@ -93,8 +93,10 @@ void Counting::Update(const float deltaTime_)
 			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-30, 0, rand() % 14 , 0));
 			gameObjects.back()->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 16 + 2.2f, 0, 0, 0));
 			gameObjects.back()->AddComponent<RenderComponent>();
-			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
-			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(50, 250, 0.0));
+			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
+			gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Sheep.obj");
+			//gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
+			gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
 			if (count == 0)
 			{
 				timeToWin = 10.0f;
