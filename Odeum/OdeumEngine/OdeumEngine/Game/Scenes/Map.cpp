@@ -15,6 +15,7 @@ MAPScene::MAPScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
+	// player 1 and 2
 	playerObjects.push_back(new GameObject());
 	playerObjects.back()->AddComponent<Rigidbody>();
 	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
@@ -802,25 +803,6 @@ bool MAPScene::Initialize()
 }
 
 void MAPScene::Update(const float deltaTime_) {
-	/*if (Input::Get().isKeyPressed(Key::A)) {
-		if (playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() == -5.0f) {
-
-		}
-		else {
-			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>
-				()->GetPosition().GetX() - 5.0f, 0.0f, -4.0f, 0.0f));
-		}
-	}
-	if (Input::Get().isKeyPressed(Key::D)) {
-		if (playerObjects.back()->GetComponent<Rigidbody>()->GetPosition().GetX() == 5.0f) {
-
-		}
-		else {
-			playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(playerObjects.back()->GetComponent<Rigidbody>
-				()->GetPosition().GetX() + 5.0f, 0.0f, -4.0f, 0.0f));
-		}
-	}*/
-
 	int tempTurn = 1;
 	// choose to move left, right, up or down based on the node they're standing on
 	// uncomment playerTurn to turn on multiplayer
