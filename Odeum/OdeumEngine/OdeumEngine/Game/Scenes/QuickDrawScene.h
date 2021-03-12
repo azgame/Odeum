@@ -19,13 +19,16 @@ private:
 	std::vector<GameObject*> players;
 	std::vector<GameObject*> gameObjects;
 	std::vector<float> playerShootTimer;
+	std::vector<bool> playerInPosition;
 	std::vector<int> playerScore;
 	Vector4 objectPos=Vector4(0,0,-5,0);
+	Vector4 slicerPos=Vector4(0,0,-10,0);
 	int maxScore;
 	int maxPlayers;
 	bool targetHit ;
 	bool won ;
 	float timeUntilTarget;
+	float timeToStart;
 	std::vector<Key::KeyCode> playerKeys;
 	
 };
