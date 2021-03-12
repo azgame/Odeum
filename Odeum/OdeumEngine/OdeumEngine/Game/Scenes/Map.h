@@ -17,8 +17,8 @@ public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
-
-	void RollDice(int size);
+	
+	int RollDice(int size, int numDie);
 
 private:
 	Graph<GameObject*> map = Graph<GameObject*>(100, false);

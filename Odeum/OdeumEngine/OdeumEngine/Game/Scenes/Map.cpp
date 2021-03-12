@@ -824,6 +824,7 @@ void MAPScene::Update(const float deltaTime_) {
 	int tempTurn = 1;
 	// choose to move left, right, up or down based on the node they're standing on
 	// uncomment playerTurn to turn on multiplayer
+	// probably doesnt need to be a switch case, could be a normal if and be something like playerObjects[playerTurn - 1]
 	switch (playerTurn) {
 	case 1:
 		if (tempTurn != turn && numMoves == 0) {
@@ -857,7 +858,8 @@ void MAPScene::Update(const float deltaTime_) {
 			}
 		}
 		else {
-			RollDice(6);
+			// add logic here to roll dice based off stats (if some item allows for a multi-roll like 2d6's 
+			numMoves = RollDice(6);
 		}
 		break;
 	case 2:
@@ -879,15 +881,11 @@ void MAPScene::Update(const float deltaTime_) {
 		turn++;
 		break;
 	};
-	if (Input::Get().isKeyPressed(Key::A)) {
 
-
-
-
-		// Aidan's move logic (doesnt really work atm)
+		// Aidan's move logic (doesnt really work atm as we're moving to a specific location)
 		//Action* move = new MoveAction(playerObjects[0], Vector2(0, 2));
 		//move->Execute();
-	}
+	
 }
 
 //Spaces* MAPScene::findSpace(const std::string& name) {
@@ -917,12 +915,35 @@ void MAPScene::UIRender()
 	ImGui::End();
 }
 
-void MAPScene::RollDice(int size){
+// simple dice rolling function, can change the dice size and how many dice with parameter (supports up to 6 die.)
+int MAPScene::RollDice(int size_, int numDie = 1){
 	int min = 1;
-	int max = size;
-	int dieRoll;
-
-	dieRoll = rand() % (max - min + 1) + min;
+	int max = size_;
+	int totalRoll = 1;
+	switch (numDie) {
+	case 1:
+		totalRoll = rand() % (max - min + 1) + min;
+		break;
+	case 2:
+		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
+		break;
+	case 3:
+		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
+		break;
+	case 4:
+		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
+		break;
+	case 5:
+		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
+		break;
+	case 6:
+		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
+		break;
+	default:
+		// too many or too little die, assume 1 die;
+		totalRoll = rand() % (max - min + 1) + min;
+		break;
+	}
 	
-	numMoves = dieRoll;
+	return totalRoll;
 }
