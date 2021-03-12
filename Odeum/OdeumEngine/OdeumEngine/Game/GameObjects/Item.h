@@ -29,7 +29,7 @@ class ItemEffect
 {
 	friend class Item;
 public:
-	ItemEffect(Proc* ProcEffect);
+	ItemEffect(Proc* ProcEffect, PlayerStatMod Mod);
 
 	Proc* GetProc() { return proc; }
 	PlayerStatMod GetStat() { return mod; }
