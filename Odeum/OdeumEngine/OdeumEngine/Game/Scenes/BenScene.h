@@ -23,8 +23,12 @@ private:
 
 	GameObject* go1;
 	GameObject* go2;
+	GameObject* go3;
+
 	float angle;
 	float direction;
+
+	float degrees;
 
 	uint16_t frameCounter;
 	float averageFrameTime;
