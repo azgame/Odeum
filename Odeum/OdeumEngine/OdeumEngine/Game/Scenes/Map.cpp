@@ -871,25 +871,6 @@ void MAPScene::Update(const float deltaTime_) {
 	
 }
 
-//Spaces* MAPScene::findSpace(const std::string& name) {
-//	for (size_t i = 0; i < spaces.size(); ++i)
-//		if (spaces[i]->name == name)
-//			return spaces[i];
-//
-//	return NULL;
-//}
-//
-//
-//
-//Spaces* MAPScene::addSpace(const std::string& name) {
-//	Spaces *spaceNode = new Spaces(name);
-//
-//	spaces.push_back(spaceNode);
-//	graph.addNode(spaceNode);
-//
-//	return spaceNode;
-//}
-
 void MAPScene::UIRender()
 {
 	ImGui::Begin("Game UI");
