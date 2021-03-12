@@ -3,6 +3,7 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
 #include "../../Engine/CoreComponents/Rigidbody.h"
+//#include "../Components/PlayerEffectsComponent.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
 
 
@@ -11,9 +12,21 @@
 MAPScene::MAPScene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+
+	playerObjects.push_back(new GameObject());
+	playerObjects.back()->AddComponent<Rigidbody>();
+	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
+	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+	playerObjects.back()->AddComponent<RenderComponent>(); 
+	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
+	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	playerObjects.back()->SetTag("Player1");
+
+
 	//were gonna tag all your nodes aka game objects via tag to work with our graph.
 	/// this is the main starting step white
 	
+
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
@@ -785,6 +798,17 @@ void MAPScene::Update(const float deltaTime_) {
 				()->GetPosition().GetX() + 5.0f, 0.0f, -4.0f, 0.0f));
 		}
 	}*/
+
+	// choose to move left, right, up or down based on the node they're standing on
+	if (Input::Get().isKeyPressed(Key::A)) {
+
+
+
+
+		// Aidan's move logic (doesnt really work atm)
+		//Action* move = new MoveAction(playerObjects[0], Vector2(0, 2));
+		//move->Execute();
+	}
 }
 
 //Spaces* MAPScene::findSpace(const std::string& name) {

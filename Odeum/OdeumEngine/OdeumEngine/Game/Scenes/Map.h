@@ -6,6 +6,8 @@
 #include "../../Engine/Core/CameraController.h"
 #include "../../Engine/DataStructures/Graph.h"
 
+#include "../GameObjects/Action.h"
+
 class MAPScene : public Scene
 {
 public:
@@ -20,6 +22,8 @@ private:
 	Graph<GameObject*> map = Graph<GameObject*>(100, false);
 
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> playerObjects;
+	
 	CameraController cameraController;
 	float angle;
 	float direction;
