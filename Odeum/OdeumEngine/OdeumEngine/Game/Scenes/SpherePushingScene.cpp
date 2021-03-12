@@ -28,7 +28,9 @@ SpherePushingScene::SpherePushingScene()
         
         playerObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5,0.5,0.5,1));
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
+        //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/moon.obj");
+
         playerObjects.back()->AddComponent<SphereCollider>();
         
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));

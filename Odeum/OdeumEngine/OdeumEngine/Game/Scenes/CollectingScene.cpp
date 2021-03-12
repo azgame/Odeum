@@ -24,8 +24,14 @@ CollectingScene::CollectingScene()
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4-6, rand()%3-1, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
+       // playerObjects.back()->GetComponent<Rigidbody>()->SetMass(1.0f);
+
+       // playerObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
+      //  playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 1));
+       // playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
         playerObjects.back()->AddComponent<ComplexCollider>();
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chicken.obj");
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0),180);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -5, 0, 0));
         playerScores.push_back(0);
 
@@ -37,8 +43,17 @@ CollectingScene::CollectingScene()
         targetObjects.back()->AddComponent<Rigidbody>();
         targetObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20, 0, 0, 0));
         targetObjects.back()->AddComponent<RenderComponent>();
+        //targetObjects.back()->GetComponent<Rigidbody>()->SetMass(1.0f);
+
+       // targetObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
+       // targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 1));
+        
+
+        //targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
+        targetObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/bread.obj");
+        targetObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0), 180);
+        //targetObjects.back()->GetComponent<Rigidbody>()->SetScale
         targetObjects.back()->AddComponent<ComplexCollider>();
-        targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
     }
@@ -77,12 +92,16 @@ bool CollectingScene::Initialize()
          {
              for (int z = 0; z < playerObjects.size(); z++)
              {
-                 if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                 if (i != z)
                  {
-                     if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY()> playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
-                     else
-                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, 0, 0));
+                     if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(),simplex))
+                     {
+                         Debug::Warning("player overlap", __FILENAME__, __LINE__);
+                         if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
+                         else
+                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, 0, 0));
+                     }
                  }
              }
             
@@ -93,7 +112,7 @@ bool CollectingScene::Initialize()
              if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
              {
                  if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10*deltaTime_, 0, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-8*deltaTime_, 0, 0, 0));
 
 
 
@@ -109,7 +128,7 @@ bool CollectingScene::Initialize()
                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 15, 0, 0));
                  if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                  {
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 5, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 20, 0, 0));
                  }
              }
              else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight)
@@ -126,7 +145,7 @@ bool CollectingScene::Initialize()
              }
              for (int x = 0; x < targetObjects.size(); x++)
              {
-                 if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), targetObjects.at(x)->GetComponent<ComplexCollider>(), simplex))
+                 if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), targetObjects.at(x)->GetComponent<ComplexCollider>(),simplex))
                  {
                      // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
                      Debug::Warning("overlap", __FILENAME__, __LINE__);
