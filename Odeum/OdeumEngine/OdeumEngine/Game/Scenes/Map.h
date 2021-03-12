@@ -27,6 +27,7 @@ private:
 	std::vector<GameObject*> playerObjects;
 	
 
+	int currPlayerTileIndex = 0;
 	int turn = 0;
 	int playerTurn = 1;
 	int numMoves = 0;

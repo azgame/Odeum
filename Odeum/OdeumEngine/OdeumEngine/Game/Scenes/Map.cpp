@@ -824,18 +824,19 @@ void MAPScene::Update(const float deltaTime_) {
 	int tempTurn = 1;
 	// choose to move left, right, up or down based on the node they're standing on
 	// uncomment playerTurn to turn on multiplayer
-	// probably doesnt need to be a switch case, could be a normal if and be something like playerObjects[playerTurn - 1]
+	// probably doesnt need to be a switch case, could be a normal if and be something like playerObjects[playerTurn - 1] can change it later.
 	switch (playerTurn) {
 	case 1:
 		if (tempTurn != turn && numMoves == 0) {
 			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
 				// logic here to find the gameobject the player is standing on
 
-				// once the gameobject is found, go to the spot in the graph (the index should be the same) 
+				// once the gameobject is found, go to the spot in the graph (the index should be the same) update currPlayerTileIndex to the corresponding gameobject
 
 				// check for edges and check if the player can move left
 
 				// move the player to the next node. (later on can pick up an item or something from a node)
+
 
 				numMoves--;
 				tempTurn--;
@@ -911,6 +912,8 @@ void MAPScene::UIRender()
 {
 	ImGui::Begin("Game UI");
 	ImGui::Text("Map");
+	// update this text with curr player and the tag of the tile.
+	ImGui::Text("Player 1 is standing on a tile.");
 
 	ImGui::End();
 }
