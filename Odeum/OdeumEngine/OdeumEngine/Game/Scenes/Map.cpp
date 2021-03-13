@@ -816,27 +816,18 @@ void MAPScene::Update(const float deltaTime_) {
 					auto it = find(gameObjects.begin(), gameObjects.end(), m);
 					if (it != gameObjects.end())
 					{
-
-						
 						int index = it - gameObjects.begin();
 						currPlayerTileIndex = index;
 					}
-					
 					currTileIndex = map.findIndex(m);
-
 				}
-
 			}
-
-
-			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
-				
-						
-
+			if (Input::Get().isKeyPressed(playerObjects[playerTurn - 1]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
 				// check for edges and check if the player can move left
-				
 				// move the player to the next node. (later on can pick up an item or something from a node)
-
+				int tempIndex;
+				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
+				playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
 
 				numMoves--;
 				tempTurn--;
@@ -860,7 +851,7 @@ void MAPScene::Update(const float deltaTime_) {
 		}
 		else {
 			// add logic here to roll dice based off stats (if some item allows for a multi-roll like 2d6's 
-			numMoves = RollDice(6);
+			numMoves = RollDice(6, 1);
 		}
 		break;
 	case 2:
