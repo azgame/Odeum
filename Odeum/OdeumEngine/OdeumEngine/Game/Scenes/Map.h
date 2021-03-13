@@ -28,11 +28,14 @@ private:
 	
 
 	int currPlayerTileIndex = 0;
+	int currTileIndex = 0;
 	int turn = 0;
 	int playerTurn = 1;
 	int numMoves = 0;
 	CameraController cameraController;
 	float angle;
 	float direction;
+
+
 };
 #endif
