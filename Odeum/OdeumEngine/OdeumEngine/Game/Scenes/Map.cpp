@@ -817,23 +817,24 @@ void MAPScene::Update(const float deltaTime_) {
 					if (it != gameObjects.end())
 					{
 
-						// calculating the index
-						// of K
+						
 						int index = it - gameObjects.begin();
 						currPlayerTileIndex = index;
 					}
 					
+					currTileIndex = map.findIndex(m);
+
 				}
+
 			}
 
 
 			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
-				// logic here to find the gameobject the player is standing on
 				
-				// once the gameobject is found, go to the spot in the graph (the index should be the same) update currPlayerTileIndex to the corresponding gameobject
+						
 
 				// check for edges and check if the player can move left
-
+				
 				// move the player to the next node. (later on can pick up an item or something from a node)
 
 
