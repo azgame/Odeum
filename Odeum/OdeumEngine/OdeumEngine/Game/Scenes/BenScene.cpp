@@ -15,6 +15,7 @@
 BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));	
+	degrees = 45.0f;
 
 	go1 = new GameObject();
 	go1->AddComponent<Rigidbody>();
@@ -46,10 +47,20 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	go2->AddComponent<SphereCollider>();
 	//go2->AddComponent<ComplexCollider>();
 
+	go3 = new GameObject();
+	go3->AddComponent<Rigidbody>();
+	go3->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	go3->GetComponent<Rigidbody>()->SetMass(1.0f);
+	
+	go3->AddComponent<RenderComponent>();
+	go3->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.2f, 0.8f, 0.5f));
+	
 	//setup audiohandler
 	AudioHandler::GetInstance()->Initialize();
 	go1->AddComponent<AudioSource>();
 	go1->GetComponent<AudioSource>()->Initialize("TextCoin.wav");
+
+	
 }
 
 BenScene::~BenScene()
@@ -87,5 +98,25 @@ void BenScene::UIRender()
 	ImGui::Begin("Game UI");
 	ImGui::Text("Enter game UI components here");
 	//ImGui::Text("GO1 pos: ");
+	ImGui::InputFloat("Degrees", &degrees, 1.0f, 15.0f, 2);
+	
+	// setting up string
+	std::stringstream stream;
+	stream << "Rotate " << std::fixed << std::setprecision(2) << degrees << " degrees on ";
+
+	std::string sx = stream.str().append("x-axis");
+	std::string sy = stream.str().append("y-axis");
+	std::string sz = stream.str().append("z-axis");
+
+	if (ImGui::Button(sx.c_str())) {
+		go3->GetComponent<Rigidbody>()->AddRotation(Vector4(1.0f, 0.0f, 0.0f, 1.0f), degrees);
+	}
+	if (ImGui::Button(sy.c_str())) {
+		go3->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 1.0f, 0.0f, 1.0f), degrees);
+	}
+	if (ImGui::Button(sz.c_str())) {
+		go3->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 0.0f, 1.0f, 1.0f), degrees);
+	}
+
 	ImGui::End();
 }

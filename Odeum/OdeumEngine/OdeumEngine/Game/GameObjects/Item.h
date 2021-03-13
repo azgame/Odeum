@@ -11,22 +11,16 @@ class Proc : public Observer
 {
 public:
 
-	Proc(double Chance) { m_chanceToProc = Chance; }
+	Proc() {}
 
 	void OnNotify(GameObject& GameObject, GameEvent& Event) override
 	{
-		if (shouldTrigger(Event))
-			procCallback(GameObject, Event);
+		if (Trigger(Event))
+			Effect(GameObject, Event);
 	}
 
-	std::function<bool(GameEvent&)> shouldTrigger;
-	std::function<void(GameObject&, GameEvent&)> procCallback;
-
-	double GetProcChance() { return m_chanceToProc; }
-
-private:
-
-	double m_chanceToProc;
+	std::function<bool(GameEvent&)> Trigger;
+	std::function<void(GameObject&, GameEvent&)> Effect;
 };
 
 class Item;
@@ -35,15 +29,12 @@ class ItemEffect
 {
 	friend class Item;
 public:
-	ItemEffect(Proc* ProcEffect);
+	ItemEffect(Proc* ProcEffect, PlayerStatMod Mod);
 
 	Proc* GetProc() { return proc; }
 	PlayerStatMod GetStat() { return mod; }
 
 private:
-
-	bool ShouldTrigger(GameEvent& Action);
-	void ChanceToActivate(GameObject& GameObject, GameEvent& Event);
 
 	Proc* proc;
 	PlayerStatMod mod;
