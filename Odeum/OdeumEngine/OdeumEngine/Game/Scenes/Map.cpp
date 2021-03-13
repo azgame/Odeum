@@ -30,19 +30,19 @@ MAPScene::MAPScene()
 	playerObjects.back()->GetComponent<Player>()->SetLeft(Key::S);
 	playerObjects.back()->GetComponent<Player>()->SetRight(Key::D);
 
-	playerObjects.push_back(new GameObject());
-	playerObjects.back()->AddComponent<Rigidbody>();
-	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
-	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
-	playerObjects.back()->AddComponent<RenderComponent>();
-	playerObjects.back()->AddComponent<Player>();
-	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
-	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 1.0f));
-	playerObjects.back()->SetTag("Player2");
-	playerObjects.back()->GetComponent<Player>()->SetUp(Key::I);
-	playerObjects.back()->GetComponent<Player>()->SetDown(Key::K);
-	playerObjects.back()->GetComponent<Player>()->SetLeft(Key::J);
-	playerObjects.back()->GetComponent<Player>()->SetRight(Key::L);
+	//playerObjects.push_back(new GameObject());
+	//playerObjects.back()->AddComponent<Rigidbody>();
+	//playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
+	//playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+	//playerObjects.back()->AddComponent<RenderComponent>();
+	//playerObjects.back()->AddComponent<Player>();
+	////playerObjects.back()->AddComponent<PlayerEffectsComponent>();
+	//playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 1.0f));
+	//playerObjects.back()->SetTag("Player2");
+	//playerObjects.back()->GetComponent<Player>()->SetUp(Key::I);
+	//playerObjects.back()->GetComponent<Player>()->SetDown(Key::K);
+	//playerObjects.back()->GetComponent<Player>()->SetLeft(Key::J);
+	//playerObjects.back()->GetComponent<Player>()->SetRight(Key::L);
 	
 
 
@@ -811,8 +811,8 @@ void MAPScene::Update(const float deltaTime_) {
 	case 1:
 		if (tempTurn != turn && numMoves == 0) {
 			for (auto m : gameObjects) {
-				if (playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->GetPosition().GetX() == m->GetComponent<Rigidbody>()->GetPosition().GetX()
-					&& playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->GetPosition().GetZ() == m->GetComponent<Rigidbody>()->GetPosition().GetZ()) {
+				if (playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetX() == m->GetComponent<Rigidbody>()->GetPosition().GetX()
+					&& playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetZ() == m->GetComponent<Rigidbody>()->GetPosition().GetZ()) {
 					auto it = find(gameObjects.begin(), gameObjects.end(), m);
 					if (it != gameObjects.end())
 					{
@@ -822,26 +822,36 @@ void MAPScene::Update(const float deltaTime_) {
 					currTileIndex = map.findIndex(m);
 				}
 			}
-			if (Input::Get().isKeyPressed(playerObjects[playerTurn - 1]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
+			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
 				// check for edges and check if the player can move left
 				// move the player to the next node. (later on can pick up an item or something from a node)
 				int tempIndex;
 				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				// moved the player to the next game object.
 
 				numMoves--;
 				tempTurn--;
 			}
 			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetRight()) && numMoves > 0) {
-
+				int tempIndex;
+				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
+				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				// moved the player to the next game object.
 				tempTurn--;
 			}
 			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetUp()) && numMoves > 0) {
-
+				int tempIndex;
+				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
+				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				// moved the player to the next game object.
 				tempTurn--;
 			}
 			else if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetDown()) && numMoves > 0) {
-
+				int tempIndex;
+				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
+				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				// moved the player to the next game object.
 				tempTurn--;
 			}
 			else if (numMoves <= 0) {
