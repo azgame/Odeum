@@ -810,9 +810,26 @@ void MAPScene::Update(const float deltaTime_) {
 	switch (playerTurn) {
 	case 1:
 		if (tempTurn != turn && numMoves == 0) {
+			for (auto m : gameObjects) {
+				if (playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->GetPosition().GetX() == m->GetComponent<Rigidbody>()->GetPosition().GetX()
+					&& playerObjects[playerTurn - 1]->GetComponent<Rigidbody>()->GetPosition().GetZ() == m->GetComponent<Rigidbody>()->GetPosition().GetZ()) {
+					auto it = find(gameObjects.begin(), gameObjects.end(), m);
+					if (it != gameObjects.end())
+					{
+
+						// calculating the index
+						// of K
+						int index = it - gameObjects.begin();
+						currPlayerTileIndex = index;
+					}
+					
+				}
+			}
+
+
 			if (Input::Get().isKeyPressed(playerObjects[0]->GetComponent<Player>()->GetLeft()) && numMoves > 0) {
 				// logic here to find the gameobject the player is standing on
-
+				
 				// once the gameobject is found, go to the spot in the graph (the index should be the same) update currPlayerTileIndex to the corresponding gameobject
 
 				// check for edges and check if the player can move left
