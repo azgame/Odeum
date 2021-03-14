@@ -21,14 +21,14 @@ MAPScene::MAPScene()
 	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
 	playerObjects.back()->AddComponent<RenderComponent>(); 
-	playerObjects.back()->AddComponent<Player>(); 
 	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	playerObjects.back()->SetTag("Player1");
+	playerObjects.back()->AddComponent<Player>(); 
 	playerObjects.back()->GetComponent<Player>()->SetUp(Key::W);
 	playerObjects.back()->GetComponent<Player>()->SetDown(Key::A);
 	playerObjects.back()->GetComponent<Player>()->SetLeft(Key::S);
 	playerObjects.back()->GetComponent<Player>()->SetRight(Key::D);
+	playerObjects.back()->SetTag("Player1");
 
 	//playerObjects.push_back(new GameObject());
 	//playerObjects.back()->AddComponent<Rigidbody>();
