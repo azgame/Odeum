@@ -824,7 +824,7 @@ void MAPScene::Update(const float deltaTime_) {
 			}
 			if (Input::Get().isKeyPressed(KeyCode::A) && numMoves > 0) {
 				// check for edges and check if the player can move left
-				// move the player to the next node. (later on can pick up an item or something from a node)
+				// move the player to the next node. (later on can pick up an item or something from a node).
 				int tempIndex;
 				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
 				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
