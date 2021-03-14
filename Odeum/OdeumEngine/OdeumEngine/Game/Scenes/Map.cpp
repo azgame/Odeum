@@ -73,7 +73,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 1, 0);
+	map.attachDirectedEdge(0, 1, 0);
 
 
 	gameObjects.push_back(new GameObject());
@@ -85,9 +85,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(0, 2, 0);
-
-
+	map.attachDirectedEdge(1, 2, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -98,7 +96,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(2, 3, 0);
+	map.attachDirectedEdge(2, 3, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -109,7 +107,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachEdge(3, 4, 0);
+	map.attachDirectedEdge(3, 4, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
