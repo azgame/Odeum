@@ -809,7 +809,6 @@ void MAPScene::Update(const float deltaTime_) {
 	// probably doesnt need to be a switch case, could be a normal if and be something like playerObjects[playerTurn - 1] can change it later.
 	switch (playerTurn) {
 	case 1:
-		if (tempTurn != turn && numMoves == 0) {
 			for (auto m : gameObjects) {
 				if (playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetX() == m->GetComponent<Rigidbody>()->GetPosition().GetX()
 					&& playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetZ() == m->GetComponent<Rigidbody>()->GetPosition().GetZ()) {
@@ -822,12 +821,12 @@ void MAPScene::Update(const float deltaTime_) {
 					currTileIndex = map.findIndex(m);
 				}
 			}
-			if (Input::Get().isKeyPressed(KeyCode::A) && numMoves > 0) {
+			if (numMoves > 0) {
 				// check for edges and check if the player can move left
 				// move the player to the next node. (later on can pick up an item or something from a node).
 				int tempIndex;
 				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
+				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex + 1]->GetComponent<Rigidbody>()->GetPosition());
 				// moved the player to the next game object.
 
 				numMoves--;
@@ -858,8 +857,7 @@ void MAPScene::Update(const float deltaTime_) {
 				//playerTurn = 2;
 				tempTurn = turn + 1;
 			}
-		}
-		else {
+		if (numMoves == 0) {
 			// add logic here to roll dice based off stats (if some item allows for a multi-roll like 2d6's 
 			numMoves = RollDice(6, 1);
 		}
@@ -896,6 +894,10 @@ void MAPScene::UIRender()
 	ImGui::Text("Map");
 	// update this text with curr player and the tag of the tile.
 	ImGui::Text("Player 1 is standing on a tile.");
+	std::string text = "Movements: " + std::to_string(numMoves);
+
+	const char* textchar = text.c_str();
+	ImGui::Text(textchar);
 
 	ImGui::End();
 }
