@@ -51,8 +51,9 @@ CollectingScene::CollectingScene()
 
         //targetObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
         targetObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/bread.obj");
-        targetObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0), 180);
-        //targetObjects.back()->GetComponent<Rigidbody>()->SetScale
+        targetObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(1, 0, 0, 0), 90);
+        targetObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 90);
+        targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         targetObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
@@ -112,7 +113,7 @@ bool CollectingScene::Initialize()
              if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
              {
                  if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-8*deltaTime_, 0, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-12*deltaTime_, 0, 0, 0));
 
 
 
@@ -120,7 +121,7 @@ bool CollectingScene::Initialize()
              else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
              {
                  if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(10* deltaTime_, 0, 0, 0));
+                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(12* deltaTime_, 0, 0, 0));
              }
 
              if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)

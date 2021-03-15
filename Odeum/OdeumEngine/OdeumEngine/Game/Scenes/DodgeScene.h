@@ -10,7 +10,7 @@ public:
 	DodgeScene();
 	virtual ~DodgeScene();
 	int MaxPlayers;
-	int MaxObstacles = 10;
+	int MaxObstacles = 8;
 	//float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);

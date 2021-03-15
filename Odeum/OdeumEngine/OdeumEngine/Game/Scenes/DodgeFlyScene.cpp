@@ -27,9 +27,13 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4 - 6, rand() % 4 - 1, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
-        playerObjects.back()->AddComponent<ComplexCollider>();
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+       // playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/alien.obj");
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 180);
+        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+        playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
+        playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
 
     }
@@ -47,7 +51,9 @@ DodgeFlyScene::DodgeFlyScene()
         obstacleObjects.back()->AddComponent<Rigidbody>();
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+        //obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/meteor.obj");
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
@@ -59,7 +65,9 @@ DodgeFlyScene::DodgeFlyScene()
         obstacleObjects.back()->AddComponent<Rigidbody>();
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+       // obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/meteor.obj");
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
@@ -71,7 +79,9 @@ DodgeFlyScene::DodgeFlyScene()
         obstacleObjects.back()->AddComponent<Rigidbody>();
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+       // obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/meteor.obj");
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
@@ -123,12 +133,12 @@ void DodgeFlyScene::Update(const float deltaTime_)
 
 
 
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0, 0.03, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0, 10*deltaTime_, 0));
                 
                 if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-12 *deltaTime_, 0, 0, 0));
 
 
 
@@ -136,17 +146,17 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(12 * deltaTime_, 0, 0, 0));
                 }
                 if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                 {
                     if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < maxVelocity)
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.1, 0, 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 12 * deltaTime_, 0, 0));
                 }
                 else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.1, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -12 * deltaTime_, 0, 0));
                 }
                 if (!Input::Get().isKeyPressed(playerKeysDown.at(i))&&!Input::Get().isKeyPressed(playerKeysUp.at(i))&& !Input::Get().isKeyPressed(playerKeysLeft.at(i))&& !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
                 {
@@ -158,7 +168,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         }
                         else
                         {
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
+                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / (1+2*deltaTime_));
                         }
                     }
                 }
@@ -196,12 +206,15 @@ void DodgeFlyScene::Update(const float deltaTime_)
                
                 for (int z = 0; z < playerObjects.size(); z++)
                 {
-                    if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                    if (z != i)
                     {
-                        if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ()-0.1)
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 10, 0));
-                        else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() < playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ())
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
+                        if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                        {
+                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ() - 0.1)
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), 10, 0));
+                            else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() < playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetZ())
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -10, 0));
+                        }
                     }
                 }
                 for (int x = 0; x < obstacleObjects.size(); x++)

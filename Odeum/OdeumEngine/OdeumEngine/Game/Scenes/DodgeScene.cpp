@@ -24,9 +24,12 @@ DodgeScene::DodgeScene()
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4 - 6, rand() % 4 - 1, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
-        playerObjects.back()->AddComponent<ComplexCollider>();
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/alien.obj");
+        playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -2, 0, 0));
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),180);
+        playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
 
     }
@@ -36,8 +39,10 @@ DodgeScene::DodgeScene()
         obstacleObjects.back()->AddComponent<Rigidbody>();
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->AddComponent<RenderComponent>();
+        //obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/meteor.obj");
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<ComplexCollider>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(2.1f, 0, 0));
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         
         objectSpawned.push_back(false);
@@ -78,23 +83,26 @@ void DodgeScene::Update(const float deltaTime_)
             {
                 for (int z = 0; z < playerObjects.size(); z++)
                 {
-                    if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                    if (i != z)
                     {
-                        if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
-                        else
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, 0, 0));
+                        if (CollisionDetection::GJKCollisionDetection(playerObjects.at(i)->GetComponent<ComplexCollider>(), playerObjects.at(z)->GetComponent<ComplexCollider>(), simplex))
+                        {
+                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
+                            else
+                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, 0, 0));
+                        }
                     }
                 }
 
                 
 
 
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.03, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -10 * deltaTime_, 0, 0));
                 if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-12*deltaTime_, 0, 0, 0));
 
 
 
@@ -102,16 +110,16 @@ void DodgeScene::Update(const float deltaTime_)
                 else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(12* deltaTime_, 0, 0, 0));
                 }
 
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)
                 {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 15, 0, 0));
                     if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
-                    {
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 5, 0, 0));
-                    }
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 20, 0, 0));
+                        
+                    
                 }
                 else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight)
                 {
@@ -135,7 +143,7 @@ void DodgeScene::Update(const float deltaTime_)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
-                        if (currentDeadPlayers >= MaxPlayers - 1)
+                        if (currentDeadPlayers >= MaxPlayers )
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);

@@ -10,9 +10,9 @@ public:
 	DodgeFlyScene();
 	virtual ~DodgeFlyScene();
 	int MaxPlayers;
-	int MaxObstaclesLeft = 10;
-	int MaxObstaclesRight = 10;
-	int MaxObstaclesUp = 20;
+	int MaxObstaclesLeft = 7;
+	int MaxObstaclesRight = 7;
+	int MaxObstaclesUp = 14;
 	//float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
