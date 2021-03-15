@@ -29,8 +29,11 @@ Collecting3DScene::Collecting3DScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4 - 6, rand() % 4 - 1, 0, 0));
         playerObjects.back()->AddComponent<RenderComponent>();
         playerObjects.back()->AddComponent<ComplexCollider>();
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chicken.obj");
+        playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(-1,0,0,0), 90);
         playerScore.push_back(0);
 
     }
@@ -41,6 +44,7 @@ Collecting3DScene::Collecting3DScene()
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
+   
 
     for (int i = 0; i < MaxCollectables; i++)
     {
@@ -48,7 +52,11 @@ Collecting3DScene::Collecting3DScene()
         collectableObjects.back()->AddComponent<Rigidbody>();
         collectableObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         collectableObjects.back()->AddComponent<RenderComponent>();
-        collectableObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
+       // collectableObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 1, 1.4));
+        collectableObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(6, 6, 6, 1));
+        //collectableObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(1, 0, 0, 0), 90);
+        collectableObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 90);
+        collectableObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/bread.obj");
         collectableObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
@@ -96,16 +104,28 @@ void Collecting3DScene::Update(const float deltaTime_)
         for (int i = 0; i < playerObjects.size(); i++)
         {
             
+           
+            
 
 
-
-
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0, 0.03, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0, 10 *deltaTime_, 0));
 
                 if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
+                    
+                   // Debug::Warning(std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetY().GetZ()), __FILENAME__, __LINE__);
+                    
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetY()>=90)
+                    {
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 1);
+
+                    }
+                    else
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 1);
+                    }
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > -maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-12 * deltaTime_, 0, 0, 0));
 
 
 
@@ -113,17 +133,17 @@ void Collecting3DScene::Update(const float deltaTime_)
                 else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0.1, 0, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(12 * deltaTime_, 0, 0, 0));
                 }
                 if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.1, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 12 * deltaTime_, 0, 0));
                 }
                 else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
                 {
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -maxVelocity)
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.1, 0, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -12 * deltaTime_, 0, 0));
                 }
                 if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
                 {
@@ -135,7 +155,7 @@ void Collecting3DScene::Update(const float deltaTime_)
                         }
                         else
                         {
-                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
+                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / (1 + 2 * deltaTime_));
                         }
                     }
                 }
@@ -226,13 +246,17 @@ void Collecting3DScene::spawnObjects(float deltaTime_)
 
     for (int i = 0; i < collectableObjects.size(); i++)
     {
+        collectableObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(-1 * deltaTime_, 0, 0, 0), 1);
         if (objectSpawned.at(i) == false)
+        {
             objectSpawnTimes.at(i) -= deltaTime_;
+            
+        }
         if (objectSpawnTimes.at(i) <= 0)
         {
             objectSpawnTimes.at(i) = rand() % 2 + 0.5f;
             objectSpawned.at(i) = true;
-            collectableObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % (int)maxRight * 2+ (minRight*1), rand() % (int)maxHeight * 2 + (minHeight * 1), rand() % (int)minUp*-0.6f-2 , 0));
+            collectableObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % (int)maxRight * 2+ (minRight*1), rand() % (int)maxHeight * 2 + (minHeight * 1)-1, rand() % (int)minUp*-0.6f-2 , 0));
         }
     }
 }
