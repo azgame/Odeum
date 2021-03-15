@@ -114,8 +114,9 @@ void Collecting3DScene::Update(const float deltaTime_)
                 {
                     
                    // Debug::Warning(std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetY().GetZ()), __FILENAME__, __LINE__);
+                   
                     
-                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetY()>=90)
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetX()>0)
                     {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 1);
 
@@ -132,16 +133,43 @@ void Collecting3DScene::Update(const float deltaTime_)
                 }
                 else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
                 {
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetX() < 0)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 1);
+
+                    }
+                    else
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 1);
+                    }
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < maxVelocity)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(12 * deltaTime_, 0, 0, 0));
                 }
                 if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                 {
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetX() > 0.99)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 1);
+
+                    }
+                    else
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 1);
+                    }
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < maxVelocity)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 12 * deltaTime_, 0, 0));
                 }
                 else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
                 {
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetRotation().Get3x3().GetX().GetX() < -0.99)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 1);
+
+                    }
+                    else
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 1);
+                    }
                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -maxVelocity)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -12 * deltaTime_, 0, 0));
                 }
