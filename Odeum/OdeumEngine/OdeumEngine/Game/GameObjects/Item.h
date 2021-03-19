@@ -31,6 +31,9 @@ class ItemEffect
 public:
 	ItemEffect(Proc* ProcEffect, std::vector<PlayerStatMod> Mods);
 
+	void SetItemStats(std::vector<PlayerStatMod> Mods) { mods = Mods; }
+	void SetItemProc(Proc* Proc) { proc = Proc; }
+
 	Proc* GetProc() { return proc; }
 	std::vector<PlayerStatMod> GetStats() { return mods; }
 
