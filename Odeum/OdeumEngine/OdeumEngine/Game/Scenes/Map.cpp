@@ -859,6 +859,10 @@ void MAPScene::Update(const float deltaTime_) {
 		if (numMoves == 0) {
 			// add logic here to roll dice based off stats (if some item allows for a multi-roll like 2d6's 
 			numMoves = RollDice(6, 1);
+
+			RollAction* roll = new RollAction(playerObjects[0], Dice(6));
+			roll->Execute();
+			
 		}
 		break;
 	case 2:
@@ -902,7 +906,8 @@ void MAPScene::UIRender()
 }
 
 // simple dice rolling function, can change the dice size and how many dice with parameter (supports up to 6 die.)
-int MAPScene::RollDice(int size_ = 6, int numDie = 1){
+int MAPScene::RollDice(int size_ = 6, int numDie = 1)
+{
 	int min = 1;
 
 	// make sure size is higher than 1

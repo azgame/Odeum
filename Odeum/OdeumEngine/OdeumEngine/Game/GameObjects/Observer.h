@@ -8,7 +8,7 @@
 enum class GameEventType : uint8_t
 {
 	None = 0,
-	GameMove, GamePurchase, GameTriggerTile,
+	GameMove, GameRoll, GamePurchase, GameTriggerTile,
 	GameAttack, GameDefend
 };
 
@@ -62,6 +62,19 @@ public:
 	GAME_EVENT_TYPE(GameMove)
 protected:
 	Vector2 move;
+	GameObject* target;
+};
+
+class GameRollEvent : public GameMapEvent
+{
+public:
+	GameRollEvent(GameObject* Target, int Roll) : GameMapEvent() { target = Target; roll = Roll; }
+
+	int Roll() { return roll; }
+
+	GAME_EVENT_TYPE(GameRoll)
+protected:
+	int roll;
 	GameObject* target;
 };
 

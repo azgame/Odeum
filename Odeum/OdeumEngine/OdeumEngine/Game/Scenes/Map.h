@@ -8,6 +8,40 @@
 
 #include "../GameObjects/Action.h"
 
+#include <stdlib.h>
+
+class Dice
+{
+public:
+
+	Dice(int Size) { size = Size; }
+
+	int Roll()
+	{
+		return rand() % (size - 1) + 1;
+	}
+
+private:
+	int size;
+};
+
+class RollAction : public Action
+{
+public:
+	RollAction(GameObject* Target, Dice Die) : die(1) { target = Target; die = Die; }
+
+	void Execute() override
+	{
+		int roll = die.Roll();
+		GameRollEvent gameRoll = GameRollEvent(target, roll);
+	};
+
+	GameEventType Type() override { return GameEventType::GameRoll; }
+private:
+	GameObject* target;
+	Dice die;
+};
+
 class MAPScene : public Scene
 {
 public:

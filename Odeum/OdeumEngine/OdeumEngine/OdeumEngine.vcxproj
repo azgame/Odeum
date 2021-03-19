@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Game\Components\InventoryComponent.cpp" />
     <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
+    <ClCompile Include="Game\Components\PlayerMapComponent.cpp" />
     <ClCompile Include="Game\GameObjects\Action.cpp" />
     <ClCompile Include="Game\GameObjects\ActionQueue.cpp" />
     <ClCompile Include="Game\GameObjects\Item.cpp" />
@@ -250,6 +251,7 @@
   <ItemGroup>
     <ClInclude Include="Game\Components\InventoryComponent.h" />
     <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
+    <ClInclude Include="Game\Components\PlayerMapComponent.h" />
     <ClInclude Include="Game\GameObjects\Action.h" />
     <ClInclude Include="Game\GameObjects\ActionQueue.h" />
     <ClInclude Include="Game\GameObjects\GameManager.h" />

@@ -4,10 +4,10 @@ Item::Item()
 {
 }
 
-ItemEffect::ItemEffect(Proc* ProcEffect, PlayerStatMod Mod)
+ItemEffect::ItemEffect(Proc* ProcEffect, std::vector<PlayerStatMod> Mods)
 {
 	proc = ProcEffect; // create this elsewhere
-	mod = Mod;
+	mods = Mods;
 }
 
 void Item::Initialize(std::string Name, std::string Description, UINT Cost, ItemTypes Type, ItemEffect* Effect)
