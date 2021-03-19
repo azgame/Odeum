@@ -103,6 +103,9 @@
     <ClCompile Include="Game\Components\InventoryComponent.cpp" />
     <ClCompile Include="Game\GameObjects\ItemRegistry.cpp" />
     <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
+    <ClCompile Include="Game\Scenes\GuessScene.cpp" />
+    <ClCompile Include="Game\Scenes\Map.cpp" />
+    <ClCompile Include="Game\Components\PlayerMapComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -242,6 +245,9 @@
     <ClInclude Include="Game\Components\InventoryComponent.h" />
     <ClInclude Include="Game\GameObjects\ItemRegistry.h" />
     <ClInclude Include="Game\Scenes\TreadmillScene.h" />
+    <ClInclude Include="Game\Scenes\GuessScene.h" />
+    <ClInclude Include="Game\Scenes\Map.h" />
+    <ClInclude Include="Game\Components\PlayerMapComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />

@@ -29,15 +29,15 @@ class ItemEffect
 {
 	friend class Item;
 public:
-	ItemEffect(Proc* ProcEffect, PlayerStatMod Mod);
+	ItemEffect(Proc* ProcEffect, std::vector<PlayerStatMod> Mods);
 
 	Proc* GetProc() { return proc; }
-	PlayerStatMod GetStat() { return mod; }
+	std::vector<PlayerStatMod> GetStats() { return mods; }
 
 private:
 
 	Proc* proc;
-	PlayerStatMod mod;
+	std::vector<PlayerStatMod> mods;
 
 	Item* parent;
 };

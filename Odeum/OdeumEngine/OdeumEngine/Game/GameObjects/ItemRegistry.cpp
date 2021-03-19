@@ -59,7 +59,7 @@ Item* ItemBuilder::GenerateGoldOnMovePassive()
 	mod.duration = 0;
 	mod.id = T1_HEALTH_MOD_ID; // need to generate these mod ids
 
-	ItemEffect* procEffect = new ItemEffect(proc, mod);
+	ItemEffect* procEffect = new ItemEffect(proc, { mod });
 
 	Item* item = new Item();
 	item->Initialize("Helmet", "Shit Helm", 1, ItemTypes::Helmet, procEffect);

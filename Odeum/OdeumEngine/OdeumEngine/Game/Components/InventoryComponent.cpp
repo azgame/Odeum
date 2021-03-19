@@ -38,7 +38,8 @@ void InventoryComponent::EquipItem(Item* NewItem)
 	if (prevItem != nullptr)
 	{
 		m_effects->RemoveObserver(prevItem->GetItemEffect()->GetProc());
-		m_stats->RemoveModifier(prevItem->GetItemEffect()->GetStat());
+		for (auto mod : prevItem->GetItemEffect()->GetStats())
+			m_stats->RemoveModifier(mod);
 	}
 
 	SAFE_DELETE(prevItem);
@@ -47,5 +48,7 @@ void InventoryComponent::EquipItem(Item* NewItem)
 
 	// Add stats/effects
 	m_effects->AddObserver(NewItem->GetItemEffect()->GetProc());
-	m_stats->AddModifier(NewItem->GetItemEffect()->GetStat());
+
+	for (auto mod : NewItem->GetItemEffect()->GetStats())
+		m_stats->AddModifier(mod);
 }

@@ -2,7 +2,6 @@
 #define RINGBUFFER_H
 
 #include "../../pch.h"
-#include <queue>
 
 template <typename T>
 class RingBuffer
