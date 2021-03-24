@@ -35,7 +35,7 @@ public:
 	void Update();
 	void Uninitialize();
 
-	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2);
+	void SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2,bool angular);
 	void SpherePlaneCollisionResponse(SphereCollider& sc, Plane p);
 	void SphereStaticBoxCollisionResponse(SphereCollider& sc, BoxCollider& bc);
 	void SphereOBBCollisionResponse(SphereCollider& sc, BoxCollider& bc);
