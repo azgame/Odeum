@@ -21,6 +21,7 @@
 #include "Scenes/SpherePushingScene.h"
 #include "Scenes/TreadmillScene.h"
 #include "Scenes/Map.h"
+#include "Scenes/AvoidScene.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -122,6 +123,9 @@ void Game1::BuildScene()
 		break;
 	case 17:
 		m_currentScene = new MAPScene();
+		break;
+	case 18:
+		m_currentScene = new AvoidScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

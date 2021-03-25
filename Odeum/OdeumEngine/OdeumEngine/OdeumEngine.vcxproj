@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Scenes\AvoidScene.cpp" />
     <ClCompile Include="Game\Components\InventoryComponent.cpp" />
     <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
     <ClCompile Include="Game\Components\PlayerMapComponent.cpp" />
@@ -249,6 +250,7 @@
     <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Scenes\AvoidScene.h" />
     <ClInclude Include="Game\Components\InventoryComponent.h" />
     <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
     <ClInclude Include="Game\Components\PlayerMapComponent.h" />

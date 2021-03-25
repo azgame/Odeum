@@ -106,6 +106,7 @@
     <ClCompile Include="Game\Scenes\GuessScene.cpp" />
     <ClCompile Include="Game\Scenes\Map.cpp" />
     <ClCompile Include="Game\Components\PlayerMapComponent.cpp" />
+    <ClCompile Include="Game\Scenes\AvoidScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Game\Scenes\GuessScene.h" />
     <ClInclude Include="Game\Scenes\Map.h" />
     <ClInclude Include="Game\Components\PlayerMapComponent.h" />
+    <ClInclude Include="Game\Scenes\AvoidScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
