@@ -13,9 +13,11 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 DodgeFlyScene::DodgeFlyScene()
 {
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -58,6 +60,9 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(1);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
+    
     }
     for (int i = 0; i < MaxObstaclesRight; i++)
     {
@@ -72,6 +77,8 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(2);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
     for (int i = 0; i < MaxObstaclesUp; i++)
     {
@@ -86,6 +93,8 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(3);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::D);
@@ -108,7 +117,9 @@ DodgeFlyScene::DodgeFlyScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
@@ -254,7 +265,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
-                        
+                        obstacleObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                         if (currentDeadPlayers >= MaxPlayers)
                         {
                             won = true;

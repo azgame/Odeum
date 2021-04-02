@@ -12,9 +12,11 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 DodgeScene::DodgeScene()
 {
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     for (int i = 0; i < MaxPlayers; i++)
@@ -44,7 +46,8 @@ DodgeScene::DodgeScene()
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
-        
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
         objectSpawned.push_back(false);
     }
     playerKeysLeft.push_back(Key::A);
@@ -60,7 +63,9 @@ DodgeScene::DodgeScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
  DodgeScene::~DodgeScene()
 {
@@ -145,6 +150,7 @@ void DodgeScene::Update(const float deltaTime_)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
+                        obstacleObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                         if (currentDeadPlayers >= MaxPlayers )
                         {
                             won = true;

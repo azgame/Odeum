@@ -10,9 +10,11 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 SpherePushingScene::SpherePushingScene()
 {
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -66,7 +68,9 @@ playerKeysUp.push_back(Key::W);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
-
+playerObjects.back()->AddComponent<AudioSource>();
+playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 SpherePushingScene::~SpherePushingScene()
 {

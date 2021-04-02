@@ -20,8 +20,8 @@ QuickDrawScene::QuickDrawScene()
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cake.obj");
 	gameObjects.back()->AddComponent<AudioSource>();
-	gameObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
-	//gameObjects.back()->GetComponent<AudioSource>()->PlaySound();
+	gameObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+	gameObjects.back()->GetComponent<AudioSource>()->PlaySound();
 	
 	maxPlayers = 4;
 	maxScore = 3;
@@ -39,7 +39,8 @@ QuickDrawScene::QuickDrawScene()
 		playerInPosition.push_back(false);
 	}
 	players.back()->AddComponent<AudioSource>();
-	players.back()->GetComponent<AudioSource>()->Initialize("TestCoin.wav", false, false, false, 1.0f);
+	players.back()->GetComponent<AudioSource>()->Initialize("ding.wav", false, false, false, 1.0f);
+	
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
@@ -96,6 +97,7 @@ void QuickDrawScene::Update(const float deltaTime_)
 							players.at(i)->GetComponent<Rigidbody>()->SetPosition(slicerPos + Vector4(i * 1.3f - 2, 0, 0, 0));
 							targetHit = true;
 							playerScore.at(i) += 1;
+							players.back()->GetComponent<AudioSource>()->PlaySound();
 							//players.back()->GetComponent<AudioSource>()->PlaySound();
 							if (playerScore.at(i) == maxScore)
 							{

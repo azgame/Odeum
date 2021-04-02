@@ -14,9 +14,11 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 Collecting3DScene::Collecting3DScene()
 {
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -60,7 +62,8 @@ Collecting3DScene::Collecting3DScene()
         collectableObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
-        
+        collectableObjects.back()->AddComponent<AudioSource>();
+        collectableObjects.back()->GetComponent<AudioSource>()->Initialize("HappySax.ogg", false, false, false, 0.5f);
     }
    
     playerKeysLeft.push_back(Key::A);
@@ -84,7 +87,9 @@ Collecting3DScene::Collecting3DScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 Collecting3DScene::~Collecting3DScene()
 {
@@ -229,6 +234,7 @@ void Collecting3DScene::Update(const float deltaTime_)
                         
                        
                        // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                        collectableObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                         playerScore.at(i) += 1;
                         collectableObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                         objectSpawnTimes.at(x) = rand() % 2 + 0.5f;

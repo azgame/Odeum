@@ -11,9 +11,11 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 TreadmillScene::TreadmillScene()
 {
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     timeToStart = 4;
     srand(time(NULL));
@@ -35,7 +37,8 @@ TreadmillScene::TreadmillScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
         playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), -90);
         playerObjects.back()->AddComponent<SphereCollider>();
-
+        playerObjects.back()->AddComponent<AudioSource>();
+        playerObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
         playerDead.push_back(false);
         playerLastVelocity.push_back(Vector4(0, 0, 0, 0));
@@ -58,7 +61,7 @@ TreadmillScene::TreadmillScene()
       
         objectSpawnTimes.push_back(rand() % 20 + 1.8f);
         objectSpawned.push_back(false);
-        
+       
     }
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
@@ -87,7 +90,9 @@ TreadmillScene::TreadmillScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+    backgroundObjects.back()->AddComponent<AudioSource>();
+    backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 TreadmillScene::~TreadmillScene()
 {
@@ -237,6 +242,7 @@ void TreadmillScene::Update(const float deltaTime_)
                 if (playerDead.at(i) == true)
                 {
                     currentDeadPlayers += 1;
+                    playerObjects.at(i)->GetComponent<AudioSource>()->PlaySound();
                     if (currentDeadPlayers >= MaxPlayers)
                     {
                         won = true;

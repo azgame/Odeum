@@ -20,15 +20,13 @@ ButtonMashingScene::ButtonMashingScene()
 		moonObjects.back()->AddComponent<Rigidbody>();
 		moonObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 8 - 10, 30, 0, 0));
 		moonObjects.back()->AddComponent<RenderComponent>();
-		moonObjects.back()->AddComponent<AudioSource>();
 		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
 		moonObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
 	}
 	
-	
-	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
-	
-	//testObject2->GetComponent<AudioSource>()->PlaySound();
+	moonObjects.back()->AddComponent<AudioSource>();
+	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+	moonObjects.back()->GetComponent<AudioSource>()->PlaySound();
 	
 	
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
@@ -78,18 +76,18 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			for (int i = 0; i < gameObjects.size(); i++)
 			{
 				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
-					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.8f, 0, 0));
+					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.35f, 0, 0));
 				else
 					gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 				if (Input::Get().isKeyPressed(playerKeys.at(i)))
 				{
 					if (!playerPressed.at(i))
 					{
-						if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() <= 0)
+						if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() <= -5)
 						{
 							gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 						}
-						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 90 * deltaTime_, 0, 0));
+						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 55 * deltaTime_, 0, 0));
 					}
 					playerPressed.at(i) = true;
 
@@ -126,7 +124,7 @@ void ButtonMashingScene::Update(const float deltaTime_)
 void ButtonMashingScene::UIRender()
 {
 	ImGui::Begin("Game UI");
-	ImGui::Text("Enter game UI components here");
+	ImGui::ColorEdit3("clear color", (float*)&clear_color);
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)

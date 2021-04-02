@@ -10,7 +10,9 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
-#include <time.h>  
+#include <time.h> 
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 
 CollectingScene::CollectingScene()
 {
@@ -55,6 +57,8 @@ CollectingScene::CollectingScene()
         targetObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 90);
         targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         targetObjects.back()->AddComponent<ComplexCollider>();
+        targetObjects.back()->AddComponent<AudioSource>();
+        targetObjects.back()->GetComponent<AudioSource>()->Initialize("HappySax.ogg", false, false, false, 0.5f);
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
     }
@@ -73,6 +77,12 @@ CollectingScene::CollectingScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     
+    AudioHandler::GetInstance()->Initialize();
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
+  
+   
 }
 CollectingScene::~CollectingScene()
 {
@@ -150,6 +160,7 @@ bool CollectingScene::Initialize()
                  {
                      // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
                      Debug::Warning("overlap", __FILENAME__, __LINE__);
+                     targetObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                      targetObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                      objectSpawned.at(x) = false;
                      UpdateScore(i, 1);
@@ -188,6 +199,7 @@ bool CollectingScene::Initialize()
   void CollectingScene::UpdateScore(int scorePosition_, int score_)
   {
       playerScores.at(scorePosition_) += score_;
+     
       if (playerScores.at(scorePosition_) >= maxScore)
       {
           won = true;
