@@ -29,8 +29,11 @@ TreadmillScene::TreadmillScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetMass(1.0f);
 
         playerObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
-        playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 1));
-        playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.3, 0.3, 0.3, 1));
+        //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
+        playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/pig.obj");
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
+        playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), -90);
         playerObjects.back()->AddComponent<SphereCollider>();
 
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
@@ -45,9 +48,14 @@ TreadmillScene::TreadmillScene()
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(40, 0, 0, 0));
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 1));
+        
         obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(2.1f, 0, 0));
+        //obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cow.obj");
         obstacleObjects.back()->AddComponent<SphereCollider>();
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 270);
+        obstacleObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90);
+      
         objectSpawnTimes.push_back(rand() % 20 + 1.8f);
         objectSpawned.push_back(false);
         

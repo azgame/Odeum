@@ -250,6 +250,10 @@ void Collecting3DScene::Update(const float deltaTime_)
                 }
             
         }
+        if (won)
+        {
+            //return who won
+        }
     }
 }
 

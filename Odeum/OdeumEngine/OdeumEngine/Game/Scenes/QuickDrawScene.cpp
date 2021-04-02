@@ -130,6 +130,10 @@ void QuickDrawScene::Update(const float deltaTime_)
 		{
 			timeToStart -= deltaTime_;
 		}
+		if (won)
+		{
+			//return who won
+		}
 	}
 	
 }

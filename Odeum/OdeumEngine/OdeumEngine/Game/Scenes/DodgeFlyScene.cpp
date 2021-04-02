@@ -275,6 +275,10 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 }
             }
         }
+        if (won)
+        {
+            //return who won
+        }
     }
 }
 

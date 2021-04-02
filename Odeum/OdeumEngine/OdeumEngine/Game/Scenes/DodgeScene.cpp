@@ -76,7 +76,9 @@ void DodgeScene::Update(const float deltaTime_)
     if (!won)
     {
         spawnObjects(deltaTime_);
-
+        timeToWin -= deltaTime_;
+        if (timeToWin <= 0)
+            won = true;
         for (int i = 0; i < playerObjects.size(); i++)
         {
             if (!playerDead.at(i))
@@ -162,6 +164,10 @@ void DodgeScene::Update(const float deltaTime_)
 
                 }
             }
+        }
+        if (won)
+        {
+            //return who won
         }
     }
 }

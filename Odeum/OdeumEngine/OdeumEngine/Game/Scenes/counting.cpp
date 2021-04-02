@@ -118,6 +118,10 @@ void Counting::Update(const float deltaTime_)
 				playerPressed.at(i) = false;
 			}
 		}
+		if (won)
+		{
+			//return who won
+		}
 	}
 }
 

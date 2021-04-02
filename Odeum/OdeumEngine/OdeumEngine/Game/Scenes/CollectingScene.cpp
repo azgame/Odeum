@@ -88,7 +88,7 @@ bool CollectingScene::Initialize()
      if (!won)
      {
          spawnObjects(deltaTime_);
-
+         
          for (int i = 0; i < playerObjects.size(); i++)
          {
              for (int z = 0; z < playerObjects.size(); z++)
@@ -157,6 +157,10 @@ bool CollectingScene::Initialize()
 
 
              }
+         }
+         if (won)
+         {
+             //return who won
          }
      }
 }
