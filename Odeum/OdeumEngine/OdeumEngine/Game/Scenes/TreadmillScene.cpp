@@ -105,160 +105,169 @@ bool TreadmillScene::Initialize()
 }
 void TreadmillScene::Update(const float deltaTime_)
 {
-    if (timeToStart <= 0)
-    {
-        spawnObjects(deltaTime_);
-        for (int i = 0; i < playerObjects.size(); i++)
+    
+        if (timeToStart <= 0)
         {
-            playerLastVelocity.at(i) = playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity();
-        }
-        for (int i = 0; i < playerObjects.size(); i++)
-        {
-            if (!playerDead.at(i))
+            if (!won)
+          {
+            spawnObjects(deltaTime_);
+            for (int i = 0; i < playerObjects.size(); i++)
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10 * deltaTime_, 0, 0, 0));
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > 0)
+                playerLastVelocity.at(i) = playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity();
+            }
+            for (int i = 0; i < playerObjects.size(); i++)
+            {
+                if (!playerDead.at(i))
                 {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10 * deltaTime_, 0, 0, 0));
-                }
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > 0)
-                {
-                  playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -5* deltaTime_, 0, 0));
-                }
-                else 
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 5 * deltaTime_, 0, 0));
-                }
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -0.2 && playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < 0.2)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 0, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(),0));
-                }
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > 0)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10 * deltaTime_, 0, 0, 0));
+                    }
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > 0)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -5 * deltaTime_, 0, 0));
+                    }
+                    else
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 5 * deltaTime_, 0, 0));
+                    }
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > -0.2 && playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < 0.2)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 0, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
 
 
 
-                if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-5 * deltaTime_, 0, 0, 0));
-                }
-                else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(35 * deltaTime_, 0, 0, 0));
-                }
-                if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 600 * deltaTime_, 0, 0));
-                }
-                else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -600 * deltaTime_, 0, 0));
-                }
+                    if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-5 * deltaTime_, 0, 0, 0));
+                    }
+                    else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(35 * deltaTime_, 0, 0, 0));
+                    }
+                    if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 600 * deltaTime_, 0, 0));
+                    }
+                    else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -600 * deltaTime_, 0, 0));
+                    }
 
-                /* if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
-                 {
-                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() >= 0)
+                    /* if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
                      {
-                         if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().Mag() <= 1)
+                         if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() >= 0)
                          {
-                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                             if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().Mag() <= 1)
+                             {
+                                 playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                             }
+                             else
+                             {
+                                 playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
+                             }
                          }
-                         else
-                         {
-                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
-                         }
+                     }*/
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < minRight)
+                    {
+                        playerDead.at(i) = true;
+                        //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() + Vector4(0, 0, 10, 0));
+
+
+
+                    }
+                    else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > maxRight)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+
+                    }
+                    else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+
+
+
+
+                    for (int z = 0; z < playerObjects.size(); z++)
+                    {
+                        if (z != i)
+                        {
+                            if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
+                            {
+                                CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>(), false);
+
+
+                            }
+                        }
+                    }
+
+
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+                    else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > maxVelocity)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+                    if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > maxVelocity)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+                    else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < -maxVelocity * 2)
+                    {
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-maxVelocity * 2, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    }
+
+                    /* if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ() > maxVelocity)
+                     {
+                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), maxVelocity, 0));
                      }
-                 }*/
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < minRight)
-                {
-                    playerDead.at(i) = true;
-                    //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() + Vector4(0, 0, 10, 0));
-                   
-
-
-                }
-                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > maxRight)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-
-                }
-                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -10, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-
-
-
-
-                for (int z = 0; z < playerObjects.size(); z++)
-                {
-                    if (z != i)
+                     else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ() < -maxVelocity)
+                     {
+                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -maxVelocity, 0));
+                     }*/
+                    for (int x = 0; x < obstacleObjects.size(); x++)
                     {
-                        if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
+                        if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), obstacleObjects.at(x)->GetComponent<SphereCollider>()))
                         {
-                            CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>(), false);
-                           
-
+                            playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() + obstacleObjects.at(x)->GetComponent<Rigidbody>()->GetVelocity() + Vector4(-75, 0, 0, 0));
                         }
                     }
-                }
-               
-
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > maxVelocity)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > maxVelocity)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(maxVelocity , playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < -maxVelocity*2)
-                {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-maxVelocity*2 , playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
-                }
-                
-                /* if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ() > maxVelocity)
-                 {
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), maxVelocity, 0));
-                 }
-                 else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ() < -maxVelocity)
-                 {
-                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -maxVelocity, 0));
-                 }*/
-                for (int x = 0; x < obstacleObjects.size(); x++)
-                {
-                    if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), obstacleObjects.at(x)->GetComponent<SphereCollider>()))
+                    if (playerDead.at(i) == true)
                     {
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity()+ obstacleObjects.at(x)->GetComponent<Rigidbody>()->GetVelocity()+Vector4(-75,0,0,0));
-                    }
-                }
-                if (playerDead.at(i) == true)
-                {
-                    currentDeadPlayers += 1;
-                    playerObjects.at(i)->GetComponent<AudioSource>()->PlaySound();
-                    if (currentDeadPlayers >= MaxPlayers)
-                    {
-                        won = true;
-                        Debug::Warning("win", __FILENAME__, __LINE__);
-                        for (int t = 0; t < obstacleObjects.size(); t++)
+                        currentDeadPlayers += 1;
+                        playerObjects.at(i)->GetComponent<AudioSource>()->PlaySound();
+                        if (currentDeadPlayers >= MaxPlayers - 1)
                         {
-                            obstacleObjects.at(t)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-                        }
-                        for (int w = 0; w < playerObjects.size(); w++)
-                        {
-                            playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                            won = true;
+                            Debug::Warning("win", __FILENAME__, __LINE__);
+                            for (int t = 0; t < obstacleObjects.size(); t++)
+                            {
+                                obstacleObjects.at(t)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                            }
+                            for (int w = 0; w < playerObjects.size(); w++)
+                            {
+                                playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                            }
                         }
                     }
                 }
             }
+            if (won)
+            {
+                //return winner
+            }
         }
+       
     }
     else
     {
@@ -269,7 +278,7 @@ void TreadmillScene::Update(const float deltaTime_)
 void TreadmillScene::UIRender()
 {
     ImGui::Begin("Game UI");
-    ImGui::Text("Enter game UI components here");
+    
     if (timeToStart > 0)
     {
         ImGui::Text("wait for it");
@@ -278,6 +287,19 @@ void TreadmillScene::UIRender()
         const char* timechar = timeText.c_str();
 
         ImGui::Text(timechar);
+    }
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + " Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
+
+        }
     }
     ImGui::End();
 }

@@ -179,21 +179,26 @@ bool CollectingScene::Initialize()
   void CollectingScene::UIRender()
 {
       ImGui::Begin("Game UI");
-      ImGui::Text("Enter game UI components here");
-      for (int i = 0; i < playerScores.size(); i++)
-      {
-          float test = playerScores.at(i);
-          std::string text = "player "+ std::to_string(i) + " score: " + std::to_string(test);
-
-          const char* textchar = text.c_str();
-          ImGui::Text(textchar);
-          if (test >= maxScore)
+     
+      
+          for (int i = 0; i < playerScores.size(); i++)
           {
-              text = "player " + std::to_string(i) + " wins";
-              textchar = text.c_str();
-              ImGui::Text(textchar);
+              float test = playerScores.at(i);
+              if (!won)
+              {
+                  std::string text = "player " + std::to_string(i+1) + " score: " + std::to_string(test);
+
+                  const char* textchar = text.c_str();
+                  ImGui::Text(textchar);
+              }
+              if (test >= maxScore)
+              {
+                  std::string  text = "player " + std::to_string(i+1) + " wins";
+                  const char* textchar = text.c_str();
+                  ImGui::Text(textchar);
+              }
           }
-      }
+      
       ImGui::End();
 }
   void CollectingScene::UpdateScore(int scorePosition_, int score_)

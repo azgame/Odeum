@@ -134,7 +134,7 @@ void Counting::Update(const float deltaTime_)
 void Counting::UIRender()
 {
 	ImGui::Begin("Game UI");
-	ImGui::Text("Enter game UI components here");
+	ImGui::Text("Count the Sheep without going over");
 	for (int i = 0; i < players.size(); i++)
 	{
 		std::string text = "Player" + std::to_string(i + 1) + "Count: " + std::to_string(playerCount.at(i));
@@ -154,15 +154,18 @@ void Counting::UIRender()
 			}
 
 		}
+		std::string text = "correct number " + std::to_string(maxCount);
+		const char* textchar = text.c_str();
+		ImGui::Text(textchar);
 	}
-	std::string text = "MaxCount" + std::to_string(maxCount);
-	const char* textchar = text.c_str();
-	ImGui::Text(textchar);
-	text = "count" + std::to_string(count);
-	 textchar = text.c_str();
-	ImGui::Text(textchar);
-	text = "time to win" + std::to_string(timeToWin);
-	textchar = text.c_str();
-	ImGui::Text(textchar);
+	else
+	{
+		if (timeToWin < 10)
+		{
+			std::string text = "time left " + std::to_string(timeToWin);
+			const char* textchar = text.c_str();
+			ImGui::Text(textchar);
+		}
+	}
 	ImGui::End();
 }

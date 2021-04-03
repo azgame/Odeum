@@ -265,7 +265,28 @@ void Collecting3DScene::Update(const float deltaTime_)
 
 void Collecting3DScene::UIRender()
 {
+    ImGui::Begin("Game UI");
 
+   
+        for (int i = 0; i < playerScore.size(); i++)
+        {
+            float test = playerScore.at(i);
+            if (!won)
+            {
+                std::string text = "player " + std::to_string(i+1) + " score: " + std::to_string(test);
+
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
+            if (test >= maxScore)
+            {
+                std::string text = "player " + std::to_string(i+1) + " wins";
+                const char*  textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
+        }
+    
+    ImGui::End();
 }
 
 void Collecting3DScene::spawnObjects(float deltaTime_)

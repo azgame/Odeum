@@ -144,26 +144,27 @@ void QuickDrawScene::UIRender()
 {
 
 	ImGui::Begin("Game UI");
-	ImGui::Text("Enter game UI components here");
+
 	
 	for (int i = 0; i < players.size(); i++)
 	{
-		std::string text = "Player" + std::to_string(i + 1) +"Score: " + std::to_string(playerScore.at(i));
-		const char* textchar = text.c_str();
-		ImGui::Text(textchar);
-		 text = "Player" + std::to_string(i + 1) + "Counter: " + std::to_string(playerShootTimer.at(i));
-		 textchar = text.c_str();
-		ImGui::Text(textchar);
-		if (playerScore.at(i) == maxScore)
+		if (!won)
 		{
-			text = "Player" + std::to_string(i + 1) + "Wins ";
-			textchar = text.c_str();
+			std::string text = "Player" + std::to_string(i + 1) + "Score: " + std::to_string(playerScore.at(i));
+			const char* textchar = text.c_str();
 			ImGui::Text(textchar);
 		}
+		else
+		{
+			if (playerScore.at(i) == maxScore)
+			{
+				std::string text = "Player" + std::to_string(i + 1) + "Wins ";
+				const char* textchar = text.c_str();
+				ImGui::Text(textchar);
+			}
+		}
 	}
-	std::string text = "time until target: " + std::to_string(timeUntilTarget);
-		const char* textchar = text.c_str();
-		ImGui::Text(textchar);
+	
 	ImGui::End();
 	
 	

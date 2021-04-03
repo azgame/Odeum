@@ -38,7 +38,8 @@ SpherePushingScene::SpherePushingScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
         playerDead.push_back(false);
         playerLastVelocity.push_back(Vector4(0,0,0,0));
-
+        playerObjects.back()->AddComponent<AudioSource>();
+        playerObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
    
     backgroundObjects.push_back(new GameObject());
@@ -68,9 +69,9 @@ playerKeysUp.push_back(Key::W);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
-playerObjects.back()->AddComponent<AudioSource>();
-playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
-playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
+backgroundObjects.back()->AddComponent<AudioSource>();
+backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 SpherePushingScene::~SpherePushingScene()
 {
@@ -138,9 +139,15 @@ void SpherePushingScene::Update(const float deltaTime_)
                     //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() + Vector4(0, 0, 10, 0));
                     deadPlayers += 1;
+                    playerObjects.at(i)->GetComponent<AudioSource>()->PlaySound();
                     if (deadPlayers >= MaxPlayers-1)
                     {
                         won = true;
+                        for (int w = 0; w < playerObjects.size(); w++)
+                        {
+                            if(playerDead.at(w)==false)
+                            playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                        }
                     }
 
 
@@ -228,6 +235,18 @@ void SpherePushingScene::Update(const float deltaTime_)
 
 void SpherePushingScene::UIRender()
 {
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + "Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
 
+        }
+    }
 }
 

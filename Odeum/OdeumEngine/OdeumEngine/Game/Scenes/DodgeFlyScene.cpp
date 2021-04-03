@@ -266,7 +266,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
                         obstacleObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
-                        if (currentDeadPlayers >= MaxPlayers)
+                        if (currentDeadPlayers >= MaxPlayers-1)
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);
@@ -295,7 +295,21 @@ void DodgeFlyScene::Update(const float deltaTime_)
 
 void DodgeFlyScene::UIRender()
 {
+    ImGui::Begin("Game UI");
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + " Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
 
+        }
+    }
+    ImGui::End();
 }
 
 void DodgeFlyScene::spawnObjects(float deltaTime_)
