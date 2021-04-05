@@ -34,7 +34,7 @@ private:
 	Simplex<Vector3> simplex;
 
 
-
+	float timeToEnd = 5;
 	float maxVelocity = 7;
 	float maxHeight = 9;
 	float minHeight = -9;

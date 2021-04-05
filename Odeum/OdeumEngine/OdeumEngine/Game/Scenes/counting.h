@@ -27,7 +27,7 @@ private:
 	float timeToSpawn;
 	float timeToWin;
 	bool won;
-	
+	float timeToEnd = 5;
 	int maxCount;
 	int count;
 	int MaxPlayers;

@@ -111,7 +111,15 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			}
 		if (won)
 		{
-			//return who wins
+			if (timeToEnd >= 0)
+			{
+				timeToEnd -= deltaTime_;
+				if (timeToEnd >= 0)
+				{
+					//return who wins
+				}
+			}
+			
 		}
 	}
 	

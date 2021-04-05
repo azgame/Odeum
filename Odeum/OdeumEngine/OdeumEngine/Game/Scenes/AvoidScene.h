@@ -27,6 +27,7 @@ private:
 	std::vector<GameObject*> obstacleObjects;
 	int currentDeadPlayers;
 	float timeToWin=30.0f;
+	float timeToEnd = 5;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;
 	std::vector<Key::KeyCode> playerKeysRight;

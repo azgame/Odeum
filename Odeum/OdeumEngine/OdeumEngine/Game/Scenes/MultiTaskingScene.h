@@ -35,6 +35,7 @@ private:
 	//targetHeights is the three difrent heights the player needs to maintain.
 	std::vector<float> targetHeights;
 	bool won;
+	float timeToEnd = 5;
 };
 
 #endif

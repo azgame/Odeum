@@ -24,7 +24,7 @@ private:
 	std::vector<Vector4> playerLastVelocity;
 
 	float timeToStart;
-
+	float timeToEnd = 5;
 	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> obstacleObjects;
 	//change these to players later

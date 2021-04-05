@@ -21,7 +21,7 @@ private:
 	Vector4 clear_color=Vector4(0,0,0,0);
 	CameraController cameraController;
 	
-	
+	float timeToEnd = 5;
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> moonObjects;
 	std::vector<Key::KeyCode> playerKeys;

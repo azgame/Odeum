@@ -221,7 +221,14 @@ void AvoidScene::Update(const float deltaTime_)
             won = true;
         if (won)
         {
-            //return who wins
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
         }
     }
 }

@@ -228,13 +228,22 @@ void SpherePushingScene::Update(const float deltaTime_)
         }
         if (won)
         {
-            //return who won
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
         }
     }
 }
 
 void SpherePushingScene::UIRender()
 {
+    ImGui::Begin("Game UI");
+    ImGui::Text("Push everyone off");
     if (won)
     {
         for (int i = 0; i < playerObjects.size(); i++)
@@ -248,5 +257,6 @@ void SpherePushingScene::UIRender()
 
         }
     }
+    ImGui::End();
 }
 

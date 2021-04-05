@@ -30,7 +30,7 @@ private:
 	float timeUntilTarget;
 	float timeToStart;
 	std::vector<Key::KeyCode> playerKeys;
-	
+	float timeToEnd = 5;
 };
 
 #endif

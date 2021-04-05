@@ -31,7 +31,7 @@ private:
 	Simplex<Vector3> simplex;
 	//these ensure the player may not hold the button
 	float timeToWin = 30;
-	
+	float timeToEnd = 5;
 	//targetHeights is the three difrent heights the player needs to maintain.
 	float maxVelocity = 7;
 	float maxHeight = 9;

@@ -264,7 +264,14 @@ void TreadmillScene::Update(const float deltaTime_)
             }
             if (won)
             {
-                //return winner
+                if (timeToEnd >= 0)
+                {
+                    timeToEnd -= deltaTime_;
+                    if (timeToEnd >= 0)
+                    {
+                        //return who wins
+                    }
+                }
             }
         }
        
@@ -278,7 +285,7 @@ void TreadmillScene::Update(const float deltaTime_)
 void TreadmillScene::UIRender()
 {
     ImGui::Begin("Game UI");
-    
+    ImGui::Text("Run Forward, don't fall!");
     if (timeToStart > 0)
     {
         ImGui::Text("wait for it");

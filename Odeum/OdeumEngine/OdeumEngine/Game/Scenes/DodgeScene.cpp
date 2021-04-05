@@ -173,7 +173,14 @@ void DodgeScene::Update(const float deltaTime_)
         }
         if (won)
         {
-            //return who won
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
         }
     }
 }

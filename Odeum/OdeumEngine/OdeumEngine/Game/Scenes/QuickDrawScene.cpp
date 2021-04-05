@@ -15,6 +15,13 @@ QuickDrawScene::QuickDrawScene()
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0,-4.5,0,0)+objectPos);
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/stall.obj");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 30, 0));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
 	gameObjects.back()->AddComponent<RenderComponent>();
@@ -134,7 +141,14 @@ void QuickDrawScene::Update(const float deltaTime_)
 		}
 		if (won)
 		{
-			//return who won
+			if (timeToEnd >= 0)
+			{
+				timeToEnd -= deltaTime_;
+				if (timeToEnd >= 0)
+				{
+					//return who wins
+				}
+			}
 		}
 	}
 	
