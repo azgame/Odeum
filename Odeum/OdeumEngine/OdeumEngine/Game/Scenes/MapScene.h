@@ -1,14 +1,18 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef MAPSCENE_H
+#define MAPSCENE_H
 
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
 #include "../../Engine/DataStructures/Graph.h"
+#include "../../Engine/DataStructures/SimpleGraph.h"
+#include "../../Engine/DataStructures/PriorityQueue.h"
 
 #include "../GameObjects/Action.h"
 
 #include <stdlib.h>
+
+class PlayerMapComponent;
 
 class Dice
 {
@@ -32,14 +36,17 @@ public:
 
 	void Execute() override
 	{
-		int roll = die.Roll();
+		roll = die.Roll();
 		GameRollEvent gameRoll = GameRollEvent(target, roll);
 	};
 
+	int GetRoll() { return roll; }
+	
 	GameEventType Type() override { return GameEventType::GameRoll; }
 private:
 	GameObject* target;
 	Dice die;
+	int roll;
 };
 
 class MAPScene : public Scene
@@ -51,25 +58,21 @@ public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
-	
-	int RollDice(int size, int numDie);
-
 private:
+
+	bool PlayerTurn();
+
 	Graph<GameObject*> map = Graph<GameObject*>(100, false);
 
+	SimpleGraph<PlayerMapComponent*>* m_map;
+	std::queue<PlayerMapComponent*> players;
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> playerObjects;
 	
-
-	int currPlayerTileIndex = 0;
-	int currTileIndex = 0;
-	int turn = 0;
-	int playerTurn = 1;
+	PlayerMapComponent* m_currentPlayer;
 	int numMoves = 0;
-	CameraController cameraController;
-	float angle;
-	float direction;
-
-
+	int dieRoll = 0;
+	bool hasRolled = false;
 };
+
 #endif

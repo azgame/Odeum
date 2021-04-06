@@ -37,8 +37,6 @@
     <ClCompile Include="Engine\ImGui\imgui_impl_dx12.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCommandContext.cpp" />
-    <ClCompile Include="Engine\Rendering\Vulkan\VKCore.cpp" />
     <ClCompile Include="Engine\Rendering\Common\GraphicsCore.cpp" />
     <ClCompile Include="Engine\Rendering\DirectX12\BufferAllocator.cpp" />
     <ClCompile Include="Engine\Core\Input.cpp" />
@@ -104,8 +102,9 @@
     <ClCompile Include="Game\GameObjects\ItemRegistry.cpp" />
     <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
     <ClCompile Include="Game\Scenes\GuessScene.cpp" />
-    <ClCompile Include="Game\Scenes\Map.cpp" />
     <ClCompile Include="Game\Components\PlayerMapComponent.cpp" />
+    <ClCompile Include="Game\Scenes\MapScene.cpp" />
+    <ClCompile Include="Game\GameObjects\Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -153,9 +152,6 @@
     <ClInclude Include="Engine\ImGui\imstb_textedit.h" />
     <ClInclude Include="Engine\ImGui\imstb_truetype.h" />
     <ClInclude Include="Engine\Math\MathUtility.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCommandContext.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKCore.h" />
-    <ClInclude Include="Engine\Rendering\Vulkan\VKIncludes.h" />
     <ClInclude Include="Engine\Core\Component.h" />
     <ClInclude Include="Engine\Core\KeyCodes.h" />
     <ClInclude Include="Engine\Core\MouseCodes.h" />
@@ -246,8 +242,11 @@
     <ClInclude Include="Game\GameObjects\ItemRegistry.h" />
     <ClInclude Include="Game\Scenes\TreadmillScene.h" />
     <ClInclude Include="Game\Scenes\GuessScene.h" />
-    <ClInclude Include="Game\Scenes\Map.h" />
     <ClInclude Include="Game\Components\PlayerMapComponent.h" />
+    <ClInclude Include="Engine\DataStructures\PriorityQueue.h" />
+    <ClInclude Include="Game\Scenes\MapScene.h" />
+    <ClInclude Include="Game\GameObjects\Map.h" />
+    <ClInclude Include="Engine\DataStructures\SimpleGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
