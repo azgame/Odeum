@@ -1,4 +1,4 @@
-#include "Map.h"
+#include "MapScene.h"
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 
@@ -7,7 +7,9 @@
 #include "../../Engine/CoreComponents/RenderComponent.h"
 #include "../Game/Components/Player.h"
 
+#include "../Components/PlayerMapComponent.h"
 
+#include "../../Engine/DataStructures/SimpleGraph.h"
 
 
 
@@ -21,6 +23,7 @@ MAPScene::MAPScene()
 	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
 	playerObjects.back()->AddComponent<RenderComponent>(); 
+	playerObjects.back()->AddComponent<PlayerMapComponent>(); 
 	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
 	//playerObjects.back()->AddComponent<Player>(); 
@@ -29,6 +32,8 @@ MAPScene::MAPScene()
 	//playerObjects.back()->GetComponent<Player>()->SetLeft(Key::S);
 	//playerObjects.back()->GetComponent<Player>()->SetRight(Key::D);
 	playerObjects.back()->SetTag("Player1");
+
+	players.push(playerObjects.back()->GetComponent<PlayerMapComponent>());
 
 	//playerObjects.push_back(new GameObject());
 	//playerObjects.back()->AddComponent<Rigidbody>();
@@ -790,6 +795,14 @@ MAPScene::MAPScene()
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5, 0.5, 0.5));
 	playerObjects.back()->SetTag("Node1");*/
+
+	//SimpleGraph<GameObject*> graph = SimpleGraph<GameObject*>(0);
+	//graph.Push(gameObjects[0]);
+	//graph.Push(gameObjects[1]);
+
+	//graph.Connect(0, 1);
+
+	//LinkedList<GameObject*>* list = graph.GetNeighbours(1);
 }
 
 MAPScene::~MAPScene() {
@@ -800,147 +813,75 @@ bool MAPScene::Initialize()
 	return true;
 }
 
-void MAPScene::Update(const float deltaTime_) {
-	int tempTurn = 1;
-	// choose to move left, right, up or down based on the node they're standing on
-	// uncomment playerTurn to turn on multiplayer
-	// probably doesnt need to be a switch case, could be a normal if and be something like playerObjects[playerTurn - 1] can change it later.
-	switch (playerTurn) {
-	case 1:
-			for (auto m : gameObjects) {
-				if (playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetX() == m->GetComponent<Rigidbody>()->GetPosition().GetX()
-					&& playerObjects[0]->GetComponent<Rigidbody>()->GetPosition().GetZ() == m->GetComponent<Rigidbody>()->GetPosition().GetZ()) {
-					auto it = find(gameObjects.begin(), gameObjects.end(), m);
-					if (it != gameObjects.end())
-					{
-						int index = it - gameObjects.begin();
-						currPlayerTileIndex = index;
-					}
-					currTileIndex = map.findIndex(m);
-				}
-			}
-			if (Input::Get().isKeyPressed(KeyCode::A) && numMoves > 0) {
-				// check for edges and check if the player can move left
-				// move the player to the next node. (later on can pick up an item or something from a node).
-				int tempIndex;
-				// seems to work a bit, keeps bringing the player back to 0
-				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
-				// moved the player to the next game object.
+void MAPScene::Update(const float deltaTime_) 
+{
+	if (!PlayerTurn())
+	{
+		players.emplace(m_currentPlayer);
+		m_currentPlayer = nullptr;
+	}
+}
 
-				numMoves--;
-				tempTurn--;
-			}
-			else if (Input::Get().isKeyPressed(KeyCode::D) && numMoves > 0) {
-				int tempIndex;
-				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
-				// moved the player to the next game object.
-				tempTurn--;
-			}
-			else if (Input::Get().isKeyPressed(KeyCode::W) && numMoves > 0) {
-				int tempIndex;
-				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
-				// moved the player to the next game object.
-				tempTurn--;
-			}
-			else if (Input::Get().isKeyPressed(KeyCode::S) && numMoves > 0) {
-				int tempIndex;
-				tempIndex = map.getNextUnvisitedVertex(currTileIndex);
-				playerObjects[0]->GetComponent<Rigidbody>()->SetPosition(gameObjects[tempIndex]->GetComponent<Rigidbody>()->GetPosition());
-				// moved the player to the next game object.
-				tempTurn--;
-			}
-			else if (numMoves <= 0) {
-				//playerTurn = 2;
-				tempTurn = turn + 1;
-			}
-		if (numMoves == 0) {
-			// add logic here to roll dice based off stats (if some item allows for a multi-roll like 2d6's 
-			numMoves = RollDice(6, 1);
+bool MAPScene::PlayerTurn()
+{
+	if (!m_currentPlayer)
+	{
+		m_currentPlayer = players.front(); players.pop();
+	}
 
+	if (!hasRolled)
+	{
+		if (Input::Get().isKeyPressed(Key::R))
+		{
 			RollAction* roll = new RollAction(playerObjects[0], Dice(6));
 			roll->Execute();
-			
+			numMoves = dieRoll = roll->GetRoll();
+			hasRolled = true;
 		}
-		break;
-	case 2:
+	}
 
-		if (numMoves <= 0) {
-			//playerTurn = 3;
+	int currentTile = m_currentPlayer->GetTile();
+
+	if (Input::Get().isKeyPressed(Key::A))
+	{
+		if (currentTile - numMoves < 0)
+		{
+			int temp = numMoves - currentTile;
+			m_currentPlayer->SetDestination(gameObjects.size() - temp);
 		}
-		break;
-	case 3:
+		else
+		{
+			m_currentPlayer->SetDestination(currentTile - numMoves);
+		}
+	}
+	else if (Input::Get().isKeyPressed(Key::D))
+	{
+		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
+	}
 
-		//playerTurn = 4;
-		break;
-	case 4:
+	if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
+	{
+		m_currentPlayer->Move(&gameObjects);
+		numMoves = 0;
+	}
 
-		//playerTurn = 5;
-		break;
-	default:
-		playerTurn = 1;
-		turn++;
-		break;
-	};
+	if (Input::Get().isKeyPressed(Key::Enter) || (numMoves == 0 && hasRolled))
+	{
+		dieRoll = 0;
+		hasRolled = false;
+		return false;
+	}
 
-		// Aidan's move logic (doesnt really work atm as we're moving to a specific location)
-		//Action* move = new MoveAction(playerObjects[0], Vector2(0, 2));
-		//move->Execute();
-	
+	return true;
 }
+
 
 void MAPScene::UIRender()
 {
-	ImGui::Begin("Game UI");
-	ImGui::Text("Map");
-	// update this text with curr player and the tag of the tile.
-	ImGui::Text("Player 1 is standing on a tile.");
-	std::string text = "Movements: " + std::to_string(numMoves);
+	ImGui::Begin("Map UI");
 
-	const char* textchar = text.c_str();
-	ImGui::Text(textchar);
+	ImGui::Text("Dice Roll: %d", dieRoll);
+	ImGui::Text("Movement: %d", numMoves);
 
 	ImGui::End();
-}
-
-// simple dice rolling function, can change the dice size and how many dice with parameter (supports up to 6 die.)
-int MAPScene::RollDice(int size_ = 6, int numDie = 1)
-{
-	int min = 1;
-
-	// make sure size is higher than 1
-	if (size_ < 1) {
-		//make size the default
-		size_ = 6;
-	}
-	int max = size_;
-	int totalRoll = 1;
-	switch (numDie) {
-	case 1:
-		totalRoll = rand() % (max - min + 1) + min;
-		break;
-	case 2:
-		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
-		break;
-	case 3:
-		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
-		break;
-	case 4:
-		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
-		break;
-	case 5:
-		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
-		break;
-	case 6:
-		totalRoll = (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min) + (rand() % (max - min + 1) + min);
-		break;
-	default:
-		// too many or too little die, assume 1 die;
-		totalRoll = rand() % (max - min + 1) + min;
-		break;
-	}
-	
-	return totalRoll;
 }

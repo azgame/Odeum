@@ -36,7 +36,7 @@
 #include "Engine/ImGui/imgui_impl_dx12.h"
 
 #define NAME_D3D_RESOURCES 1
-#define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }
+#define SAFE_DELETE( x ) { if( x != nullptr ) delete x; x = NULL; }
 #define SAFE_DELETE_ARRAY( x ) { if( x ) delete[] x; x = NULL; }
 
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)

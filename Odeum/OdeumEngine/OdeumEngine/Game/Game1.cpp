@@ -20,8 +20,8 @@
 #include "Scenes/Collecting3DScene.h"
 #include "Scenes/SpherePushingScene.h"
 #include "Scenes/TreadmillScene.h"
-#include "Scenes/Map.h"
 #include "Scenes/AvoidScene.h"
+#include "Scenes/MapScene.h"
 
 Game1::Game1() : GameInterface()
 {
