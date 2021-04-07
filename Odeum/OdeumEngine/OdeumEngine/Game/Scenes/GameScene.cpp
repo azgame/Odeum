@@ -16,6 +16,7 @@
 #include "../Components/InventoryComponent.h"
 
 #include "../GameObjects/ItemRegistry.h"
+#include "../../Engine/DataStructures/LinkedList.h"
 
 #include <stdlib.h>
 
@@ -119,6 +120,8 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 
 	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(helmet);
 	gameObjects[0]->GetComponent<InventoryComponent>()->EquipItem(chest);
+
+
 }
 
 GameScene::~GameScene()
