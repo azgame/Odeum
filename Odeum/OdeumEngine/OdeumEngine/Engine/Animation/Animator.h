@@ -38,7 +38,7 @@ struct Animator {
 	};
 
 	// same with this function, maybe make an animation helper class?
-	inline void LoadAnimation(const aiScene* scene, Animation& animation)
+	static inline void LoadAnimation(const aiScene* scene, Animation& animation)
 	{
 		// loading the first animation
 		aiAnimation* firstAnimation = scene->mAnimations[0];
@@ -83,7 +83,8 @@ struct Animator {
 		}
 	}
 
-	inline void GetPose(Animation& animation, Bone& skeleton, float dt, std::vector<Matrix4>& output, Matrix4& parentTransform, Matrix4& globalInverseTransform)
+	//																											 vv & - I took this out
+	static inline void GetPose(Animation& animation, Bone& skeleton, float dt, std::vector<Matrix4>& output, Matrix4 parentTransform, Matrix4& globalInverseTransform)
 	{
 		BoneTransformTrack& btt = animation.boneTransforms[skeleton.name];
 		dt = fmod(dt, animation.duration);
@@ -124,7 +125,7 @@ struct Animator {
 		}
 	}
 
-	inline std::pair<unsigned int, float> GetTimeFraction(std::vector<float>& times, float& dt) {
+	static inline std::pair<unsigned int, float> GetTimeFraction(std::vector<float>& times, float& dt) {
 		unsigned int segment = 0;
 		while (dt > times[segment])
 			segment++;

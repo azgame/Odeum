@@ -41,6 +41,8 @@ private:
 
 	// animation stuff
 	bool isAnimation;
+	std::vector<Matrix4> currentPose;
+	Matrix4 globalInverseTransform;
 
 };
 

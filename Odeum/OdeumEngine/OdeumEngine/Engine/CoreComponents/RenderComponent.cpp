@@ -7,6 +7,7 @@ void RenderComponent::OnAttach(GameObject* parent)
 	m_gameObject = parent;
 	isAnimation = false;
 	isRendered = true;
+	currentPose = {};
 }
 
 void RenderComponent::OnDetach()
@@ -18,7 +19,7 @@ void RenderComponent::Update(float deltaTime)
 {
 	if (isAnimation)
 	{
-		//Animator::GetPose();
+		Animator::GetPose(m_model.animation, *m_model.m_skeleton, deltaTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
 	}
 }
 

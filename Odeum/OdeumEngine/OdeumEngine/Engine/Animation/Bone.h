@@ -1,7 +1,7 @@
 #ifndef BONE_H
 #define BONE_H
 
-#include "../../pch.h"
+//#include "../../pch.h"
 #include "../Math/Matrix.h"
 
 struct Bone {
@@ -10,7 +10,6 @@ struct Bone {
 	Matrix4 transform = Matrix4(kIdentity);
 
 	std::vector<Bone> children = {}; // all the children bones of this bone
-
 };
 
 struct BoneTransformTrack {

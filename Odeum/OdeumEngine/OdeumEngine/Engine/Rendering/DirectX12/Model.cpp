@@ -201,13 +201,14 @@ void Model::Load(bool isAnimation)
 			std::unordered_map<std::string, std::pair<int, Matrix4>> boneInfo = {};
 			std::vector<uint32_t> boneCounts;
 			boneCounts.resize(sourceMesh->mNumVertices, 0);
-			uint32_t boneCount = sourceMesh->mNumBones;
+			m_boneCount = sourceMesh->mNumBones;
 
 			// loop through each bone
-			for (unsigned int i = 0; i < boneCount; i++)
+			for (unsigned int i = 0; i < m_boneCount; i++)
 			{
 				aiBone* bone = sourceMesh->mBones[i];
 				Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
+				boneInfo[bone->mName.C_Str()] = { i, matrix };
 
 				// loop through each vertex that has that bone
 				for (int j = 0; j < bone->mNumWeights; j++) {
@@ -241,6 +242,7 @@ void Model::Load(bool isAnimation)
 
 				// create bone hierarchy 
 				Animator::ReadSkeleton(*m_skeleton, scene->mRootNode, m_boneInfo);
+				Animator::LoadAnimation(scene, animation);
 			}
 
 			// normalize weights to make all weight sum 1
@@ -265,7 +267,6 @@ void Model::Load(bool isAnimation)
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
 		}
 	}
-
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
