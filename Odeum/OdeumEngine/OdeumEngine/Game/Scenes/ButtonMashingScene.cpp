@@ -132,7 +132,7 @@ void ButtonMashingScene::Update(const float deltaTime_)
 void ButtonMashingScene::UIRender()
 {
 	ImGui::Begin("Game UI");
-	ImGui::ColorEdit3("clear color", (float*)&clear_color);
+	
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)

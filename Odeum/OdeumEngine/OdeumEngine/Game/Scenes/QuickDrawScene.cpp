@@ -22,8 +22,8 @@ QuickDrawScene::QuickDrawScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 30, 0));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -1, 500, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cake.obj");
 	gameObjects.back()->AddComponent<AudioSource>();
