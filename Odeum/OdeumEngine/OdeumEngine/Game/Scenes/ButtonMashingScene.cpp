@@ -5,29 +5,30 @@
 #include "../../Engine/CoreComponents/Rigidbody.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
 #include "../../Engine/CoreComponents/AudioSource.h"
-
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>  
 ButtonMashingScene::ButtonMashingScene()
 {
 	MaxPlayers = 4;
 	timeToStart = 4;
 	AudioHandler::GetInstance()->Initialize();
-	testObject2 = new GameObject();
-	testObject2->AddComponent<Rigidbody>();
-	testObject2->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
-	testObject2->AddComponent<RenderComponent>();
-	testObject2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
-	//testObject2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0));
-	testObject = new GameObject();
-	testObject->AddComponent<Rigidbody>();
-	testObject->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
-	testObject->AddComponent<RenderComponent>();
-	testObject->AddComponent<AudioSource>();
-	testObject->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
-	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),45.6f);
-	testObject->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 0, -1, 0),10);
-	testObject2->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),90);
-	testObject->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
-	testObject->GetComponent<AudioSource>()->PlaySound();
+	
+	for (int i = 0; i < MaxPlayers; i++)
+	{
+		moonObjects.push_back(new GameObject());
+		
+		moonObjects.back()->AddComponent<Rigidbody>();
+		moonObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 8 - 10, 30, 0, 0));
+		moonObjects.back()->AddComponent<RenderComponent>();
+		moonObjects.back()->AddComponent<AudioSource>();
+		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+		moonObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+	}
+	
+	
+	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
+	
+	//testObject2->GetComponent<AudioSource>()->PlaySound();
 	
 	
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
@@ -36,7 +37,11 @@ ButtonMashingScene::ButtonMashingScene()
 	{
 		gameObjects.push_back(new GameObject());
 		gameObjects.back()->AddComponent<Rigidbody>();
-		gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i*5, -10, 0, 0));
+		gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i*8-10, -10, 0, 0));
+		gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
+		
+		gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 0, -1, 0), 90);
+		gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90);
 		gameObjects.back()->AddComponent<RenderComponent>();
 		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
@@ -47,6 +52,7 @@ ButtonMashingScene::ButtonMashingScene()
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
 	playerKeys.push_back(Key::L);
+	srand(time(NULL));
 }
 
 ButtonMashingScene::~ButtonMashingScene()
@@ -72,13 +78,19 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			for (int i = 0; i < gameObjects.size(); i++)
 			{
 				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
-					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -0.002, 0, 0));
+					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.8f, 0, 0));
 				else
 					gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 				if (Input::Get().isKeyPressed(playerKeys.at(i)))
 				{
 					if (!playerPressed.at(i))
-						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 0.5f, 0, 0));
+					{
+						if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() <= 0)
+						{
+							gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+						}
+						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 90 * deltaTime_, 0, 0));
+					}
 					playerPressed.at(i) = true;
 
 				}
@@ -86,17 +98,22 @@ void ButtonMashingScene::Update(const float deltaTime_)
 				{
 					playerPressed.at(i) = false;
 				}
-
+				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)
+				{
+					won = true;
+					for (int z = 0; z < gameObjects.size(); z++)
+					{
+						gameObjects.at(z)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+						if (z != i)
+						{
+							moonObjects.at(z)->GetComponent<Rigidbody>()->SetAcceleration(Vector4(0, -rand() % 15 -10, 0, 0));
+						}
+					}
+				}
 			}
-	}
-	else
-	{
 		
-		for (int i = 0; i < gameObjects.size(); i++)
-		{
-			gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-		}
 	}
+	
 	
 	
 
@@ -109,11 +126,11 @@ void ButtonMashingScene::UIRender()
 	ImGui::Text("Enter game UI components here");
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 15.0f)
+		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)
 		{
 			std::string text  = "Player"+std::to_string(i+1)+" Wins";
 			const char* textchar = text.c_str();
-			won = true;
+			
 			ImGui::Text(textchar);
 		}
 		

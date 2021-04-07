@@ -80,7 +80,7 @@ void BenScene::Update(const float deltaTime_)
 
 	if (CollisionDetection::SphereSphereCollisionDetection(go1->GetComponent<SphereCollider>(), go2->GetComponent<SphereCollider>()))
 	{
-		CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*go1->GetComponent<SphereCollider>(), *go2->GetComponent<SphereCollider>());
+		CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*go1->GetComponent<SphereCollider>(), *go2->GetComponent<SphereCollider>(),false);
 	}
 
 	/*if (CollisionDetection::GJKCollisionDetection(go1->GetComponent<ComplexCollider>(), go2->GetComponent<ComplexCollider>(), simplex))

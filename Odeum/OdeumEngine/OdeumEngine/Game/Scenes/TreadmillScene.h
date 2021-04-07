@@ -10,7 +10,7 @@ public:
 	TreadmillScene();
 	virtual ~TreadmillScene();
 	int MaxPlayers;
-	int MaxObstacles = 14;
+	int MaxObstacles = 18;
 	//float timeToStart;
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime_);

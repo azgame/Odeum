@@ -48,7 +48,7 @@ TreadmillScene::TreadmillScene()
         obstacleObjects.back()->AddComponent<RenderComponent>();
         obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(2.1f, 0, 0));
         obstacleObjects.back()->AddComponent<SphereCollider>();
-        objectSpawnTimes.push_back(rand() % 18 + 1.8f);
+        objectSpawnTimes.push_back(rand() % 20 + 1.8f);
         objectSpawned.push_back(false);
         
     }
@@ -103,10 +103,10 @@ void TreadmillScene::Update(const float deltaTime_)
         {
             if (!playerDead.at(i))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-300 * deltaTime_, 0, 0, 0));
+                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10 * deltaTime_, 0, 0, 0));
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > 0)
                 {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-300 * deltaTime_, 0, 0, 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-10 * deltaTime_, 0, 0, 0));
                 }
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() > 0)
                 {
@@ -125,11 +125,11 @@ void TreadmillScene::Update(const float deltaTime_)
 
                 if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-600 * deltaTime_, 0, 0, 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-5 * deltaTime_, 0, 0, 0));
                 }
                 else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
                 {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(700 * deltaTime_, 0, 0, 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(35 * deltaTime_, 0, 0, 0));
                 }
                 if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
                 {
@@ -186,44 +186,13 @@ void TreadmillScene::Update(const float deltaTime_)
                     {
                         if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
                         {
-
-                            Debug::Warning("collision" + std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
-                            //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
-                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(2, 0, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-                            }
-                            else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-2, 0, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-
-                            }
-                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 2, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-                            }
-                            else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -2, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-
-                            }
-                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
-
-                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
-                           // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
-                            //won = true;
-
+                            CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>(), false);
+                           
 
                         }
                     }
                 }
-                /*if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(0)->GetComponent<SphereCollider>(), playerObjects.at(1)->GetComponent<SphereCollider>()))
-                {
-                    Vector4 V1 = playerObjects.at(0)->GetComponent<Rigidbody>()->GetVelocity();
-                    playerObjects.at(0)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(1)->GetComponent<Rigidbody>()->GetVelocity() * 1.1f);
-                    playerObjects.at(1)->GetComponent<Rigidbody>()->SetVelocity(V1 * 1.1f);
-
-                }*/
+               
 
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
                 {
@@ -235,12 +204,13 @@ void TreadmillScene::Update(const float deltaTime_)
                 }
                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() > maxVelocity)
                 {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(maxVelocity / 2, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(maxVelocity , playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
                 }
-                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < -maxVelocity)
+                else if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX() < -maxVelocity*2)
                 {
-                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-maxVelocity*2 , playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
                 }
+                
                 /* if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ() > maxVelocity)
                  {
                      playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), maxVelocity, 0));
@@ -253,9 +223,7 @@ void TreadmillScene::Update(const float deltaTime_)
                 {
                     if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), obstacleObjects.at(x)->GetComponent<SphereCollider>()))
                     {
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-                        playerDead.at(i) = true;
+                        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity()+ obstacleObjects.at(x)->GetComponent<Rigidbody>()->GetVelocity()+Vector4(-75,0,0,0));
                     }
                 }
                 if (playerDead.at(i) == true)
@@ -315,7 +283,7 @@ void TreadmillScene::spawnObjects(float deltaTime_)
             objectSpawnTimes.at(i) = rand() % 3 + 0.5f;
             objectSpawned.at(i) = true;
             obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(maxRight, rand() % (int)maxHeight * 2 + minHeight, 0, 0));
-            obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4( -3, 0, 0, 0));
+            obstacleObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4( -3- rand() % 2, 0, 0, 0));
         }
     }
 }

@@ -20,10 +20,8 @@
 #include "Scenes/Collecting3DScene.h"
 #include "Scenes/SpherePushingScene.h"
 #include "Scenes/TreadmillScene.h"
-
-#include "Scenes/AnimationTestScene.h"
-#include "Scenes/Map.h"
-
+#include "Scenes/AvoidScene.h"
+#include "Scenes/MapScene.h"
 
 Game1::Game1() : GameInterface()
 {
@@ -123,14 +121,12 @@ void Game1::BuildScene()
 	case 16:
 		m_currentScene = new TreadmillScene();
 		break;
-
 	case 17:
 		m_currentScene = new MAPScene();
 		break;
 	case 18:
-		m_currentScene = new AnimationTestScene();
+		m_currentScene = new AvoidScene();
 		break;
-
 	default: // case 0
 		m_currentScene = new StartScene();
 		break;

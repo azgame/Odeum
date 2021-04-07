@@ -115,7 +115,7 @@ void CollisionHandler::Uninitialize()
 	previousCollisions.clear();
 }
 
-void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2) 
+void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, SphereCollider& sc2, bool angular)
 {
 	// Setup Variables
 	float m1 = sc1.GetRigidbody()->GetMass();
@@ -142,20 +142,21 @@ void CollisionHandler::SphereSphereCollisionResponse(SphereCollider& sc1, Sphere
 	float speed2 = (fellingSpeed * (m2 - m1)) / (m1 + m2);
 	sc1.GetRigidbody()->AddVelocity(Vector4(n * speed1));
 	sc2.GetRigidbody()->AddVelocity(Vector4(n * (speed2 - fellingSpeed)));
+	if (angular)
+	{
+		Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetAngularVelocity());
+		Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetAngularVelocity());
 
-	Vector3 wi1 = Vector3(sc1.GetRigidbody()->GetAngularVelocity());
-	Vector3 wi2 = Vector3(sc2.GetRigidbody()->GetAngularVelocity());
+		Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
+		Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
 
-	Vector3 wf1 = (Math::Cross(n, Math::Cross(n, wi1))) + Vector3(0, sc2.GetRigidbody()->GetVelocity().GetY(), sc2.GetRigidbody()->GetVelocity().GetZ());
-	Vector3 wf2 = (Math::Cross(n, Math::Cross(n, wi2))) - Vector3(0, sc1.GetRigidbody()->GetVelocity().GetY(), sc1.GetRigidbody()->GetVelocity().GetZ());
-
-	if (wf1.Mag() > 0) {
-		sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), wf1.Mag() * 0.0167f);
+		if (wf1.Mag() > 0) {
+			sc1.GetRigidbody()->SetAngularVelocity(Vector4(wf1), wf1.Mag() * 0.0167f);
+		}
+		if (wf2.Mag() > 0) {
+			sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2), wf2.Mag() * 0.0167f);
+		}
 	}
-	if (wf2.Mag() > 0) {
-		sc2.GetRigidbody()->SetAngularVelocity(Vector4(wf2), wf2.Mag() * 0.0167f);
-	}
-
 	/*
 	//Quaternion wi1 = sc1.GetRigidbody()->GetOrientation();
 	//Quaternion wi2 = sc2.GetRigidbody()->GetOrientation();

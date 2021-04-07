@@ -36,12 +36,13 @@
 #include "Engine/ImGui/imgui_impl_dx12.h"
 
 #define NAME_D3D_RESOURCES 1
-#define SAFE_DELETE( x ) { if( x ) delete x; x = NULL; }
+#define SAFE_DELETE( x ) { if( x != nullptr ) delete x; x = NULL; }
 #define SAFE_DELETE_ARRAY( x ) { if( x ) delete[] x; x = NULL; }
 
 #define __FILENAME__ (strrchr(__FILE__,'\\')+1)
 
 #define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define BIND_STATIC_FN(fn) (auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
 
 #define D3D12_GPU_VIRTUAL_ADDRESS_NULL 0ull
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN ~0ull

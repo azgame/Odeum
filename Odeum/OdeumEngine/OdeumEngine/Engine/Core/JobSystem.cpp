@@ -26,7 +26,7 @@ void JobSystem::Initialize()
 
 	auto numCores = std::thread::hardware_concurrency();
 
-	m_numThreads = std::max(1u, numCores - 1);
+	m_numThreads = std::max((unsigned int)1, numCores - 1);
 
     for (uint32_t threadID = 0; threadID < m_numThreads; threadID++)
     {
@@ -71,8 +71,6 @@ bool JobSystem::Work()
 
 void JobSystem::ThreadInitialize()
 {
-    std::function<void()> job;
-
     while (true)
     {
         if (!Work())

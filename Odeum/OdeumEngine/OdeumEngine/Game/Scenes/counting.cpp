@@ -13,13 +13,15 @@ Counting::Counting()
 	MaxPlayers = 4;
 	
 	srand(time(NULL));
-	maxCount = rand() % 40 + 20;
+	maxCount = rand() % 20 + 20;
 	count = maxCount;
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		players.push_back(new GameObject());
 		playerCount.push_back(0);
 		playerPressed.push_back(false);
+		playerWon.push_back(false);
+		playerScore.push_back(false);
 	}
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
@@ -37,7 +39,32 @@ bool Counting::Initialize()
 	LOG("Creating Counting Scene")
 	return true;
 }
+void Counting::CalculateWinner()
+{
+	bool stop=false;
+	for (int i = 0; i < players.size(); i++)
+	{
+		playerScore.at(i) = playerCount.at(i) - maxCount;
+		if (playerScore.at(i) > 0)
+		{
+			playerScore.at(i) = -maxCount;
+		}
+	}
+	for (int z = 0; z > -maxCount-1; z--)
+	{
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (playerScore.at(i) == z)
+			{
+				playerWon.at(i) = true;
+				stop = true;
+			}
+		}
+		if (stop)
+			return;
 
+	}
+}
 void Counting::Update(const float deltaTime_)
 {
 	if (timeToWin > 0)
@@ -46,6 +73,10 @@ void Counting::Update(const float deltaTime_)
 	}
 	else
 	{
+		if (won == false)
+		{
+			CalculateWinner();
+		}
 		won = true;
 	}
 	if (!won)
@@ -62,8 +93,10 @@ void Counting::Update(const float deltaTime_)
 			gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-30, 0, rand() % 14 , 0));
 			gameObjects.back()->GetComponent<Rigidbody>()->SetVelocity(Vector4(rand() % 16 + 2.2f, 0, 0, 0));
 			gameObjects.back()->AddComponent<RenderComponent>();
-			gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
-			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(50, 250, 0.0));
+			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
+			gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Sheep.obj");
+			//gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
+			gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
 			if (count == 0)
 			{
 				timeToWin = 10.0f;
@@ -101,7 +134,16 @@ void Counting::UIRender()
 	}
 	if (won)
 	{
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (playerWon.at(i) == true)
+			{
+				std::string text = "Player" + std::to_string(i + 1) + "Wins ";
+				const char* textchar = text.c_str();
+				ImGui::Text(textchar);
+			}
 
+		}
 	}
 	std::string text = "MaxCount" + std::to_string(maxCount);
 	const char* textchar = text.c_str();

@@ -20,10 +20,10 @@ public:
 private:
 
 	CameraController cameraController;
-	GameObject* testObject;
-	GameObject* testObject2;
+	
 	
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> moonObjects;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;
 	bool won;
