@@ -33,7 +33,7 @@ public:
 		SAFE_DELETE(m_srvs);
 	}
 
-	void Load();
+	void Load(bool isAnimation);
 	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;

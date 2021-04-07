@@ -22,6 +22,7 @@ private:
 	//std::vector<GameObject*> gameObjects;
 
 	GameObject* go1;
+	GameObject* go2;
 	
 
 	uint16_t frameCounter;

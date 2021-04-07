@@ -5,7 +5,7 @@
 void RenderComponent::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
-
+	isAnimation = false;
 	isRendered = true;
 }
 
@@ -16,6 +16,10 @@ void RenderComponent::OnDetach()
 
 void RenderComponent::Update(float deltaTime)
 {
+	if (isAnimation)
+	{
+		//Animator::GetPose();
+	}
 }
 
 void RenderComponent::LoadModelFromFile(std::string fileName)
@@ -24,6 +28,16 @@ void RenderComponent::LoadModelFromFile(std::string fileName)
 	m_model.m_details.fileName = fileName;
 
 	SceneGraph::Get()->AddRenderObject(this);
+	isAnimation = false;
+}
+
+void RenderComponent::LoadModelFromFile(std::string fileName, bool animate)
+{
+	m_model.SetParent(this);
+	m_model.m_details.fileName = fileName;
+
+	SceneGraph::Get()->AddRenderObject(this);
+	isAnimation = true;
 }
 
 void RenderComponent::LoadShape(ShapeTypes preDefinedShape, Colour colour)

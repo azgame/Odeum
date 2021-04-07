@@ -5,6 +5,7 @@
 #include "../Core/Component.h"
 #include "../Rendering/DirectX12/Model.h"
 #include "../Math/BoundingBox.h"
+#include "../Animation/Animator.h"
 
 class RenderComponent : public Component
 {
@@ -16,6 +17,7 @@ public:
 	void Update(float deltaTime) override;
 
 	void LoadModelFromFile(std::string fileName);
+	void LoadModelFromFile(std::string fileName, bool animate);
 	void LoadShape(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
 	void CreateFromExistingModel(Model* Model);
 
@@ -27,11 +29,19 @@ public:
 	bool IsRendered() { return isRendered; }
 	void ToggleRender() { isRendered != isRendered; }
 
+	// animation stuff
+	bool IsAnimation() { return isAnimation; }
+	
+
 private:
 	Model m_model;
 	Matrix4 m_modelMatrix;
 	OrientedBoundingBox modelOBB;
 	bool isRendered;
+
+	// animation stuff
+	bool isAnimation;
+
 };
 
 #endif
