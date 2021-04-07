@@ -6,6 +6,8 @@
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
 #include "TextureManager.h"
+#include "../../Animation/Bone.h"
+#include <unordered_map>
 
 class RenderComponent;
 
@@ -56,6 +58,7 @@ public:
 		uint32_t vertexStride;
 
 		uint32_t materialIndex;
+		//uint32_t boneCount;
 	};
 
 	struct Material
@@ -100,7 +103,11 @@ public:
 
 	uint32_t		m_vertexStride;
 
-	bool			isLoaded = false;
+	// bone things
+	Bone* m_skeleton;
+	std::unordered_map<std::string, std::pair<int, Matrix4>> m_boneInfo;
+
+	bool isLoaded = false;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE* GetSRVs(uint32_t mIndex) const
 	{

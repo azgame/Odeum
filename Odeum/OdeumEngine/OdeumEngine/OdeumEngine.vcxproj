@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Scenes\AnimationTestScene.cpp" />
     <ClCompile Include="Game\Components\InventoryComponent.cpp" />
     <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
     <ClCompile Include="Game\GameObjects\Action.cpp" />
@@ -246,6 +247,10 @@
     <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Scenes\AnimationTestScene.h" />
+    <ClInclude Include="Engine\Animation\Animation.h" />
+    <ClInclude Include="Engine\Animation\Animator.h" />
+    <ClInclude Include="Engine\Animation\Bone.h" />
     <ClInclude Include="Game\Components\InventoryComponent.h" />
     <ClInclude Include="Game\Components\PlayerEffectsComponent.h" />
     <ClInclude Include="Game\GameObjects\Action.h" />

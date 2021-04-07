@@ -3,6 +3,7 @@
 
 #include "D3DIncludes.h"
 #include "Colour.h"
+#include "../../Math/Vector.h"
 
 using namespace DirectX;
 
@@ -15,6 +16,10 @@ struct Vertex
 	XMFLOAT3 normal;
 	XMFLOAT3 tangent;
 	XMFLOAT3 bitangent;
+	XMINT4 boneIDs;
+	Vector4 boneWeights;
+
+	Vertex(const Vertex& v) { position = v.position; uvcoords = v.uvcoords; normal = v.normal; tangent = v.tangent; bitangent = v.bitangent; boneIDs = v.boneIDs; boneWeights = v.boneWeights; };
 };
 
 enum ShapeTypes

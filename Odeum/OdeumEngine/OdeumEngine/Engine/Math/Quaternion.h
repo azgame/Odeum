@@ -3,6 +3,8 @@
 
 #include "Vector.h"
 #include "EulerAngles.h"
+#include <assimp/scene.h>
+#include <assimp/quaternion.h>
 
 class Quaternion
 {
@@ -75,6 +77,16 @@ namespace Math {
 
 		return e;
 	};
+
+	inline Quaternion Slerp(const Quaternion q1, const Quaternion q2, float t)
+	{
+		return Quaternion(XMQuaternionSlerp(q1, q2, t));
+	}
+
+	inline Quaternion ASSIMPToQuaternion(aiQuaternion q) {
+		Vector4 newQ(q.x, q.y, q.z, q.w);
+		return Quaternion(newQ);
+	}
 }
 
 #endif

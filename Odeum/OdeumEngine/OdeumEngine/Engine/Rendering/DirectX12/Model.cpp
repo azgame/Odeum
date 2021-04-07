@@ -5,6 +5,7 @@
 #include <assimp/postprocess.h>
 
 #include "../../CoreComponents/RenderComponent.h"
+#include "../../Animation/Animator.h"
 
 #include <thread>
 
@@ -133,6 +134,10 @@ void Model::Load()
 	m_pVertexData = new Vertex[m_details.vertexCount];
 	m_pIndexData = new uint16_t[m_details.indexCount];
 
+	// using these vectors for now, could change after
+	std::vector<Vertex> verticesOutput;
+	std::vector<uint32_t> indicesOutput;
+
 	Vector3 vMin(kZero), vMax(kZero);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
@@ -177,8 +182,70 @@ void Model::Load()
 			else
 				vertex->bitangent = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
+
+			// bone stuff
+			vertex->boneIDs = DirectX::XMINT4(0, 0, 0, 0);
+			vertex->boneWeights = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			verticesOutput.push_back(*vertex);
+
+
 			vertex++;
 		}
+
+		// more bone stuff
+		// load bone data to vertices
+		std::unordered_map<std::string, std::pair<int, Matrix4>> boneInfo = {};
+		std::vector<uint32_t> boneCounts;
+		boneCounts.resize(sourceMesh->mNumVertices, 0);
+		uint32_t boneCount = sourceMesh->mNumBones;
+
+		// loop through each bone
+		for (unsigned int i = 0; i < boneCount; i++)
+		{
+			aiBone* bone = sourceMesh->mBones[i];
+			Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
+
+			// loop through each vertex that has that bone
+			for (int j = 0; j < bone->mNumWeights; j++) {
+				uint32_t id = bone->mWeights[j].mVertexId;
+				float weight = bone->mWeights[j].mWeight;
+				boneCounts[id]++;
+
+				switch (boneCounts[id])
+				{
+				case 1:
+					verticesOutput[id].boneIDs.x = i;
+					verticesOutput[id].boneWeights.SetX(weight);
+					break;
+				case 2:
+					verticesOutput[id].boneIDs.y = i;
+					verticesOutput[id].boneWeights.SetY(weight);
+					break;
+				case 3:
+					verticesOutput[id].boneIDs.z = i;
+					verticesOutput[id].boneWeights.SetZ(weight);
+					break;
+				case 4:
+					verticesOutput[id].boneIDs.w = i;
+					verticesOutput[id].boneWeights.SetW(weight);
+					break;
+				default:
+					Debug::Error("Unable to allocate bone to vertex.", "Model.cpp", __LINE__);
+					break;
+				}
+			}
+		}
+
+		// normalize weights to make all weight sum 1
+		for (int i = 0; i < verticesOutput.size(); i++)
+		{
+			float totalWeight = verticesOutput[i].boneWeights.GetX() + verticesOutput[i].boneWeights.GetY() + verticesOutput[i].boneWeights.GetZ() + verticesOutput[i].boneWeights.GetW();
+			if (totalWeight > 0.0f)
+			{
+				verticesOutput[i].boneWeights.Normalize();
+			}
+		}
+		
 
 		uint16_t* indice = m_pIndexData + destMesh.indexOffset;
 
@@ -191,6 +258,9 @@ void Model::Load()
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
 		}
 	}
+
+	// create bone hierarchy 
+	Animator::ReadSkeleton(*m_skeleton, scene->mRootNode, m_boneInfo);
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
