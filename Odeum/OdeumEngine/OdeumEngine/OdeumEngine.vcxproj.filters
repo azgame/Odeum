@@ -106,6 +106,7 @@
     <ClCompile Include="Game\Scenes\AvoidScene.cpp" />
     <ClCompile Include="Game\Scenes\MapScene.cpp" />
     <ClCompile Include="Game\GameObjects\Map.cpp" />
+    <ClCompile Include="Game\Scenes\AnimationTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DataStructures\Graph.h" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Game\Scenes\MapScene.h" />
     <ClInclude Include="Game\GameObjects\Map.h" />
     <ClInclude Include="Engine\DataStructures\SimpleGraph.h" />
+    <ClInclude Include="Game\Scenes\AnimationTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />

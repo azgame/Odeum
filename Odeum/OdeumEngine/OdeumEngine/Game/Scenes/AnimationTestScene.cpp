@@ -16,12 +16,13 @@ AnimationTestScene::AnimationTestScene() : Scene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-
+	go1 = new GameObject();
 	go1->AddComponent<RenderComponent>();
-	go1->GetComponent<RenderComponent>()->LoadModelFromFile("Pig.obj");
+	go1->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5f, 1.0f, 1.0f, 1.0f));
+	//go1->GetComponent<RenderComponent>()->LoadModelFromFile("Pig.obj");
 
 	go1->AddComponent<Rigidbody>();
-	//go1->GetComponent<Rigidbody>()->
+	go1->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 5.0f, 0.0f, 0.0f));
 
 }
 
