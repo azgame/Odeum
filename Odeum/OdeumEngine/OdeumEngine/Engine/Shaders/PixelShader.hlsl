@@ -128,6 +128,8 @@ float4 main(PS_INPUT input) : SV_Target0
 
     float3 colour = 0.0f;
 
+    colour = normalize(diffuseColour + ambientColour);
+
     float3 normal;
     normal = texNormal.Sample(sampler0, input.uv) * 2.0 - 1.0;
     AntiAliasSpecular(normal, gloss);
@@ -137,8 +139,6 @@ float4 main(PS_INPUT input) : SV_Target0
     float3 viewDir = normalize(input.viewDir);
     colour += ApplyPointLight(diffuseColour, specularMask, specularColour, gloss, normal,
         viewDir, input.worldPos, lightPos, radiusSq, lightColour);
-
-    colour *= ambientColour;
 
     colour = (flatColour * flatColour.w) + colour * (1.0f - flatColour.w);
 

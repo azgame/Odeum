@@ -5,12 +5,10 @@
 void RenderComponent::OnAttach(GameObject* parent)
 {
 	m_gameObject = parent;
-	isAnimation = false;
+
 	isRendered = true;
-	currentPose = {};
-	globalInverseTransform = ~Matrix4(kIdentity); // ~ is used for inverse
-	//globalInverseTransform = Matrix4(DirectX::XMMatrixInverse(nullptr, globalInverseTransform));
-	totalTime = 0.0f;
+
+	SetColour(Colour(1.0, 1.0, 1.0, 0.0));
 }
 
 void RenderComponent::OnDetach()
@@ -20,14 +18,6 @@ void RenderComponent::OnDetach()
 
 void RenderComponent::Update(float deltaTime)
 {
-	if (isAnimation)
-	{
-		
-		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
-		if (totalTime > 1.0f)
-			Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
-	}
-	totalTime += deltaTime;
 }
 
 void RenderComponent::LoadModelFromFile(std::string fileName)
@@ -36,16 +26,6 @@ void RenderComponent::LoadModelFromFile(std::string fileName)
 	m_model.m_details.fileName = fileName;
 
 	SceneGraph::Get()->AddRenderObject(this);
-	isAnimation = false;
-}
-
-void RenderComponent::LoadModelFromFile(std::string fileName, bool animate)
-{
-	m_model.SetParent(this);
-	m_model.m_details.fileName = fileName;
-
-	SceneGraph::Get()->AddRenderObject(this);
-	isAnimation = true;
 }
 
 void RenderComponent::LoadShape(ShapeTypes preDefinedShape, Colour colour)
