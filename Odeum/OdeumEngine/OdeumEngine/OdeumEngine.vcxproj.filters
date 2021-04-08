@@ -250,6 +250,9 @@
     <ClInclude Include="Game\Scenes\MapScene.h" />
     <ClInclude Include="Game\GameObjects\Map.h" />
     <ClInclude Include="Engine\DataStructures\SimpleGraph.h" />
+    <ClInclude Include="Engine\Animation\Animation.h" />
+    <ClInclude Include="Engine\Animation\Animator.h" />
+    <ClInclude Include="Engine\Animation\Bone.h" />
     <ClInclude Include="Game\Scenes\AnimationTestScene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -260,5 +263,9 @@
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="Game\GameAssets\PlayerStats.json" />
+    <None Include="Engine\Resources\Models\BaseCharacter.fbx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engine\Resources\Models\Man.dae.txt" />
   </ItemGroup>
 </Project>
