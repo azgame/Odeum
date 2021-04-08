@@ -5,6 +5,18 @@ cbuffer LightData : register(b1)
 	float3 lightColour;
 };
 
+cbuffer MaterialData : register(b2)
+{
+    float3 diffuse;
+    float3 specular;
+    float3 ambient;
+    float3 emissive;
+    float3 transparent;
+    float opacity;
+    float shininess;
+    float specularStrength;
+}
+
 struct PS_INPUT
 {
 	float4 position : SV_POSITION;
@@ -98,14 +110,22 @@ float3 ApplyPointLight(
 float4 main(PS_INPUT input) : SV_Target0
 {
     float3 diffuseColour = texDiffuse.Sample(sampler0, input.uv);
-    float3 specularColour = float3(0.56f, 0.56f, 0.56f);
+
+    if (diffuseColour.x < 0 || diffuseColour.y < 0 || diffuseColour.z < 0) // no texture passed, check mat
+    {
+        diffuseColour = diffuse;
+    }
+    else
+    {
+        diffuseColour = normalize(diffuseColour + diffuse);
+    }
+
+    float3 specularColour = specular;
     float specularMask = texSpec.Sample(sampler0, input.uv).g;
-    float3 ambientColour = diffuseColour * float3(0.25f, 0.25f, 0.25f);
-    float gloss = 16.0f;
+    float3 ambientColour = ambient;
+    float gloss = shininess;
 
     float3 colour = 0.0f;
-
-    colour += ambientColour;
 
     float3 normal;
     normal = texNormal.Sample(sampler0, input.uv) * 2.0 - 1.0;
@@ -116,5 +136,7 @@ float4 main(PS_INPUT input) : SV_Target0
     float3 viewDir = normalize(input.viewDir);
     colour += ApplyPointLight(diffuseColour, specularMask, specularColour, gloss, normal,
         viewDir, input.worldPos, lightPos, radiusSq, lightColour);
+
+    colour *= ambientColour;
 	return float4(colour, 1.0f);
 }

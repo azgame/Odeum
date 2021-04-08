@@ -101,7 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDev\vcpkg\packages\assimp_x64-windows\include;C:\GameDev\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\GameDev\glm-0.9.9.8;C:\GameDev\VulkanSDK\1.2.148.1\Include;dxc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
@@ -473,21 +473,10 @@
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="Game\GameAssets\PlayerStats.json" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
-    <Import Project="..\packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
