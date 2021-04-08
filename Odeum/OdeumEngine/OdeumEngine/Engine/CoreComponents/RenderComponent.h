@@ -16,6 +16,7 @@ public:
 	void OnStart() {};
 	void Update(float deltaTime) override;
 
+	void SetColour(Colour Colour) { m_model.SetFlatColour(Colour); }
 	void LoadModelFromFile(std::string fileName);
 	void LoadModelFromFile(std::string fileName, bool animate);
 	void LoadShape(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));

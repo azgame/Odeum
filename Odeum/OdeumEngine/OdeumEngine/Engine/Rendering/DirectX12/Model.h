@@ -61,9 +61,9 @@ public:
 		//uint32_t boneCount;
 	};
 
-	struct Material
+	struct MaterialInfo
 	{
-		Material()
+		MaterialInfo()
 		{
 			strncpy_s(name, "", 0);
 			strncpy_s(diffuseTextureFile, "", 0);
@@ -74,15 +74,6 @@ public:
 			strncpy_s(reflectionTextureFile, "", 0);
 		}
 
-		Vector3 diffuse;
-		Vector3 specular;
-		Vector3 ambient;
-		Vector3 emissive;
-		Vector3 transparent;
-		float opacity;
-		float shininess;
-		float specularStrength;
-
 		char name[128];
 		char diffuseTextureFile[128];
 		char specularTextureFile[128];
@@ -92,7 +83,23 @@ public:
 		char reflectionTextureFile[128];
 	};
 
+	struct Material
+	{
+		Vector4 flatColour;
+		Vector3 diffuse;
+		Vector3 specular;
+		Vector3 ambient;
+		Vector3 emissive;
+		Vector3 transparent;
+		float opacity;
+		float shininess;
+		float specularStrength;
+	};
+
 	Mesh& GetMesh(int index);
+	Material& GetMaterial(int index);
+
+	void SetFlatColour(Colour Colour) { m_flatColour = Colour; }
 
 	ModelInfo		m_details;
 	Mesh*			m_pMesh;
@@ -100,6 +107,7 @@ public:
 	Vertex*			m_pVertexData; // temp vertex storage for upload
 	uint16_t*		m_pIndexData; // temp index storage for upload
 	Material*		m_pMaterials;
+	MaterialInfo*	m_pMaterialDetails;
 
 	uint32_t		m_vertexStride;
 
