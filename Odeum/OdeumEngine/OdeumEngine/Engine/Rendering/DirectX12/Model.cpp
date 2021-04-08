@@ -22,17 +22,17 @@ void Model::Load()
 
 	importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
 
-	const aiScene* scene = importer.ReadFile(fileName,
+	const aiScene* scene = importer.ReadFile(fileName.c_str(),
 		aiProcess_CalcTangentSpace |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_Triangulate |
-		aiProcess_RemoveComponent |
+		//aiProcess_RemoveComponent |
 		aiProcess_GenSmoothNormals |
 		aiProcess_SplitLargeMeshes |
 		aiProcess_ValidateDataStructure |
 		aiProcess_RemoveRedundantMaterials |
 		aiProcess_SortByPType |
-		aiProcess_FindInvalidData |
+		//aiProcess_FindInvalidData |
 		aiProcess_GenUVCoords |
 		aiProcess_TransformUVCoords |
 		aiProcess_OptimizeMeshes |
@@ -47,11 +47,14 @@ void Model::Load()
 	m_details.materialCount = scene->mNumMaterials;
 	m_pMaterials = new Material[m_details.materialCount];
 	memset(m_pMaterials, 0, sizeof(Material) * m_details.materialCount);
+	m_pMaterialDetails = new MaterialInfo[m_details.materialCount];
+	memset(m_pMaterialDetails, 0, sizeof(MaterialInfo) * m_details.materialCount);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMaterials; mIndex++)
 	{
 		const aiMaterial* sourceMat = scene->mMaterials[mIndex];
 		Material& destMat = m_pMaterials[mIndex];
+		MaterialInfo& destMatInfo = m_pMaterialDetails[mIndex];
 
 		aiColor3D diffuse(1.0f, 1.0f, 1.0f);
 		aiColor3D specular(1.0f, 1.0f, 1.0f);
@@ -71,6 +74,7 @@ void Model::Load()
 		sourceMat->Get(AI_MATKEY_SHININESS, shininess);
 		sourceMat->Get(AI_MATKEY_SHININESS_STRENGTH, specularStrength);
 
+		destMat.flatColour = Vector4(m_flatColour);
 		destMat.diffuse = Vector3(diffuse.r, diffuse.g, diffuse.b);
 		destMat.specular = Vector3(specular.r, specular.g, specular.b);
 		destMat.ambient = Vector3(ambient.r, ambient.g, ambient.b);
@@ -95,13 +99,13 @@ void Model::Load()
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_LIGHTMAP, 0), texLightmapPath);
 		sourceMat->Get(AI_MATKEY_TEXTURE(aiTextureType_REFLECTION, 0), texReflectionPath);
 
-		strncpy_s(destMat.name, matName.C_Str(), 127);
-		strncpy_s(destMat.diffuseTextureFile, texDiffusePath.C_Str(), 127);
-		strncpy_s(destMat.specularTextureFile, texSpecularPath.C_Str(), 127);
-		strncpy_s(destMat.emissiveTextureFile, texEmissivePath.C_Str(), 127);
-		strncpy_s(destMat.normalTextureFile, texNormalPath.C_Str(), 127);
-		strncpy_s(destMat.lightmapTextureFile, texLightmapPath.C_Str(), 127);
-		strncpy_s(destMat.reflectionTextureFile, texReflectionPath.C_Str(), 127);
+		strncpy_s(destMatInfo.name, matName.C_Str(), 127);
+		strncpy_s(destMatInfo.diffuseTextureFile, texDiffusePath.C_Str(), 127);
+		strncpy_s(destMatInfo.specularTextureFile, texSpecularPath.C_Str(), 127);
+		strncpy_s(destMatInfo.emissiveTextureFile, texEmissivePath.C_Str(), 127);
+		strncpy_s(destMatInfo.normalTextureFile, texNormalPath.C_Str(), 127);
+		strncpy_s(destMatInfo.lightmapTextureFile, texLightmapPath.C_Str(), 127);
+		strncpy_s(destMatInfo.reflectionTextureFile, texReflectionPath.C_Str(), 127);
 	}
 
 	m_details.meshCount = scene->mNumMeshes;
@@ -209,21 +213,21 @@ void Model::LoadTextures()
 
 	for (uint32_t mIndex = 0; mIndex < m_details.materialCount; mIndex++)
 	{
-		const Material& material = m_pMaterials[mIndex];
+		const MaterialInfo& materialInfo = m_pMaterialDetails[mIndex];
 
-		if (!std::string(material.diffuseTextureFile).empty())
+		if (!std::string(materialInfo.diffuseTextureFile).empty())
 		{
-			matTextures[0] = TextureManager::Get()->LoadFromFile(material.diffuseTextureFile);
+			matTextures[0] = TextureManager::Get()->LoadFromFile(materialInfo.diffuseTextureFile);
 
-			matTextures[1] = TextureManager::Get()->LoadFromFile(material.specularTextureFile);
+			matTextures[1] = TextureManager::Get()->LoadFromFile(materialInfo.specularTextureFile);
 			if (!matTextures[1]->isValid())
 				matTextures[1] = matTextures[0];
 
-			matTextures[3] = TextureManager::Get()->LoadFromFile(material.normalTextureFile);
+			matTextures[3] = TextureManager::Get()->LoadFromFile(materialInfo.normalTextureFile);
 		}
 		else
 		{
-			matTextures[0] = TextureManager::Get()->LoadColour(m_flatColour);
+			matTextures[0] = TextureManager::Get()->LoadColour(Colour(-1, -1, -1, -1));
 			matTextures[1] = matTextures[0];
 			matTextures[3] = matTextures[0];
 		}
@@ -240,4 +244,9 @@ void Model::LoadTextures()
 Model::Mesh& Model::GetMesh(int index)
 {
 	return m_pMesh[index];
+}
+
+Model::Material& Model::GetMaterial(int index)
+{
+	return m_pMaterials[index];
 }

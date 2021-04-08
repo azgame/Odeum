@@ -16,11 +16,12 @@ void D3DRenderer::Initialize(Window& Window)
 	SamplerDesc defaultSampler;
 	defaultSampler.MaxAnisotropy = 8;
 
-	m_rootSig.Reset(3, 1);
+	m_rootSig.Reset(4, 1);
 	m_rootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_rootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
-	m_rootSig[2].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_rootSig[2].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_rootSig[3].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
@@ -85,8 +86,8 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 	DirectX::XMStoreFloat3(&vsConstants.viewerPos, Camera.GetPosition());
 
 	LightData light;
-	DirectX::XMStoreFloat3(&light.position, Vector3(10.0f, 20.0f, -30.0f));
-	light.radiusSq = 4000.0f;
+	DirectX::XMStoreFloat3(&light.position, Vector3(0.0f, -15.0f, 5.0f));
+	light.radiusSq = 1000.0f;
 	DirectX::XMStoreFloat3(&light.colour, Vector3(0.3f, 0.3f, 0.3f));
 
 	GraphicsContext& graphics = GraphicsContext::RequestContext(L"Scene Render");
@@ -125,7 +126,9 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 				uint32_t startIndex = mesh.indexOffset;
 				uint32_t baseVertex = mesh.vertexOffset;
 
-				graphics.SetDynamicDescriptors(2, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+				graphics.SetDynamicConstantBufferView(2, sizeof(object->GetModel().GetMaterial(mesh.materialIndex)), &object->GetModel().GetMaterial(mesh.materialIndex));
+
+				graphics.SetDynamicDescriptors(3, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
 
 				graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 			}
