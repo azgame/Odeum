@@ -43,6 +43,8 @@ private:
 	bool isAnimation;
 	std::vector<Matrix4> currentPose;
 	Matrix4 globalInverseTransform;
+	
+	float totalTime;
 
 };
 

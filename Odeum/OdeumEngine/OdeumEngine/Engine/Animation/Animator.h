@@ -21,6 +21,7 @@ struct Animator {
 			{
 				Bone child;
 				ReadSkeleton(child, node->mChildren[i], boneInfoTable);
+				boneOutput.children.push_back(child);
 			}
 			return true;
 		}
@@ -90,24 +91,32 @@ struct Animator {
 		dt = fmod(dt, animation.duration);
 		std::pair<unsigned int, float> fp;
 
-		// calculate interpolated position
-		fp = GetTimeFraction(btt.positionTimestamps, dt);
+		Vector3 position, scale;
+		Quaternion rotation;
 
-		Vector3 position1 = btt.positions[fp.first - 1];
-		Vector3 position2 = btt.positions[fp.first];
-		Vector3 position = Math::Lerp(position1, position2, fp.second);
+		// calculate interpolated position
+		if (btt.positionTimestamps.size() > 1) {
+			fp = GetTimeFraction(btt.positionTimestamps, dt);
+			Vector3 position1 = btt.positions[fp.first - 1];
+			Vector3 position2 = btt.positions[fp.first];
+			position = Math::Lerp(position1, position2, fp.second);
+		}
 
 		// calculated interpolated rotation
-		fp = GetTimeFraction(btt.rotationTimestamps, dt);
-		Quaternion rotation1 = btt.rotations[fp.first - 1];
-		Quaternion rotation2 = btt.rotations[fp.first];
-		Quaternion rotation = Math::Slerp(rotation1, rotation2, fp.second);
+		if (btt.rotationTimestamps.size() > 1) {
+			fp = GetTimeFraction(btt.rotationTimestamps, dt);
+			Quaternion rotation1 = btt.rotations[fp.first - 1];
+			Quaternion rotation2 = btt.rotations[fp.first];
+			Quaternion rotation = Math::Slerp(rotation1, rotation2, fp.second);
+		}
 
 		// calculated interpolated scale
-		fp = GetTimeFraction(btt.scaleTimestamps, dt);
-		Vector3 scale1 = btt.scales[fp.first - 1];
-		Vector3 scale2 = btt.scales[fp.first];
-		Vector3 scale = Math::Lerp(scale1, scale2, fp.second); // lerp
+		if (btt.scaleTimestamps.size() > 1) {
+			fp = GetTimeFraction(btt.scaleTimestamps, dt);
+			Vector3 scale1 = btt.scales[fp.first - 1];
+			Vector3 scale2 = btt.scales[fp.first];
+			Vector3 scale = Math::Lerp(scale1, scale2, fp.second); // lerp
+		}
 
 		Matrix4 positionMat = Matrix4(kIdentity);
 		Matrix4 scaleMat = Matrix4(kIdentity);

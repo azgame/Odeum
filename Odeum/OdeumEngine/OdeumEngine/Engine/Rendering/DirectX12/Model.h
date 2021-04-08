@@ -6,7 +6,7 @@
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
 #include "TextureManager.h"
-#include "../../Animation/Bone.h"
+#include "../../Animation/Animation.h"
 #include <unordered_map>
 
 class RenderComponent;
@@ -22,7 +22,7 @@ public:
 		m_pIndexData(nullptr),
 		m_srvs(nullptr),
 		m_vertexStride(sizeof(Vertex)),
-		m_flatColour(1.0f, 1.0f, 1.0f, 1.0f) {}
+		m_flatColour(1.0f, 1.0f, 1.0f, 1.0f){}
 
 	~Model()
 	{
@@ -104,7 +104,7 @@ public:
 	uint32_t		m_vertexStride;
 
 	// bone things
-	Bone* m_skeleton;
+	Bone m_skeleton;
 	std::unordered_map<std::string, std::pair<int, Matrix4>> m_boneInfo;
 	uint32_t m_boneCount;
 	Animation animation;

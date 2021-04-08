@@ -198,7 +198,7 @@ void Model::Load(bool isAnimation)
 		// load bone data to vertices
 		if(isAnimation)
 		{
-			std::unordered_map<std::string, std::pair<int, Matrix4>> boneInfo = {};
+			m_boneInfo = {};
 			std::vector<uint32_t> boneCounts;
 			boneCounts.resize(sourceMesh->mNumVertices, 0);
 			m_boneCount = sourceMesh->mNumBones;
@@ -208,7 +208,7 @@ void Model::Load(bool isAnimation)
 			{
 				aiBone* bone = sourceMesh->mBones[i];
 				Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
-				boneInfo[bone->mName.C_Str()] = { i, matrix };
+				m_boneInfo[bone->mName.C_Str()] = { i, matrix };
 
 				// loop through each vertex that has that bone
 				for (int j = 0; j < bone->mNumWeights; j++) {
@@ -239,10 +239,7 @@ void Model::Load(bool isAnimation)
 						break;
 					}
 				}
-
-				// create bone hierarchy 
-				Animator::ReadSkeleton(*m_skeleton, scene->mRootNode, m_boneInfo);
-				Animator::LoadAnimation(scene, animation);
+				
 			}
 
 			// normalize weights to make all weight sum 1
@@ -254,6 +251,8 @@ void Model::Load(bool isAnimation)
 					verticesOutput[i].boneWeights.Normalize();
 				}
 			}
+
+			
 		}
 
 		uint16_t* indice = m_pIndexData + destMesh.indexOffset;
@@ -265,6 +264,13 @@ void Model::Load(bool isAnimation)
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[0];
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[1];
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
+		}
+
+		// might want to move this
+		if (isAnimation) {
+			// create bone hierarchy
+			Animator::ReadSkeleton(m_skeleton, scene->mRootNode, m_boneInfo);
+			Animator::LoadAnimation(scene, animation);
 		}
 	}
 

@@ -56,6 +56,7 @@ bool AnimationTestScene::Initialize()
 void AnimationTestScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
+	std::cout << std::setprecision(8) << "time: " << deltaTime_ << std::endl;
 }
 
 void AnimationTestScene::UIRender()

@@ -8,6 +8,9 @@ void RenderComponent::OnAttach(GameObject* parent)
 	isAnimation = false;
 	isRendered = true;
 	currentPose = {};
+	globalInverseTransform = ~Matrix4(kIdentity); // ~ is used for inverse
+	//globalInverseTransform = Matrix4(DirectX::XMMatrixInverse(nullptr, globalInverseTransform));
+	totalTime = 0.0f;
 }
 
 void RenderComponent::OnDetach()
@@ -19,8 +22,12 @@ void RenderComponent::Update(float deltaTime)
 {
 	if (isAnimation)
 	{
-		Animator::GetPose(m_model.animation, *m_model.m_skeleton, deltaTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
+		
+		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
+		if (totalTime > 1.0f)
+			Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
 	}
+	totalTime += deltaTime;
 }
 
 void RenderComponent::LoadModelFromFile(std::string fileName)

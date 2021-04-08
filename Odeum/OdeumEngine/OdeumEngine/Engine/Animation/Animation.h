@@ -3,7 +3,6 @@
 
 #include "Bone.h"
 #include <unordered_map>
-#include <assimp/scene.h>
 
 struct Animation {
 	float duration = 0.0f;
