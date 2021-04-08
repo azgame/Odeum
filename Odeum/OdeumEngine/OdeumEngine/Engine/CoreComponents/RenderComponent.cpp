@@ -7,6 +7,8 @@ void RenderComponent::OnAttach(GameObject* parent)
 	m_gameObject = parent;
 
 	isRendered = true;
+
+	SetColour(Colour(1.0, 1.0, 1.0, 0.0));
 }
 
 void RenderComponent::OnDetach()
