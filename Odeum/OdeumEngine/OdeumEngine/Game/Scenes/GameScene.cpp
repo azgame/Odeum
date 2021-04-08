@@ -70,6 +70,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	gameObjects[0]->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
 	gameObjects[0]->AddComponent<RenderComponent>();
 	gameObjects[0]->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Pig.obj");
+	gameObjects[0]->GetComponent<RenderComponent>()->SetColour(Colour(0.0, 0.0, 1.0, 0.2));
 	gameObjects[0]->AddComponent<BoxCollider>();
 	gameObjects[0]->AddComponent<PlayerEffectsComponent>();
 	gameObjects[0]->AddComponent<StatComponent>();

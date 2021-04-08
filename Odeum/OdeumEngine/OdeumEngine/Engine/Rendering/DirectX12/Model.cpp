@@ -74,6 +74,7 @@ void Model::Load()
 		sourceMat->Get(AI_MATKEY_SHININESS, shininess);
 		sourceMat->Get(AI_MATKEY_SHININESS_STRENGTH, specularStrength);
 
+		destMat.flatColour = Vector4(m_flatColour);
 		destMat.diffuse = Vector3(diffuse.r, diffuse.g, diffuse.b);
 		destMat.specular = Vector3(specular.r, specular.g, specular.b);
 		destMat.ambient = Vector3(ambient.r, ambient.g, ambient.b);

@@ -7,6 +7,7 @@ cbuffer LightData : register(b1)
 
 cbuffer MaterialData : register(b2)
 {
+    float4 flatColour;
     float3 diffuse;
     float3 specular;
     float3 ambient;
@@ -138,5 +139,8 @@ float4 main(PS_INPUT input) : SV_Target0
         viewDir, input.worldPos, lightPos, radiusSq, lightColour);
 
     colour *= ambientColour;
+
+    colour = (flatColour * flatColour.w) + colour * (1.0f - flatColour.w);
+
 	return float4(colour, 1.0f);
 }

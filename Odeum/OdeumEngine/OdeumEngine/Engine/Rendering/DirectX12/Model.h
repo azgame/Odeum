@@ -82,6 +82,7 @@ public:
 
 	struct Material
 	{
+		Vector4 flatColour;
 		Vector3 diffuse;
 		Vector3 specular;
 		Vector3 ambient;
@@ -94,6 +95,8 @@ public:
 
 	Mesh& GetMesh(int index);
 	Material& GetMaterial(int index);
+
+	void SetFlatColour(Colour Colour) { m_flatColour = Colour; }
 
 	ModelInfo		m_details;
 	Mesh*			m_pMesh;
