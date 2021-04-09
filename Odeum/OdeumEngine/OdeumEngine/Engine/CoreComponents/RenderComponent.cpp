@@ -22,8 +22,37 @@ void RenderComponent::Update(float deltaTime)
 	{
 
 		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
-		//if (totalTime > 1.0f)
-			//Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
+		if (totalTime > 1.0f) {
+			Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
+			
+			// bone transformations - was shader code
+			Matrix4 bone_transforms[50];
+			// not sure about these values vvvvvv
+			bone_transforms[m_model.m_boneCount] = currentPose[0];
+			Vector4 bw;
+			// need to iterate through each vertex vv need to change the ending point i'm pretty sure
+			for (Vertex *v = m_model.m_pVertexData; m_model.m_pVertexData; v++)
+			{
+				bw = Vector4();
+				if (int(v->boneIDs.x) == 1) {
+					bw.SetZ(v->boneIDs.x);
+				}
+
+				v->boneWeights.Normalize();
+				Matrix4 boneTransform = Matrix4();
+				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.x)] * v->boneWeights.GetX();
+				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.y)] * v->boneWeights.GetY();
+				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.z)] * v->boneWeights.GetZ();
+				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.w)] * v->boneWeights.GetW();
+
+				Vector4 pos = boneTransform * Vector4(v->position, 1.0f);
+				Vector4 norm = boneTransform * Vector4(v->normal, 1.0f);
+
+				v->position = DirectX::XMFLOAT3(pos.GetX(), pos.GetY(), pos.GetZ());
+				v->normal = DirectX::XMFLOAT3(norm.GetX(), norm.GetY(), norm.GetZ());;
+			}
+			
+		}
 	}
 	totalTime += deltaTime;
 }

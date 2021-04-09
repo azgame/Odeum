@@ -98,6 +98,9 @@ public:
 	inline Vector4 operator* (Vector3 vec_) const { return Vector4(XMVector3Transform(vec_, mat)); }
 	inline Vector4 operator* (Vector4 vec_) const { return Vector4(XMVector4Transform(vec_, mat)); }
 	inline Matrix4 operator* (const Matrix4& mat_) const { return Matrix4(XMMatrixMultiply(mat_, mat)); }
+	inline Matrix4 operator* (const float s) const { return Matrix4(mat * s); }
+	inline Matrix4 operator+ (const Matrix4 mat_) const { return Matrix4(mat + mat_); }
+	inline Matrix4 operator- (const Matrix4 mat_) const { return Matrix4(mat - mat_); }
 	inline Matrix4 operator~ () const { return Matrix4(XMMatrixInverse(nullptr, mat)); }
 
 	static inline Matrix4 MakeScale(float scale_) { return Matrix4(XMMatrixScaling(scale_, scale_, scale_)); }

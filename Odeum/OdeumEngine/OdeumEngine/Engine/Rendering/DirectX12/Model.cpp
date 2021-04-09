@@ -140,6 +140,7 @@ void Model::Load(bool isAnimation)
 
 	// using these vectors for now, could change after
 	std::vector<Vertex> verticesOutput;
+	//Vertex* verticesOutput = new Vertex[m_details.vertexCount];
 	std::vector<uint32_t> indicesOutput;
 
 	Vector3 vMin(kZero), vMax(kZero);
@@ -277,8 +278,11 @@ void Model::Load(bool isAnimation)
 			Animator::LoadAnimation(scene, animation);
 		}
 	}
+	Vertex* b_pVertexData = &verticesOutput[0];
+	
 
-	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
+	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, b_pVertexData);
+	//m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
 
 	LoadTextures();

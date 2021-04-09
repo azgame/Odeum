@@ -31,10 +31,11 @@ AnimationTestScene::AnimationTestScene() : Scene()
 	go2 = new GameObject();
 	go2->AddComponent<RenderComponent>();
 	//go2->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5f, 1.0f, 1.0f, 1.0f));
-	go2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Man.dae", false);
+	go2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Man.dae", true);
 	go2->AddComponent<Rigidbody>();
 	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 5.0f, 0.0f, 1.0f));
-	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 45.0f);
+	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 180.0f);
+	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(1.0f, 0.0f, 0.0f, 1.0f), -90.0f);
 
 
 
@@ -56,7 +57,7 @@ bool AnimationTestScene::Initialize()
 void AnimationTestScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
-	std::cout << std::setprecision(8) << "time: " << deltaTime_ << std::endl;
+	//std::cout << std::setprecision(8) << "time: " << deltaTime_ << std::endl;
 }
 
 void AnimationTestScene::UIRender()
