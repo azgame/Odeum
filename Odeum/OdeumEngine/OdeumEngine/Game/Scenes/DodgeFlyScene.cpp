@@ -31,7 +31,7 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->AddComponent<RenderComponent>();
        // playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/alien.obj");
-        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 180);
+       
         playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
@@ -42,11 +42,35 @@ DodgeFlyScene::DodgeFlyScene()
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 10, 0));
     
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(60, 35, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, -18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-4, 6, -12, 0));
+
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18, 9, -17, 0));
+
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+
     for (int i = 0; i < MaxObstaclesLeft; i++)
     {
         obstacleObjects.push_back(new GameObject());
@@ -134,7 +158,15 @@ void DodgeFlyScene::Update(const float deltaTime_)
 {
     if (!won)
     {
-        spawnObjects(deltaTime_);
+        if (timeToStart <= 0)
+        {
+            
+            spawnObjects(deltaTime_);
+        }
+        else
+        {
+            timeToStart -= deltaTime_;
+        }
 
         for (int i = 0; i < playerObjects.size(); i++)
         {
@@ -303,6 +335,7 @@ void DodgeFlyScene::Update(const float deltaTime_)
 void DodgeFlyScene::UIRender()
 {
     ImGui::Begin("Game UI");
+    ImGui::Text("Avoid the meteorites!");
     if (won)
     {
         for (int i = 0; i < playerObjects.size(); i++)

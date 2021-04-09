@@ -43,16 +43,120 @@ Collecting3DScene::Collecting3DScene()
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -10, 2.5, 0));
+
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(40, 30, 1, 1));
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
-   
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 35, 0, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 20, 0, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(80, 60, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10, 20, -25, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud1.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5,5, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13, 25, -24, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-45, 35, -22, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(45, 22, -18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 28, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0),90.0f);
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 1));
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/rock_tallB.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(27, 22, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 58, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(14, 14, 14, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 58, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(14, 14, 14, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-16, 45, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-8, 30, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(9, 9, 9, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-32, 36, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(9, 9, 9, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-2, 55, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9, 36, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
 
     for (int i = 0; i < MaxCollectables; i++)
     {

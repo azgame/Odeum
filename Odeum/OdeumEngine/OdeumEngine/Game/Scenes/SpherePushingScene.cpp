@@ -42,14 +42,7 @@ SpherePushingScene::SpherePushingScene()
         playerObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
    
-    backgroundObjects.push_back(new GameObject());
-    backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17.5, 9, 1, 0));
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-    
-
+   
 
 playerKeysLeft.push_back(Key::A);
 playerKeysRight.push_back(Key::D);
@@ -69,9 +62,43 @@ playerKeysUp.push_back(Key::W);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -10, 2.5, 0));
+
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(34, 20, 1, 1));
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+
 backgroundObjects.back()->AddComponent<AudioSource>();
 backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
 backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
+
+
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, -18, 0));
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-4, 6, -12, 0));
+
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18, 9, -17, 0));
+
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+
 }
 SpherePushingScene::~SpherePushingScene()
 {

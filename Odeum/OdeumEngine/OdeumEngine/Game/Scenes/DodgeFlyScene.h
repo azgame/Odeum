@@ -41,6 +41,7 @@ private:
 	//these ensure the player may not hold the button
 
 	float timeToEnd = 5;
+	float timeToStart = 5;
 	//targetHeights is the three difrent heights the player needs to maintain.
 	float maxVelocity = 7;
 	float maxHeight = 9;
