@@ -31,8 +31,11 @@ void RenderComponent::Update(float deltaTime)
 			bone_transforms[m_model.m_boneCount] = currentPose[0];
 			Vector4 bw;
 			// need to iterate through each vertex vv need to change the ending point i'm pretty sure
-			for (Vertex *v = m_model.m_pVertexData; m_model.m_pVertexData; v++)
+			//for (Vertex *v = m_model.m_pVertexData; m_model.m_details.vertexCount; v++)
+			Vertex* v = m_model.m_pVertexData;
+			for(int i = 0; i < m_model.m_details.vertexCount; i++)
 			{
+
 				bw = Vector4();
 				if (int(v->boneIDs.x) == 1) {
 					bw.SetZ(v->boneIDs.x);
@@ -45,11 +48,16 @@ void RenderComponent::Update(float deltaTime)
 				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.z)] * v->boneWeights.GetZ();
 				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.w)] * v->boneWeights.GetW();
 
+				boneTransform = boneTransform * Matrix4(DirectX::XMMatrixTranslationFromVector(Vector3(1.0f, 0.0f, 0.0f)));
+
 				Vector4 pos = boneTransform * Vector4(v->position, 1.0f);
+				// Testing movement of vertexes manually
+				//pos = pos + Vector4(0.5f, 0.0f, 0.0f, 1.0f);
 				Vector4 norm = boneTransform * Vector4(v->normal, 1.0f);
 
 				v->position = DirectX::XMFLOAT3(pos.GetX(), pos.GetY(), pos.GetZ());
-				v->normal = DirectX::XMFLOAT3(norm.GetX(), norm.GetY(), norm.GetZ());;
+				v->normal = DirectX::XMFLOAT3(norm.GetX(), norm.GetY(), norm.GetZ());
+				v++;
 			}
 			
 		}

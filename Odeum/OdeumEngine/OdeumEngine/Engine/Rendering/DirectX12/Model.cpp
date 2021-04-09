@@ -192,6 +192,62 @@ void Model::Load(bool isAnimation)
 			if (isAnimation) {
 				vertex->boneIDs = DirectX::XMINT4(0, 0, 0, 0);
 				vertex->boneWeights = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+
+				// try and add bone stuff here
+				/*m_boneInfo = {};
+				std::vector<uint32_t> boneCounts;
+				boneCounts.resize(sourceMesh->mNumVertices, 0);
+				m_boneCount = sourceMesh->mNumBones;
+
+				// loop through each bone
+				for (unsigned int i = 0; i < m_boneCount; i++)
+				{
+					aiBone* bone = sourceMesh->mBones[i];
+					Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
+					m_boneInfo[bone->mName.C_Str()] = { i, matrix };
+
+					// loop through each vertex that has that bone
+					for (int j = 0; j < bone->mNumWeights; j++) {
+						uint32_t id = bone->mWeights[j].mVertexId;
+						float weight = bone->mWeights[j].mWeight;
+						boneCounts[id]++;
+
+						switch (boneCounts[id])
+						{
+						case 1:
+							verticesOutput[id].boneIDs.x = i;
+							verticesOutput[id].boneWeights.SetX(weight);
+							break;
+						case 2:
+							verticesOutput[id].boneIDs.y = i;
+							verticesOutput[id].boneWeights.SetY(weight);
+							break;
+						case 3:
+							verticesOutput[id].boneIDs.z = i;
+							verticesOutput[id].boneWeights.SetZ(weight);
+							break;
+						case 4:
+							verticesOutput[id].boneIDs.w = i;
+							verticesOutput[id].boneWeights.SetW(weight);
+							break;
+						default:
+							Debug::Error("Unable to allocate bone to vertex.", "Model.cpp", __LINE__);
+							break;
+						}
+					}
+
+				}
+
+				// normalize weights to make all weight sum 1
+				for (int i = 0; i < verticesOutput.size(); i++)
+				{
+					float totalWeight = verticesOutput[i].boneWeights.GetX() + verticesOutput[i].boneWeights.GetY() + verticesOutput[i].boneWeights.GetZ() + verticesOutput[i].boneWeights.GetW();
+					if (totalWeight > 0.0f)
+					{
+						verticesOutput[i].boneWeights.Normalize();
+					}
+				}
+				*/
 				verticesOutput.push_back(*vertex);
 			}
 
@@ -201,7 +257,7 @@ void Model::Load(bool isAnimation)
 
 		// more bone stuff
 		// load bone data to vertices
-		if(isAnimation)
+		if (isAnimation)
 		{
 			m_boneInfo = {};
 			std::vector<uint32_t> boneCounts;
@@ -244,7 +300,7 @@ void Model::Load(bool isAnimation)
 						break;
 					}
 				}
-				
+
 			}
 
 			// normalize weights to make all weight sum 1
@@ -257,9 +313,9 @@ void Model::Load(bool isAnimation)
 				}
 			}
 
-			
-		}
 
+		}
+		
 		uint16_t* indice = m_pIndexData + destMesh.indexOffset;
 
 		for (unsigned int fIndex = 0; fIndex < sourceMesh->mNumFaces; fIndex++)
@@ -279,6 +335,8 @@ void Model::Load(bool isAnimation)
 		}
 	}
 	Vertex* b_pVertexData = &verticesOutput[0];
+	
+	//m_pVertexData = &verticesOutput[0];
 	
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, b_pVertexData);
