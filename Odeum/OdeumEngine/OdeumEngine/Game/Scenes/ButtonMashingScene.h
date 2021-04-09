@@ -23,6 +23,7 @@ private:
 	
 	float timeToEnd = 5;
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> moonObjects;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;

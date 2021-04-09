@@ -12,7 +12,7 @@ ButtonMashingScene::ButtonMashingScene()
 	MaxPlayers = 4;
 	timeToStart = 4;
 	AudioHandler::GetInstance()->Initialize();
-	
+	srand(time(NULL));
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		moonObjects.push_back(new GameObject());
@@ -20,7 +20,7 @@ ButtonMashingScene::ButtonMashingScene()
 		moonObjects.back()->AddComponent<Rigidbody>();
 		moonObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 8 - 10, 30, 0, 0));
 		moonObjects.back()->AddComponent<RenderComponent>();
-		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
 		moonObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
 	}
 	
@@ -45,12 +45,24 @@ ButtonMashingScene::ButtonMashingScene()
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
 	}
+	for (int i = 0; i < 75; i++)
+	{
+		backgroundObjects.push_back(new GameObject());
+		backgroundObjects.back()->AddComponent<Rigidbody>();
+		backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % 100-30, i+(rand() % 5)-15, 10, 0));
+		backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(rand() % 2+1,  (rand() % 2) +1, (rand() % 2) + 1, 1));
+
+		backgroundObjects.back()->AddComponent<RenderComponent>();
+		backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Asteroid1.obj");
+
+	}
+		
 	
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
 	playerKeys.push_back(Key::L);
-	srand(time(NULL));
+	
 }
 
 ButtonMashingScene::~ButtonMashingScene()

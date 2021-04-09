@@ -23,9 +23,9 @@ QuickDrawScene::QuickDrawScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -1, 500, 0));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cake.obj");
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cakeBirthday.fbx");
 	gameObjects.back()->AddComponent<AudioSource>();
 	gameObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
 	gameObjects.back()->GetComponent<AudioSource>()->PlaySound();
@@ -73,7 +73,7 @@ void QuickDrawScene::Update(const float deltaTime_)
 		{
 			if (timeUntilTarget <= 0)
 			{
-				gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(objectPos);
+				gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3, 0, 0, 0)+objectPos);
 			}
 			else {
 				timeUntilTarget -= deltaTime_;
@@ -159,7 +159,7 @@ void QuickDrawScene::UIRender()
 
 	ImGui::Begin("Game UI");
 
-	
+	ImGui::Text("Grab the cake first");
 	for (int i = 0; i < players.size(); i++)
 	{
 		if (!won)

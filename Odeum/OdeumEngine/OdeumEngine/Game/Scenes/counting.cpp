@@ -34,6 +34,70 @@ Counting::Counting()
 	players.back()->AddComponent<AudioSource>();
 	players.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
 	players.back()->GetComponent<AudioSource>()->PlaySound();
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -3, 0, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(100, 2, 100, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+	backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.8));
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 19, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/log_stack.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-8, -1.1, -8, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(8, 8, 8, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12, -1.1, -5, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(8, 8, 8, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(7.2, -1.1, 23, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(12, 12, 12, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-15, -1.1, 28, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(6, 6, 6, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(14, -1.1, 22, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(7, 7, 7, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(14, -1.1, 44, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(13, 13, 13, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-33, -1.1, 44, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17, 17, 17, 1));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
 }
 
 Counting::~Counting()
@@ -101,6 +165,8 @@ void Counting::Update(const float deltaTime_)
 			gameObjects.back()->AddComponent<RenderComponent>();
 			//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(rand() % 3, rand() % 3, rand() % 3));
 			gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Sheep.obj");
+			gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(rand() % 2, rand() % 2, rand() % 2,0.2));
+			//gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0,0.2));
 			//gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
 			gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90);
 			if (count == 0)

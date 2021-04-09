@@ -17,6 +17,7 @@ public:
 
 private:
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> players;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;

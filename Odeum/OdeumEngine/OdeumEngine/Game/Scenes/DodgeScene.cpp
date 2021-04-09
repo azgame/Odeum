@@ -66,6 +66,38 @@ DodgeScene::DodgeScene()
     playerObjects.back()->AddComponent<AudioSource>();
     playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
     playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -9.5, 0, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 1, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/MovingPlatform_Long.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.4));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, 18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-4, 6, 12, 0));
+  
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18, 9, 17, 0));
+
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+
+    
 }
  DodgeScene::~DodgeScene()
 {
@@ -188,6 +220,7 @@ void DodgeScene::Update(const float deltaTime_)
 void DodgeScene::UIRender()
 {
     ImGui::Begin("Game UI");
+    ImGui::Text("Avoid the meteorites!");
     if (won)
     {
         for (int i = 0; i < playerObjects.size(); i++)

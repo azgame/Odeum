@@ -21,6 +21,7 @@ public:
 private:
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
+	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> targetObjects;
 	std::vector<float> objectSpawnTimes;
 	std::vector<bool> objectSpawned;

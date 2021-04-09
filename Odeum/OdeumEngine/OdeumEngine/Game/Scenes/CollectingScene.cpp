@@ -34,7 +34,7 @@ CollectingScene::CollectingScene()
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chicken.obj");
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0),180);
-        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -5, 0, 0));
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 4, 0, 0));
         playerScores.push_back(0);
 
     }
@@ -81,7 +81,43 @@ CollectingScene::CollectingScene()
     playerObjects.back()->AddComponent<AudioSource>();
     playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
     playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
-  
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0,-9.5, 0, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10,1, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/MovingPlatform_Long.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.4));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 6, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud1.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6, 9, 6, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(17, 2, 12, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+    
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18, 2, 10, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+
    
 }
 CollectingScene::~CollectingScene()
@@ -179,7 +215,7 @@ bool CollectingScene::Initialize()
   void CollectingScene::UIRender()
 {
       ImGui::Begin("Game UI");
-     
+      ImGui::Text("Let's get this bread!");
       
           for (int i = 0; i < playerScores.size(); i++)
           {
