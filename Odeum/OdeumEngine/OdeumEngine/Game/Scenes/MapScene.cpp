@@ -879,7 +879,7 @@ bool MAPScene::PlayerTurn()
 void MAPScene::UIRender()
 {
 	ImGui::Begin("Map UI");
-
+	ImGui::Text("Press R to roll, space to choose where to move.");
 	ImGui::Text("Dice Roll: %d", dieRoll);
 	ImGui::Text("Movement: %d", numMoves);
 
