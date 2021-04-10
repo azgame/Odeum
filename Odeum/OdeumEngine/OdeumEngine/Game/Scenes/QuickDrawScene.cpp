@@ -19,6 +19,96 @@ QuickDrawScene::QuickDrawScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/stall.obj");
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 0, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0),90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0),180.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5, -5, -6.5, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5, -5, -6.5, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 10, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Kitchen_Fridge.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Couch_Large2.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Column_Round2.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Houseplant_2.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-35, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Light_Stand1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 20, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Kitchen_Oven_Large.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 0, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Trashcan_Large.fbx");
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
