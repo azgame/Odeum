@@ -32,6 +32,7 @@ public:
 
 	// animation stuff
 	bool IsAnimation() { return isAnimation; }
+	void SetISAnimation(bool b) { isAnimation = b; }
 	
 
 private:
