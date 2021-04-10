@@ -30,7 +30,7 @@ struct PS_INPUT
 	float3 bitangent : Bitangent;
 };
 
-PS_INPUT main(VS_INPUT input)
+PS_INPUT main(VS_INPUT input, uint Vertex_ID : SV_VertexID)
 {
 	PS_INPUT output;
 
