@@ -42,34 +42,33 @@ DodgeFlyScene::DodgeFlyScene()
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 10, 0));
-    
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(60, 35, 1, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 70, 1.5, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4.7, 4.7, 4.7, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90.0f);
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Space Station.obj");
+
+    backgroundObjects.back()->AddComponent<AudioSource>();
+    backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
 
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, -18, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 530, -18, 0));
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(23, 23, 23, 1));
 
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-4, 6, -12, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-150, 500, -46, 0));
 
     backgroundObjects.back()->AddComponent<RenderComponent>();
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(16, 16, 16, 1));
 
-    backgroundObjects.push_back(new GameObject());
-    backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18, 9, -17, 0));
 
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SmallPlanet1.obj");
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
 
     for (int i = 0; i < MaxObstaclesLeft; i++)
     {
