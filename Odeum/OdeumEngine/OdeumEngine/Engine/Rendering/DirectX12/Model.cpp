@@ -259,6 +259,7 @@ void Model::Load(bool isAnimation)
 		// load bone data to vertices
 		if (isAnimation)
 		{
+			// this info should be right???
 			m_boneInfo = {};
 			std::vector<uint32_t> boneCounts;
 			boneCounts.resize(sourceMesh->mNumVertices, 0);
@@ -280,36 +281,43 @@ void Model::Load(bool isAnimation)
 					switch (boneCounts[id])
 					{
 					case 1:
-						verticesOutput[id].boneIDs.x = i;
-						verticesOutput[id].boneWeights.SetX(weight);
+						m_pVertexData[id].boneIDs.x = i;
+						m_pVertexData[id].boneWeights.SetX(weight);
+						//verticesOutput[id].boneIDs.x = i;
+						//verticesOutput[id].boneWeights.SetX(weight);
 						break;
 					case 2:
-						verticesOutput[id].boneIDs.y = i;
-						verticesOutput[id].boneWeights.SetY(weight);
+						m_pVertexData[id].boneIDs.y = i;
+						m_pVertexData[id].boneWeights.SetY(weight);
+						//verticesOutput[id].boneIDs.y = i;
+						//verticesOutput[id].boneWeights.SetY(weight);
 						break;
 					case 3:
-						verticesOutput[id].boneIDs.z = i;
-						verticesOutput[id].boneWeights.SetZ(weight);
+						m_pVertexData[id].boneIDs.z = i;
+						m_pVertexData[id].boneWeights.SetZ(weight);
+						//verticesOutput[id].boneIDs.z = i;
+						//verticesOutput[id].boneWeights.SetZ(weight);
 						break;
 					case 4:
-						verticesOutput[id].boneIDs.w = i;
-						verticesOutput[id].boneWeights.SetW(weight);
+						m_pVertexData[id].boneIDs.w = i;
+						m_pVertexData[id].boneWeights.SetW(weight);
+						//verticesOutput[id].boneIDs.w = i;
+						//verticesOutput[id].boneWeights.SetW(weight);
 						break;
 					default:
 						Debug::Error("Unable to allocate bone to vertex.", "Model.cpp", __LINE__);
 						break;
 					}
 				}
-
 			}
 
 			// normalize weights to make all weight sum 1
 			for (int i = 0; i < verticesOutput.size(); i++)
 			{
-				float totalWeight = verticesOutput[i].boneWeights.GetX() + verticesOutput[i].boneWeights.GetY() + verticesOutput[i].boneWeights.GetZ() + verticesOutput[i].boneWeights.GetW();
+				float totalWeight = m_pVertexData[i].boneWeights.GetX() + m_pVertexData[i].boneWeights.GetY() + m_pVertexData[i].boneWeights.GetZ() + m_pVertexData[i].boneWeights.GetW();
 				if (totalWeight > 0.0f)
 				{
-					verticesOutput[i].boneWeights.Normalize();
+					m_pVertexData[i].boneWeights.Normalize();
 				}
 			}
 
@@ -334,13 +342,13 @@ void Model::Load(bool isAnimation)
 			Animator::LoadAnimation(scene, animation);
 		}
 	}
-	Vertex* b_pVertexData = &verticesOutput[0];
+	//Vertex* b_pVertexData = &verticesOutput[0];
 	
 	//m_pVertexData = &verticesOutput[0];
 	
 
-	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, b_pVertexData);
-	//m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
+	//m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, b_pVertexData);
+	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
 
 	LoadTextures();

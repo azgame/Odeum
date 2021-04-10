@@ -7,7 +7,7 @@
 
 struct Animator {
 	
-	// this function should maybe be somewhere else - it's used when we load a model
+	// this function should be goood
 	static inline bool ReadSkeleton(Bone& boneOutput, aiNode* node, std::unordered_map<std::string, std::pair<int, Matrix4>>& boneInfoTable)
 	{
 		// read in data for everybone
@@ -38,7 +38,7 @@ struct Animator {
 		return false;
 	};
 
-	// same with this function, maybe make an animation helper class?
+	// same with this function, maybe make an animation helper class? this function should be good
 	static inline void LoadAnimation(const aiScene* scene, Animation& animation)
 	{
 		// loading the first animation
@@ -84,7 +84,7 @@ struct Animator {
 		}
 	}
 
-	//																											 vv & - I took this out
+	//	COULD BE SOME STUFF HERE THAT NEEDS TO BE TAKEN OUT																									 vv & - I took this out
 	static inline void GetPose(Animation& animation, Bone& skeleton, float dt, std::vector<Matrix4>& output, Matrix4 parentTransform, Matrix4& globalInverseTransform)
 	{
 		BoneTransformTrack& btt = animation.boneTransforms[skeleton.name];

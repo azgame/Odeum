@@ -23,6 +23,7 @@ void RenderComponent::Update(float deltaTime)
 
 		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
 		if (totalTime > 1.0f) {
+			// global inverse probably not needed!
 			Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
 			
 			// bone transformations - was shader code
@@ -48,7 +49,7 @@ void RenderComponent::Update(float deltaTime)
 				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.z)] * v->boneWeights.GetZ();
 				boneTransform = boneTransform + bone_transforms[int(v->boneIDs.w)] * v->boneWeights.GetW();
 
-				boneTransform = boneTransform * Matrix4(DirectX::XMMatrixTranslationFromVector(Vector3(1.0f, 0.0f, 0.0f)));
+				//boneTransform = boneTransform * Matrix4(DirectX::XMMatrixTranslationFromVector(Vector3(1.0f, 0.0f, 0.0f)));
 
 				Vector4 pos = boneTransform * Vector4(v->position, 1.0f);
 				// Testing movement of vertexes manually
