@@ -61,7 +61,7 @@ QuickDrawScene::QuickDrawScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17, -5, 50, 0));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
 	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 180.0f);
@@ -71,7 +71,7 @@ QuickDrawScene::QuickDrawScene()
 	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 1, 1, 0.1));
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 50, 0));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
 	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
@@ -89,7 +89,7 @@ QuickDrawScene::QuickDrawScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-35, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-35, -5, 50, 0));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
 	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
@@ -114,7 +114,34 @@ QuickDrawScene::QuickDrawScene()
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Trashcan_Large.fbx");
 
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-45, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 2, 2, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cabinWall.fbx");
 
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 60, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 2, 2, 1));
+	//gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cabinWall.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 1, 1, 0.1));
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20, -5, 15, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 2, 2, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cabinWall.fbx");
+	
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -1, 500, 0));
