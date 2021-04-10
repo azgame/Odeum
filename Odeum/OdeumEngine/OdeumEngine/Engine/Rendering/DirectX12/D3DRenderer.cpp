@@ -27,9 +27,9 @@ void D3DRenderer::Initialize(Window& Window)
 	m_animRootSig.Reset(5, 1);
 	m_animRootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
-	m_animRootSig[1].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig[2].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
-	m_animRootSig[3].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig[3].InitAsConstantBuffer(3, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_animRootSig[4].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig.Finalize(L"Animated Viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -128,9 +128,11 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
 
+	std::vector<RenderComponent*> animObjects;
+
 	for (auto object : SceneGraph::Get()->GetRenderObjects())
 	{
-		if (object->IsRendered())
+		if (object->IsRendered() && !object->IsAnimation())
 		{
 			vsConstants.model = object->GetGameObject()->GetTransform();
 			graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
@@ -152,10 +154,44 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 				graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 			}
-		}	
+		}
+		else
+		{
+			animObjects.push_back(object);
+		}
 	}
 
 	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);
+
+	graphics.SetRootSignature(m_animRootSig);
+	graphics.SetPipelineState(m_animatedPSO);
+
+	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
+
+	for (auto object : animObjects)
+	{
+		vsConstants.model = object->GetGameObject()->GetTransform();
+		graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
+
+		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
+		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
+
+		for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
+		{
+			Model::Mesh& mesh = object->GetModel().GetMesh(i);
+			uint32_t vertexStride = object->GetModel().m_vertexStride;
+			uint32_t indexCount = mesh.indexCount;
+			uint32_t startIndex = mesh.indexOffset;
+			uint32_t baseVertex = mesh.vertexOffset;
+
+			graphics.SetDynamicConstantBufferView(2, sizeof(object->GetModel().GetMaterial(mesh.materialIndex)), &object->GetModel().GetMaterial(mesh.materialIndex));
+			//graphics.SetDynamicConstantBufferView(3, sizeof(AnimStruct), animStructObject));
+
+			graphics.SetDynamicDescriptors(3, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+
+			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
+		}
+	}
 
 	graphics.Finish();
 

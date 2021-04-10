@@ -5,6 +5,11 @@ cbuffer VSConstants : register(b0)
 	float3 viewerPos;
 };
 
+cbuffer AnimBuffer : register(b3)
+{
+
+};
+
 struct VS_INPUT
 {
 	float3 position : POSITION;
