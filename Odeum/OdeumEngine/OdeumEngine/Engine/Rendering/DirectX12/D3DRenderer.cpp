@@ -168,6 +168,9 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
 
+	// animatino stuff
+	AnimInfo animInfo;
+
 	for (auto object : animObjects)
 	{
 		vsConstants.model = object->GetGameObject()->GetTransform();
@@ -175,6 +178,8 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
 		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
+
+		animInfo.boneIDs = object->GetModel().animation.boneIDs;
 
 		for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
 		{
