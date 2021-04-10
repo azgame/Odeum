@@ -24,6 +24,15 @@ void D3DRenderer::Initialize(Window& Window)
 	m_rootSig[3].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
+	m_animRootSig.Reset(5, 1);
+	m_animRootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig[1].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[2].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[3].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig[4].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig.Finalize(L"Animated Viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
 	DXGI_FORMAT depthFormat = DXGraphics::m_sceneDepthBuffer.GetFormat();
 
@@ -36,7 +45,7 @@ void D3DRenderer::Initialize(Window& Window)
 		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 
-	m_colourPSO.SetRootSignature(m_rootSig);
+	m_colourPSO.SetRootSignature(m_animRootSig);
 	m_colourPSO.SetRasterizerState(DXGraphics::rasterDesc);
 	m_colourPSO.SetBlendState(DXGraphics::alphaBlend);
 	m_colourPSO.SetDepthStencilState(DXGraphics::depthReadWrite);
@@ -46,6 +55,17 @@ void D3DRenderer::Initialize(Window& Window)
 	m_colourPSO.CompileVertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
+
+	m_animatedPSO.SetRootSignature(m_rootSig);
+	m_animatedPSO.SetRasterizerState(DXGraphics::rasterDesc);
+	m_animatedPSO.SetBlendState(DXGraphics::alphaBlend);
+	m_animatedPSO.SetDepthStencilState(DXGraphics::depthReadWrite);
+	m_animatedPSO.SetInputLayout(_countof(verts), verts);
+	m_animatedPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	m_animatedPSO.SetRenderTargetFormats(1, &colourFormat, depthFormat);
+	m_animatedPSO.CompileVertexShader(L"Engine/Shaders/VertexAnimShader.hlsl", "main", "vs_5_0");
+	m_animatedPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
+	m_animatedPSO.Finalize();
 
 	CreateUIResources();
 	InitializeUI(Window);
