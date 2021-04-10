@@ -11,6 +11,7 @@
     <FxCompile Include="Engine\Shaders\Present.hlsl" />
     <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
     <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Engine\Shaders\VertexAnimShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
