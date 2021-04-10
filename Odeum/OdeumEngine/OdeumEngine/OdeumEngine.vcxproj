@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Scenes\AnimationTestScene.cpp" />
     <ClCompile Include="Game\Scenes\AvoidScene.cpp" />
     <ClCompile Include="Game\Components\InventoryComponent.cpp" />
     <ClCompile Include="Game\Components\PlayerEffectsComponent.cpp" />
@@ -250,6 +251,10 @@
     <ClCompile Include="Game\Scenes\TreadmillScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Animation.h" />
+    <ClInclude Include="Engine\Animation\Animator.h" />
+    <ClInclude Include="Engine\Animation\Bone.h" />
+    <ClInclude Include="Game\Scenes\AnimationTestScene.h" />
     <ClInclude Include="Game\Scenes\AvoidScene.h" />
     <ClInclude Include="Engine\DataStructures\PriorityQueue.h" />
     <ClInclude Include="Engine\DataStructures\SimpleGraph.h" />
@@ -479,6 +484,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\Resources\Models\BaseCharacter.fbx" />
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
@@ -486,6 +492,9 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engine\Resources\Models\Man.dae.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
