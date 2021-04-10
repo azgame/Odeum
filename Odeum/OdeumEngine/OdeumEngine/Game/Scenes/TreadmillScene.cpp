@@ -72,13 +72,7 @@ TreadmillScene::TreadmillScene()
     backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
     backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
 
-    backgroundObjects.push_back(new GameObject());
-    backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Conveyor.obj");
-   
+  
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
@@ -127,6 +121,7 @@ TreadmillScene::TreadmillScene()
     backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(1, 0, 0, 0), 90);
     backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 180);
 
+  
     
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::D);

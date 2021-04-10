@@ -140,9 +140,7 @@ DodgeFlyScene::DodgeFlyScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-    playerObjects.back()->AddComponent<AudioSource>();
-    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
-    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
+   
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
