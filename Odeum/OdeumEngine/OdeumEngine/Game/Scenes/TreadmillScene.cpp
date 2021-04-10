@@ -65,13 +65,61 @@ TreadmillScene::TreadmillScene()
     }
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17.5, 9, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -10, 2.5, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(34, 20, 1, 1));
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10, 20, -25, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud1.fbx");
 
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13, 25, -24, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
 
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-45, 35, -22, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
 
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(45, 22, -18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+   
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10, 20, -5, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/arrow2.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(1, 0, 0, 0), 90);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 180);
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-10, 20, -5, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/arrow2.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(1, 0, 0, 0), 90);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 1, 0, 0), 180);
+
+    
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::D);
     playerKeysDown.push_back(Key::S);
