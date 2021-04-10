@@ -20,7 +20,7 @@ public:
 
 	inline operator XMVECTOR() const { return vec; }
 
-	inline Vector4 GetVector4() const { return vec; }
+	inline Vector4 GetVector4() const { return *this; }
 
 	// Operator Overloads
 	/* Conjugate*/	inline Quaternion operator~ (void) const { return Quaternion(XMQuaternionConjugate(vec)); }
@@ -30,7 +30,7 @@ public:
 	inline Vector3 operator* (Vector3 rhs_) const { return Vector3(XMVector3Rotate(rhs_, vec)); }
 
 	inline Quaternion& operator= (Quaternion rhs_) { vec = rhs_; return *this; }
-	inline Quaternion& operator*= (Quaternion rhs_) { *this = *this * rhs_; return *this; }
+	inline Quaternion& operator*= (Quaternion rhs_) { vec = vec * rhs_; return *this; }
 
 protected:
 	XMVECTOR vec;

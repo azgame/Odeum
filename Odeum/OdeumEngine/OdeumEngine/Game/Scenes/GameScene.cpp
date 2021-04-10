@@ -14,6 +14,7 @@
 #include "../Components/StatComponent.h"
 #include "../Components/PlayerEffectsComponent.h"
 #include "../Components/InventoryComponent.h"
+#include "../Components/InputComponent.h"
 
 #include "../GameObjects/ItemRegistry.h"
 #include "../../Engine/DataStructures/LinkedList.h"
@@ -69,10 +70,14 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	gameObjects[0]->AddComponent<Rigidbody>();
 	gameObjects[0]->GetComponent<Rigidbody>()->SetPosition(Vector4(kZero));
 	gameObjects[0]->AddComponent<RenderComponent>();
-	gameObjects[0]->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Man.dae");
+	gameObjects[0]->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Pig.obj");
 	gameObjects[0]->GetComponent<RenderComponent>()->SetColour(Colour(0.0, 0.0, 1.0, 0.2));
 	gameObjects[0]->AddComponent<BoxCollider>();
 	gameObjects[0]->AddComponent<PlayerEffectsComponent>();
+	gameObjects[0]->AddComponent<InputComponent>();
+	gameObjects[0]->GetComponent<InputComponent>()->SetKeyBind(GameInput::MoveLeft, { new MoveAction(gameObjects[0], Vector3(-0.1, 0.0, 0.0)) });
+	gameObjects[0]->GetComponent<InputComponent>()->SetKeyBind(GameInput::MoveRight, { new MoveAction(gameObjects[0], Vector3(0.1, 0.0, 0.0)) });
+	gameObjects[0]->GetComponent<InputComponent>()->SetKeyBind(GameInput::First, { new AnyAction(gameObjects[0], BIND_EVENT_FN(GameScene::Test)) });
 	gameObjects[0]->AddComponent<StatComponent>();
 	gameObjects[0]->AddComponent<InventoryComponent>();
 	gameObjects[0]->SetTag("Player1");
@@ -136,15 +141,7 @@ bool GameScene::Initialize()
 
 void GameScene::Update(const float deltaTime_)
 {
-	cameraController.UpdateMainCamera();
-
-	frameTimeTotal += deltaTime_;
-
-	if (Input::Get().isKeyPressed(Key::C))
-	{
-		Action* move = new MoveAction(gameObjects[gameObjects.size() - 1], Vector2((rand() % 7 - 3), (rand() % 7 - 3)));
-		move->Execute();
-	}
+	//cameraController.UpdateMainCamera();
 }
 
 void GameScene::UIRender()
@@ -152,4 +149,9 @@ void GameScene::UIRender()
 	ImGui::Begin("Game UI");
 	ImGui::Text("Enter game UI components here");
 	ImGui::End();
+}
+
+void GameScene::Test(GameObject* Object)
+{
+	std::cout << "Test from: " << Object->Tag() << std::endl;
 }

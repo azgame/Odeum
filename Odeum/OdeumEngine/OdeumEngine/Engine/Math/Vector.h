@@ -163,8 +163,8 @@ public:
 	inline Vector4() { vec = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); }
 	inline Vector4(float x_, float y_, float z_, float w_) { vec = XMVectorSet(x_, y_, z_, w_); }
 	inline Vector4(Vector3 vec_, float w_) { vec = XMVectorSetW(vec_.GetVec(), w_); }
-	inline Vector4(Vector4& v_) { vec = v_.GetVec(); }
 	inline Vector4(const XMVECTOR& v_) { vec = v_; }
+	//inline Vector4( Vector4& v_) { vec = v_; }
 	inline Vector4(Quaternion q_);
 	inline explicit Vector4(Vector3 xyz_) { vec = SetWToOne(xyz_); }
 	inline explicit Vector4(EZeroTag) { vec = XMVectorZero(); }
