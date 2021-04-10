@@ -11,17 +11,119 @@
 #include"../../Engine/Core/AudioHandler.h"
 QuickDrawScene::QuickDrawScene()
 {
+	playerColors.push_back(&Colour(0, 0, 1, 0.5));
+	playerColors.push_back(&Colour(1, 0, 0, 0.5));
+	playerColors.push_back(&Colour(1, 1, 0, 0.5));
+	playerColors.push_back(&Colour(0, 1, 0, 0.5));
 	AudioHandler::GetInstance()->Initialize();
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0,-4.5,0,0)+objectPos);
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 10));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cake.obj");
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/stall.obj");
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 0, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0),90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0),180.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5, -5, -6.5, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5, -5, -6.5, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chair_1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 10, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Kitchen_Fridge.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-17, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 180.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Couch_Large2.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 1, 1, 0.1));
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Column_Round2.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 3, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Houseplant_2.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-35, -5, 30, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	//gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Light_Stand1.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 20, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Kitchen_Oven_Large.fbx");
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15, -5, 0, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5, 5, 1));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(-1, 0, 0, 0), 90.0f);
+	gameObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f);
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Trashcan_Large.fbx");
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -1, 500, 0));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cakeBirthday.fbx");
 	gameObjects.back()->AddComponent<AudioSource>();
-	gameObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
-	//gameObjects.back()->GetComponent<AudioSource>()->PlaySound();
+	gameObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+	gameObjects.back()->GetComponent<AudioSource>()->PlaySound();
 	
 	maxPlayers = 4;
 	maxScore = 3;
@@ -37,9 +139,12 @@ QuickDrawScene::QuickDrawScene()
 		playerScore.push_back(0);
 		playerShootTimer.push_back(0);
 		playerInPosition.push_back(false);
+
+		players.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 	}
 	players.back()->AddComponent<AudioSource>();
-	players.back()->GetComponent<AudioSource>()->Initialize("TestCoin.wav", false, false, false, 1.0f);
+	players.back()->GetComponent<AudioSource>()->Initialize("ding.wav", false, false, false, 1.0f);
+	
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
@@ -65,7 +170,7 @@ void QuickDrawScene::Update(const float deltaTime_)
 		{
 			if (timeUntilTarget <= 0)
 			{
-				gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(objectPos);
+				gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3, 0, 0, 0)+objectPos);
 			}
 			else {
 				timeUntilTarget -= deltaTime_;
@@ -96,6 +201,7 @@ void QuickDrawScene::Update(const float deltaTime_)
 							players.at(i)->GetComponent<Rigidbody>()->SetPosition(slicerPos + Vector4(i * 1.3f - 2, 0, 0, 0));
 							targetHit = true;
 							playerScore.at(i) += 1;
+							players.back()->GetComponent<AudioSource>()->PlaySound();
 							//players.back()->GetComponent<AudioSource>()->PlaySound();
 							if (playerScore.at(i) == maxScore)
 							{
@@ -130,6 +236,17 @@ void QuickDrawScene::Update(const float deltaTime_)
 		{
 			timeToStart -= deltaTime_;
 		}
+		if (won)
+		{
+			if (timeToEnd >= 0)
+			{
+				timeToEnd -= deltaTime_;
+				if (timeToEnd >= 0)
+				{
+					//return who wins
+				}
+			}
+		}
 	}
 	
 }
@@ -138,26 +255,27 @@ void QuickDrawScene::UIRender()
 {
 
 	ImGui::Begin("Game UI");
-	ImGui::Text("Enter game UI components here");
-	
+
+	ImGui::Text("Grab the cake first");
 	for (int i = 0; i < players.size(); i++)
 	{
-		std::string text = "Player" + std::to_string(i + 1) +"Score: " + std::to_string(playerScore.at(i));
-		const char* textchar = text.c_str();
-		ImGui::Text(textchar);
-		 text = "Player" + std::to_string(i + 1) + "Counter: " + std::to_string(playerShootTimer.at(i));
-		 textchar = text.c_str();
-		ImGui::Text(textchar);
-		if (playerScore.at(i) == maxScore)
+		if (!won)
 		{
-			text = "Player" + std::to_string(i + 1) + "Wins ";
-			textchar = text.c_str();
+			std::string text = "Player" + std::to_string(i + 1) + "Score: " + std::to_string(playerScore.at(i));
+			const char* textchar = text.c_str();
 			ImGui::Text(textchar);
 		}
+		else
+		{
+			if (playerScore.at(i) == maxScore)
+			{
+				std::string text = "Player" + std::to_string(i + 1) + "Wins ";
+				const char* textchar = text.c_str();
+				ImGui::Text(textchar);
+			}
+		}
 	}
-	std::string text = "time until target: " + std::to_string(timeUntilTarget);
-		const char* textchar = text.c_str();
-		ImGui::Text(textchar);
+	
 	ImGui::End();
 	
 	

@@ -19,8 +19,10 @@ public:
 	void UpdateScore(int scorePosition_, int score_);
 	void spawnObjects(float deltaTime_);
 private:
+	std::vector<Colour*> playerColors;
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
+	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> targetObjects;
 	std::vector<float> objectSpawnTimes;
 	std::vector<bool> objectSpawned;
@@ -30,7 +32,7 @@ private:
 	std::vector<Key::KeyCode> playerKeysUp;
 	Simplex<Vector3> simplex;
 	//these ensure the player may not hold the button
-	
+	float timeToEnd = 5;
 	std::vector<float> playerScores;
 	//targetHeights is the three difrent heights the player needs to maintain.
 	float maxVelocity=7;

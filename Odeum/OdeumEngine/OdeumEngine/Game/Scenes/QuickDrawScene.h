@@ -16,6 +16,7 @@ public:
 	virtual void UIRender();
 
 private:
+	std::vector<Colour*> playerColors;
 	std::vector<GameObject*> players;
 	std::vector<GameObject*> gameObjects;
 	std::vector<float> playerShootTimer;
@@ -30,7 +31,7 @@ private:
 	float timeUntilTarget;
 	float timeToStart;
 	std::vector<Key::KeyCode> playerKeys;
-	
+	float timeToEnd = 5;
 };
 
 #endif

@@ -14,9 +14,16 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 Collecting3DScene::Collecting3DScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -35,16 +42,126 @@ Collecting3DScene::Collecting3DScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(-1,0,0,0), 90);
         playerScore.push_back(0);
-
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -10, 2.5, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(40, 30, 1, 1));
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-   
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 20, 0, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(80, 60, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10, 20, -25, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud1.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(5, 5,5, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13, 25, -24, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-45, 35, -22, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(45, 22, -18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 28, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0),90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(27, 22, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10, 10, 10, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 58, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(14, 14, 14, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 58, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(14, 14, 14, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-16, 45, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-8, 30, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(9, 9, 9, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-32, 36, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(9, 9, 9, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-2, 55, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9, 36, -3, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(-1, 0, 0, 0), 90.0f);
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(11, 11, 11, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat.obj");
 
     for (int i = 0; i < MaxCollectables; i++)
     {
@@ -60,7 +177,8 @@ Collecting3DScene::Collecting3DScene()
         collectableObjects.back()->AddComponent<ComplexCollider>();
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
-        
+        collectableObjects.back()->AddComponent<AudioSource>();
+        collectableObjects.back()->GetComponent<AudioSource>()->Initialize("HappySax.ogg", false, false, false, 0.5f);
     }
    
     playerKeysLeft.push_back(Key::A);
@@ -84,7 +202,9 @@ Collecting3DScene::Collecting3DScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
 }
 Collecting3DScene::~Collecting3DScene()
 {
@@ -229,6 +349,7 @@ void Collecting3DScene::Update(const float deltaTime_)
                         
                        
                        // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                        collectableObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                         playerScore.at(i) += 1;
                         collectableObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                         objectSpawnTimes.at(x) = rand() % 2 + 0.5f;
@@ -250,12 +371,44 @@ void Collecting3DScene::Update(const float deltaTime_)
                 }
             
         }
+        if (won)
+        {
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
+        }
     }
 }
 
 void Collecting3DScene::UIRender()
 {
+    ImGui::Begin("Game UI");
 
+   
+        for (int i = 0; i < playerScore.size(); i++)
+        {
+            float test = playerScore.at(i);
+            if (!won)
+            {
+                std::string text = "player " + std::to_string(i+1) + " score: " + std::to_string(test);
+
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
+            if (test >= maxScore)
+            {
+                std::string text = "player " + std::to_string(i+1) + " wins";
+                const char*  textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
+        }
+    
+    ImGui::End();
 }
 
 void Collecting3DScene::spawnObjects(float deltaTime_)

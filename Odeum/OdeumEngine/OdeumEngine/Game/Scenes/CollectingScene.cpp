@@ -10,12 +10,17 @@
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
-#include <time.h>  
+#include <time.h> 
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 
 CollectingScene::CollectingScene()
 {
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
-
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
     MaxPlayers = 4;
     srand(time(NULL));
     for (int i = 0; i < MaxPlayers; i++)
@@ -32,9 +37,9 @@ CollectingScene::CollectingScene()
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Chicken.obj");
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0),180);
-        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -5, 0, 0));
+        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 4, 0, 0));
         playerScores.push_back(0);
-
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
     }
 
     for (int i = 0; i < MaxTargets; i++)
@@ -55,6 +60,8 @@ CollectingScene::CollectingScene()
         targetObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, -1, 0, 0), 90);
         targetObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         targetObjects.back()->AddComponent<ComplexCollider>();
+        targetObjects.back()->AddComponent<AudioSource>();
+        targetObjects.back()->GetComponent<AudioSource>()->Initialize("HappySax.ogg", false, false, false, 0.5f);
         objectSpawnTimes.push_back(0);
         objectSpawned.push_back(false);
     }
@@ -73,6 +80,48 @@ CollectingScene::CollectingScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     
+    AudioHandler::GetInstance()->Initialize();
+    playerObjects.back()->AddComponent<AudioSource>();
+    playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0,-9.5, 0, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(10,1, 1, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/MovingPlatform_Long.obj");
+    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.4));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 6, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud1.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6, 9, 6, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud2.fbx");
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(17, 2, 12, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 2));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+    
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18, 2, 10, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Cloud3.fbx");
+
+   
 }
 CollectingScene::~CollectingScene()
 {
@@ -88,7 +137,7 @@ bool CollectingScene::Initialize()
      if (!won)
      {
          spawnObjects(deltaTime_);
-
+         
          for (int i = 0; i < playerObjects.size(); i++)
          {
              for (int z = 0; z < playerObjects.size(); z++)
@@ -150,6 +199,7 @@ bool CollectingScene::Initialize()
                  {
                      // playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), 10, 0, 0));
                      Debug::Warning("overlap", __FILENAME__, __LINE__);
+                     targetObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
                      targetObjects.at(x)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
                      objectSpawned.at(x) = false;
                      UpdateScore(i, 1);
@@ -158,32 +208,42 @@ bool CollectingScene::Initialize()
 
              }
          }
+         if (won)
+         {
+             //return who won
+         }
      }
 }
 
   void CollectingScene::UIRender()
 {
       ImGui::Begin("Game UI");
-      ImGui::Text("Enter game UI components here");
-      for (int i = 0; i < playerScores.size(); i++)
-      {
-          float test = playerScores.at(i);
-          std::string text = "player "+ std::to_string(i) + " score: " + std::to_string(test);
-
-          const char* textchar = text.c_str();
-          ImGui::Text(textchar);
-          if (test >= maxScore)
+      ImGui::Text("Let's get this bread!");
+      
+          for (int i = 0; i < playerScores.size(); i++)
           {
-              text = "player " + std::to_string(i) + " wins";
-              textchar = text.c_str();
-              ImGui::Text(textchar);
+              float test = playerScores.at(i);
+              if (!won)
+              {
+                  std::string text = "player " + std::to_string(i+1) + " score: " + std::to_string(test);
+
+                  const char* textchar = text.c_str();
+                  ImGui::Text(textchar);
+              }
+              if (test >= maxScore)
+              {
+                  std::string  text = "player " + std::to_string(i+1) + " wins";
+                  const char* textchar = text.c_str();
+                  ImGui::Text(textchar);
+              }
           }
-      }
+      
       ImGui::End();
 }
   void CollectingScene::UpdateScore(int scorePosition_, int score_)
   {
       playerScores.at(scorePosition_) += score_;
+     
       if (playerScores.at(scorePosition_) >= maxScore)
       {
           won = true;

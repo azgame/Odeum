@@ -17,6 +17,7 @@ public:
 
 private:
 	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> players;
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;
@@ -27,7 +28,7 @@ private:
 	float timeToSpawn;
 	float timeToWin;
 	bool won;
-	
+	float timeToEnd = 5;
 	int maxCount;
 	int count;
 	int MaxPlayers;

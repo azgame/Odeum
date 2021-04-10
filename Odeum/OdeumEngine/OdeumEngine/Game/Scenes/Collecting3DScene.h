@@ -18,6 +18,8 @@ public:
 	virtual void UIRender();
 	void spawnObjects(float deltaTime_);
 private:
+	std::vector<Colour*> playerColors;
+
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
 	std::vector<GameObject*> collectableObjects;
@@ -38,7 +40,7 @@ private:
 	Simplex<Vector3> simplex;
 	//these ensure the player may not hold the button
 
-
+	float timeToEnd = 5;
 	//targetHeights is the three difrent heights the player needs to maintain.
 	float maxVelocity = 7;
 	float maxHeight = 9;

@@ -22,7 +22,7 @@ private:
 	std::vector<GameObject*> playerObjects;
 	std::vector<bool> playerDead;
 	std::vector<Vector4> playerLastVelocity;
-	
+	int deadPlayers;
 
 
 	std::vector<GameObject*> backgroundObjects;
@@ -33,8 +33,8 @@ private:
 	std::vector<Key::KeyCode> playerKeysDown;
 	Simplex<Vector3> simplex;
 
-
-
+	std::vector<Colour*> playerColors;
+	float timeToEnd = 5;
 	float maxVelocity = 7;
 	float maxHeight = 9;
 	float minHeight = -9;

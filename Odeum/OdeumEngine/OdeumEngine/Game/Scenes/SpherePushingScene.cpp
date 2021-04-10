@@ -10,9 +10,15 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 SpherePushingScene::SpherePushingScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -30,23 +36,18 @@ SpherePushingScene::SpherePushingScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1,1,1,1));
         //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/moon.obj");
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 
         playerObjects.back()->AddComponent<SphereCollider>();
         
-        playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
+        
         playerDead.push_back(false);
         playerLastVelocity.push_back(Vector4(0,0,0,0));
-
+        playerObjects.back()->AddComponent<AudioSource>();
+        playerObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
    
-    backgroundObjects.push_back(new GameObject());
-    backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17.5, 9, 1, 0));
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-    
-
+   
 
 playerKeysLeft.push_back(Key::A);
 playerKeysRight.push_back(Key::D);
@@ -67,6 +68,35 @@ playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 70, 1.5, 0));
+
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4.7, 4.7, 4.7, 1));
+backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90.0f);
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Space Station.obj");
+
+backgroundObjects.back()->AddComponent<AudioSource>();
+backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
+
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 530, -18, 0));
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(23, 23, 23, 1));
+
+backgroundObjects.push_back(new GameObject());
+backgroundObjects.back()->AddComponent<Rigidbody>();
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-150, 500, -46, 0));
+
+backgroundObjects.back()->AddComponent<RenderComponent>();
+backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(16, 16, 16, 1));
+
+
 }
 SpherePushingScene::~SpherePushingScene()
 {
@@ -81,78 +111,73 @@ void SpherePushingScene::Update(const float deltaTime_)
 {
     if (!won)
     {
-        //std::string r = std::to_string(playerObjects.at(0)->GetPosition().GetX());
-       // Debug::Warning(r, __FILENAME__, __LINE__);
-        /*if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(0)->GetComponent<SphereCollider>(), playerObjects.at(1)->GetComponent<SphereCollider>()))
+        
+
+        for (int i = 0; i < playerObjects.size(); i++)
         {
-            Debug::Warning("collision", __FILENAME__, __LINE__);
-       }*/
-    }
-    for (int i = 0; i < playerObjects.size(); i++)
-    {
-        playerLastVelocity.at(i)=playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity();
-    }
-    for (int i = 0; i < playerObjects.size(); i++)
-    {
-        if (!playerDead.at(i))
+            playerLastVelocity.at(i) = playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity();
+        }
+        for (int i = 0; i < playerObjects.size(); i++)
         {
-
-
-
-
-
-
-            if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
+            if (!playerDead.at(i))
             {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-6*deltaTime_, 0, 0, 0));
-            }
-            else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
-            {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(6*deltaTime_, 0, 0, 0));
-            }
-            if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
-            {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 6* deltaTime_, 0, 0));
-            }
-            else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
-            {
-                playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -6* deltaTime_, 0, 0));
-            }
 
-            /* if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
-             {
-                 if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() >= 0)
-                 {
-                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().Mag() <= 1)
-                     {
-                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
-                     }
-                     else
-                     {
-                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
-                     }
-                 }
-             }*/
-            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < minRight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > maxRight)
-            {
-                playerDead.at(i) = true;
-                //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
-                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity()+ Vector4(0, 0, 10, 0));
-                for (int E = 0; E < playerDead.size(); E++)
+
+
+
+
+
+                if (Input::Get().isKeyPressed(playerKeysLeft.at(i)))
                 {
-                    if (playerDead.at(E) == false)
-                    {
-                        continue;
-                    }
-                    else if (E == MaxPlayers - 1)
-                    {
-                        won = true;
-                    }
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(-6 * deltaTime_, 0, 0, 0));
+                }
+                else if (Input::Get().isKeyPressed(playerKeysRight.at(i)))
+                {
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(6 * deltaTime_, 0, 0, 0));
+                }
+                if (Input::Get().isKeyPressed(playerKeysUp.at(i)))
+                {
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 6 * deltaTime_, 0, 0));
+                }
+                else if (Input::Get().isKeyPressed(playerKeysDown.at(i)))
+                {
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -6 * deltaTime_, 0, 0));
                 }
 
+                /* if (!Input::Get().isKeyPressed(playerKeysDown.at(i)) && !Input::Get().isKeyPressed(playerKeysUp.at(i)) && !Input::Get().isKeyPressed(playerKeysLeft.at(i)) && !Input::Get().isKeyPressed(playerKeysRight.at(i)) && !Input::Get().isKeyPressed(playerKeysJump.at(i)))
+                 {
+                     if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetZ() >= 0)
+                     {
+                         if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().Mag() <= 1)
+                         {
+                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                         }
+                         else
+                         {
+                             playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() / 1.003);
+                         }
+                     }
+                 }*/
+                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() < minHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > maxHeight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() < minRight || playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > maxRight)
+                {
+                    playerDead.at(i) = true;
+                    //playerObjects.at(i)->GetComponent<Rigidbody>()->SetPosition(Vector4(100, 100, 100, 0));
+                    playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity() + Vector4(0, 0, 10, 0));
+                    deadPlayers += 1;
+                    playerObjects.at(i)->GetComponent<AudioSource>()->PlaySound();
+                    if (deadPlayers >= MaxPlayers-1)
+                    {
+                        won = true;
+                        for (int w = 0; w < playerObjects.size(); w++)
+                        {
+                            if(playerDead.at(w)==false)
+                            playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+                        }
+                    }
 
-            }
-                
+
+                }
+
 
 
                 for (int z = 0; z < playerObjects.size(); z++)
@@ -161,37 +186,37 @@ void SpherePushingScene::Update(const float deltaTime_)
                     {
                         if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(i)->GetComponent<SphereCollider>(), playerObjects.at(z)->GetComponent<SphereCollider>()))
                         {
-                            CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>(),false);
-                          /*  Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
-                            //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
-                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(3,0,0,0)+ playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-                            }
-                            else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-3, 0, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                            CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(z)->GetComponent<SphereCollider>(), false);
+                            /*  Debug::Warning("collision"+std::to_string(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX()), __FILENAME__, __LINE__);
+                              //CollisionHandler::GetInstance()->SphereSphereCollisionResponse(*playerObjects.at(i)->GetComponent<SphereCollider>(), *playerObjects.at(i)->GetComponent<SphereCollider>());
+                              if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
+                              {
+                                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(3,0,0,0)+ playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                              }
+                              else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetX() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetX())
+                              {
+                                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(-3, 0, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
 
-                            }
-                            if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
-                            }
-                            else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
-                            {
-                                playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                              }
+                              if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                              {
+                                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
+                              }
+                              else if(playerObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() != playerObjects.at(z)->GetComponent<Rigidbody>()->GetPosition().GetY())
+                              {
+                                  playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, -3, 0, 0) + playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity());
 
-                            }
-                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
-                            
-                            //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
-                           // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
-                            //won = true;
-                            */
+                              }
+                              //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z));
+
+                              //playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(playerLastVelocity.at(z).Bounce(playerLastVelocity.at(i)));
+                             // [v1-v2,x1-x2]/norm(x2-x1)squared* (x2-x1)
+                              //won = true;
+                              */
 
                         }
                     }
-                } 
+                }
                 /*if (CollisionDetection::SphereSphereCollisionDetection(playerObjects.at(0)->GetComponent<SphereCollider>(), playerObjects.at(1)->GetComponent<SphereCollider>()))
                 {
                     Vector4 V1 = playerObjects.at(0)->GetComponent<Rigidbody>()->GetVelocity();
@@ -200,7 +225,7 @@ void SpherePushingScene::Update(const float deltaTime_)
 
                 }*/
 
-               if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
+                if (playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() < -maxVelocity)
                 {
                     playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), -maxVelocity, playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetZ(), 0));
                 }
@@ -225,11 +250,38 @@ void SpherePushingScene::Update(const float deltaTime_)
                      playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetX(), playerObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY(), -maxVelocity, 0));
                  }*/
             }
+        }
+        if (won)
+        {
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
+        }
     }
 }
 
 void SpherePushingScene::UIRender()
 {
+    ImGui::Begin("Game UI");
+    ImGui::Text("Push everyone off");
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + "Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
 
+        }
+    }
+    ImGui::End();
 }
 

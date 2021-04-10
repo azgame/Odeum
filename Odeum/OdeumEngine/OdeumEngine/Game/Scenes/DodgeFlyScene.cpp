@@ -13,9 +13,15 @@
 #include <algorithm>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
-
+#include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/CoreComponents/AudioSource.h"
 DodgeFlyScene::DodgeFlyScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -29,22 +35,48 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->AddComponent<RenderComponent>();
        // playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0, 0, 1.4));
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/alien.obj");
-        playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 180);
+       
         playerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+
+
 
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(18.5, 10, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(23, 70, 1.5, 0));
+
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4.7, 4.7, 4.7, 1));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90.0f);
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
-    
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Space Station.obj");
+
+    backgroundObjects.back()->AddComponent<AudioSource>();
+    backgroundObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+    backgroundObjects.back()->GetComponent<AudioSource>()->PlaySound();
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 530, -18, 0));
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(23, 23, 23, 1));
+
+    backgroundObjects.push_back(new GameObject());
+    backgroundObjects.back()->AddComponent<Rigidbody>();
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-150, 500, -46, 0));
+
+    backgroundObjects.back()->AddComponent<RenderComponent>();
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(16, 16, 16, 1));
+
+
+
     for (int i = 0; i < MaxObstaclesLeft; i++)
     {
         obstacleObjects.push_back(new GameObject());
@@ -58,6 +90,9 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(1);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
+    
     }
     for (int i = 0; i < MaxObstaclesRight; i++)
     {
@@ -72,6 +107,8 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(2);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
     for (int i = 0; i < MaxObstaclesUp; i++)
     {
@@ -86,6 +123,8 @@ DodgeFlyScene::DodgeFlyScene()
         objectSpawnTimes.push_back(rand() % 13 + 1.8f);
         objectSpawned.push_back(false);
         obstacleLane.push_back(3);
+        obstacleObjects.back()->AddComponent<AudioSource>();
+        obstacleObjects.back()->GetComponent<AudioSource>()->Initialize("SadSax.ogg", false, false, false, 0.5f);
     }
     playerKeysLeft.push_back(Key::A);
     playerKeysRight.push_back(Key::D);
@@ -108,7 +147,7 @@ DodgeFlyScene::DodgeFlyScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
-
+   
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
@@ -123,7 +162,15 @@ void DodgeFlyScene::Update(const float deltaTime_)
 {
     if (!won)
     {
-        spawnObjects(deltaTime_);
+        if (timeToStart <= 0)
+        {
+            
+            spawnObjects(deltaTime_);
+        }
+        else
+        {
+            timeToStart -= deltaTime_;
+        }
 
         for (int i = 0; i < playerObjects.size(); i++)
         {
@@ -254,8 +301,8 @@ void DodgeFlyScene::Update(const float deltaTime_)
                         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
                         playerDead.at(i) = true;
                         currentDeadPlayers += 1;
-                        
-                        if (currentDeadPlayers >= MaxPlayers)
+                        obstacleObjects.at(x)->GetComponent<AudioSource>()->PlaySound();
+                        if (currentDeadPlayers >= MaxPlayers-1)
                         {
                             won = true;
                             Debug::Warning("win", __FILENAME__, __LINE__);
@@ -275,12 +322,38 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 }
             }
         }
+        if (won)
+        {
+            if (timeToEnd >= 0)
+            {
+                timeToEnd -= deltaTime_;
+                if (timeToEnd >= 0)
+                {
+                    //return who wins
+                }
+            }
+        }
     }
 }
 
 void DodgeFlyScene::UIRender()
 {
+    ImGui::Begin("Game UI");
+    ImGui::Text("Avoid the meteorites!");
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + " Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
 
+        }
+    }
+    ImGui::End();
 }
 
 void DodgeFlyScene::spawnObjects(float deltaTime_)

@@ -12,7 +12,11 @@ ButtonMashingScene::ButtonMashingScene()
 	MaxPlayers = 4;
 	timeToStart = 4;
 	AudioHandler::GetInstance()->Initialize();
-	
+	srand(time(NULL));
+	playerColors.push_back(&Colour(0,0,1,0.5));
+	playerColors.push_back(&Colour(1,0,0,0.5));
+	playerColors.push_back(&Colour(1,1,0,0.5));
+	playerColors.push_back(&Colour(0,1,0,0.5));
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		moonObjects.push_back(new GameObject());
@@ -20,15 +24,13 @@ ButtonMashingScene::ButtonMashingScene()
 		moonObjects.back()->AddComponent<Rigidbody>();
 		moonObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 8 - 10, 30, 0, 0));
 		moonObjects.back()->AddComponent<RenderComponent>();
-		moonObjects.back()->AddComponent<AudioSource>();
-		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Moon.obj");
+		moonObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Planet1.obj");
 		moonObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
 	}
 	
-	
-	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 1.0f);
-	
-	//testObject2->GetComponent<AudioSource>()->PlaySound();
+	moonObjects.back()->AddComponent<AudioSource>();
+	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
+	moonObjects.back()->GetComponent<AudioSource>()->PlaySound();
 	
 	
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
@@ -46,13 +48,26 @@ ButtonMashingScene::ButtonMashingScene()
 		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
+		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 	}
+	for (int i = 0; i < 75; i++)
+	{
+		backgroundObjects.push_back(new GameObject());
+		backgroundObjects.back()->AddComponent<Rigidbody>();
+		backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(rand() % 100-30, i+(rand() % 5)-15, 10, 0));
+		backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(rand() % 2+1,  (rand() % 2) +1, (rand() % 2) + 1, 1));
+
+		backgroundObjects.back()->AddComponent<RenderComponent>();
+		backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Asteroid1.obj");
+
+	}
+		
 	
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
 	playerKeys.push_back(Key::L);
-	srand(time(NULL));
+	
 }
 
 ButtonMashingScene::~ButtonMashingScene()
@@ -78,18 +93,18 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			for (int i = 0; i < gameObjects.size(); i++)
 			{
 				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
-					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.8f, 0, 0));
+					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.35f, 0, 0));
 				else
 					gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 				if (Input::Get().isKeyPressed(playerKeys.at(i)))
 				{
 					if (!playerPressed.at(i))
 					{
-						if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() <= 0)
+						if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetVelocity().GetY() <= -5)
 						{
 							gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 						}
-						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 90 * deltaTime_, 0, 0));
+						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 55 * deltaTime_, 0, 0));
 					}
 					playerPressed.at(i) = true;
 
@@ -111,7 +126,18 @@ void ButtonMashingScene::Update(const float deltaTime_)
 					}
 				}
 			}
-		
+		if (won)
+		{
+			if (timeToEnd >= 0)
+			{
+				timeToEnd -= deltaTime_;
+				if (timeToEnd >= 0)
+				{
+					//return who wins
+				}
+			}
+			
+		}
 	}
 	
 	
@@ -123,7 +149,7 @@ void ButtonMashingScene::Update(const float deltaTime_)
 void ButtonMashingScene::UIRender()
 {
 	ImGui::Begin("Game UI");
-	ImGui::Text("Enter game UI components here");
+	
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)
