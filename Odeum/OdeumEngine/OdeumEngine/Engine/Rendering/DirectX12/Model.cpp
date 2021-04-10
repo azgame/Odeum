@@ -283,24 +283,32 @@ void Model::Load(bool isAnimation)
 					case 1:
 						m_pVertexData[id].boneIDs.x = i;
 						m_pVertexData[id].boneWeights.SetX(weight);
+						animation.boneIDs[id].SetX(i);
+						animation.boneWeights[id].SetX(weight);
 						//verticesOutput[id].boneIDs.x = i;
 						//verticesOutput[id].boneWeights.SetX(weight);
 						break;
 					case 2:
 						m_pVertexData[id].boneIDs.y = i;
 						m_pVertexData[id].boneWeights.SetY(weight);
+						animation.boneIDs[id].SetY(i);
+						animation.boneWeights[id].SetY(weight);
 						//verticesOutput[id].boneIDs.y = i;
 						//verticesOutput[id].boneWeights.SetY(weight);
 						break;
 					case 3:
 						m_pVertexData[id].boneIDs.z = i;
 						m_pVertexData[id].boneWeights.SetZ(weight);
+						animation.boneIDs[id].SetZ(i);
+						animation.boneWeights[id].SetZ(weight);
 						//verticesOutput[id].boneIDs.z = i;
 						//verticesOutput[id].boneWeights.SetZ(weight);
 						break;
 					case 4:
 						m_pVertexData[id].boneIDs.w = i;
 						m_pVertexData[id].boneWeights.SetW(weight);
+						animation.boneIDs[id].SetW(i);
+						animation.boneWeights[id].SetW(weight);
 						//verticesOutput[id].boneIDs.w = i;
 						//verticesOutput[id].boneWeights.SetW(weight);
 						break;
