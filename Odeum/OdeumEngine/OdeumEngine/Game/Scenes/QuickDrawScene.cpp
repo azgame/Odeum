@@ -11,6 +11,10 @@
 #include"../../Engine/Core/AudioHandler.h"
 QuickDrawScene::QuickDrawScene()
 {
+	playerColors.push_back(&Colour(0, 0, 1, 0.5));
+	playerColors.push_back(&Colour(1, 0, 0, 0.5));
+	playerColors.push_back(&Colour(1, 1, 0, 0.5));
+	playerColors.push_back(&Colour(0, 1, 0, 0.5));
 	AudioHandler::GetInstance()->Initialize();
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 	gameObjects.push_back(new GameObject());
@@ -134,6 +138,8 @@ QuickDrawScene::QuickDrawScene()
 		playerScore.push_back(0);
 		playerShootTimer.push_back(0);
 		playerInPosition.push_back(false);
+
+		players.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 	}
 	players.back()->AddComponent<AudioSource>();
 	players.back()->GetComponent<AudioSource>()->Initialize("ding.wav", false, false, false, 1.0f);

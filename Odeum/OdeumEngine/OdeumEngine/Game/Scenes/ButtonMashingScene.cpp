@@ -13,6 +13,10 @@ ButtonMashingScene::ButtonMashingScene()
 	timeToStart = 4;
 	AudioHandler::GetInstance()->Initialize();
 	srand(time(NULL));
+	playerColors.push_back(&Colour(0,0,1,0.5));
+	playerColors.push_back(&Colour(1,0,0,0.5));
+	playerColors.push_back(&Colour(1,1,0,0.5));
+	playerColors.push_back(&Colour(0,1,0,0.5));
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		moonObjects.push_back(new GameObject());
@@ -44,6 +48,7 @@ ButtonMashingScene::ButtonMashingScene()
 		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
+		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 	}
 	for (int i = 0; i < 75; i++)
 	{

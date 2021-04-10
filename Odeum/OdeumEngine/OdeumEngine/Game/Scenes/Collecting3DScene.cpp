@@ -18,6 +18,11 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 Collecting3DScene::Collecting3DScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+
     AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
@@ -37,7 +42,7 @@ Collecting3DScene::Collecting3DScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(-1,0,0,0), 90);
         playerScore.push_back(0);
-
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());

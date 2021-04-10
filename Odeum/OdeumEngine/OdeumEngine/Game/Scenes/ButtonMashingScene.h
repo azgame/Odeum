@@ -20,7 +20,7 @@ public:
 private:
 	Vector4 clear_color=Vector4(0,0,0,0);
 	CameraController cameraController;
-	
+	std::vector<Colour*> playerColors;
 	float timeToEnd = 5;
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> backgroundObjects;

@@ -18,6 +18,10 @@ DodgeScene::DodgeScene()
 {
     AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
     srand(time(NULL));
     for (int i = 0; i < MaxPlayers; i++)
     {
@@ -33,6 +37,9 @@ DodgeScene::DodgeScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),180);
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+
+
 
     }
     for (int i = 0; i < MaxObstacles; i++)

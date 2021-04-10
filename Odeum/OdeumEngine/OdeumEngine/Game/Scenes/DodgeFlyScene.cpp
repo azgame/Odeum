@@ -17,6 +17,10 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 DodgeFlyScene::DodgeFlyScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
     AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
@@ -37,6 +41,9 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+
+
 
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));

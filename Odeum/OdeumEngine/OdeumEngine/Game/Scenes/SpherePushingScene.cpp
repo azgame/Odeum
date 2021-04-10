@@ -14,6 +14,10 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 SpherePushingScene::SpherePushingScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
     AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
@@ -32,6 +36,7 @@ SpherePushingScene::SpherePushingScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1,1,1,1));
         //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/moon.obj");
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
 
         playerObjects.back()->AddComponent<SphereCollider>();
         

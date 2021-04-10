@@ -18,6 +18,8 @@ public:
 	virtual void UIRender();
 
 private:
+	std::vector<Colour*> playerColors;
+
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
 	std::vector<bool> playerDead;

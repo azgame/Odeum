@@ -18,6 +18,7 @@ public:
 	virtual void UIRender();
 	void spawnObjects(float deltaTime_);
 private:
+	std::vector<Colour*> playerColors;
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
 	std::vector<GameObject*> backgroundObjects;
