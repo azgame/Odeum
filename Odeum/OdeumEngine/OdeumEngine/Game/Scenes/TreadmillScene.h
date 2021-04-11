@@ -28,6 +28,7 @@ private:
 	float timeToStart;
 	float timeToEnd = 5;
 	std::vector<GameObject*> backgroundObjects;
+	std::vector<GameObject*> spinnerObjects;
 	std::vector<GameObject*> obstacleObjects;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;
