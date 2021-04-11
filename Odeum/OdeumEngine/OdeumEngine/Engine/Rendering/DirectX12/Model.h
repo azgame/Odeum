@@ -22,7 +22,7 @@ public:
 		m_pIndexData(nullptr),
 		m_srvs(nullptr),
 		m_vertexStride(sizeof(Vertex)),
-		m_flatColour(1.0f, 1.0f, 1.0f, 1.0f){}
+		m_flatColour(1.0f, 1.0f, 1.0f, 1.0f) {}
 
 	~Model()
 	{
@@ -115,7 +115,7 @@ public:
 	Bone m_skeleton;
 	std::unordered_map<std::string, std::pair<int, Matrix4>> m_boneInfo;
 	uint32_t m_boneCount;
-	Animation animation;
+	Animation animation; // SET UP FOR MULTIPLE MESHES
 
 	bool isLoaded = false;
 

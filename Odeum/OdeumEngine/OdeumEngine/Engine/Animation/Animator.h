@@ -107,7 +107,7 @@ struct Animator {
 			fp = GetTimeFraction(btt.rotationTimestamps, dt);
 			Quaternion rotation1 = btt.rotations[fp.first - 1];
 			Quaternion rotation2 = btt.rotations[fp.first];
-			Quaternion rotation = Math::Slerp(rotation1, rotation2, fp.second);
+			rotation = Math::Slerp(rotation1, rotation2, fp.second);
 		}
 
 		// calculated interpolated scale
@@ -115,17 +115,14 @@ struct Animator {
 			fp = GetTimeFraction(btt.scaleTimestamps, dt);
 			Vector3 scale1 = btt.scales[fp.first - 1];
 			Vector3 scale2 = btt.scales[fp.first];
-			Vector3 scale = Math::Lerp(scale1, scale2, fp.second); // lerp
+			scale = Math::Lerp(scale1, scale2, fp.second); // lerp
 		}
 
-		Matrix4 positionMat = Matrix4(kIdentity);
-		Matrix4 scaleMat = Matrix4(kIdentity);
-
 		// calculated localTransform
-		Matrix4 localTransform = Matrix4(DirectX::XMMatrixScalingFromVector(scale) * DirectX::XMMatrixRotationQuaternion(rotation) * DirectX::XMMatrixTranslationFromVector(position));
+		Matrix4 localTransform = Matrix4(DirectX::XMMatrixTranslationFromVector(position) * DirectX::XMMatrixRotationQuaternion(rotation) * DirectX::XMMatrixScalingFromVector(scale));
 		Matrix4 globalTransform = parentTransform * localTransform;
 
-		output[skeleton.id] = globalInverseTransform * globalTransform * skeleton.transform;
+		output[skeleton.id] = globalTransform * skeleton.transform; // removed inverse matrix, I think dxmath does this for us
 		
 		// update values for children bones
 		for (Bone& child : skeleton.children)

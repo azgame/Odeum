@@ -38,7 +38,6 @@ AnimationTestScene::AnimationTestScene() : Scene()
 	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(1.0f, 0.0f, 0.0f, 1.0f), -90.0f);
 
 
-
 	// I don't think this should be done here
 
 }

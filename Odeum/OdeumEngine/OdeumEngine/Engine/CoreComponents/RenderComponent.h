@@ -34,6 +34,7 @@ public:
 	bool IsAnimation() { return isAnimation; }
 	void SetISAnimation(bool b) { isAnimation = b; }
 	
+	Matrix4* GetCurrentPosePtr() { return currentPose.data(); }
 
 private:
 	Model m_model;

@@ -138,11 +138,6 @@ void Model::Load(bool isAnimation)
 	m_pVertexData = new Vertex[m_details.vertexCount];
 	m_pIndexData = new uint16_t[m_details.indexCount];
 
-	// using these vectors for now, could change after
-	std::vector<Vertex> verticesOutput;
-	//Vertex* verticesOutput = new Vertex[m_details.vertexCount];
-	std::vector<uint32_t> indicesOutput;
-
 	Vector3 vMin(kZero), vMax(kZero);
 
 	for (unsigned int mIndex = 0; mIndex < scene->mNumMeshes; mIndex++)
@@ -187,82 +182,31 @@ void Model::Load(bool isAnimation)
 			else
 				vertex->bitangent = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
-
-			// bone stuff
-			if (isAnimation) {
-				vertex->boneIDs = DirectX::XMINT4(0, 0, 0, 0);
-				vertex->boneWeights = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-
-				// try and add bone stuff here
-				/*m_boneInfo = {};
-				std::vector<uint32_t> boneCounts;
-				boneCounts.resize(sourceMesh->mNumVertices, 0);
-				m_boneCount = sourceMesh->mNumBones;
-
-				// loop through each bone
-				for (unsigned int i = 0; i < m_boneCount; i++)
-				{
-					aiBone* bone = sourceMesh->mBones[i];
-					Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
-					m_boneInfo[bone->mName.C_Str()] = { i, matrix };
-
-					// loop through each vertex that has that bone
-					for (int j = 0; j < bone->mNumWeights; j++) {
-						uint32_t id = bone->mWeights[j].mVertexId;
-						float weight = bone->mWeights[j].mWeight;
-						boneCounts[id]++;
-
-						switch (boneCounts[id])
-						{
-						case 1:
-							verticesOutput[id].boneIDs.x = i;
-							verticesOutput[id].boneWeights.SetX(weight);
-							break;
-						case 2:
-							verticesOutput[id].boneIDs.y = i;
-							verticesOutput[id].boneWeights.SetY(weight);
-							break;
-						case 3:
-							verticesOutput[id].boneIDs.z = i;
-							verticesOutput[id].boneWeights.SetZ(weight);
-							break;
-						case 4:
-							verticesOutput[id].boneIDs.w = i;
-							verticesOutput[id].boneWeights.SetW(weight);
-							break;
-						default:
-							Debug::Error("Unable to allocate bone to vertex.", "Model.cpp", __LINE__);
-							break;
-						}
-					}
-
-				}
-
-				// normalize weights to make all weight sum 1
-				for (int i = 0; i < verticesOutput.size(); i++)
-				{
-					float totalWeight = verticesOutput[i].boneWeights.GetX() + verticesOutput[i].boneWeights.GetY() + verticesOutput[i].boneWeights.GetZ() + verticesOutput[i].boneWeights.GetW();
-					if (totalWeight > 0.0f)
-					{
-						verticesOutput[i].boneWeights.Normalize();
-					}
-				}
-				*/
-				verticesOutput.push_back(*vertex);
-			}
-
-
 			vertex++;
+		}
+
+		uint16_t* indice = m_pIndexData + destMesh.indexOffset;
+
+		for (unsigned int fIndex = 0; fIndex < sourceMesh->mNumFaces; fIndex++)
+		{
+			ASSERT(sourceMesh->mFaces[fIndex].mNumIndices == 3, "Must be triangle indicies");
+
+			*indice++ = sourceMesh->mFaces[fIndex].mIndices[0];
+			*indice++ = sourceMesh->mFaces[fIndex].mIndices[1];
+			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
 		}
 
 		// more bone stuff
 		// load bone data to vertices
 		if (isAnimation)
 		{
+			animation.m_kNumAnims = sourceMesh->mNumVertices;
+			animation.animInfo = new AnimInfo[animation.m_kNumAnims];
+
 			// this info should be right???
 			m_boneInfo = {};
 			std::vector<uint32_t> boneCounts;
-			boneCounts.resize(sourceMesh->mNumVertices, 0);
+			boneCounts.resize(animation.m_kNumAnims, 0);
 			m_boneCount = sourceMesh->mNumBones;
 
 			// loop through each bone
@@ -278,86 +222,65 @@ void Model::Load(bool isAnimation)
 					float weight = bone->mWeights[j].mWeight;
 					boneCounts[id]++;
 
+					AnimInfo* info = animation.animInfo;
+
 					switch (boneCounts[id])
 					{
-					case 1:
-						m_pVertexData[id].boneIDs.x = i;
-						m_pVertexData[id].boneWeights.SetX(weight);
-						animation.boneIDs[id].SetX(i);
-						animation.boneWeights[id].SetX(weight);
-						//verticesOutput[id].boneIDs.x = i;
-						//verticesOutput[id].boneWeights.SetX(weight);
-						break;
-					case 2:
-						m_pVertexData[id].boneIDs.y = i;
-						m_pVertexData[id].boneWeights.SetY(weight);
-						animation.boneIDs[id].SetY(i);
-						animation.boneWeights[id].SetY(weight);
-						//verticesOutput[id].boneIDs.y = i;
-						//verticesOutput[id].boneWeights.SetY(weight);
-						break;
-					case 3:
-						m_pVertexData[id].boneIDs.z = i;
-						m_pVertexData[id].boneWeights.SetZ(weight);
-						animation.boneIDs[id].SetZ(i);
-						animation.boneWeights[id].SetZ(weight);
-						//verticesOutput[id].boneIDs.z = i;
-						//verticesOutput[id].boneWeights.SetZ(weight);
-						break;
-					case 4:
-						m_pVertexData[id].boneIDs.w = i;
-						m_pVertexData[id].boneWeights.SetW(weight);
-						animation.boneIDs[id].SetW(i);
-						animation.boneWeights[id].SetW(weight);
-						//verticesOutput[id].boneIDs.w = i;
-						//verticesOutput[id].boneWeights.SetW(weight);
-						break;
-					default:
-						Debug::Error("Unable to allocate bone to vertex.", "Model.cpp", __LINE__);
-						break;
+						case 1:
+						{
+							info[id].boneIDs.SetX(i);
+							info[id].boneWeights.SetX(weight);
+							break;
+						}
+						case 2:
+						{
+							info[id].boneIDs.SetY(i);
+							info[id].boneWeights.SetY(weight);
+							break;
+						}
+						case 3:
+						{
+							info[id].boneIDs.SetZ(i);
+							info[id].boneWeights.SetZ(weight);
+							break;
+						}
+						case 4:
+						{						
+							info[id].boneIDs.SetW(i);
+							info[id].boneWeights.SetW(weight);
+							break;
+						}
+						default:
+						{
+							//ERROR("Unable to allocate bone to vertex.");
+							break;
+						}
 					}
 				}
 			}
 
 			// normalize weights to make all weight sum 1
-			for (int i = 0; i < verticesOutput.size(); i++)
+			for (int i = 0; i < m_details.vertexCount; i++)
 			{
-				float totalWeight = m_pVertexData[i].boneWeights.GetX() + m_pVertexData[i].boneWeights.GetY() + m_pVertexData[i].boneWeights.GetZ() + m_pVertexData[i].boneWeights.GetW();
+				float totalWeight = animation.animInfo[i].boneWeights.GetX() + animation.animInfo[i].boneWeights.GetY() + animation.animInfo[i].boneWeights.GetZ() + animation.animInfo[i].boneWeights.GetW();
 				if (totalWeight > 0.0f)
 				{
-					m_pVertexData[i].boneWeights.Normalize();
+					animation.animInfo[i].boneWeights.Normalize();
 				}
 			}
-
-
-		}
-		
-		uint16_t* indice = m_pIndexData + destMesh.indexOffset;
-
-		for (unsigned int fIndex = 0; fIndex < sourceMesh->mNumFaces; fIndex++)
-		{
-			ASSERT(sourceMesh->mFaces[fIndex].mNumIndices == 3, "Must be triangle indicies");
-
-			*indice++ = sourceMesh->mFaces[fIndex].mIndices[0];
-			*indice++ = sourceMesh->mFaces[fIndex].mIndices[1];
-			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
-		}
-
-		// might want to move this
-		if (isAnimation) {
-			// create bone hierarchy
-			Animator::ReadSkeleton(m_skeleton, scene->mRootNode, m_boneInfo);
-			Animator::LoadAnimation(scene, animation);
 		}
 	}
-	//Vertex* b_pVertexData = &verticesOutput[0];
-	
-	//m_pVertexData = &verticesOutput[0];
-	
 
-	//m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, b_pVertexData);
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
+
+	if (isAnimation)
+	{
+		// create bone hierarchy
+		Animator::ReadSkeleton(m_skeleton, scene->mRootNode, m_boneInfo);
+		Animator::LoadAnimation(scene, animation);
+		animation.m_animationBuffer.Create("Animation Buffer", animation.m_kNumAnims, sizeof(AnimInfo), animation.animInfo);
+	}
 
 	LoadTextures();
 

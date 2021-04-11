@@ -1,8 +1,8 @@
 cbuffer LightData : register(b1)
 {
-	float3 lightPos;
-	float radiusSq;
-	float3 lightColour;
+    float3 lightPos;
+    float radiusSq;
+    float3 lightColour;
 };
 
 cbuffer MaterialData : register(b2)
@@ -16,7 +16,7 @@ cbuffer MaterialData : register(b2)
     float opacity;
     float shininess;
     float specularStrength;
-}
+};
 
 struct PS_INPUT
 {

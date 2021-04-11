@@ -4,19 +4,21 @@
 #include "Bone.h"
 #include <unordered_map>
 
-struct Animation {
+struct AnimInfo 
+{
+	Vector4 boneIDs;
+	Vector4 boneWeights;
+};
+
+struct Animation 
+{
 	float duration = 0.0f;
 	float ticksPerSecond = 1.0f;
 	std::unordered_map<std::string, BoneTransformTrack> boneTransforms = {}; // keeps track of all the joint movements
 
-	std::vector<Vector4> boneIDs;
-	std::vector<Vector4> boneWeights;
+	uint32_t m_kNumAnims;
+	AnimInfo* animInfo;
+	StructuredBuffer m_animationBuffer;
 };
 
-
-struct AnimInfo {
-	std::vector<Vector4> boneIDs;
-	std::vector<Vector4> boneWeights;
-	Matrix4 boneTransforms[50];
-};
 #endif

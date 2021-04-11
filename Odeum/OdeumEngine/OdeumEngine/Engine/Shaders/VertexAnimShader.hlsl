@@ -1,3 +1,4 @@
+
 cbuffer VSConstants : register(b0)
 {
 	matrix viewProj;
@@ -5,10 +6,18 @@ cbuffer VSConstants : register(b0)
 	float3 viewerPos;
 };
 
-cbuffer AnimBuffer : register(b3)
+cbuffer AnimConstants : register(b3)
 {
-
+	float4x4 inBoneTransforms[50];
 };
+
+struct AnimBuffer
+{
+	float4 boneIds;
+	float4 boneWeights;
+};
+
+StructuredBuffer<AnimBuffer> animBuffer : register(t4);
 
 struct VS_INPUT
 {
@@ -34,16 +43,22 @@ PS_INPUT main(VS_INPUT input, uint Vertex_ID : SV_VertexID)
 {
 	PS_INPUT output;
 
-	float4 pos = float4(input.position, 1.0f);
+	//float4 weights = normalize(animBuffer[Vertex_ID].boneWeights);
+	float4 weights = animBuffer[Vertex_ID].boneWeights;
 
-	pos = mul(pos, model);
-	output.worldPos = pos;
-	pos = mul(viewProj, pos);
+	matrix boneTransform = { {0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0} };
+	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.x] * weights.x;
+	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.y] * weights.y;
+	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.z] * weights.z;
+	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.w] * weights.w;
 
-	output.position = pos;
+	float4 pos = mul(boneTransform, float4(input.position, 1.0));
+
+	output.worldPos = mul(pos, model);
+	output.position = mul(viewProj, mul(pos, model));
 	output.uv = input.uv;
 	output.viewDir = output.worldPos - viewerPos;
-	output.normal = mul(input.normal, model);
+	output.normal = mul(input.normal, mul(model, boneTransform));
 	output.tangent = input.tangent;
 	output.bitangent = input.bitangent;
 

@@ -24,13 +24,14 @@ void D3DRenderer::Initialize(Window& Window)
 	m_rootSig[3].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	m_animRootSig.Reset(5, 1);
+	m_animRootSig.Reset(6, 1);
 	m_animRootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_animRootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig[2].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_animRootSig[3].InitAsConstantBuffer(3, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_animRootSig[4].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[5].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 1, D3D12_SHADER_VISIBILITY_VERTEX);
 	m_animRootSig.Finalize(L"Animated Viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
@@ -45,7 +46,7 @@ void D3DRenderer::Initialize(Window& Window)
 		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 
-	m_colourPSO.SetRootSignature(m_animRootSig);
+	m_colourPSO.SetRootSignature(m_rootSig);
 	m_colourPSO.SetRasterizerState(DXGraphics::rasterDesc);
 	m_colourPSO.SetBlendState(DXGraphics::alphaBlend);
 	m_colourPSO.SetDepthStencilState(DXGraphics::depthReadWrite);
@@ -56,7 +57,7 @@ void D3DRenderer::Initialize(Window& Window)
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
 
-	m_animatedPSO.SetRootSignature(m_rootSig);
+	m_animatedPSO.SetRootSignature(m_animRootSig);
 	m_animatedPSO.SetRasterizerState(DXGraphics::rasterDesc);
 	m_animatedPSO.SetBlendState(DXGraphics::alphaBlend);
 	m_animatedPSO.SetDepthStencilState(DXGraphics::depthReadWrite);
@@ -155,21 +156,16 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 				graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 			}
 		}
-		else
+		else if (object->IsRendered() && object->IsAnimation())
 		{
 			animObjects.push_back(object);
 		}
 	}
 
-	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);
-
 	graphics.SetRootSignature(m_animRootSig);
 	graphics.SetPipelineState(m_animatedPSO);
 
 	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
-
-	// animatino stuff
-	AnimInfo animInfo;
 
 	for (auto object : animObjects)
 	{
@@ -178,8 +174,6 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
 		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
-
-		animInfo.boneIDs = object->GetModel().animation.boneIDs;
 
 		for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
 		{
@@ -190,13 +184,16 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 			uint32_t baseVertex = mesh.vertexOffset;
 
 			graphics.SetDynamicConstantBufferView(2, sizeof(object->GetModel().GetMaterial(mesh.materialIndex)), &object->GetModel().GetMaterial(mesh.materialIndex));
-			//graphics.SetDynamicConstantBufferView(3, sizeof(AnimStruct), animStructObject));
+			graphics.SetDynamicConstantBufferView(3, sizeof(Matrix4) * object->GetModel().m_boneCount, object->GetCurrentPosePtr());
 
-			graphics.SetDynamicDescriptors(3, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+			graphics.SetDynamicDescriptors(4, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+			graphics.SetDynamicDescriptor(5, 0, object->GetModel().animation.m_animationBuffer.ShaderResourceView());
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 		}
 	}
+
+	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);
 
 	graphics.Finish();
 

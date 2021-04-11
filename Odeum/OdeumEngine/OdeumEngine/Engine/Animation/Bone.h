@@ -4,7 +4,8 @@
 //#include "../../pch.h"
 #include "../Math/Matrix.h"
 
-struct Bone {
+struct Bone 
+{
 	int id = 0;
 	std::string name = "";
 	Matrix4 transform = Matrix4(kIdentity);
@@ -12,7 +13,8 @@ struct Bone {
 	std::vector<Bone> children = {}; // all the children bones of this bone
 };
 
-struct BoneTransformTrack {
+struct BoneTransformTrack 
+{
 	// these vectors contain the timestamps of when to perform translation, rotation, or scale
 	std::vector<float> positionTimestamps = {};
 	std::vector<float> rotationTimestamps = {};

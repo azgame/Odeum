@@ -207,6 +207,7 @@ public:
 	//}
 	inline Vector4 Bounce(Vector4 B) { return vec + Project(B) * -2; }
 	// Operator Overloads
+
 	inline Vector4 operator- () const { return Vector4(XMVectorNegate(vec)); }
 	inline Vector4 operator+ (Vector4 v2_) const { return Vector4(XMVectorAdd(vec, v2_.GetVec())); }
 	inline Vector4 operator- (Vector4 v2_) const { return Vector4(XMVectorSubtract(vec, v2_.GetVec())); }
