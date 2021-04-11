@@ -573,7 +573,7 @@ bool MAPScene::PlayerTurn()
 
 	int currentTile = m_currentPlayer->GetTile();
 
-	if (Input::Get().isKeyPressed(Key::A))
+	if (Input::Get().isKeyPressed(Key::D))
 	{
 		if (currentTile - numMoves < 0)
 		{
@@ -585,7 +585,7 @@ bool MAPScene::PlayerTurn()
 			m_currentPlayer->SetDestination(currentTile - numMoves);
 		}
 	}
-	else if (Input::Get().isKeyPressed(Key::D))
+	else if (Input::Get().isKeyPressed(Key::A))
 	{
 		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
 	}
