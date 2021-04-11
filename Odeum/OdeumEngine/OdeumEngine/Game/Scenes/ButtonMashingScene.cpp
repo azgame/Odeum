@@ -126,21 +126,23 @@ void ButtonMashingScene::Update(const float deltaTime_)
 					}
 				}
 			}
-		if (won)
-		{
-			if (timeToEnd >= 0)
-			{
-				timeToEnd -= deltaTime_;
-				if (timeToEnd >= 0)
-				{
-					//return who wins
-				}
-			}
-			
-		}
+		
 	}
 	
-	
+	if (won)
+	{
+		if (timeToEnd >= 0)
+		{
+			timeToEnd -= deltaTime_;
+			if (timeToEnd <= 0)
+			{
+				OdeumEngine::Get().SetCurrentScene(19);
+				
+				//return who wins
+			}
+		}
+
+	}
 	
 
 	
