@@ -29,7 +29,7 @@ AnimationTestScene::AnimationTestScene() : Scene()
 	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 1.0f));
 	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 180.0f);
 	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(1.0f, 0.0f, 0.0f, 1.0f), -90.0f);
-
+	// pg
 	ParticleProperties particleProps;
 	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f);
