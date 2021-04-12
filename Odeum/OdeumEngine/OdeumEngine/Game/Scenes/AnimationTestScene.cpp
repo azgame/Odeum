@@ -16,11 +16,11 @@ AnimationTestScene::AnimationTestScene() : Scene()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
-	go1 = new GameObject();
+	/*go1 = new GameObject();
 	go1->AddComponent<RenderComponent>();
 	go1->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Pig.obj");
 	go1->AddComponent<Rigidbody>();
-	go1->GetComponent<Rigidbody>()->SetPosition(Vector4(-2.0f, 0.0f, 0.0f, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetPosition(Vector4(-2.0f, 0.0f, 0.0f, 1.0f));*/
 
 	go2 = new GameObject();
 	go2->AddComponent<RenderComponent>();
@@ -55,7 +55,7 @@ AnimationTestScene::AnimationTestScene() : Scene()
 	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -2.0f));
 	// particleProps.textureID --
 
-	particle = &ParticleManager::Get().CreateEffect(particleProps);
+	// particle = &ParticleManager::Get().CreateEffect(particleProps);
 
 	SceneGraph::Get()->LoadGraphicsObjects();
 }
@@ -74,7 +74,7 @@ void AnimationTestScene::Update(const float deltaTime_)
 {
 	cameraController.UpdateMainCamera();
 	
-	particle->Translate(Vector3(0.02, 0.0, 0.0));
+	//particle->Translate(Vector3(0.02, 0.0, 0.0));
 }
 
 void AnimationTestScene::UIRender()
