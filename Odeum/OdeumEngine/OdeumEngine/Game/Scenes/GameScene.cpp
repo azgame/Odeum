@@ -25,7 +25,7 @@ GameScene::GameScene() : Scene(), angle(0.0f), direction(1.0f)
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
 	// Particles
-	/*ParticleInitProperties particleProps;
+	/*ParticleProperties particleProps;
 	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f);
 	particleProps.lifeTime = FLT_MAX;

@@ -68,6 +68,12 @@ public:
 	// Texture
 	// std::string textureName;
 
+	Vector3 GetPosition() { return DirectX::XMLoadFloat3(&m_properties.lauchingData.launchPosition); }
+	void SetPosition(Vector3 Position) { DirectX::XMStoreFloat3(&m_properties.lauchingData.launchPosition, Position); }
+	void Translate(Vector3 Position) { SetPosition(GetPosition() + Position); }
+	void SetSpawnRate(float SpawnRate) { m_properties.lauchingData.spawnRate = SpawnRate; }
+	void ModifySpawnRate(float ChangeRate) { m_properties.lauchingData.spawnRate += ChangeRate; }
+
 private:
 	
 	uint32_t kMaxParticles = 1000;

@@ -3,6 +3,8 @@
 
 #include "Vector.h"
 #include "EulerAngles.h"
+#include <assimp/scene.h>
+#include <assimp/quaternion.h>
 
 class Quaternion
 {
@@ -20,7 +22,7 @@ public:
 
 	inline operator XMVECTOR() const { return vec; }
 
-	inline Vector4 GetVector4() const { return vec; }
+	inline Vector4 GetVector4() const { return *this; }
 
 	// Operator Overloads
 	/* Conjugate*/	inline Quaternion operator~ (void) const { return Quaternion(XMQuaternionConjugate(vec)); }
@@ -30,7 +32,7 @@ public:
 	inline Vector3 operator* (Vector3 rhs_) const { return Vector3(XMVector3Rotate(rhs_, vec)); }
 
 	inline Quaternion& operator= (Quaternion rhs_) { vec = rhs_; return *this; }
-	inline Quaternion& operator*= (Quaternion rhs_) { *this = *this * rhs_; return *this; }
+	inline Quaternion& operator*= (Quaternion rhs_) { vec = vec * rhs_; return *this; }
 
 protected:
 	XMVECTOR vec;
@@ -75,6 +77,16 @@ namespace Math {
 
 		return e;
 	};
+
+	inline Quaternion Slerp(const Quaternion q1, const Quaternion q2, float t)
+	{
+		return Quaternion(XMQuaternionSlerp(q1, q2, t));
+	}
+
+	inline Quaternion ASSIMPToQuaternion(aiQuaternion q) {
+		Vector4 newQ(q.x, q.y, q.z, q.w);
+		return Quaternion(newQ);
+	}
 }
 
 #endif
