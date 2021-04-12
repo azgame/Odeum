@@ -13,10 +13,14 @@
 
 AvoidScene::AvoidScene()
 {
+    playerColors.push_back(&Colour(0, 0, 1, 0.5));
+    playerColors.push_back(&Colour(1, 0, 0, 0.5));
+    playerColors.push_back(&Colour(1, 1, 0, 0.5));
+    playerColors.push_back(&Colour(0, 1, 0, 0.5));
     MaxPlayers = 4;
     srand(time(NULL));
-    OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
-    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0f, 45.0f, 0.0f), Vector3(0.0f, 1, 0.0f));
+    OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 0.0f, -50.0f));
+    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1, 0.0f));
     for (int i = 0; i < MaxPlayers; i++)
     {
 
@@ -36,7 +40,7 @@ AvoidScene::AvoidScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerDead.push_back(false);
         playerLastVelocity.push_back(Vector4(0, 0, 0, 0));
-
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
     }
     for (int i = 0; i < MaxObstacles; i++)
     {
@@ -44,19 +48,21 @@ AvoidScene::AvoidScene()
         obstacleObjects.back()->AddComponent<Rigidbody>();
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 0, 0));
         obstacleObjects.back()->GetComponent<Rigidbody>()->SetRadius(1.3f);
-        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 1));
+        obstacleObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 180);
+        obstacleObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, 1, 0), 180);
+        obstacleObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 1));
         obstacleObjects.back()->AddComponent<RenderComponent>();
-        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(2.1f, 0, 0));
+        obstacleObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Ghost.fbx");
         obstacleObjects.back()->AddComponent<SphereCollider>();
         
 
     }
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(17.5, 9, 1, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5, 0, 2.5, 0));
+    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(25, 20, 1, 0));
     backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 1, 0.2f));
+    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1, 0, 0.2f,0.5f));
 
 
 
@@ -218,16 +224,23 @@ void AvoidScene::Update(const float deltaTime_)
             }
         }
         if (timeToWin <= 0)
-            won = true;
-        if (won)
         {
-            if (timeToEnd >= 0)
+            won = true;
+            for (int w = 0; w < playerObjects.size(); w++)
             {
-                timeToEnd -= deltaTime_;
-                if (timeToEnd >= 0)
-                {
-                    //return who wins
-                }
+                playerObjects.at(w)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+            }
+        }
+       
+    }
+    if (won)
+    {
+        if (timeToEnd >= 0)
+        {
+            timeToEnd -= deltaTime_;
+            if (timeToEnd <= 0)
+            {
+                //return who wins
             }
         }
     }
@@ -235,6 +248,21 @@ void AvoidScene::Update(const float deltaTime_)
 
 void AvoidScene::UIRender()
 {
+    ImGui::Begin("Game UI");
+    ImGui::Text("Push everyone off");
+    if (won)
+    {
+        for (int i = 0; i < playerObjects.size(); i++)
+        {
+            if (playerDead.at(i) == false)
+            {
+                std::string text = "Player" + std::to_string(i + 1) + " Wins ";
+                const char* textchar = text.c_str();
+                ImGui::Text(textchar);
+            }
 
+        }
+    }
+    ImGui::End();
 }
 
