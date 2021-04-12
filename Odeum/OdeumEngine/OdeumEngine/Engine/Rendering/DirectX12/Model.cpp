@@ -5,10 +5,11 @@
 #include <assimp/postprocess.h>
 
 #include "../../CoreComponents/RenderComponent.h"
+#include "../../Animation/Animator.h"
 
 #include <thread>
 
-void Model::Load()
+void Model::Load(bool isAnimation)
 {
 	std::string fileName = m_details.fileName;
 
@@ -194,10 +195,104 @@ void Model::Load()
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[1];
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
 		}
+
+		// more bone stuff
+		// load bone data to vertices
+		if (isAnimation)
+		{
+			kNumAnims++;
+			m_animations.push_back(Animation());
+			m_animations.back().m_kNumAnims = sourceMesh->mNumVertices;
+			m_animations.back().animInfo = new AnimInfo[m_animations.back().m_kNumAnims];
+			memset(m_animations.back().animInfo, 0, m_animations.back().m_kNumAnims * (2 * sizeof(Vector4)));
+
+			// this info should be right???
+			std::vector<uint32_t> boneCounts;
+			boneCounts.resize(m_animations.back().m_kNumAnims, 0);
+			m_animations.back().m_boneCount = sourceMesh->mNumBones;
+
+			m_boneInfo.push_back(std::unordered_map<std::string, std::pair<int, Matrix4>>());
+
+			// loop through each bone
+			for (unsigned int i = 0; i < m_animations.back().m_boneCount; i++)
+			{
+				aiBone* bone = sourceMesh->mBones[i];
+				Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
+
+				m_boneInfo.back()[bone->mName.C_Str()] = { i, matrix };
+
+				// loop through each vertex that has that bone
+				for (int j = 0; j < bone->mNumWeights; j++) {
+					uint32_t id = bone->mWeights[j].mVertexId;
+					float weight = bone->mWeights[j].mWeight;
+					boneCounts[id]++;
+
+					AnimInfo* info = m_animations.back().animInfo;
+
+					switch (boneCounts[id])
+					{
+						case 1:
+						{
+							info[id].boneIDs.SetX(i);
+							info[id].boneWeights.SetX(weight);
+							break;
+						}
+						case 2:
+						{
+							info[id].boneIDs.SetY(i);
+							info[id].boneWeights.SetY(weight);
+							break;
+						}
+						case 3:
+						{
+							info[id].boneIDs.SetZ(i);
+							info[id].boneWeights.SetZ(weight);
+							break;
+						}
+						case 4:
+						{						
+							info[id].boneIDs.SetW(i);
+							info[id].boneWeights.SetW(weight);
+							break;
+						}
+						default:
+						{
+							//ERROR("Unable to allocate bone to vertex.");
+							break;
+						}
+					}
+				}
+			}
+
+			// normalize weights to make all weight sum 1
+			for (int i = 0; i < m_animations.back().m_kNumAnims; i++)
+			{
+				if (m_animations.back().animInfo[i].boneWeights != Vector4(kZero))
+				{
+					float totalWeight = m_animations.back().animInfo[i].boneWeights.GetX() + m_animations.back().animInfo[i].boneWeights.GetY() + m_animations.back().animInfo[i].boneWeights.GetZ() + m_animations.back().animInfo[i].boneWeights.GetW();
+					if (totalWeight > 0.0f)
+					{
+						m_animations.back().animInfo[i].boneWeights.Normalize();
+					}
+				}
+			}
+		}
 	}
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
+
+	if (isAnimation)
+	{
+		// create bone hierarchy
+		for (int i = 0; i < kNumAnims; i++)
+		{
+			m_skeletons.push_back(Bone());
+			Animator::ReadSkeleton(m_skeletons.back(), scene->mRootNode, m_boneInfo[i]);
+			Animator::LoadAnimation(scene, m_animations[i]);
+			m_animations[i].m_animationBuffer.Create("Animation Buffer", m_animations[i].m_kNumAnims, sizeof(AnimInfo), m_animations[i].animInfo);
+		}
+	}
 
 	LoadTextures();
 
