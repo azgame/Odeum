@@ -9,9 +9,9 @@
 
 class ComputeContext;
 
-struct ParticleInitProperties
+struct ParticleProperties
 {
-	ParticleInitProperties()
+	ParticleProperties()
 	{
 		ZeroMemory(this, sizeof(*this));
 		startColour = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -51,7 +51,7 @@ class ParticleEffect
 {
 public:
 
-	ParticleEffect(ParticleInitProperties Properties)
+	ParticleEffect(ParticleProperties Properties)
 	{
 		m_currentParticleBuffer = 0;
 		elapsedTime = 0.0f;
@@ -73,7 +73,7 @@ private:
 	uint32_t kMaxParticles = 1000;
 	float elapsedTime;
 
-	ParticleInitProperties m_properties;
+	ParticleProperties m_properties;
 
 	uint8_t m_currentParticleBuffer;
 	StructuredBuffer m_particleBuffer[2];

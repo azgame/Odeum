@@ -33,7 +33,7 @@ public:
 	}
 
 	void Initialize(uint32_t Width, uint32_t Height);
-	void CreateEffect(ParticleInitProperties Properties);
+	ParticleEffect& CreateEffect(ParticleProperties Properties);
 	void Update(ComputeContext& Compute, float deltaTime);
 	void Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
 	void Uninitialize();
