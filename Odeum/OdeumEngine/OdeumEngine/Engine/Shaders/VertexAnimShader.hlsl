@@ -53,9 +53,11 @@ PS_INPUT main(VS_INPUT input, uint Vertex_ID : SV_VertexID)
 	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.w] * weights.w;
 
 	float4 pos = mul(boneTransform, float4(input.position, 1.0));
+	//float4 pos = mul(float4(input.position, 1.0), boneTransform);
 
 	output.worldPos = mul(pos, model);
 	output.position = mul(viewProj, mul(pos, model));
+	//output.position = mul(viewProj, mul(model, pos));
 	output.uv = input.uv;
 	output.viewDir = output.worldPos - viewerPos;
 	output.normal = mul(input.normal, mul(model, boneTransform));

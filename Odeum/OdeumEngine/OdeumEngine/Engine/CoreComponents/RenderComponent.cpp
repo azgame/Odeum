@@ -23,7 +23,8 @@ void RenderComponent::Update(float deltaTime)
 
 	if (isAnimation && totalTime > 1.0)
 	{
-		Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, m_gameObject->GetTransform(), globalInverseTransform);
+		// maybe change this --------------------------------------------------------------- vv was m_gameObject->GetTransform()
+		Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, Matrix4(kIdentity), globalInverseTransform);
 	}
 
 	totalTime += deltaTime;

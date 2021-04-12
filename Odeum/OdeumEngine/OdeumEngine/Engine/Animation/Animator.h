@@ -94,35 +94,38 @@ struct Animator {
 		Vector3 position, scale;
 		Quaternion rotation;
 
+		// don't need the if checks
+
 		// calculate interpolated position
-		if (btt.positionTimestamps.size() > 1) {
+		//if (btt.positionTimestamps.size() > 1) {
 			fp = GetTimeFraction(btt.positionTimestamps, dt);
 			Vector3 position1 = btt.positions[fp.first - 1];
 			Vector3 position2 = btt.positions[fp.first];
 			position = Math::Lerp(position1, position2, fp.second);
-		}
+		//}
 
 		// calculated interpolated rotation
-		if (btt.rotationTimestamps.size() > 1) {
+		//if (btt.rotationTimestamps.size() > 1) {
 			fp = GetTimeFraction(btt.rotationTimestamps, dt);
 			Quaternion rotation1 = btt.rotations[fp.first - 1];
 			Quaternion rotation2 = btt.rotations[fp.first];
 			rotation = Math::Slerp(rotation1, rotation2, fp.second);
-		}
+		//}
 
 		// calculated interpolated scale
-		if (btt.scaleTimestamps.size() > 1) {
+		//if (btt.scaleTimestamps.size() > 1) {
 			fp = GetTimeFraction(btt.scaleTimestamps, dt);
 			Vector3 scale1 = btt.scales[fp.first - 1];
 			Vector3 scale2 = btt.scales[fp.first];
 			scale = Math::Lerp(scale1, scale2, fp.second); // lerp
-		}
+		//}
 
 		// calculated localTransform
-		Matrix4 localTransform = Matrix4(DirectX::XMMatrixTranslationFromVector(position) * DirectX::XMMatrixRotationQuaternion(rotation) * DirectX::XMMatrixScalingFromVector(scale));
-		Matrix4 globalTransform = parentTransform * localTransform;
+		Matrix4 localTransform = Matrix4(DirectX::XMMatrixScalingFromVector(scale) * DirectX::XMMatrixRotationQuaternion(rotation) * DirectX::XMMatrixTranslationFromVector(position));
+		Matrix4 globalTransform = localTransform * parentTransform;
 
-		output[skeleton.id] = globalTransform * skeleton.transform; // removed inverse matrix, I think dxmath does this for us
+		output[skeleton.id] = skeleton.transform * globalTransform; // removed inverse matrix, I think dxmath does this for us
+		//output[skeleton.id] = globalTransform * skeleton.transform;
 		
 		// update values for children bones
 		for (Bone& child : skeleton.children)
