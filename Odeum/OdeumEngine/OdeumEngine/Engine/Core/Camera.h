@@ -14,6 +14,7 @@ public:
 	void SetPosition(Vector3 position_);
 	void SetLookDirection(Vector3 forward_, Vector3 up_ = Vector3(kYUnitVector));
 	void SetRotation(Quaternion rotation_);
+	void SetLookAt(Vector3 At);
 
 	void UpdateCamera();
 
@@ -89,6 +90,11 @@ inline void BaseCamera::SetPosition(Vector3 position_)
 
 inline void BaseCamera::SetRotation(Quaternion rotation_)
 {
+}
+
+inline void BaseCamera::SetLookAt(Vector3 At)
+{
+	SetLookDirection(At, m_up);
 }
 
 inline Camera::Camera()

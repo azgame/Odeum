@@ -5,6 +5,8 @@
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
 
+class ParticleEffect;
+
 // Scene index 1
 class AnimationTestScene : public Scene
 {
@@ -23,7 +25,8 @@ private:
 
 	GameObject* go1;
 	GameObject* go2;
-	
+
+	ParticleEffect* particle;
 
 	uint16_t frameCounter;
 	float averageFrameTime;

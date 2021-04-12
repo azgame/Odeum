@@ -15,7 +15,8 @@
 
 MAPScene::MAPScene()
 {
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 25.0f, -17.0f));
+	OdeumEngine::Get().GetCamera().SetLookAt(Vector3(0.0, 0.0, 17.0));
 
 	// player 1 and 2
 	playerObjects.push_back(new GameObject());
@@ -471,7 +472,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
@@ -482,7 +483,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Minigame");
@@ -493,7 +494,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
@@ -504,7 +505,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Minigame");
@@ -515,7 +516,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Loss");
@@ -526,7 +527,7 @@ MAPScene::MAPScene()
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 0.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
 	gameObjects.back()->SetTag("Gain");
@@ -593,6 +594,10 @@ bool MAPScene::PlayerTurn()
 	if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
 	{
 		m_currentPlayer->Move(&gameObjects);
+		int tileID = m_currentPlayer->GetDestination();
+
+		tile = gameObjects[tileID]->Tag();
+
 		numMoves = 0;
 	}
 
@@ -613,6 +618,7 @@ void MAPScene::UIRender()
 	ImGui::Text("Press R to roll, space to choose where to move.");
 	ImGui::Text("Dice Roll: %d", dieRoll);
 	ImGui::Text("Movement: %d", numMoves);
+	ImGui::Text("Landed on: %s", tile.c_str());
 
 	ImGui::End();
 }

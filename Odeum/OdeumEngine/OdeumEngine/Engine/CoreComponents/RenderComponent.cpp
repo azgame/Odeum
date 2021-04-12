@@ -30,14 +30,6 @@ void RenderComponent::Update(float deltaTime)
 	totalTime += deltaTime;
 }
 
-void RenderComponent::LoadModelFromFile(std::string fileName)
-{
-	m_model.SetParent(this);
-	m_model.m_details.fileName = fileName;
-
-	SceneGraph::Get()->AddRenderObject(this);
-}
-
 void RenderComponent::LoadModelFromFile(std::string fileName, bool animate)
 {
 	m_model.SetParent(this);
