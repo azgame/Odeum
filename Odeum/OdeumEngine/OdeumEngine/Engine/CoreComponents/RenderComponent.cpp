@@ -18,13 +18,21 @@ void RenderComponent::OnDetach()
 
 void RenderComponent::Update(float deltaTime)
 {
-	if (currentPose.size() == 0)
-		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
-
-	if (isAnimation && totalTime > 1.0)
+	for (int i = 0; i < m_model.kNumAnims; i++)
 	{
-		// maybe change this --------------------------------------------------------------- vv was m_gameObject->GetTransform()
-		Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, Matrix4(kIdentity), globalInverseTransform);
+		if (m_poses.size() == 0)
+		{
+			m_poses.resize(m_model.kNumAnims);
+		}
+
+		if (m_poses[i].size() == 0)
+			m_poses[i].resize(m_model.m_animations[i].m_boneCount, Matrix4(kIdentity)); // use this for no animation
+
+		if (isAnimation && totalTime > 1.0)
+		{
+			// maybe change this --------------------------------------------------------------- vv was m_gameObject->GetTransform()
+			Animator::GetPose(m_model.m_animations[i], m_model.m_skeletons[i], totalTime, m_poses[i], Matrix4(kIdentity), globalInverseTransform);
+		}
 	}
 
 	totalTime += deltaTime;

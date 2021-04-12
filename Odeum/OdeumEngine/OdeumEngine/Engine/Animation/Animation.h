@@ -17,6 +17,7 @@ struct Animation
 	std::unordered_map<std::string, BoneTransformTrack> boneTransforms = {}; // keeps track of all the joint movements
 
 	uint32_t m_kNumAnims;
+	uint32_t m_boneCount;
 	AnimInfo* animInfo;
 	StructuredBuffer m_animationBuffer;
 };

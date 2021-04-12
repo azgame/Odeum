@@ -24,7 +24,7 @@ AnimationTestScene::AnimationTestScene() : Scene()
 
 	go2 = new GameObject();
 	go2->AddComponent<RenderComponent>();
-	go2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Man.dae", true);
+	go2->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/BaseCharacter.fbx", true);
 	go2->AddComponent<Rigidbody>();
 	go2->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 1.0f));
 	go2->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 1.0f, 0.0f, 1.0f), 180.0f);

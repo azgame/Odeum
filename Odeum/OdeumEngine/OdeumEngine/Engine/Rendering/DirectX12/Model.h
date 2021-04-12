@@ -108,14 +108,14 @@ public:
 	uint16_t*		m_pIndexData; // temp index storage for upload
 	Material*		m_pMaterials;
 	MaterialInfo*	m_pMaterialDetails;
-
 	uint32_t		m_vertexStride;
 
 	// bone things
-	Bone m_skeleton;
-	std::unordered_map<std::string, std::pair<int, Matrix4>> m_boneInfo;
-	uint32_t m_boneCount;
-	Animation animation; // SET UP FOR MULTIPLE MESHES
+	std::vector<std::unordered_map<std::string, std::pair<int, Matrix4>>> m_boneInfo;
+	
+	uint32_t kNumAnims = 0;
+	std::vector<Animation> m_animations; // SET UP FOR MULTIPLE MESHES
+	std::vector<Bone> m_skeletons;
 
 	bool isLoaded = false;
 

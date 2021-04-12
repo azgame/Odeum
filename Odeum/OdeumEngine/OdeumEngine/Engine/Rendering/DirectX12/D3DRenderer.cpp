@@ -184,10 +184,10 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 			uint32_t baseVertex = mesh.vertexOffset;
 
 			graphics.SetDynamicConstantBufferView(2, sizeof(object->GetModel().GetMaterial(mesh.materialIndex)), &object->GetModel().GetMaterial(mesh.materialIndex));
-			graphics.SetDynamicConstantBufferView(3, sizeof(Matrix4) * object->GetModel().m_boneCount, object->GetCurrentPosePtr());
+			graphics.SetDynamicConstantBufferView(3, sizeof(Matrix4) * object->GetModel().m_animations[i].m_boneCount, object->GetCurrentPosePtr(i));
 
 			graphics.SetDynamicDescriptors(4, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
-			graphics.SetDynamicDescriptor(5, 0, object->GetModel().animation.m_animationBuffer.ShaderResourceView());
+			graphics.SetDynamicDescriptor(5, 0, object->GetModel().m_animations[i].m_animationBuffer.ShaderResourceView());
 
 			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 		}
