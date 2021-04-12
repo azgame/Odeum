@@ -122,10 +122,10 @@ struct Animator {
 
 		// calculated localTransform
 		Matrix4 localTransform = Matrix4(DirectX::XMMatrixScalingFromVector(scale) * DirectX::XMMatrixRotationQuaternion(rotation) * DirectX::XMMatrixTranslationFromVector(position));
-		Matrix4 globalTransform = localTransform * parentTransform;
+		Matrix4 globalTransform = parentTransform * localTransform;
 
-		output[skeleton.id] = skeleton.transform * globalTransform; // removed inverse matrix, I think dxmath does this for us
-		//output[skeleton.id] = globalTransform * skeleton.transform;
+		//output[skeleton.id] = skeleton.transform * globalTransform; // removed inverse matrix, I think dxmath does this for us
+		output[skeleton.id] = globalTransform * skeleton.transform;
 		
 		// update values for children bones
 		for (Bone& child : skeleton.children)

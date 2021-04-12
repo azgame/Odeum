@@ -43,21 +43,19 @@ PS_INPUT main(VS_INPUT input, uint Vertex_ID : SV_VertexID)
 {
 	PS_INPUT output;
 
-	//float4 weights = normalize(animBuffer[Vertex_ID].boneWeights);
 	float4 weights = animBuffer[Vertex_ID].boneWeights;
 
-	matrix boneTransform = { {0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0} };
+	float4x4 boneTransform = { {0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0} };
 	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.x] * weights.x;
 	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.y] * weights.y;
 	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.z] * weights.z;
 	boneTransform += inBoneTransforms[(int)animBuffer[Vertex_ID].boneIds.w] * weights.w;
 
 	float4 pos = mul(boneTransform, float4(input.position, 1.0));
-	//float4 pos = mul(float4(input.position, 1.0), boneTransform);
+	//float4 pos = float4(input.position, 1.0);
 
 	output.worldPos = mul(pos, model);
 	output.position = mul(viewProj, mul(pos, model));
-	//output.position = mul(viewProj, mul(model, pos));
 	output.uv = input.uv;
 	output.viewDir = output.worldPos - viewerPos;
 	output.normal = mul(input.normal, mul(model, boneTransform));

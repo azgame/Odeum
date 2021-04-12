@@ -120,10 +120,15 @@ namespace Math {
 	inline Matrix4 ASSIMPToMatrix4(aiMatrix4x4 m) {
 		Matrix4 newM;
 
-		newM.mat.r[0] = Vector4(m.a1, m.a2, m.a3, m.a4);
+		/*newM.mat.r[0] = Vector4(m.a1, m.a2, m.a3, m.a4);
 		newM.mat.r[1] = Vector4(m.b1, m.b2, m.b3, m.b4);
 		newM.mat.r[2] = Vector4(m.c1, m.c2, m.c3, m.c4);
-		newM.mat.r[3] = Vector4(m.d1, m.d2, m.d3, m.d4);
+		newM.mat.r[3] = Vector4(m.d1, m.d2, m.d3, m.d4);*/
+
+		newM.mat.r[0] = Vector4(m.a1, m.b1, m.c1, m.d1);
+		newM.mat.r[1] = Vector4(m.a2, m.b2, m.c2, m.d2);
+		newM.mat.r[2] = Vector4(m.a3, m.b3, m.c3, m.d3);
+		newM.mat.r[3] = Vector4(m.a4, m.b4, m.c4, m.d4);
 
 		return newM;
 	}
