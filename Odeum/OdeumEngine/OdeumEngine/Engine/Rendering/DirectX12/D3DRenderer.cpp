@@ -24,6 +24,16 @@ void D3DRenderer::Initialize(Window& Window)
 	m_rootSig[3].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
 	m_rootSig.Finalize(L"Colour viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
+	m_animRootSig.Reset(6, 1);
+	m_animRootSig.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[0].InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig[1].InitAsConstantBuffer(1, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[2].InitAsConstantBuffer(2, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[3].InitAsConstantBuffer(3, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig[4].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 0, 4, D3D12_SHADER_VISIBILITY_PIXEL);
+	m_animRootSig[5].InitAsDescriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 1, D3D12_SHADER_VISIBILITY_VERTEX);
+	m_animRootSig.Finalize(L"Animated Viewer", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
 	DXGI_FORMAT colourFormat = DXGraphics::m_presentBuffer.GetFormat();
 	DXGI_FORMAT depthFormat = DXGraphics::m_sceneDepthBuffer.GetFormat();
 
@@ -46,6 +56,17 @@ void D3DRenderer::Initialize(Window& Window)
 	m_colourPSO.CompileVertexShader(L"Engine/Shaders/VertexShader.hlsl", "main", "vs_5_0");
 	m_colourPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
 	m_colourPSO.Finalize();
+
+	m_animatedPSO.SetRootSignature(m_animRootSig);
+	m_animatedPSO.SetRasterizerState(DXGraphics::rasterDesc);
+	m_animatedPSO.SetBlendState(DXGraphics::alphaBlend);
+	m_animatedPSO.SetDepthStencilState(DXGraphics::depthReadWrite);
+	m_animatedPSO.SetInputLayout(_countof(verts), verts);
+	m_animatedPSO.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	m_animatedPSO.SetRenderTargetFormats(1, &colourFormat, depthFormat);
+	m_animatedPSO.CompileVertexShader(L"Engine/Shaders/VertexAnimShader.hlsl", "main", "vs_5_0");
+	m_animatedPSO.CompilePixelShader(L"Engine/Shaders/PixelShader.hlsl", "main", "ps_5_0");
+	m_animatedPSO.Finalize();
 
 	CreateUIResources();
 	InitializeUI(Window);
@@ -108,9 +129,11 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
 
+	std::vector<RenderComponent*> animObjects;
+
 	for (auto object : SceneGraph::Get()->GetRenderObjects())
 	{
-		if (object->IsRendered())
+		if (object->IsRendered() && !object->IsAnimation())
 		{
 			vsConstants.model = object->GetGameObject()->GetTransform();
 			graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
@@ -132,7 +155,42 @@ void D3DRenderer::Render(Camera& Camera, float deltaTime)
 
 				graphics.DrawIndexed(indexCount, startIndex, baseVertex);
 			}
-		}	
+		}
+		else if (object->IsRendered() && object->IsAnimation())
+		{
+			animObjects.push_back(object);
+		}
+	}
+
+	graphics.SetRootSignature(m_animRootSig);
+	graphics.SetPipelineState(m_animatedPSO);
+
+	graphics.SetDynamicConstantBufferView(1, sizeof(light), &light);
+
+	for (auto object : animObjects)
+	{
+		vsConstants.model = object->GetGameObject()->GetTransform();
+		graphics.SetDynamicConstantBufferView(0, sizeof(vsConstants), &vsConstants);
+
+		graphics.SetIndexBuffer(object->GetModel().m_indexBuffer.IndexBufferView());
+		graphics.SetVertexBuffer(0, object->GetModel().m_vertexBuffer.VertexBufferView());
+
+		for (UINT i = 0; i < object->GetModel().m_details.meshCount; i++)
+		{
+			Model::Mesh& mesh = object->GetModel().GetMesh(i);
+			uint32_t vertexStride = object->GetModel().m_vertexStride;
+			uint32_t indexCount = mesh.indexCount;
+			uint32_t startIndex = mesh.indexOffset;
+			uint32_t baseVertex = mesh.vertexOffset;
+
+			graphics.SetDynamicConstantBufferView(2, sizeof(object->GetModel().GetMaterial(mesh.materialIndex)), &object->GetModel().GetMaterial(mesh.materialIndex));
+			graphics.SetDynamicConstantBufferView(3, sizeof(Matrix4) * object->GetModel().m_boneCount, object->GetCurrentPosePtr());
+
+			graphics.SetDynamicDescriptors(4, 0, 4, object->GetModel().GetSRVs(mesh.materialIndex));
+			graphics.SetDynamicDescriptor(5, 0, object->GetModel().animation.m_animationBuffer.ShaderResourceView());
+
+			graphics.DrawIndexed(indexCount, startIndex, baseVertex);
+		}
 	}
 
 	ParticleManager::Get().Render(graphics, Camera, DXGraphics::m_presentBuffer, DXGraphics::m_sceneDepthBuffer);
