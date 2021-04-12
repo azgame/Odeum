@@ -52,19 +52,19 @@ SpherePushingScene::SpherePushingScene()
 playerKeysLeft.push_back(Key::A);
 playerKeysRight.push_back(Key::D);
 playerKeysDown.push_back(Key::S);
-playerKeysDown.push_back(Key::M);
+playerKeysDown.push_back(Key::K);
 playerKeysDown.push_back(Key::M);
 playerKeysDown.push_back(Key::M);
 
 
 playerKeysLeft.push_back(Key::H);
-playerKeysRight.push_back(Key::J);
-playerKeysLeft.push_back(Key::H);
-playerKeysRight.push_back(Key::J);
+playerKeysRight.push_back(Key::L);
+playerKeysLeft.push_back(Key::J);
+playerKeysRight.push_back(Key::H);
 playerKeysLeft.push_back(Key::H);
 playerKeysRight.push_back(Key::J);
 playerKeysUp.push_back(Key::W);
-playerKeysUp.push_back(Key::U);
+playerKeysUp.push_back(Key::I);
 playerKeysUp.push_back(Key::U);
 playerKeysUp.push_back(Key::U);
 
