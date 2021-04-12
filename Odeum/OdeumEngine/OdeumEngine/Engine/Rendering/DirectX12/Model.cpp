@@ -5,11 +5,10 @@
 #include <assimp/postprocess.h>
 
 #include "../../CoreComponents/RenderComponent.h"
-#include "../../Animation/Animator.h"
 
 #include <thread>
 
-void Model::Load(bool isAnimation)
+void Model::Load()
 {
 	std::string fileName = m_details.fileName;
 
@@ -195,92 +194,10 @@ void Model::Load(bool isAnimation)
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[1];
 			*indice++ = sourceMesh->mFaces[fIndex].mIndices[2];
 		}
-
-		// more bone stuff
-		// load bone data to vertices
-		if (isAnimation)
-		{
-			animation.m_kNumAnims = sourceMesh->mNumVertices;
-			animation.animInfo = new AnimInfo[animation.m_kNumAnims];
-
-			// this info should be right???
-			m_boneInfo = {};
-			std::vector<uint32_t> boneCounts;
-			boneCounts.resize(animation.m_kNumAnims, 0);
-			m_boneCount = sourceMesh->mNumBones;
-
-			// loop through each bone
-			for (unsigned int i = 0; i < m_boneCount; i++)
-			{
-				aiBone* bone = sourceMesh->mBones[i];
-				Matrix4 matrix = Math::ASSIMPToMatrix4(bone->mOffsetMatrix);
-				m_boneInfo[bone->mName.C_Str()] = { i, matrix };
-
-				// loop through each vertex that has that bone
-				for (int j = 0; j < bone->mNumWeights; j++) {
-					uint32_t id = bone->mWeights[j].mVertexId;
-					float weight = bone->mWeights[j].mWeight;
-					boneCounts[id]++;
-
-					AnimInfo* info = animation.animInfo;
-
-					switch (boneCounts[id])
-					{
-						case 1:
-						{
-							info[id].boneIDs.SetX(i);
-							info[id].boneWeights.SetX(weight);
-							break;
-						}
-						case 2:
-						{
-							info[id].boneIDs.SetY(i);
-							info[id].boneWeights.SetY(weight);
-							break;
-						}
-						case 3:
-						{
-							info[id].boneIDs.SetZ(i);
-							info[id].boneWeights.SetZ(weight);
-							break;
-						}
-						case 4:
-						{						
-							info[id].boneIDs.SetW(i);
-							info[id].boneWeights.SetW(weight);
-							break;
-						}
-						default:
-						{
-							//ERROR("Unable to allocate bone to vertex.");
-							break;
-						}
-					}
-				}
-			}
-
-			// normalize weights to make all weight sum 1
-			for (int i = 0; i < m_details.vertexCount; i++)
-			{
-				float totalWeight = animation.animInfo[i].boneWeights.GetX() + animation.animInfo[i].boneWeights.GetY() + animation.animInfo[i].boneWeights.GetZ() + animation.animInfo[i].boneWeights.GetW();
-				if (totalWeight > 0.0f)
-				{
-					animation.animInfo[i].boneWeights.Normalize();
-				}
-			}
-		}
 	}
 
 	m_vertexBuffer.Create("Vertex buffer", m_details.vertexCount, m_vertexStride, m_pVertexData);
 	m_indexBuffer.Create("Index buffer", m_details.indexCount, sizeof(uint16_t), m_pIndexData);
-
-	if (isAnimation)
-	{
-		// create bone hierarchy
-		Animator::ReadSkeleton(m_skeleton, scene->mRootNode, m_boneInfo);
-		Animator::LoadAnimation(scene, animation);
-		animation.m_animationBuffer.Create("Animation Buffer", animation.m_kNumAnims, sizeof(AnimInfo), animation.animInfo);
-	}
 
 	LoadTextures();
 

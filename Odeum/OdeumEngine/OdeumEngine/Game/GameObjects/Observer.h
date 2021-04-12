@@ -55,13 +55,13 @@ class GameMoveEvent : public GameMapEvent
 {
 public:
 	
-	GameMoveEvent(GameObject* Target, Vector3 Move) : GameMapEvent() { target = Target; move = Move; }
+	GameMoveEvent(GameObject* Target, Vector2 Move) : GameMapEvent() { target = Target; move = Move; }
 
-	Vector3 Distance() { return move; }
+	Vector2 Distance() { return move; }
 
 	GAME_EVENT_TYPE(GameMove)
 protected:
-	Vector3 move;
+	Vector2 move;
 	GameObject* target;
 };
 

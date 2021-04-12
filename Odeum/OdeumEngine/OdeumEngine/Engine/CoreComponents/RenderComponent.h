@@ -5,7 +5,6 @@
 #include "../Core/Component.h"
 #include "../Rendering/DirectX12/Model.h"
 #include "../Math/BoundingBox.h"
-#include "../Animation/Animator.h"
 
 class RenderComponent : public Component
 {
@@ -17,7 +16,7 @@ public:
 	void Update(float deltaTime) override;
 
 	void SetColour(Colour Colour) { m_model.SetFlatColour(Colour); }
-	void LoadModelFromFile(std::string fileName, bool animate = false);
+	void LoadModelFromFile(std::string fileName);
 	void LoadShape(ShapeTypes preDefinedShape, Colour colour = Colour(1.0f, 1.0f, 1.0f, 1.0f));
 	void CreateFromExistingModel(Model* Model);
 
@@ -29,25 +28,11 @@ public:
 	bool IsRendered() { return isRendered; }
 	void ToggleRender() { isRendered != isRendered; }
 
-	// animation stuff
-	bool IsAnimation() { return isAnimation; }
-	void SetISAnimation(bool b) { isAnimation = b; }
-	
-	Matrix4* GetCurrentPosePtr() { return currentPose.data(); }
-
 private:
 	Model m_model;
 	Matrix4 m_modelMatrix;
 	OrientedBoundingBox modelOBB;
 	bool isRendered;
-
-	// animation stuff
-	bool isAnimation;
-	std::vector<Matrix4> currentPose;
-	Matrix4 globalInverseTransform;
-	
-	float totalTime;
-
 };
 
 #endif

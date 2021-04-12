@@ -15,8 +15,7 @@
 
 MAPScene::MAPScene()
 {
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 25.0f, -17.0f));
-	OdeumEngine::Get().GetCamera().SetLookAt(Vector3(0.0, 0.0, 17.0));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
 
 	// player 1 and 2
 	playerObjects.push_back(new GameObject());
@@ -26,7 +25,7 @@ MAPScene::MAPScene()
 	playerObjects.back()->AddComponent<RenderComponent>(); 
 	playerObjects.back()->AddComponent<PlayerMapComponent>(); 
 	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
-	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 0.0f));
+	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
 	//playerObjects.back()->AddComponent<Player>(); 
 	//playerObjects.back()->GetComponent<Player>()->SetUp(Key::W);
 	//playerObjects.back()->GetComponent<Player>()->SetDown(Key::A);
@@ -70,18 +69,17 @@ MAPScene::MAPScene()
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//left side brown steps
 	//connected to start to start white spot
-
-
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(0, 1, 0);
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -89,7 +87,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(1, 2, 0);
@@ -99,8 +97,8 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(2, 3, 0);
@@ -110,7 +108,7 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-12.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -121,13 +119,25 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-15.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(4, 5, 0);
+	map.attachEdge(4, 5, 0);
 
-	// corner
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(5, 6, 0);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//turning  on z axis the red  side steps
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
@@ -135,406 +145,664 @@ MAPScene::MAPScene()
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 4.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(5, 6, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 8.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(6, 7, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 12.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(7, 8, 0);
+	map.attachEdge(6, 7, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 16.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(8, 9, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 20.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(9, 10, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 24.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(10, 11, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 28.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 8.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(11, 12, 0);
-
-	// top left corner
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 32.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(12, 13, 0);
-
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 36.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(13, 14, 0);
+	map.attachEdge(7, 8, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-15.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 12.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(14, 15, 0);
+	map.attachEdge(8, 9, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-12.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 16.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(15, 16, 0);
+	map.attachEdge(9, 10, 0);
+
+		
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//on red side making the little square area
+	
+
+
+	//far left in square
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 21.5f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(10, 11, 0);
+
+
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(11, 12, 0);
+	
+	///far right in square
 	
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(16, 17, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(17, 18, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(18, 19, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-16.9f, -0.4f, 21.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(19, 20, 0);
+	map.attachEdge(12, 13, 0);
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-16.9f, -0.4f, 26.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(20, 21, 0);
+	map.attachEdge(13, 14, 0);
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	//middle stretch where red and blue connect
+
+	//now this is the connecting side to middle but on brown steps
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(21, 22, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(22, 23, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13.3f, -0.4f, 26.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(23, 24, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(24, 25, 0);
+	map.attachEdge(14, 15, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 40.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(25, 26, 0);
-
-	// corner
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(21.0f, -0.4f, 36.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(26, 27, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 32.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(27, 28, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 28.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-10.1f, -0.4f, 26.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(28, 29, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 24.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(29, 30, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 20.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(30, 31, 0);
+	map.attachEdge(15, 16, 0);
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 16.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(31, 32, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 12.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(32, 33, 0);
-
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 8.5f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(33, 34, 0);
-
-	// corner
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(21.0f, -0.4f, 4.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-7.1f, -0.4f, 26.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(34, 35, 0);
+	map.attachEdge(16, 17, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.9f, -0.4f, 26.0f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(17,18, 0);
 	
-	// corner
-
+	/// //////////////////////////////////////////////////////////////////////////////////////////////////
+	/// continue path on red steps from square
+	
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 1.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(35, 36, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 1.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(36, 37, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 1.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Fight");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(37, 38, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 1.0f, 2.0f));
-	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
-	gameObjects.back()->SetTag("Minigame");
-
-	map.push(gameObjects.back());
-	map.attachDirectedEdge(38, 39, 0);
-
-	gameObjects.push_back(new GameObject());
-	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 31.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
 	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
-	gameObjects.back()->SetTag("Loss");
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(39, 40, 0);
+	map.attachEdge(12, 19, 0);
+
+	
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 36.5f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(19, 20, 0);
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 42.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
-	gameObjects.back()->SetTag("Gain");
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
-	map.attachDirectedEdge(40, 41, 0);
+	map.attachEdge(20, 21, 0);
 
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 48.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(21, 22, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-20.0f, -0.4f, 54.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(22,23, 0);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//the 4 square block
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-11.5f, -0.4f, 54.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(23, 24, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-11.5f, -0.4f, 45.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(24,25, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, -0.4f, 45.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(25,26, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, -0.4f, 54.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(26,27, 0);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//white square for red.
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -0.4f, 54.9f, 2.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 1.0f, 1.0f));
+	gameObjects.back()->SetTag("Fight");
+
+	map.push(gameObjects.back());
+	map.attachEdge(27,26,  0);
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// the right steps blue
+	//connected to start white spot
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+	
+	map.push(gameObjects.back());
+
+	map.attachEdge(0,20, 0);
+
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(20, 21, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(21, 22, 0);
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(22, 23, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(23, 24, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(24, 25, 0);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//turning  on z axis the blue side steps
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, 0.0f, 3.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(25, 26, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, 0.0f, 7.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(26, 27, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, 0.0f, 11.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(27, 28, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, 0.0f, 15.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(28, 29, 0);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//on blue side making the blue quare side
+
+
+	//far left side on blue square
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(17.20f, 0.0f, 20.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(29, 30, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(17.20f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(30, 31, 0);
+	
+
+	// far right side in square 
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 20.5f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(31, 32, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(32, 33, 0);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	//middle stretch where brown and blue connect
+	
+
+
+
+	//now this is the connecting side to middle but on blue steps
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(13.8f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(33, 34, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10.5f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(34, 35, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(7.3f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(35, 36, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(4.0f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(36, 37, 0);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//continue path up on blue side far right 
+	
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(4.0f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(37, 38, 0);
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//2nd middle part
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 25.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 1.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(38, 39, 0);
+
+	///////////////////////////////////////////////////////////////////
+	//continue path on blue side from square
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 29.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(33, 40, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 35.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(40, 41, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 40.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(41, 42, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 47.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(42, 43, 0);
+
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(20.5f, 0.0f, 54.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(43,44, 0);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////square blue
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(11.5f, 0.0f, 54.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(44, 45, 0);
+
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(11.5f, 0.0f, 45.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(45,46, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 45.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(46,47, 0);
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, 0.0f, 54.9f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(47,48, 0);
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	//white square for blue
+
+	gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 44.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f,1.0f, 1.0f));
+	gameObjects.back()->SetTag("Item");
+
+	map.push(gameObjects.back());
+	map.attachEdge(48,49, 0);
+
+
+	//white 4th
+
+	// NODE1
+	/*gameObjects.push_back(new GameObject());
+	gameObjects.back()->AddComponent<Rigidbody>();
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2.0f, 5.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-5.0f, 0.0f, 0.0f, 0.0f));
+	gameObjects.back()->AddComponent<RenderComponent>();
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.5, 0.5, 0.5));
+	playerObjects.back()->SetTag("Node1");*/
+
+	//SimpleGraph<GameObject*> graph = SimpleGraph<GameObject*>(0);
+	//graph.Push(gameObjects[0]);
+	//graph.Push(gameObjects[1]);
+
+	//graph.Connect(0, 1);
+
+	//LinkedList<GameObject*>* list = graph.GetNeighbours(1);
 }
 
 MAPScene::~MAPScene() {
@@ -574,7 +842,7 @@ bool MAPScene::PlayerTurn()
 
 	int currentTile = m_currentPlayer->GetTile();
 
-	if (Input::Get().isKeyPressed(Key::D))
+	if (Input::Get().isKeyPressed(Key::A))
 	{
 		if (currentTile - numMoves < 0)
 		{
@@ -586,7 +854,7 @@ bool MAPScene::PlayerTurn()
 			m_currentPlayer->SetDestination(currentTile - numMoves);
 		}
 	}
-	else if (Input::Get().isKeyPressed(Key::A))
+	else if (Input::Get().isKeyPressed(Key::D))
 	{
 		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
 	}
@@ -594,10 +862,6 @@ bool MAPScene::PlayerTurn()
 	if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
 	{
 		m_currentPlayer->Move(&gameObjects);
-		int tileID = m_currentPlayer->GetDestination();
-
-		tile = gameObjects[tileID]->Tag();
-
 		numMoves = 0;
 	}
 
@@ -615,10 +879,9 @@ bool MAPScene::PlayerTurn()
 void MAPScene::UIRender()
 {
 	ImGui::Begin("Map UI");
-	ImGui::Text("Press R to roll, space to choose where to move.");
+
 	ImGui::Text("Dice Roll: %d", dieRoll);
 	ImGui::Text("Movement: %d", numMoves);
-	ImGui::Text("Landed on: %s", tile.c_str());
 
 	ImGui::End();
 }

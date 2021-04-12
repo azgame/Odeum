@@ -19,9 +19,6 @@ public:
 	virtual void UIRender();
 
 private:
-
-	void Test(GameObject*);
-
 	CameraController cameraController;
 
 	std::vector<GameObject*> gameObjects;

@@ -98,39 +98,13 @@ public:
 	inline Vector4 operator* (Vector3 vec_) const { return Vector4(XMVector3Transform(vec_, mat)); }
 	inline Vector4 operator* (Vector4 vec_) const { return Vector4(XMVector4Transform(vec_, mat)); }
 	inline Matrix4 operator* (const Matrix4& mat_) const { return Matrix4(XMMatrixMultiply(mat_, mat)); }
-	inline Matrix4 operator* (const float s) const { return Matrix4(mat * s); }
-	inline Matrix4 operator+ (const Matrix4 mat_) const { return Matrix4(mat + mat_); }
-	inline Matrix4 operator- (const Matrix4 mat_) const { return Matrix4(mat - mat_); }
-	inline Matrix4 operator~ () const { return Matrix4(XMMatrixInverse(nullptr, mat)); }
 
 	static inline Matrix4 MakeScale(float scale_) { return Matrix4(XMMatrixScaling(scale_, scale_, scale_)); }
 	static inline Matrix4 MakeScale(float scaleX_, float scaleY_, float scaleZ_) { return Matrix4(XMMatrixScaling(scaleX_, scaleY_, scaleZ_)); }
 	static inline Matrix4 MakeScale(Vector3 scale_) { return Matrix4(XMMatrixScalingFromVector(scale_)); }
 
-
-
-	
-// should change this back to private
-public:
+private:
 	XMMATRIX mat;
 };
 
-namespace Math {
-
-	inline Matrix4 ASSIMPToMatrix4(aiMatrix4x4 m) {
-		Matrix4 newM;
-
-		/*newM.mat.r[0] = Vector4(m.a1, m.a2, m.a3, m.a4);
-		newM.mat.r[1] = Vector4(m.b1, m.b2, m.b3, m.b4);
-		newM.mat.r[2] = Vector4(m.c1, m.c2, m.c3, m.c4);
-		newM.mat.r[3] = Vector4(m.d1, m.d2, m.d3, m.d4);*/
-
-		newM.mat.r[0] = Vector4(m.a1, m.b1, m.c1, m.d1);
-		newM.mat.r[1] = Vector4(m.a2, m.b2, m.c2, m.d2);
-		newM.mat.r[2] = Vector4(m.a3, m.b3, m.c3, m.d3);
-		newM.mat.r[3] = Vector4(m.a4, m.b4, m.c4, m.d4);
-
-		return newM;
-	}
-}
 #endif

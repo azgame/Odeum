@@ -75,15 +75,13 @@ void ParticleManager::Initialize(uint32_t Width, uint32_t Height)
 	// create texture array -- later
 }
 
-ParticleEffect& ParticleManager::CreateEffect(ParticleProperties Properties)
+void ParticleManager::CreateEffect(ParticleInitProperties Properties)
 {
 	std::lock_guard<std::mutex> lg(sm_mutex);
 
 	ParticleEffect* effect = new ParticleEffect(Properties);
 	effect->Initialize();
 	sm_activeEffects.push_back(effect);
-
-	return *effect;
 }
 
 void ParticleManager::Update(ComputeContext& Compute, float deltaTime)

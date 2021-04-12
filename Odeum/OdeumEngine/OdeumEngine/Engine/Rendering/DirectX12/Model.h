@@ -6,8 +6,6 @@
 #include "Shapes.h"
 #include "../../Math/D3DMath.h"
 #include "TextureManager.h"
-#include "../../Animation/Animation.h"
-#include <unordered_map>
 
 class RenderComponent;
 
@@ -33,7 +31,7 @@ public:
 		SAFE_DELETE(m_srvs);
 	}
 
-	void Load(bool isAnimation);
+	void Load();
 	void LoadTextures();
 
 	static const unsigned short maxFilePath = 128;
@@ -58,7 +56,6 @@ public:
 		uint32_t vertexStride;
 
 		uint32_t materialIndex;
-		//uint32_t boneCount;
 	};
 
 	struct MaterialInfo
@@ -111,13 +108,7 @@ public:
 
 	uint32_t		m_vertexStride;
 
-	// bone things
-	Bone m_skeleton;
-	std::unordered_map<std::string, std::pair<int, Matrix4>> m_boneInfo;
-	uint32_t m_boneCount;
-	Animation animation; // SET UP FOR MULTIPLE MESHES
-
-	bool isLoaded = false;
+	bool			isLoaded = false;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE* GetSRVs(uint32_t mIndex) const
 	{

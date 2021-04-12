@@ -13,7 +13,6 @@
 #include <stdlib.h>
 
 class PlayerMapComponent;
-class CameraController;
 
 class Dice
 {
@@ -69,13 +68,10 @@ private:
 	std::queue<PlayerMapComponent*> players;
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> playerObjects;
-
-	CameraController camera;
 	
 	PlayerMapComponent* m_currentPlayer;
 	int numMoves = 0;
 	int dieRoll = 0;
-	std::string tile;
 	bool hasRolled = false;
 };
 

@@ -18,27 +18,15 @@ void RenderComponent::OnDetach()
 
 void RenderComponent::Update(float deltaTime)
 {
-	if (currentPose.size() == 0)
-		currentPose.resize(m_model.m_boneCount, Matrix4(kIdentity)); // use this for no animation
-
-	if (isAnimation && totalTime > 1.0)
-	{
-		// maybe change this --------------------------------------------------------------- vv was m_gameObject->GetTransform()
-		Animator::GetPose(m_model.animation, m_model.m_skeleton, totalTime, currentPose, Matrix4(kIdentity), globalInverseTransform);
-	}
-
-	totalTime += deltaTime;
 }
 
-void RenderComponent::LoadModelFromFile(std::string fileName, bool animate)
+void RenderComponent::LoadModelFromFile(std::string fileName)
 {
 	m_model.SetParent(this);
 	m_model.m_details.fileName = fileName;
 
 	SceneGraph::Get()->AddRenderObject(this);
-	isAnimation = animate;
 }
-
 
 void RenderComponent::LoadShape(ShapeTypes preDefinedShape, Colour colour)
 {

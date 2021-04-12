@@ -28,7 +28,7 @@ void SceneGraph::LoadGraphicsObjects()
 		auto go = sm_unloadedObjects.front(); sm_unloadedObjects.pop();
 
 		if (!go->GetModel().isLoaded)
-			go->GetModel().Load(go->IsAnimation());
+			go->GetModel().Load();
 
 		sm_sceneGameObjects.push_back(go);
 	}

@@ -24,9 +24,7 @@ private:
 	Camera mainCamera;
 
 	RootSignature m_rootSig;
-	RootSignature m_animRootSig;
 	GraphicsPSO m_colourPSO;
-	GraphicsPSO m_animatedPSO;
 	D3D12_VIEWPORT m_mainViewport;
 	D3D12_RECT m_mainScissor;
 	ID3D12DescriptorHeap* m_pHeap;
