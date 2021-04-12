@@ -2,6 +2,7 @@
 
 #include "../../Engine/Rendering/DirectX12/SceneGraph.h"
 #include <math.h>
+#include "../../Engine/Rendering/DirectX12/ParticleManager.h"
 #include "../../Engine/CoreComponents/Rigidbody.h"
 #include "../../Engine/CoreComponents/RenderComponent.h"
 #include "../../Engine/CoreComponents/AudioSource.h"
@@ -61,6 +62,35 @@ ButtonMashingScene::ButtonMashingScene()
 		backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Asteroid1.obj");
 
 	}
+
+
+	//particles
+	ParticleProperties particleProps;
+	particleProps.startColour = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	particleProps.endColour = DirectX::XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f);
+	particleProps.lifeTime = FLT_MAX;
+	particleProps.minLife = 4.0f;
+	particleProps.maxLife = 8.0f;
+	particleProps.minMass = 0.1f;
+	particleProps.maxMass = 0.4f;
+	particleProps.rotationMax = 1.0f;
+	particleProps.spread = Vector3(20.0f, 50.0f, 20.0f);
+	particleProps.minVelocity = Vector2(0.4f, 0.6f);
+	particleProps.maxVelocity = Vector2(0.3f, 0.4f);
+	particleProps.minSize = Vector2(0.0050f, 0.0075f);
+	particleProps.maxSize = Vector2(0.01f, 0.025f);
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.xAxis, Vector3(kXUnitVector));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.yAxis, Vector3(kYUnitVector));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.zAxis, Vector3(kZUnitVector));
+	particleProps.lauchingData.maxParticles = 5000;
+	particleProps.lauchingData.spawnRate = 64.0f;
+	particleProps.lauchingData.speed = 1.0f;
+	particleProps.lauchingData.groundBounce = 1.02f;
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.gravity, Vector3(0.0f, -0.1f, 0.0f));
+	DirectX::XMStoreFloat3(&particleProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, -2.0f));
+	// particleProps.textureID --
+
+	// particle = &ParticleManager::Get().CreateEffect(particleProps);
 		
 	
 	playerKeys.push_back(Key::H);
