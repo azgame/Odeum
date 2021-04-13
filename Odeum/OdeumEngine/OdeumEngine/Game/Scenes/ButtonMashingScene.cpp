@@ -63,27 +63,40 @@ ButtonMashingScene::ButtonMashingScene()
 	}
 
 
-	//particles
+	//_______ particles __________
 	rocketProps.startColour = DirectX::XMFLOAT4(1.0f, 0.7f, 0.0f, 1.0f);
 	rocketProps.endColour = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 	rocketProps.lifeTime = FLT_MAX;
+
 	rocketProps.minLife = 1.0f;
 	rocketProps.maxLife = 2.5f;
+
 	rocketProps.minMass = 0.1f;
 	rocketProps.maxMass = 0.4f;
+
 	rocketProps.rotationMax = 0.0f;
 	rocketProps.spread = Vector3(0.0f, 100.0f, 0.0f);
+
+	// speed
 	rocketProps.minVelocity = Vector2(1.f, 1.f);
 	rocketProps.maxVelocity = Vector2(10.0f, 10.0f);
+
+
 	rocketProps.minSize = Vector2(0.1f, 0.1f);
-	rocketProps.maxSize = Vector2(0.2f, 0.2f);
+	rocketProps.maxSize = Vector2(0.4f, 0.4f);
+
+	// yAxis set to -1 to reverse the particles
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.xAxis, Vector3(kXUnitVector));
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.yAxis, Vector3(0.0f, -1.0f, 0.0f));
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.zAxis, Vector3(kZUnitVector));
+
 	rocketProps.lauchingData.maxParticles = 300;
 	rocketProps.lauchingData.spawnRate = 64.0f;
 	rocketProps.lauchingData.speed = 1.0f;
+
+	// dont want the particles to bounce
 	rocketProps.lauchingData.groundBounce = 0.0f;
+
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.gravity, Vector3(0.0f, -9.8f, 0.0f));
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, 0.0f));
 	// particleProps.textureID --
@@ -133,7 +146,10 @@ void ButtonMashingScene::Update(const float deltaTime_)
 						}
 						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 55 * deltaTime_, 0, 0));
 
+
+
 						//particles for the rocketship
+						//rocketProps.maxVelocity = Vector2(-55.0f * deltaTime_, -55.0f * deltaTime_);
 						pEffect = &ParticleManager::Get().CreateEffect(rocketProps);
 						pEffect->Translate(gameObjects.at(i)->GetPosition());
 					}
