@@ -5,6 +5,9 @@
 #include "../../Engine/Core/OdeumEngine.h"
 #include "../../Engine/Core/CameraController.h"
 #include"../../Engine/Core/AudioHandler.h"
+#include "../../Engine/Rendering/DirectX12/ParticleManager.h"
+
+
 // Scene index 8
 class ButtonMashingScene : public Scene
 {
@@ -18,6 +21,7 @@ public:
 	virtual void UIRender();
 
 private:
+
 	Vector4 clear_color=Vector4(0,0,0,0);
 	CameraController cameraController;
 	std::vector<Colour*> playerColors;
@@ -28,6 +32,10 @@ private:
 	std::vector<Key::KeyCode> playerKeys;
 	std::vector<bool> playerPressed;
 	bool won;
+
+	ParticleEffect* pEffect;
+	ParticleProperties rocketProps;
+	ParticleProperties explosionProps;
 };
 
 #endif
