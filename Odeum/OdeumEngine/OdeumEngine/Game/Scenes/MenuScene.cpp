@@ -25,7 +25,7 @@ void MenuScene::Update(const float deltaTime_)
 void MenuScene::UIRender()
 {
 	ImGui::Begin("Menu UI");
-	ImGui::Text("Come here often?");
+	ImGui::Text("Choose your game mode");
 	ImGui::Button("Start Game");
 	ImGui::SliderInt(levelString.at(i1), &i1, 1, 9);
 	if (ImGui::Button("Select MiniGame")) { LoadLevel(i1); }

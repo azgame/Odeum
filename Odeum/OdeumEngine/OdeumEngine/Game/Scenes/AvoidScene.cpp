@@ -84,6 +84,7 @@ AvoidScene::AvoidScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
+   
 
 }
 AvoidScene::~AvoidScene()

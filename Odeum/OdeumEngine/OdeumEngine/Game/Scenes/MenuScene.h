@@ -20,11 +20,11 @@ public:
 
 private:
 	CameraController cameraController;
-	std::vector<const char*> levelString= { "E","Planet Panic!" ,"Cake Swipers" ,  "Level B",  "Test 3",  "Test D hehe","Level 5", "Test 6", "who did this xDDDDD", "Level 8", "A" };
+	std::vector<const char*> levelString= { "E","Planet Panic!" ,"Cake Swipers" ,  "Wool Watchers",  "Hopping aliens",  "Space Station Savants","Hopping Chickens", "Lets get this bread", "Comet Crashers", "Farm Frenzy", "A" };
 	std::vector<GameObject*> gameObjects;
 	void LoadLevel(int level_);
 	uint16_t frameCounter;
-	 int i1;
+	 int i1=1;
 	float averageFrameTime;
 	float frameTimeTotal;
 
