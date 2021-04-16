@@ -70,8 +70,11 @@ private:
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> pathObjects;
 	std::vector<GameObject*> playerObjects;
+	std::vector<GameObject*> backgroundObjects;
 	//length will be the number of tiles, vertical will make the path vertical rather than horizontal
 	void SetPath(int length_, bool vertical_, Vector4 startPos_);
+	void SetArea(int length_,int width, Vector4 startPos_);
+	void BuildEnviroment();
 	CameraController camera;
 
 	PlayerMapComponent* m_currentPlayer;
