@@ -75,6 +75,7 @@ void AnimationTestScene::Update(const float deltaTime_)
 	cameraController.UpdateMainCamera();
 	
 	particle->Translate(Vector3(0.02, 0.0, 0.0));
+	go2->GetComponent<Rigidbody>()->SetPosition(go2->GetComponent<Rigidbody>()->GetPosition() + Vector4(0.0f, 0.0f, -0.05f, 1.0f));
 }
 
 void AnimationTestScene::UIRender()
