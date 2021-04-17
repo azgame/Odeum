@@ -151,7 +151,11 @@ DodgeFlyScene::DodgeFlyScene()
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool DodgeFlyScene::Initialize()

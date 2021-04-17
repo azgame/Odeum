@@ -182,6 +182,11 @@ QuickDrawScene::QuickDrawScene()
 
 QuickDrawScene::~QuickDrawScene()
 {
+	for (int i = 0; i < playerColors.size(); i++)
+	{
+		delete (playerColors[i]);
+	}
+	playerColors.clear();
 }
 
 bool QuickDrawScene::Initialize()

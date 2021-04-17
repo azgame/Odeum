@@ -17,6 +17,7 @@ public:
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 
+
 private:
 	Vector4 clear_color=Vector4(0,0,0,0);
 	CameraController cameraController;

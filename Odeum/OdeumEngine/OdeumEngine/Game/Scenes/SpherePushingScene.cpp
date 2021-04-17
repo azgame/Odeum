@@ -100,7 +100,11 @@ backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(16, 16, 16
 }
 SpherePushingScene::~SpherePushingScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool SpherePushingScene::Initialize()

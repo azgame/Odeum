@@ -158,7 +158,11 @@ TreadmillScene::TreadmillScene()
 }
 TreadmillScene::~TreadmillScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool TreadmillScene::Initialize()
