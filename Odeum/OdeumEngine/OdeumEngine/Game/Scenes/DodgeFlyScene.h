@@ -15,6 +15,7 @@ public:
 	int MaxObstaclesUp = 14;
 	//float timeToStart;
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 
 	virtual void UIRender();

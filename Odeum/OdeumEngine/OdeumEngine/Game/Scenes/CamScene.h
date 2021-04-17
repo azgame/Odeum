@@ -14,6 +14,7 @@ public:
 	virtual ~CamScene();
 	std::vector<GameObject*> gameObjects;
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 	Vector3 Pos;

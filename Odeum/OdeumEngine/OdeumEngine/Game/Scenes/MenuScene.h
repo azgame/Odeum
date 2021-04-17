@@ -15,6 +15,7 @@ public:
 	virtual ~MenuScene();
 
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 

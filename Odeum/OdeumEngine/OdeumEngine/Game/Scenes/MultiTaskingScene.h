@@ -12,6 +12,7 @@ public:
 	int MaxPlayers;
 	float timeToStart;
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 	void UpdateObjectsB(const float deltaTime_);
 	void UpdateObjectsC(const float deltaTime_);
