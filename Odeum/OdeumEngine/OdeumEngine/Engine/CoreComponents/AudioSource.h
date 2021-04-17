@@ -16,6 +16,7 @@ public:
 	void Initialize(std::string soundName, bool isLoop = false, bool is3D = false, bool isLong = false, float volume = 1.0f);
 
 	void PlaySound();
+	void StopSound();
 	bool IsPlaying();
 
 private:

@@ -23,6 +23,8 @@ public:
 	bool Initialize(Vector3 position = Vector3(), Vector3 velocity = Vector3(), Vector3 forward = Vector3(0.0f, 0.0f, -1.0f), Vector3 up = Vector3(0.0f, 1.0f, 0.0f));
 	static AudioHandler* GetInstance();
 
+	void StopAllSounds();
+
 	void OnDestroy();
 	void Update();
 
@@ -45,6 +47,8 @@ private:
 	bool LoadSound(std::string soundName, bool isLoop = false, bool is3D = false, bool isLong = false);
 	FMOD::Sound* GetSound(std::string soundName);
 	int PlaySound(std::string soundName, Vector3 position, Vector3 velocity, float volume);
+	void StopSound(int channelNum);
+	void StopAllSounds();
 	void UpdateChannel(int channelNum, Vector3 position, Vector3 velocity);
 	bool IsPlaying(int channelNum);
 
