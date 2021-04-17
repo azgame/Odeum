@@ -68,14 +68,21 @@ TreadmillScene::TreadmillScene()
        
     }
    
-    backgroundObjects.push_back(new GameObject());
-    backgroundObjects.back()->AddComponent<Rigidbody>();
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, -10, 2.5, 0));
-    backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(34, 20, 1, 1));
-    backgroundObjects.back()->AddComponent<RenderComponent>();
-    backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/cliff_block_rock.obj");
-    backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.2));
+    
+    for (int i = 0; i < 22; i++)
+    {
+        spinnerObjects.push_back(new GameObject());
+        spinnerObjects.back()->AddComponent<Rigidbody>();
+        spinnerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-16+i*1.5, 0, 2.5, 0));
+        spinnerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 20, 1));
+        spinnerObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0), 90.0f);
+        spinnerObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(1, 0, 0, 0), 90.0f);
+        spinnerObjects.back()->AddComponent<RenderComponent>();
+        spinnerObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.2));
+        spinnerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/octagon.fbx");
+    }
 
+   
   
     backgroundObjects.push_back(new GameObject());
     backgroundObjects.back()->AddComponent<Rigidbody>();
@@ -151,7 +158,11 @@ TreadmillScene::TreadmillScene()
 }
 TreadmillScene::~TreadmillScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool TreadmillScene::Initialize()
@@ -165,6 +176,10 @@ void TreadmillScene::Update(const float deltaTime_)
         {
             if (!won)
           {
+                for (int i = 0; i<spinnerObjects.size(); i++)
+                {
+                    spinnerObjects.at(i)->GetComponent<Rigidbody>()->AddRotation(Vector4(0, 0, -1, 0), 90.0f*deltaTime_);
+                }
             spawnObjects(deltaTime_);
             for (int i = 0; i < playerObjects.size(); i++)
             {
@@ -317,23 +332,25 @@ void TreadmillScene::Update(const float deltaTime_)
                     }
                 }
             }
-            if (won)
-            {
-                if (timeToEnd >= 0)
-                {
-                    timeToEnd -= deltaTime_;
-                    if (timeToEnd >= 0)
-                    {
-                        //return who wins
-                    }
-                }
-            }
+           
         }
        
     }
     else
     {
     timeToStart -= deltaTime_;
+    }
+    if (won)
+    {
+        if (timeToEnd >= 0)
+        {
+            timeToEnd -= deltaTime_;
+            if (timeToEnd <= 0)
+            {
+                OdeumEngine::Get().SetCurrentScene(19);
+                //return who wins
+            }
+        }
     }
 }
 

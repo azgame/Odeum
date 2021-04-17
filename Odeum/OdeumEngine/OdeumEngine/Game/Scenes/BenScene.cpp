@@ -24,7 +24,7 @@ BenScene::BenScene() : Scene(), angle(0.0f), direction(1.0f)
 	//go1->GetComponent<Rigidbody>()->SetRotation(Vector4(1.0f, 0.0f, 1.0f, 1.0f), 20.0f);
 	go1->GetComponent<Rigidbody>()->SetRadius(1.3f);
 	go1->GetComponent<Rigidbody>()->SetScale(Vector4(0.5f, 0.5, 0.5, 1.0f));
-	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 1.5f, 0.0f, 1.0f));
+	go1->GetComponent<Rigidbody>()->SetVelocity(Vector4(0.0f, 0.5f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->ApplyTorque(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 	//go1->GetComponent<Rigidbody>()->SetAngularVelocity(Vector4(1.0f, 0.0f, 0.0f, 0.0f), 0.005f);
 	//go1->GetComponent<Rigidbody>()->ApplyTorque(Vector4(1.0f, 0.0f, 0.0f, 1.0f));

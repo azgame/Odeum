@@ -125,7 +125,11 @@ CollectingScene::CollectingScene()
 }
 CollectingScene::~CollectingScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool CollectingScene::Initialize()
@@ -208,9 +212,18 @@ bool CollectingScene::Initialize()
 
              }
          }
-         if (won)
+        
+     }
+     if (won)
+     {
+         if (timeToEnd >= 0)
          {
-             //return who won
+             timeToEnd -= deltaTime_;
+             if (timeToEnd <= 0)
+             {
+                 OdeumEngine::Get().SetCurrentScene(19);
+                 //return who wins
+             }
          }
      }
 }

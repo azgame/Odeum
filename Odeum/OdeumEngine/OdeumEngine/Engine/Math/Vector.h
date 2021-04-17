@@ -181,7 +181,7 @@ public:
 	// Print
 	inline void Print() { std::cout << "(" << GetX() << ", " << GetY() << ", " << GetZ() << ", " << GetW() << ")"; }
 	inline std::string ToString() const { return std::string("(" + std::to_string(GetX()) + ", " + std::to_string(GetY()) + ", " + std::to_string(GetZ()) + ", " + std::to_string(GetW()) + ")"); }
-	
+
 	// Getters and Setters
 	inline XMVECTOR GetVec() { return vec; }
 	inline float GetX() const { return XMVectorGetX(vec); }
@@ -192,15 +192,15 @@ public:
 	inline void SetY(float y_) { vec = XMVectorSetY(vec, y_); }
 	inline void SetZ(float z_) { vec = XMVectorSetZ(vec, z_); }
 	inline void SetW(float w_) { vec = XMVectorSetW(vec, w_); }
-	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2)+pow(XMVectorGetW(vec),2)); }
+	inline float Mag() { return sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
 	inline Vector4 Normalize() { return vec / sqrt(pow(XMVectorGetX(vec), 2) + pow(XMVectorGetY(vec), 2) + pow(XMVectorGetZ(vec), 2) + pow(XMVectorGetW(vec), 2)); }
 	//float Dot(Vector a, Vector b)
 	//{
 	//	return a.x * b.x + a.y * b.y /*+ a.z * b.z*/;
 	//}
-	inline float Dot(Vector4 B) { return XMVectorGetX(vec)*B.GetX() + XMVectorGetY(vec) * B.GetY() + XMVectorGetZ(vec) * B.GetZ(); }
+	inline float Dot(Vector4 B) { return XMVectorGetX(vec) * B.GetX() + XMVectorGetY(vec) * B.GetY() + XMVectorGetZ(vec) * B.GetZ(); }
 	//return Mult(Normalize(a), Dot(v, a)   / Norm(a));
-	inline Vector4 Project(Vector4 B) { return Normalize()*Dot(B)/Mag(); }
+	inline Vector4 Project(Vector4 B) { return Normalize() * Dot(B) / Mag(); }
 	//Vector Bounce(Vector v, Vector n)
 	//{
 	//	return Add(v, Mult(Project(v, n), -2));
@@ -224,6 +224,8 @@ public:
 	inline Vector4& operator /= (float s_) { *this = *this / s_; return *this; }
 
 	inline bool operator==(Vector4 v_) { return GetX() == v_.GetX() && GetY() == v_.GetY() && GetZ() == v_.GetZ() && GetW() == v_.GetW(); }
+	inline bool operator!=(Vector4 v_) { return GetX() != v_.GetX() && GetY() != v_.GetY() && GetZ() != v_.GetZ() && GetW() != v_.GetW();
+}
 
 protected:
 	XMVECTOR vec;

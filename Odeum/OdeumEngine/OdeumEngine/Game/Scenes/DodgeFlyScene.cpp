@@ -151,7 +151,11 @@ DodgeFlyScene::DodgeFlyScene()
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
-
+    for (int i = 0; i < playerColors.size(); i++)
+    {
+        delete (playerColors[i]);
+    }
+    playerColors.clear();
 }
 //float timeToStart;
 bool DodgeFlyScene::Initialize()
@@ -322,15 +326,17 @@ void DodgeFlyScene::Update(const float deltaTime_)
                 }
             }
         }
-        if (won)
+        
+    }
+    if (won)
+    {
+        if (timeToEnd >= 0)
         {
-            if (timeToEnd >= 0)
+            timeToEnd -= deltaTime_;
+            if (timeToEnd <= 0)
             {
-                timeToEnd -= deltaTime_;
-                if (timeToEnd >= 0)
-                {
-                    //return who wins
-                }
+                OdeumEngine::Get().SetCurrentScene(19);
+                //return who wins
             }
         }
     }

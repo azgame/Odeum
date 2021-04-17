@@ -22,6 +22,8 @@
 #include "Scenes/TreadmillScene.h"
 #include "Scenes/AvoidScene.h"
 #include "Scenes/MapScene.h"
+#include "Scenes/MenuScene.h"
+#include "Scenes/CamScene.h"
 #include "Scenes/AnimationTestScene.h"
 
 Game1::Game1() : GameInterface()
@@ -129,7 +131,13 @@ void Game1::BuildScene()
 		m_currentScene = new AvoidScene();
 		break;
 	case 19:
+		m_currentScene = new MenuScene();
+		break;
+	case 20:
 		m_currentScene = new AnimationTestScene();
+		break;
+	case 21:
+		m_currentScene = new CamScene();
 		break;
 	default: // case 0
 		m_currentScene = new StartScene();

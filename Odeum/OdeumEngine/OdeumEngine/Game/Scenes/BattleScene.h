@@ -13,6 +13,7 @@ public:
 	virtual ~BattleScene();
 
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 	void DamageCalculation(StatComponent* attacker_, StatComponent* defender_, int attackType, int defenceType);

@@ -33,7 +33,7 @@ public:
 	bool IsAnimation() { return isAnimation; }
 	void SetISAnimation(bool b) { isAnimation = b; }
 	
-	Matrix4* GetCurrentPosePtr() { return currentPose.data(); }
+	Matrix4* GetCurrentPosePtr(int index) { return m_poses[index].data(); }
 
 private:
 	Model m_model;
@@ -43,7 +43,7 @@ private:
 
 	// animation stuff
 	bool isAnimation;
-	std::vector<Matrix4> currentPose;
+	std::vector<std::vector<Matrix4>> m_poses;
 	Matrix4 globalInverseTransform;
 	
 	float totalTime;

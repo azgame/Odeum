@@ -11,8 +11,6 @@
     <FxCompile Include="Engine\Shaders\Present.hlsl" />
     <FxCompile Include="Engine\Shaders\ScreenQuad.hlsl" />
     <FxCompile Include="Engine\Shaders\VertexShader.hlsl" />
-    <FxCompile Include="Engine\Shaders\VertexAnimShader.hlsl" />
-    <FxCompile Include="Engine\Shaders\PixelAnimShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -108,7 +106,8 @@
     <ClCompile Include="Game\Scenes\AvoidScene.cpp" />
     <ClCompile Include="Game\Scenes\MapScene.cpp" />
     <ClCompile Include="Game\GameObjects\Map.cpp" />
-    <ClCompile Include="Game\Components\InputComponent.cpp" />
+    <ClCompile Include="Game\Scenes\MenuScene.cpp" />
+    <ClCompile Include="Game\Scenes\CamScene.cpp" />
     <ClCompile Include="Game\Scenes\AnimationTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +252,8 @@
     <ClInclude Include="Game\Scenes\MapScene.h" />
     <ClInclude Include="Game\GameObjects\Map.h" />
     <ClInclude Include="Engine\DataStructures\SimpleGraph.h" />
-    <ClInclude Include="Game\Components\InputComponent.h" />
+    <ClInclude Include="Game\Scenes\MenuScene.h" />
+    <ClInclude Include="Game\Scenes\CamScene.h" />
     <ClInclude Include="Engine\Animation\Animation.h" />
     <ClInclude Include="Engine\Animation\Animator.h" />
     <ClInclude Include="Engine\Animation\Bone.h" />
@@ -267,7 +267,5 @@
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="Game\GameAssets\PlayerStats.json" />
-    <None Include="Engine\Shaders\AnimRS.hlsli" />
-    <None Include="Engine\Resources\Models\Man.dae" />
   </ItemGroup>
 </Project>

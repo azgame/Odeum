@@ -15,16 +15,16 @@
 
 MAPScene::MAPScene()
 {
-	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 25.0f, -17.0f));
-	OdeumEngine::Get().GetCamera().SetLookAt(Vector3(0.0, 0.0, 17.0));
+	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 25.0f, -19.0f));
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 17.0));
 
 	// player 1 and 2
 	playerObjects.push_back(new GameObject());
 	playerObjects.back()->AddComponent<Rigidbody>();
 	playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.6f, 1.0f, 0.6f, 0.0f));
 	playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 1.0f, 0.0f, 0.0f));
-	playerObjects.back()->AddComponent<RenderComponent>(); 
-	playerObjects.back()->AddComponent<PlayerMapComponent>(); 
+	playerObjects.back()->AddComponent<RenderComponent>();
+	playerObjects.back()->AddComponent<PlayerMapComponent>();
 	//playerObjects.back()->AddComponent<PlayerEffectsComponent>();
 	playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.5f, 0.0f));
 	//playerObjects.back()->AddComponent<Player>(); 
@@ -49,19 +49,20 @@ MAPScene::MAPScene()
 	//playerObjects.back()->GetComponent<Player>()->SetDown(Key::K);
 	//playerObjects.back()->GetComponent<Player>()->SetLeft(Key::J);
 	//playerObjects.back()->GetComponent<Player>()->SetRight(Key::L);
-	
+
 
 
 	//were gonna tag all your nodes aka game objects via tag to work with our graph.
 	/// this is the main starting step white
-	
+
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 1.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 1.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_castle.fbx");
 	gameObjects.back()->SetTag("Start");
 
 	map.push(gameObjects.back());
@@ -74,10 +75,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, 0.0f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -85,10 +87,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1,0,0,0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -96,10 +100,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.0f, -0.0f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -107,10 +112,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-12.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -118,10 +124,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-15.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -131,10 +138,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 4.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -142,10 +151,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 8.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.0f, 8.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -153,10 +163,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 12.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -164,10 +175,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 16.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.0f, 16.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -175,10 +187,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 20.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.0f, 20.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -186,10 +199,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 24.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -197,10 +211,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 28.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -210,10 +226,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.4f, 32.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.0f, 32.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -222,10 +239,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-18.0f, -0.4f, 36.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -233,10 +251,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-15.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -244,21 +263,23 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-12.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(15, 16, 0);
-	
+
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -266,10 +287,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.0f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -277,10 +299,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.0f, -0.0f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -288,10 +311,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -299,10 +324,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -310,10 +337,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.0f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -321,10 +349,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 40.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.0f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -332,10 +361,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -343,10 +374,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -354,10 +386,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 40.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -367,10 +400,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(21.0f, -0.4f, 36.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -378,10 +412,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 32.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -389,10 +424,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 28.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -400,10 +437,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 24.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.0f, 24.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -411,10 +449,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 20.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -422,10 +461,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 16.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -433,10 +473,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 12.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -445,10 +486,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.4f, 8.5f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.0f, 8.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
@@ -458,23 +500,26 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(21.0f, -0.4f, 4.5f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(34, 35, 0);
-	
+
 	// corner
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(18.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -482,10 +527,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.0f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -493,10 +539,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
 	gameObjects.back()->SetTag("Fight");
 
 	map.push(gameObjects.back());
@@ -504,10 +551,11 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(9.0f, -0.0f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 1.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass_hill.fbx");
 	gameObjects.back()->SetTag("Minigame");
 
 	map.push(gameObjects.back());
@@ -515,10 +563,12 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, -0.4f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(1.0f, 0.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_grass.fbx");
+	gameObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(1, 0, 0, 0.8));
 	gameObjects.back()->SetTag("Loss");
 
 	map.push(gameObjects.back());
@@ -526,26 +576,296 @@ MAPScene::MAPScene()
 
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
-	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.0f, 0.2f, 1.0f, 0.0f));
-	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.4f, 1.0f, 2.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.2f, 0.2f, 0.2f, 0.0f));
+	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(3.0f, -0.0f, 1.0f, 2.0f));
 	gameObjects.back()->AddComponent<RenderComponent>();
-	gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(0.0f, 1.0f, 0.0f));
+	gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Tile_building_mill.fbx");
 	gameObjects.back()->SetTag("Gain");
 
 	map.push(gameObjects.back());
 	map.attachDirectedEdge(40, 41, 0);
+
+	//art stuff
+	BuildEnviroment();
 
 }
 
 MAPScene::~MAPScene() {
 };
 
+void MAPScene::BuildEnviroment()
+{
+	SetPath(15, true, Vector4(-21.0f, -0.5f, 3.5f, 2.0f));
+	SetPath(17, false, Vector4(-18.5f, -0.5f, 1.0f, 2.0f));
+	SetPath(15, true, Vector4(24.0f, -0.5f, 3.5f, 2.0f));
+	SetPath(17, false, Vector4(-18.5f, -0.5f, 41.0f, 2.0f));
+
+	pathObjects.push_back(new GameObject());
+	pathObjects.back()->AddComponent<Rigidbody>();
+	pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+	pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.5f, 1.0f, 2.0f));
+	pathObjects.back()->AddComponent<RenderComponent>();
+	pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathBendBank.fbx");
+	pathObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 180.0f);
+
+	pathObjects.push_back(new GameObject());
+	pathObjects.back()->AddComponent<Rigidbody>();
+	pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+	pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.5f, 1.0f, 2.0f));
+	pathObjects.back()->AddComponent<RenderComponent>();
+	pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathBendBank.fbx");
+	pathObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 90.0f);
+
+	pathObjects.push_back(new GameObject());
+	pathObjects.back()->AddComponent<Rigidbody>();
+	pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+	pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-21.0f, -0.5f, 41.0f, 2.0f));
+	pathObjects.back()->AddComponent<RenderComponent>();
+	pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathBendBank.fbx");
+	pathObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 270.0f);
+
+	pathObjects.push_back(new GameObject());
+	pathObjects.back()->AddComponent<Rigidbody>();
+	pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+	pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(24.0f, -0.5f, 41.0f, 2.0f));
+	pathObjects.back()->AddComponent<RenderComponent>();
+	pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathBendBank.fbx");
+	pathObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 0.0f);
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4.25, 4.0, 3.8, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(1.5f, -0.5f, 21.0f, 2.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_grass.fbx");
+	backgroundObjects.back()->GetComponent<RenderComponent>()->SetColour(Colour(0, 0, 0, 0.5));
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, -0.5f, 10.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(15.0f, -0.5f, 21.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8.0f, -0.5f, 22.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/stump_oldTall.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 1.5f, 17.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/grass_large.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(6.0f, 1.5f, 21.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/grass_large.obj");
+	
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(3, 3, 3, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(10.0f, 1.5f, 22.3f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/grass_large.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2,2, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, 4.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/rock_tallB.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, 0.0f, 3.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/rock_tallB.obj");
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 90.0f);
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-3.60f, 0.0f, 4.27f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/rock_tallB.obj");
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 194.0f);
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(2, 2, 2, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-9.7f, 0.0f, 7.87f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/rock_tallC.obj");
+	
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.65, 0.65, 0.65, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-13.0f, -0.5f, 7.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_fat_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(5.0f, -0.5f, 16.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_detailed_dark.fbx");
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 109.0f);
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.5f, 18.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_cone_dark.fbx");
+	
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-4.7f, -0.5f, 25.6f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_oak_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(2.4f, -0.5f, 24.9f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_blocks_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(16.4f, -0.5f, 4.7f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/tree_blocks_dark.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(4.0f, -0.5f, 4.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/statue_columnDamaged.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.5f, 4.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/statue_column.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(12.0f, -0.5f, 12.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/statue_column.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(4.0f, -0.5f, 12.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/statue_column.fbx");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.5, 0.5, 0.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8.0f, -0.5f, 8.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/statue_head.fbx");
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f), 180.0f);
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.5, 1.5, 1.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-8.0f, -0.5f, 15.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/log_stackLarge.obj");
+	
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.5, 1.5, 1.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-7.0f, -0.5f, 15.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/log_stackLarge.obj");
+
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1.5, 1.5, 1.5, 0.0f));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(-6.0f, -0.5f, 15.0f, 0.0f));
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/log_stackLarge.obj");
+
+}
+void MAPScene::SetPath(int length_, bool vertical_, Vector4 startPos_)
+{
+	
+	if (vertical_)
+	{
+		for (int i = 0; i < length_; i++)
+		{
+			pathObjects.push_back(new GameObject());
+			pathObjects.back()->AddComponent<Rigidbody>();
+			pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+			pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0.0f, 0.0f, i*2.5f, 2.0f)+startPos_);
+			pathObjects.back()->AddComponent<RenderComponent>();
+			pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathStraight.fbx");
+
+		}
+	}
+	else
+	{
+		for (int i = 0; i < length_; i++)
+		{
+			pathObjects.push_back(new GameObject());
+			pathObjects.back()->AddComponent<Rigidbody>();
+			pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(0.25f, 0.25f, 0.25f, 0.0f));
+			pathObjects.back()->GetComponent<Rigidbody>()->SetRotation(Vector4(0.0f, 1.0f, 0.0f, 0.0f),90.0f);
+			pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i*2.5f, 0.0f, 0.0f, 2.0f) + startPos_);
+			pathObjects.back()->AddComponent<RenderComponent>();
+			pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_pathStraight.fbx");
+
+		}
+	}
+}
+void  MAPScene::SetArea(int length_, int width, Vector4 startPos_)
+{
+	for (int x = 0; x < width; x++) {
+		for (int i = 0; i < length_; i++)
+		{
+			pathObjects.push_back(new GameObject());
+			pathObjects.back()->AddComponent<Rigidbody>();
+			pathObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 0.0f));
+			pathObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(x * 10.0f, 0.0f, i * 10.0f, 2.0f) + startPos_);
+			pathObjects.back()->AddComponent<RenderComponent>();
+			pathObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/ground_grass.fbx");
+
+		}
+	}
+}
 bool MAPScene::Initialize()
 {
 	return true;
 }
 
-void MAPScene::Update(const float deltaTime_) 
+void MAPScene::Update(const float deltaTime_)
 {
 	if (!PlayerTurn())
 	{

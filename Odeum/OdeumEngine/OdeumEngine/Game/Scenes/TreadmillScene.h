@@ -13,6 +13,7 @@ public:
 	int MaxObstacles = 18;
 	//float timeToStart;
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 	void spawnObjects(float deltaTime_);
 	virtual void UIRender();
@@ -28,6 +29,7 @@ private:
 	float timeToStart;
 	float timeToEnd = 5;
 	std::vector<GameObject*> backgroundObjects;
+	std::vector<GameObject*> spinnerObjects;
 	std::vector<GameObject*> obstacleObjects;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;

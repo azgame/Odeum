@@ -5,6 +5,7 @@
 #include "../../Engine/Core/GameObject.h"
 #include "../../Engine/Math/Vector.h"
 
+
 #include "Item.h"
 
 #include <functional>
@@ -19,14 +20,14 @@ public:
 class MoveAction : public Action
 {
 public:
-	MoveAction(GameObject* Target, Vector3 Move);
+	MoveAction(GameObject* Target, Vector2 Move);
 
 	void Execute() override;
 	GameEventType Type() override { return GameEventType::GameMove; }
 
 private:
 	GameObject* target;
-	Vector3 move;
+	Vector2 move;
 };
 
 

@@ -14,6 +14,7 @@ public:
 
 	//float timeToStart;
 	virtual bool Initialize();
+	void Unload() {};
 	virtual void Update(const float deltaTime_);
 
 	virtual void UIRender();
@@ -35,13 +36,13 @@ private:
 	std::vector<Key::KeyCode> playerKeysDown;
 	Simplex<Vector3> simplex;
 
-
+	std::vector<Colour*> playerColors;
 
 	float maxVelocity = 7;
-	float maxHeight = 9;
-	float minHeight = -9;
-	float minRight = -17.5;
-	float maxRight = 17.5;
+	float maxHeight = 20;
+	float minHeight = -20;
+	float minRight = -30;
+	float maxRight = 20;
 	int maxScore = 10;
 	bool won;
 };
