@@ -11,7 +11,7 @@
 
 #include "../../Engine/DataStructures/SimpleGraph.h"
 
-
+#include <stdlib.h>     /* srand, rand */
 
 MAPScene::MAPScene()
 {
@@ -919,6 +919,8 @@ bool MAPScene::PlayerTurn()
 
 		tile = gameObjects[tileID]->Tag();
 
+		LoadLevel((rand() % 9) + 1);
+
 		numMoves = 0;
 	}
 
@@ -932,6 +934,44 @@ bool MAPScene::PlayerTurn()
 	return true;
 }
 
+void MAPScene::LoadLevel(int level_)
+{
+	int selection;
+	switch (level_)
+	{
+	case 1:
+		selection = 5;
+		break;
+	case 2:
+		selection = 7;
+		break;
+	case 3:
+		selection = 8;
+		break;
+	case 4:
+		selection = 12;
+		break;
+	case 5:
+		selection = 13;
+		break;
+	case 6:
+		selection = 11;
+		break;
+	case 7:
+		selection = 14;
+		break;
+	case 8:
+		selection = 15;
+		break;
+	case 9:
+		selection = 16;
+		break;
+	default:
+		break;
+	}
+
+	OdeumEngine::Get().SetCurrentScene(selection);
+}
 
 void MAPScene::UIRender()
 {

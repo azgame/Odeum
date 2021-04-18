@@ -483,6 +483,7 @@
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
+    <None Include="Game\GameAssets\GameConfig.json" />
     <None Include="Game\GameAssets\PlayerStats.json" />
   </ItemGroup>
   <ItemGroup>
