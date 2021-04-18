@@ -11,12 +11,14 @@
 #include"../../Engine/Core/AudioHandler.h"
 QuickDrawScene::QuickDrawScene()
 {
-	playerColors.push_back(&Colour(0, 0, 1, 0.5));
-	playerColors.push_back(&Colour(1, 0, 0, 0.5));
-	playerColors.push_back(&Colour(1, 1, 0, 0.5));
-	playerColors.push_back(&Colour(0, 1, 0, 0.5));
-	AudioHandler::GetInstance()->Initialize();
+	playerColors.push_back(Colour(0, 0, 1, 0.5));
+	playerColors.push_back(Colour(1, 0, 0, 0.5));
+	playerColors.push_back(Colour(1, 1, 0, 0.5));
+	playerColors.push_back(Colour(0, 1, 0, 0.5));
+
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
+
 	gameObjects.push_back(new GameObject());
 	gameObjects.back()->AddComponent<Rigidbody>();
 	gameObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0,-4.5,0,0)+objectPos);
@@ -167,7 +169,7 @@ QuickDrawScene::QuickDrawScene()
 		playerShootTimer.push_back(0);
 		playerInPosition.push_back(false);
 
-		players.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+		players.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 	}
 	players.back()->AddComponent<AudioSource>();
 	players.back()->GetComponent<AudioSource>()->Initialize("ding.wav", false, false, false, 1.0f);
@@ -182,10 +184,6 @@ QuickDrawScene::QuickDrawScene()
 
 QuickDrawScene::~QuickDrawScene()
 {
-	for (int i = 0; i < playerColors.size(); i++)
-	{
-		delete (playerColors[i]);
-	}
 	playerColors.clear();
 }
 

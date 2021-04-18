@@ -34,7 +34,7 @@ private:
 	std::vector<Key::KeyCode> playerKeysDown;
 	Simplex<Vector3> simplex;
 
-	std::vector<Colour*> playerColors;
+	std::vector<Colour> playerColors;
 	float timeToEnd = 5;
 	float maxVelocity = 7;
 	float maxHeight = 9;

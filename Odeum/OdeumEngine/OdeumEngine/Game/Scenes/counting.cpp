@@ -12,6 +12,7 @@
 Counting::Counting()
 {
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
 	MaxPlayers = 4;
 	
 	srand(time(NULL));
@@ -30,7 +31,7 @@ Counting::Counting()
 	playerKeys.push_back(Key::K);
 	playerKeys.push_back(Key::L);
 	timeToWin = 999;
-	AudioHandler::GetInstance()->Initialize();
+
 	players.back()->AddComponent<AudioSource>();
 	players.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
 	players.back()->GetComponent<AudioSource>()->PlaySound();

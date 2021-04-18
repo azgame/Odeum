@@ -14,11 +14,10 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 SpherePushingScene::SpherePushingScene()
 {
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
-    AudioHandler::GetInstance()->Initialize();
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -36,7 +35,7 @@ SpherePushingScene::SpherePushingScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1,1,1,1));
         //playerObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::SphereShape, Colour(0, 0, 1.4));
         playerObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/moon.obj");
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 
         playerObjects.back()->AddComponent<SphereCollider>();
         
@@ -100,10 +99,6 @@ backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(16, 16, 16
 }
 SpherePushingScene::~SpherePushingScene()
 {
-    for (int i = 0; i < playerColors.size(); i++)
-    {
-        delete (playerColors[i]);
-    }
     playerColors.clear();
 }
 //float timeToStart;

@@ -17,7 +17,7 @@ public:
 	virtual void UIRender();
 
 private:
-	std::vector<Colour*> playerColors;
+	std::vector<Colour> playerColors;
 	std::vector<GameObject*> players;
 	std::vector<GameObject*> gameObjects;
 	std::vector<float> playerShootTimer;

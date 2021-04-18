@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "../Engine/Events/ApplicationEvent.h"
 
 MenuScene::MenuScene()
 {
@@ -29,10 +30,11 @@ void MenuScene::UIRender()
 	ImGui::Button("Start Game");
 	ImGui::SliderInt(levelString.at(i1), &i1, 1, 9);
 	if (ImGui::Button("Select MiniGame")) { LoadLevel(i1); }
-	ImGui::Button("Quit Game");
+	if (ImGui::Button("Quit Game")) { Quit(); }
 	
 	ImGui::End();
 }
+
 void MenuScene::LoadLevel(int level_)
 {
 	int selection;
@@ -71,4 +73,10 @@ void MenuScene::LoadLevel(int level_)
 	}
 	OdeumEngine::Get().SetCurrentScene(selection);
 	
+}
+
+void MenuScene::Quit()
+{
+	WindowCloseEvent e = WindowCloseEvent();
+	OdeumEngine::Get().OnEvent(e);
 }

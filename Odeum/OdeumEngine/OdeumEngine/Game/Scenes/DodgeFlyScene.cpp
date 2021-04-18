@@ -17,11 +17,10 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 DodgeFlyScene::DodgeFlyScene()
 {
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
-    AudioHandler::GetInstance()->Initialize();
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
@@ -41,7 +40,7 @@ DodgeFlyScene::DodgeFlyScene()
         playerObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(4, 4, 4, 1));
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 
 
 
@@ -151,10 +150,6 @@ DodgeFlyScene::DodgeFlyScene()
 }
 DodgeFlyScene::~DodgeFlyScene()
 {
-    for (int i = 0; i < playerColors.size(); i++)
-    {
-        delete (playerColors[i]);
-    }
     playerColors.clear();
 }
 //float timeToStart;

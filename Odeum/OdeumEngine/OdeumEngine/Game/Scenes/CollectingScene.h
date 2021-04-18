@@ -20,7 +20,7 @@ public:
 	void UpdateScore(int scorePosition_, int score_);
 	void spawnObjects(float deltaTime_);
 private:
-	std::vector<Colour*> playerColors;
+	std::vector<Colour> playerColors;
 	//each of the three objects for each player
 	std::vector<GameObject*> playerObjects;
 	std::vector<GameObject*> backgroundObjects;

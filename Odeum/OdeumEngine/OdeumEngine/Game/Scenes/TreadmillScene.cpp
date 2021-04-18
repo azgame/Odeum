@@ -15,11 +15,11 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 TreadmillScene::TreadmillScene()
 {
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
-    AudioHandler::GetInstance()->Initialize();
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
+
     MaxPlayers = 4;
     timeToStart = 4;
     srand(time(NULL));
@@ -46,7 +46,7 @@ TreadmillScene::TreadmillScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(1, 0, 0, 0));
         playerDead.push_back(false);
         playerLastVelocity.push_back(Vector4(0, 0, 0, 0));
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
     }
     for (int i = 0; i < MaxObstacles; i++)
     {
@@ -158,10 +158,6 @@ TreadmillScene::TreadmillScene()
 }
 TreadmillScene::~TreadmillScene()
 {
-    for (int i = 0; i < playerColors.size(); i++)
-    {
-        delete (playerColors[i]);
-    }
     playerColors.clear();
 }
 //float timeToStart;

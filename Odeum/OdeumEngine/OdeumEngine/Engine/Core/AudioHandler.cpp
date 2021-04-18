@@ -34,6 +34,17 @@ bool AudioHandler::Initialize(Vector3 position, Vector3 velocity, Vector3 forwar
 	return true;
 }
 
+void AudioHandler::RemoveCurrentSounds()
+{
+	for (auto c : channelMap)
+	{
+		c.second->stop();
+	}
+	channelMap.clear();
+
+	numOfChannels = 0;
+}
+
 // properly destroy the maps and system
 void AudioHandler::OnDestroy()
 {
@@ -221,7 +232,8 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 	return channelID;
 }
 
-void AudioHandler::StopSound(int channelNum) {
+void AudioHandler::StopSound(int channelNum) 
+{
 	for (auto c : channelMap) {
 		if (c.first == channelNum) {
 			c.second->stop();
@@ -229,7 +241,8 @@ void AudioHandler::StopSound(int channelNum) {
 	}
 }
 
-void AudioHandler::StopAllSounds() {
+void AudioHandler::StopAllSounds() 
+{
 	for (auto c : channelMap)
 	{
 		c.second->stop();

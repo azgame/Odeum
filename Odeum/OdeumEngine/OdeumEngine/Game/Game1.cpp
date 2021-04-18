@@ -70,6 +70,7 @@ void Game1::BuildScene()
 	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to a negative number!");
 
 	SceneObjects::Get()->UnloadCurrentScene();
+	AudioHandler::GetInstance()->RemoveCurrentSounds();
 
 	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	SceneObjects::Get()->SetCurrentScene(m_currentSceneNum);

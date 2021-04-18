@@ -10,6 +10,8 @@ MultiTaskingScene::MultiTaskingScene()
 	MaxPlayers = 4;
 	timeToStart = 4;
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -25.0f));
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
+
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		gameObjectsA.push_back(new GameObject());

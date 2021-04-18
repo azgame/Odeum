@@ -14,6 +14,8 @@
 
 #include "../JSONUtility/json.hpp"
 
+#include "AudioHandler.h"
+
 OdeumEngine* OdeumEngine::sm_instance = nullptr;
 
 OdeumEngine::OdeumEngine()
@@ -29,6 +31,7 @@ OdeumEngine::OdeumEngine()
 	m_window = new Window();
 	m_camera = Camera();
 	m_renderer = new D3DRenderer();
+	AudioHandler::GetInstance()->Initialize();
 }
 
 OdeumEngine::~OdeumEngine()

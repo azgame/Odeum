@@ -14,12 +14,11 @@ ButtonMashingScene::ButtonMashingScene()
 	pEffects.resize(MaxPlayers, nullptr);
 
 	timeToStart = 4;
-	AudioHandler::GetInstance()->Initialize();
 	srand(time(NULL));
-	playerColors.push_back(new Colour(0,0,1,0.5));
-	playerColors.push_back(new Colour(1,0,0,0.5));
-	playerColors.push_back(new Colour(1,1,0,0.5));
-	playerColors.push_back(new Colour(0,1,0,0.5));
+	playerColors.push_back(Colour(0,0,1,0.5));
+	playerColors.push_back(Colour(1,0,0,0.5));
+	playerColors.push_back(Colour(1,1,0,0.5));
+	playerColors.push_back(Colour(0,1,0,0.5));
 
 	for (int i = 0; i < MaxPlayers; i++)
 	{
@@ -37,6 +36,7 @@ ButtonMashingScene::ButtonMashingScene()
 	moonObjects.back()->GetComponent<AudioSource>()->PlaySound();
 
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
 
 	for (int i = 0; i < MaxPlayers; i++)
 	{
@@ -51,7 +51,7 @@ ButtonMashingScene::ButtonMashingScene()
 		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
-		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 	}
 
 	for (int i = 0; i < 75; i++)
@@ -119,10 +119,6 @@ ButtonMashingScene::ButtonMashingScene()
 
 ButtonMashingScene::~ButtonMashingScene()
 {
-	for (int i = 0; i < playerColors.size(); i++)
-	{
-		SAFE_DELETE(playerColors[i]);
-	}
 	playerColors.clear();
 }
 
