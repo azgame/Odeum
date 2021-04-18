@@ -268,5 +268,9 @@
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
     <None Include="Game\GameAssets\PlayerStats.json" />
     <None Include="Game\GameAssets\GameConfig.json" />
+    <None Include="Engine\Resources\Models\Man.dae" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Engine\Resources\Textures\Man_Diffuse.png" />
   </ItemGroup>
 </Project>
