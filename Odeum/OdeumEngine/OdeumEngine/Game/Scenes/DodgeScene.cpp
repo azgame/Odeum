@@ -16,16 +16,16 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 DodgeScene::DodgeScene()
 {
-    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
     srand(time(NULL));
+    OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
+    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
     for (int i = 0; i < MaxPlayers; i++)
     {
-        OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
         playerObjects.push_back(new GameObject());
         playerObjects.back()->AddComponent<Rigidbody>();
         playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(i * 4 - 6, rand() % 4 - 1, 0, 0));
@@ -37,7 +37,7 @@ DodgeScene::DodgeScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, 1, 0, 0),180);
         playerObjects.back()->AddComponent<ComplexCollider>();
         playerDead.push_back(false);
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 
 
 
@@ -108,10 +108,6 @@ DodgeScene::DodgeScene()
 }
  DodgeScene::~DodgeScene()
 {
-     for (int i = 0; i < playerColors.size(); i++)
-     {
-         delete (playerColors[i]);
-     }
      playerColors.clear();
 }
 //float timeToStart;

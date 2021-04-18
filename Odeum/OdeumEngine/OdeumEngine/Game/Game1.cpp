@@ -64,12 +64,13 @@ void Game1::UIRender()
 
 void Game1::BuildScene()
 {
-	delete m_currentScene;
-	m_currentScene = nullptr;
+	m_currentScene->Unload();
+	SAFE_DELETE(m_currentScene);
 
 	ASSERT(OdeumEngine::Get().GetCurrentScene() >= 0, "Current Scene index set to a negative number!");
 
 	SceneObjects::Get()->UnloadCurrentScene();
+	AudioHandler::GetInstance()->RemoveCurrentSounds();
 
 	m_currentSceneNum = OdeumEngine::Get().GetCurrentScene();
 	SceneObjects::Get()->SetCurrentScene(m_currentSceneNum);

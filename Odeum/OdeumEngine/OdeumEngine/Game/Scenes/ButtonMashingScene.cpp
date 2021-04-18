@@ -10,13 +10,16 @@
 ButtonMashingScene::ButtonMashingScene()
 {
 	MaxPlayers = 4;
+
+	pEffects.resize(MaxPlayers, nullptr);
+
 	timeToStart = 4;
-	AudioHandler::GetInstance()->Initialize();
 	srand(time(NULL));
-	playerColors.push_back(&Colour(0,0,1,0.5));
-	playerColors.push_back(&Colour(1,0,0,0.5));
-	playerColors.push_back(&Colour(1,1,0,0.5));
-	playerColors.push_back(&Colour(0,1,0,0.5));
+	playerColors.push_back(Colour(0,0,1,0.5));
+	playerColors.push_back(Colour(1,0,0,0.5));
+	playerColors.push_back(Colour(1,1,0,0.5));
+	playerColors.push_back(Colour(0,1,0,0.5));
+
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		moonObjects.push_back(new GameObject());
@@ -31,10 +34,10 @@ ButtonMashingScene::ButtonMashingScene()
 	moonObjects.back()->AddComponent<AudioSource>();
 	moonObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
 	moonObjects.back()->GetComponent<AudioSource>()->PlaySound();
-	
-	
+
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 10.0f, -55.0f));
-	OdeumEngine::Get().GetCamera().SetRotation(Quaternion());
+	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
+
 	for (int i = 0; i < MaxPlayers; i++)
 	{
 		gameObjects.push_back(new GameObject());
@@ -48,8 +51,9 @@ ButtonMashingScene::ButtonMashingScene()
 		//gameObjects.back()->GetComponent<RenderComponent>()->LoadShape(ShapeTypes::CubeShape, Colour(i, i, i));
 		gameObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/SpaceShip.obj");
 		playerPressed.push_back(false);
-		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+		gameObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
 	}
+
 	for (int i = 0; i < 75; i++)
 	{
 		backgroundObjects.push_back(new GameObject());
@@ -59,9 +63,15 @@ ButtonMashingScene::ButtonMashingScene()
 
 		backgroundObjects.back()->AddComponent<RenderComponent>();
 		backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Asteroid1.obj");
-
 	}
 
+	backgroundObjects.push_back(new GameObject());
+	backgroundObjects.back()->AddComponent<Rigidbody>();
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(0, 0, -1, 0));
+	backgroundObjects.back()->GetComponent<Rigidbody>()->SetScale(Vector4(1, 1, 1, 1));
+
+	backgroundObjects.back()->AddComponent<RenderComponent>();
+	backgroundObjects.back()->GetComponent<RenderComponent>()->LoadModelFromFile("Engine/Resources/Models/Asteroid1.obj");
 
 	//_______ particles __________
 	rocketProps.startColour = DirectX::XMFLOAT4(1.0f, 0.7f, 0.0f, 1.0f);
@@ -90,8 +100,8 @@ ButtonMashingScene::ButtonMashingScene()
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.yAxis, Vector3(0.0f, -1.0f, 0.0f));
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.zAxis, Vector3(kZUnitVector));
 
-	rocketProps.lauchingData.maxParticles = 300;
-	rocketProps.lauchingData.spawnRate = 64.0f;
+	rocketProps.lauchingData.maxParticles = 2000;
+	rocketProps.lauchingData.spawnRate = 16.0f;
 	rocketProps.lauchingData.speed = 1.0f;
 
 	// dont want the particles to bounce
@@ -101,21 +111,14 @@ ButtonMashingScene::ButtonMashingScene()
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.launchPosition, Vector3(0.0f, 0.0f, 0.0f));
 	// particleProps.textureID --
 
-	//pEffect = &ParticleManager::Get().CreateEffect(rocketProps);
-	
 	playerKeys.push_back(Key::H);
 	playerKeys.push_back(Key::J);
 	playerKeys.push_back(Key::K);
 	playerKeys.push_back(Key::L);
-	
 }
 
 ButtonMashingScene::~ButtonMashingScene()
 {
-	for (int i = 0; i < playerColors.size(); i++)
-	{
-		delete (playerColors[i]);
-	}
 	playerColors.clear();
 }
 
@@ -124,23 +127,36 @@ bool ButtonMashingScene::Initialize()
 	return true;
 }
 
+void ButtonMashingScene::Unload()
+{
+	for (auto effect : pEffects)
+	{
+		ParticleManager::Get().RemoveEffect(effect);
+		SAFE_DELETE(effect);
+	}
+
+	pEffects.clear();
+}
+
 void ButtonMashingScene::Update(const float deltaTime_)
 {
-	
-	//cameraController.UpdateMainCamera();
 	cameraController.UpdateMainCamera();
 	timeToStart -= deltaTime_;
-	//gameObjects.back()->GetComponent<Rigidbody>()->
-	//gameObjects.back()->GetComponent<Rigidbody>()->ApplyForce(Vector4(0, -0.05, 0, 0));
+
 	if (!won)
 	{
 		if (timeToStart <= 0)
+		{
 			for (int i = 0; i < gameObjects.size(); i++)
 			{
+				if (pEffects[i] != nullptr)
+					pEffects[i]->SetPosition(Vector3(gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition()));
+
 				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > -10.50f)
-					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_*0.35f, 0, 0));
+					gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, -deltaTime_ * 0.35f, 0, 0));
 				else
 					gameObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
+
 				if (Input::Get().isKeyPressed(playerKeys.at(i)))
 				{
 					if (!playerPressed.at(i))
@@ -151,20 +167,20 @@ void ButtonMashingScene::Update(const float deltaTime_)
 						}
 						gameObjects.at(i)->GetComponent<Rigidbody>()->AddVelocity(Vector4(0, 55 * deltaTime_, 0, 0));
 
-
-
-						//particles for the rocketship
-						//rocketProps.maxVelocity = Vector2(-55.0f * deltaTime_, -55.0f * deltaTime_);
-						pEffect = &ParticleManager::Get().CreateEffect(rocketProps);
-						pEffect->Translate(gameObjects.at(i)->GetPosition());
+						if (pEffects[i] == nullptr)
+						{
+							pEffects[i] = &ParticleManager::Get().CreateEffect(rocketProps);
+							pEffects[i]->SetPosition(Vector3(gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition()));
+						}
 					}
-					playerPressed.at(i) = true;
 
+					playerPressed.at(i) = true;
 				}
 				else
 				{
 					playerPressed.at(i) = false;
 				}
+
 				if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)
 				{
 					won = true;
@@ -173,12 +189,12 @@ void ButtonMashingScene::Update(const float deltaTime_)
 						gameObjects.at(z)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
 						if (z != i)
 						{
-							moonObjects.at(z)->GetComponent<Rigidbody>()->SetAcceleration(Vector4(0, -rand() % 15 -10, 0, 0));
+							moonObjects.at(z)->GetComponent<Rigidbody>()->SetAcceleration(Vector4(0, -rand() % 15 - 10, 0, 0));
 						}
 					}
 				}
 			}
-		
+		}
 	}
 	
 	if (won)
@@ -206,6 +222,9 @@ void ButtonMashingScene::UIRender()
 	
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
+		std::string playerPos = "Player " + std::to_string(i) + " y position: " + std::to_string(gameObjects[i]->GetPosition().GetY());
+		ImGui::Text(playerPos.c_str());
+
 		if (gameObjects.at(i)->GetComponent<Rigidbody>()->GetPosition().GetY() > 22.0f)
 		{
 			std::string text  = "Player"+std::to_string(i+1)+" Wins";

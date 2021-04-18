@@ -221,22 +221,6 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 		}
 	}
 
-	for (int j = numRows - 1; j >= 0; j--)
-	{
-		for (int i = 0; i < numColumns; i++)
-		{
-			if (m_binaryGrid.Check(i, j))
-			{
-				std::cout << "O";
-			}
-			else
-			{
-				std::cout << "*";
-			}
-		}
-		std::cout << "" << std::endl;
-	}
-
 	CreateContourPoints(CellSize);
 
 	std::vector<double> triangulationPoints;
@@ -269,11 +253,11 @@ void NavMeshManager::GenerateNavMesh(float CellSize, Plane GroundPlane, std::vec
 	// For pathfinding, will need to make sure destination lies within nav mesh, and if it does, find shortest path to point from nav data
 	Graph<Vector2> pathfindingData = CreateNavigationData(delauney);
 
-	Model* model = CreateNavMeshModel(delauney);
+	/*Model* model = CreateNavMeshModel(delauney);
 
 	navMesh = new GameObject();
 	navMesh->AddComponent<RenderComponent>();
-	navMesh->GetComponent<RenderComponent>()->CreateFromExistingModel(model);
+	navMesh->GetComponent<RenderComponent>()->CreateFromExistingModel(model);*/
 
 	// cachedCollider = nullptr;
 }

@@ -10,7 +10,7 @@ cbuffer LaunchData : register(b2)
 	float3 zAxis;
 	float groundBounce;
 	float3 gravity;
-	float pad1;
+	float floorHeight;
 	uint4 randomIndices[64];
 };
 

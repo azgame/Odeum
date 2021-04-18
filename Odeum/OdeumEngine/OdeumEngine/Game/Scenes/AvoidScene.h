@@ -4,13 +4,13 @@
 #include "../../pch.h"
 #include "../../Engine/Core/OdeumEngine.h"
 
+#include "../../Engine/Core/CameraController.h"
+
 class AvoidScene : public Scene
 {
 public:
 	AvoidScene();
 	virtual ~AvoidScene();
-	int MaxPlayers;
-	int MaxObstacles=1;
 
 	//float timeToStart;
 	virtual bool Initialize();
@@ -26,8 +26,11 @@ private:
 	std::vector<Vector4> playerLastVelocity;
 	std::vector<GameObject*> backgroundObjects;
 	std::vector<GameObject*> obstacleObjects;
+	GameObject* enemyObject;
+
+	int MaxPlayers;
 	int currentDeadPlayers;
-	float timeToWin=30.0f;
+	float timeToWin = 30.0f;
 	float timeToEnd = 5;
 	//change these to players later
 	std::vector<Key::KeyCode> playerKeysLeft;
@@ -45,6 +48,8 @@ private:
 	float maxRight = 20;
 	int maxScore = 10;
 	bool won;
+
+	const int kMaxObstacles = 5;
 };
 
 #endif

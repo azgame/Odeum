@@ -34,6 +34,7 @@ public:
 
 	void Initialize(uint32_t Width, uint32_t Height);
 	ParticleEffect& CreateEffect(ParticleProperties Properties);
+	void RemoveEffect(ParticleEffect* Effect);
 	void Update(ComputeContext& Compute, float deltaTime);
 	void Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget);
 	void Uninitialize();
@@ -44,6 +45,7 @@ public:
 	StructuredBuffer GetParticleOutputBuffer() { return m_vertexBuffer; }
 
 	uint32_t GetTotalNumParticles() { return *particleCount; }
+	uint32_t GetNumParticleEffects() { return sm_activeEffects.size(); }
 
 private:
 

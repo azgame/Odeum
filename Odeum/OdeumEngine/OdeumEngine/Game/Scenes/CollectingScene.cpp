@@ -17,10 +17,12 @@
 CollectingScene::CollectingScene()
 {
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 00.0f, -25.0f));
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 0.0));
+
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
     MaxPlayers = 4;
     srand(time(NULL));
     for (int i = 0; i < MaxPlayers; i++)
@@ -39,7 +41,7 @@ CollectingScene::CollectingScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(0, -1, 0, 0),180);
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 4, 0, 0));
         playerScores.push_back(0);
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
     }
 
     for (int i = 0; i < MaxTargets; i++)
@@ -80,7 +82,6 @@ CollectingScene::CollectingScene()
     playerKeysUp.push_back(Key::U);
     playerKeysUp.push_back(Key::U);
     
-    AudioHandler::GetInstance()->Initialize();
     playerObjects.back()->AddComponent<AudioSource>();
     playerObjects.back()->GetComponent<AudioSource>()->Initialize("CanCan.mp3", true, false, false, 0.5f);
     playerObjects.back()->GetComponent<AudioSource>()->PlaySound();
@@ -125,10 +126,6 @@ CollectingScene::CollectingScene()
 }
 CollectingScene::~CollectingScene()
 {
-    for (int i = 0; i < playerColors.size(); i++)
-    {
-        delete (playerColors[i]);
-    }
     playerColors.clear();
 }
 //float timeToStart;

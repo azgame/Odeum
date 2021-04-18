@@ -18,16 +18,15 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 Collecting3DScene::Collecting3DScene()
 {
-    playerColors.push_back(&Colour(0, 0, 1, 0.5));
-    playerColors.push_back(&Colour(1, 0, 0, 0.5));
-    playerColors.push_back(&Colour(1, 1, 0, 0.5));
-    playerColors.push_back(&Colour(0, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 0, 1, 0.5));
+    playerColors.push_back(Colour(1, 0, 0, 0.5));
+    playerColors.push_back(Colour(1, 1, 0, 0.5));
+    playerColors.push_back(Colour(0, 1, 0, 0.5));
 
-    AudioHandler::GetInstance()->Initialize();
     MaxPlayers = 4;
     srand(time(NULL));
     OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, -45.0f, -20.0f));
-    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0f, 45.0f, 0.0f), Vector3(0.0f, 1, 0.0f));
+    OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0f, 45.0f, 0.0f));
     for (int i = 0; i < MaxPlayers; i++)
     {
 
@@ -42,7 +41,7 @@ Collecting3DScene::Collecting3DScene()
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetVelocity(Vector4(0, 0, 0, 0));
         playerObjects.at(i)->GetComponent<Rigidbody>()->SetRotation(Vector4(-1,0,0,0), 90);
         playerScore.push_back(0);
-        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(*playerColors.at(i));
+        playerObjects.back()->GetComponent<RenderComponent>()->SetColour(playerColors.at(i));
     }
     playerObjects.back()->GetComponent<Rigidbody>()->SetPosition(Vector4(8, rand() % 4 - 1, -1, 0));
     backgroundObjects.push_back(new GameObject());
@@ -208,10 +207,6 @@ Collecting3DScene::Collecting3DScene()
 }
 Collecting3DScene::~Collecting3DScene()
 {
-    for (int i = 0; i < playerColors.size(); i++)
-    {
-        delete (playerColors[i]);
-    }
     playerColors.clear();
 }
 //float timeToStart;

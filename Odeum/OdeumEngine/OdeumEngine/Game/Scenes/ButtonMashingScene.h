@@ -17,7 +17,7 @@ public:
 	int MaxPlayers;
 	float timeToStart;
 	virtual bool Initialize();
-	void Unload() {};
+	void Unload();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 
@@ -26,7 +26,7 @@ private:
 
 	Vector4 clear_color=Vector4(0,0,0,0);
 	CameraController cameraController;
-	std::vector<Colour*> playerColors;
+	std::vector<Colour> playerColors;
 	float timeToEnd = 5;
 	std::vector<GameObject*> gameObjects;
 	std::vector<GameObject*> backgroundObjects;
@@ -35,7 +35,7 @@ private:
 	std::vector<bool> playerPressed;
 	bool won;
 
-	ParticleEffect* pEffect;
+	std::vector<ParticleEffect*> pEffects;
 	ParticleProperties rocketProps;
 	ParticleProperties explosionProps;
 };

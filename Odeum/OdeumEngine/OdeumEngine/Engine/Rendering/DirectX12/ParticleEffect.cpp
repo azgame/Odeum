@@ -63,8 +63,6 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	// Pre fill the cbv with particle launching details (ie. spawn location, initial direction, speed, max particles, etc.)
 	// Transition the currently used particle buffer to a shader resource to get the state of each alive particle
 	// Set current particle buffer and spawn buffer as srvs
-	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
-
 	Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer], D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
 	Compute.SetDynamicDescriptor(4, 1, m_particleBuffer[m_currentParticleBuffer].ShaderResourceView());
@@ -82,6 +80,7 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	Compute.TransitionResource(m_particleBuffer[m_currentParticleBuffer], D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 	Compute.TransitionResource(m_dispatchArgsBuffer, D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT);
 	Compute.SetDynamicDescriptor(3, 2, m_particleBuffer[m_currentParticleBuffer].UnorderedAccessView());
+	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
 	Compute.DispatchIndirect(m_dispatchArgsBuffer, 0);
 
 	// Barrier so that living particles take precedent over spawning new particles
@@ -92,6 +91,7 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	// Number of spawn threads is how fast we should be spawning new particles each second. numSpawnThreads will determine how many
 	//	batches of 64 particles we will spawn this frame, up to kMaxParticles.
 	Compute.SetPipelineState(ParticleManager::Get().GetParticleSpawnPSO());
+	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
 	UINT numSpawnThreads = (UINT)(m_properties.lauchingData.spawnRate * deltaTime);
 	Compute.Dispatch((numSpawnThreads + 63) / 64, 1, 1);
@@ -105,4 +105,9 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	Compute.SetDynamicDescriptor(4, 0, m_particleBuffer[m_currentParticleBuffer].GetCounterSRV(Compute));
 	Compute.SetDynamicDescriptor(3, 1, m_dispatchArgsBuffer.UnorderedAccessView());
 	Compute.Dispatch(1, 1, 1);
+}
+
+void ParticleEffect::DestroyParticle()
+{
+	m_properties.lifeTime = 0;
 }

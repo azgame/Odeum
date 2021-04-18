@@ -52,6 +52,5 @@ void CameraController::UpdateMainCamera()
 
 	Vector3 look = Vector3(move.GetX() + x, move.GetY() + y, move.GetZ() + z);
 
-	//mainCamera.SetPosition(move);
 	mainCamera.SetEyeAtUp(move, look, Vector3(kYUnitVector));
 }
