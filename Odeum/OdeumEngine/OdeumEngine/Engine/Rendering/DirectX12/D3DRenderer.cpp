@@ -218,6 +218,7 @@ void D3DRenderer::UIRender()
 	ImGui::Text("FPS: %.1f fps", DXGraphics::GetFrameRate());
 	ImGui::Text("Render Pass frame time: %.2f ms/frame", averageFrameTime);
 	ImGui::Text("Total Number of Particles: %.0f", averageNumParticles);
+	ImGui::Text("Total number of Particle Effects: %d", ParticleManager::Get().GetNumParticleEffects());
 	ImGui::Text("Camera Pos: %.0f, %.0f, %.0f", mainCamera.GetPosition().GetX(), mainCamera.GetPosition().GetY(), mainCamera.GetPosition().GetZ());
 	ImGui::Text("Camera Look at: %.0f, %.0f, %.0f", mainCamera.LookAt().GetX(), mainCamera.LookAt().GetY(), mainCamera.LookAt().GetZ());
 

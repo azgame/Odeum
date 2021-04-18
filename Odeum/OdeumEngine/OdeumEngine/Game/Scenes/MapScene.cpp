@@ -860,6 +860,7 @@ void  MAPScene::SetArea(int length_, int width, Vector4 startPos_)
 		}
 	}
 }
+
 bool MAPScene::Initialize()
 {
 	return true;

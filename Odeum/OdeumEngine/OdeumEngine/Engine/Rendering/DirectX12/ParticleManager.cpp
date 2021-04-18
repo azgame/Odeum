@@ -86,6 +86,17 @@ ParticleEffect& ParticleManager::CreateEffect(ParticleProperties Properties)
 	return *effect;
 }
 
+void ParticleManager::RemoveEffect(ParticleEffect* Effect)
+{
+	auto iter = std::find(sm_activeEffects.begin(), sm_activeEffects.end(), Effect);
+	if (iter != sm_activeEffects.end())
+	{
+		sm_mutex.lock();
+		sm_activeEffects.erase(iter);
+		sm_mutex.unlock();
+	}
+}
+
 void ParticleManager::Update(ComputeContext& Compute, float deltaTime)
 {
 	Compute.ResetCounter(m_vertexBuffer);
@@ -128,6 +139,9 @@ void ParticleManager::Update(ComputeContext& Compute, float deltaTime)
 	
 void ParticleManager::Render(CommandContext& Context, Camera& Camera, ColourBuffer& renderTarget, DepthBuffer& depthTarget)
 {
+	if (sm_activeEffects.size() == 0)
+		return; 
+
 	uint32_t width = renderTarget.GetWidth();
 	uint32_t height = renderTarget.GetHeight();
 
@@ -168,7 +182,13 @@ void ParticleManager::Render(CommandContext& Context, Camera& Camera, ColourBuff
 	Graphics.DrawIndirect(m_drawIndirectArgs);
 }
 
+// if there are any lingering effects, delete them
 void ParticleManager::Uninitialize()
 {
-}
+	for (int i = 0; i < sm_activeEffects.size(); i++)
+	{
+		SAFE_DELETE(sm_activeEffects[i]);
+	}
 
+	sm_activeEffects.clear();
+}

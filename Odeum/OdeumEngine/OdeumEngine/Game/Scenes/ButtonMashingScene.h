@@ -17,7 +17,7 @@ public:
 	int MaxPlayers;
 	float timeToStart;
 	virtual bool Initialize();
-	void Unload() {};
+	void Unload();
 	virtual void Update(const float deltaTime_);
 	virtual void UIRender();
 
@@ -35,7 +35,7 @@ private:
 	std::vector<bool> playerPressed;
 	bool won;
 
-	ParticleEffect* pEffect;
+	std::vector<ParticleEffect*> pEffects;
 	ParticleProperties rocketProps;
 	ParticleProperties explosionProps;
 };

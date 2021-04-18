@@ -59,6 +59,11 @@ public:
 		kMaxParticles = Properties.lauchingData.maxParticles;
 	}
 
+	~ParticleEffect()
+	{
+		DestroyParticle();
+	}
+
 	void Initialize();
 	void Update(ComputeContext& Compute, float deltaTime);
 
@@ -75,6 +80,8 @@ public:
 	void ModifySpawnRate(float ChangeRate) { m_properties.lauchingData.spawnRate += ChangeRate; }
 
 private:
+
+	void DestroyParticle();
 	
 	uint32_t kMaxParticles = 1000;
 	float elapsedTime;
