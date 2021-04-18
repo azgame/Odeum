@@ -88,13 +88,25 @@ void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpee
 	// slerp rotation
 	// back to starting orientation
 	
-	if (m_direction == 0) {
-		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), 80.0f)), slerpSpeed));
+	// old slerp
+	/*if (m_direction == 0) {
+		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), -90.0f * DEGREES_TO_RADIANS)), slerpSpeed));
 	}
 	else if (m_direction == 1)
 	{
-		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), -80.0f)), slerpSpeed));
+		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), 90.0f * DEGREES_TO_RADIANS)), slerpSpeed));
+	}*/
+	// new slerp
+	Vector2 angleVec = Vector2(next->GetPosition().GetX() - start->GetPosition().GetX(), start->GetPosition().GetZ() - next->GetPosition().GetZ());
+	float angle = atan2(angleVec.GetY(),angleVec.GetX());
+	angle -= PI / 2;
+
+	if(angle < 0)
+	{ 
+		angle += 2 * PI;
 	}
+	
+	m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), angle)), slerpSpeed));
 
 	//std::cout << "distacne: " << Vector3(m_gameObject->GetComponent<Rigidbody>()->GetPosition() - next->GetComponent<Rigidbody>()->GetPosition()).Mag() << std::endl << std::endl;
 	// if the distance between the player and next tile is less than a small number, move to next tile
