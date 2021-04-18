@@ -480,6 +480,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\Resources\Models\Man.dae" />
     <None Include="Engine\Shaders\ParticleCommon.hlsli" />
     <None Include="Engine\Shaders\ParticleRS.hlsli" />
     <None Include="Engine\Shaders\ParticleUpdateUtility.hlsli" />
@@ -487,6 +488,9 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="Engine\Resources\Audio\TestCoin.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Engine\Resources\Textures\Man_Diffuse.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

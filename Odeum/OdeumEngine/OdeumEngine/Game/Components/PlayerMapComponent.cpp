@@ -33,7 +33,7 @@ void PlayerMapComponent::Move(std::vector<GameObject*>* Map)
 
 	m_gameObject->GetComponent<Rigidbody>()->SetPosition(Vector4(
 		target->GetComponent<Rigidbody>()->GetPosition().GetX(), 
-		target->GetComponent<Rigidbody>()->GetPosition().GetY() + 1,
+		target->GetComponent<Rigidbody>()->GetPosition().GetY() + 1.0f,
 		target->GetComponent<Rigidbody>()->GetPosition().GetZ(),
 		1));
 		
