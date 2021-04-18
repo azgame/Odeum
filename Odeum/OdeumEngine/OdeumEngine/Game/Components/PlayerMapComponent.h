@@ -28,10 +28,12 @@ public:
 	void SetStartMovement(bool m) { m_startMovement = m; }
 	bool GetStartMovement() { return m_startMovement; }
 
-	// 0 = right, 1 = left, 2 = up, 3 = down
+	bool IsFirstMove() { return m_firstMove; }
+	void SetFirstMove(bool firstMove) { m_firstMove = firstMove; }
+	// 0 = 'D' (backward along the gameObjects vector), 1 = 'A' (forward along the gameObjects vector)
 	void SetDirection(int d) { m_direction = d; }
-	// 0 = right, 1 = left, 2 = up, 3 = down
-	int GetDirection() { return m_direction; } 
+	// 0 = 'D' (backward along the gameObjects vector), 1 = 'A' (forward along the gameObjects vector)
+	int GetDirection() { return m_direction; }
 
 	void LerpBetweenTiles(int startID, int endID, float lerpSpeed);
 	void AddMap(std::vector<GameObject*>* map) { m_map = map; }
@@ -43,7 +45,8 @@ private:
 	UINT m_tileIndex;
 	UINT m_destinationIndex;
 	bool m_startMovement;
-	UINT m_direction; // 0 = right, 1 = left, 2 = up, 3 = down
+	bool m_firstMove;
+	UINT m_direction; // 0 = 'D' (backward along the gameObjects vector), 1 = 'A' (forward along the gameObjects vector)
 	std::vector<GameObject*>* m_map;
 };
 

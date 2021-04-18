@@ -589,6 +589,13 @@ MAPScene::MAPScene()
 	//art stuff
 	BuildEnviroment();
 
+	// adding map to player component
+	for (auto p : playerObjects) 
+	{
+		p->GetComponent<PlayerMapComponent>()->AddMap(&gameObjects);
+
+	}
+
 }
 
 MAPScene::~MAPScene() {
@@ -893,25 +900,71 @@ bool MAPScene::PlayerTurn()
 	}
 
 	int currentTile = m_currentPlayer->GetTile();
-
-	if (Input::Get().isKeyPressed(Key::D))
+	std::cout << "current: " << currentTile << std::endl;
+	std::cout << "destination: " << m_currentPlayer->GetDestination() << std::endl;
+	if (Input::Get().isKeyPressed(Key::D) && !m_currentPlayer->GetStartMovement())
 	{
-		if (currentTile - numMoves < 0)
+		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
+		if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
 		{
-			int temp = numMoves - currentTile;
-			m_currentPlayer->SetDestination(gameObjects.size() - temp);
+			// if other direction is pressed, move twice as much 
+			if (m_currentPlayer->GetDirection() == 1) {
+
+				if (currentTile - (numMoves * 2) < 0)
+				{
+					int temp = (numMoves * 2) - currentTile;
+					m_currentPlayer->SetDestination(gameObjects.size() - temp);
+					m_currentPlayer->SetDirection(0);
+					m_currentPlayer->SetStartMovement(true);
+				}
+				else
+				{
+					m_currentPlayer->SetDestination(currentTile - (numMoves * 2));
+					m_currentPlayer->SetDirection(0);
+					m_currentPlayer->SetStartMovement(true);
+				}
+			}
+			// don't move again if the direction is the same
 		}
-		else
+		else 
 		{
-			m_currentPlayer->SetDestination(currentTile - numMoves);
+			if (currentTile - numMoves < 0)
+			{
+				int temp = numMoves - currentTile;
+				m_currentPlayer->SetDestination(gameObjects.size() - temp);
+				m_currentPlayer->SetDirection(0);
+				m_currentPlayer->SetStartMovement(true);
+			}
+			else
+			{
+				m_currentPlayer->SetDestination(currentTile - numMoves);
+				m_currentPlayer->SetDirection(0);
+				m_currentPlayer->SetStartMovement(true);
+			}
 		}
 	}
-	else if (Input::Get().isKeyPressed(Key::A))
+	else if (Input::Get().isKeyPressed(Key::A) && !m_currentPlayer->GetStartMovement())
 	{
-		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
+		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
+		if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
+		{
+			// if other direction is pressed, move twice as much 
+			if (m_currentPlayer->GetDirection() == 0) {
+				m_currentPlayer->SetDestination((currentTile + numMoves * 2) % gameObjects.size());
+				m_currentPlayer->SetDirection(1);
+				m_currentPlayer->SetStartMovement(true);
+			}
+			// don't move again if the direction is the same
+		}
+		else {
+			m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
+			m_currentPlayer->SetDirection(1);
+			m_currentPlayer->SetStartMovement(true);
+		}
 	}
 
-	if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
+	//if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
+	if(Input::Get().isKeyPressed(Key::Space) && !m_currentPlayer->GetStartMovement())
 	{
 		m_currentPlayer->Move(&gameObjects);
 		int tileID = m_currentPlayer->GetDestination();
@@ -919,6 +972,7 @@ bool MAPScene::PlayerTurn()
 		tile = gameObjects[tileID]->Tag();
 
 		numMoves = 0;
+		m_currentPlayer->SetFirstMove(true);
 	}
 
 	if (Input::Get().isKeyPressed(Key::Enter) || (numMoves == 0 && hasRolled))

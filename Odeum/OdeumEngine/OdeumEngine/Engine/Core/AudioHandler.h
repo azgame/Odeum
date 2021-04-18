@@ -48,7 +48,6 @@ private:
 	FMOD::Sound* GetSound(std::string soundName);
 	int PlaySound(std::string soundName, Vector3 position, Vector3 velocity, float volume);
 	void StopSound(int channelNum);
-	void StopAllSounds();
 	void UpdateChannel(int channelNum, Vector3 position, Vector3 velocity);
 	bool IsPlaying(int channelNum);
 
