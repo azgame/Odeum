@@ -221,6 +221,21 @@ int AudioHandler::PlaySound(std::string soundName, Vector3 position, Vector3 vel
 	return channelID;
 }
 
+void AudioHandler::StopSound(int channelNum) {
+	for (auto c : channelMap) {
+		if (c.first == channelNum) {
+			c.second->stop();
+		}
+	}
+}
+
+void AudioHandler::StopAllSounds() {
+	for (auto c : channelMap)
+	{
+		c.second->stop();
+	}
+}
+
 // update 3D attributes of specific channel
 void AudioHandler::UpdateChannel(int channelNum, Vector3 position = Vector3(), Vector3 velocity = Vector3())
 {

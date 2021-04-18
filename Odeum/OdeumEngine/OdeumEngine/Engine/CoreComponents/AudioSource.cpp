@@ -34,6 +34,10 @@ void AudioSource::PlaySound()
 	}
 }
 
+void AudioSource::StopSound() {
+	AudioHandler::GetInstance()->StopSound(as_channelID);
+}
+
 bool AudioSource::IsPlaying()
 {
 	return AudioHandler::GetInstance()->IsPlaying(as_channelID);
