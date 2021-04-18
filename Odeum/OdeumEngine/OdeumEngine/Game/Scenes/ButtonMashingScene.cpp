@@ -7,6 +7,9 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
+
+#include "../Engine/JSONUtility/json.hpp"
+
 ButtonMashingScene::ButtonMashingScene()
 {
 	MaxPlayers = 4;
@@ -204,7 +207,22 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			timeToEnd -= deltaTime_;
 			if (timeToEnd <= 0)
 			{
-				OdeumEngine::Get().SetCurrentScene(19);
+				std::ifstream configFile("Game/GameAssets/GameConfig.json");
+				nlohmann::json jsonReader;
+
+				configFile >> jsonReader;
+				configFile.close();
+
+				bool map = jsonReader["Config"]["Map"].get<bool>();
+
+				if (map)
+				{
+					OdeumEngine::Get().SetCurrentScene(17);
+				}
+				else
+				{
+					OdeumEngine::Get().SetCurrentScene(19);
+				}
 				
 				//return who wins
 			}

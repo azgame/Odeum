@@ -4,6 +4,8 @@
 
 #include "../Engine/Events/ApplicationEvent.h"
 
+#include "../Engine/JSONUtility/json.hpp"
+
 MenuScene::MenuScene()
 {
 	
@@ -27,7 +29,7 @@ void MenuScene::UIRender()
 {
 	ImGui::Begin("Menu UI");
 	ImGui::Text("Choose your game mode");
-	ImGui::Button("Start Game");
+	if (ImGui::Button("Start Game")) { PlayGame(); }
 	ImGui::SliderInt(levelString.at(i1), &i1, 1, 9);
 	if (ImGui::Button("Select MiniGame")) { LoadLevel(i1); }
 	if (ImGui::Button("Quit Game")) { Quit(); }
@@ -35,8 +37,29 @@ void MenuScene::UIRender()
 	ImGui::End();
 }
 
+void MenuScene::PlayGame()
+{
+	nlohmann::json jsonReader;
+
+	jsonReader["Config"]["Map"] = true;
+
+	std::ofstream configFile("Game/GameAssets/GameConfig.json");
+	configFile << jsonReader;
+	configFile.close();
+
+	OdeumEngine::Get().SetCurrentScene(17);
+}
+
 void MenuScene::LoadLevel(int level_)
 {
+	nlohmann::json jsonReader;
+
+	jsonReader["Config"]["Map"] = false;
+
+	std::ofstream configFile("Game/GameAssets/GameConfig.json");
+	configFile << jsonReader;
+	configFile.close();
+
 	int selection;
 	switch (level_)
 	{

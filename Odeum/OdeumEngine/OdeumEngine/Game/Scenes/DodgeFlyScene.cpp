@@ -15,6 +15,9 @@
 #include <time.h>  
 #include"../../Engine/Core/AudioHandler.h"
 #include "../../Engine/CoreComponents/AudioSource.h"
+
+#include "../Engine/JSONUtility/json.hpp"
+
 DodgeFlyScene::DodgeFlyScene()
 {
     playerColors.push_back(Colour(0, 0, 1, 0.5));
@@ -330,7 +333,22 @@ void DodgeFlyScene::Update(const float deltaTime_)
             timeToEnd -= deltaTime_;
             if (timeToEnd <= 0)
             {
-                OdeumEngine::Get().SetCurrentScene(19);
+                std::ifstream configFile("Game/GameAssets/GameConfig.json");
+                nlohmann::json jsonReader;
+
+                configFile >> jsonReader;
+                configFile.close();
+
+                bool map = jsonReader["Config"]["Map"].get<bool>();
+
+                if (map)
+                {
+                    OdeumEngine::Get().SetCurrentScene(17);
+                }
+                else
+                {
+                    OdeumEngine::Get().SetCurrentScene(19);
+                }
                 //return who wins
             }
         }
