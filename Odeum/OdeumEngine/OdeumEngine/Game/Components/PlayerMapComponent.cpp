@@ -9,6 +9,8 @@ void PlayerMapComponent::OnAttach(GameObject* parent)
 	m_startMovement = false;
 	m_direction = 0;
 	m_firstMove = true;
+	slerpSpeed = 0.03f;
+	lerpSpeed = 0.05f;
 }
 
 void PlayerMapComponent::OnStart()
@@ -40,7 +42,7 @@ void PlayerMapComponent::Move(std::vector<GameObject*>* Map)
 	m_tileIndex = m_destinationIndex;
 }
 
-void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpeed)
+void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpeed, float slerpSpeed)
 {
 	GameObject* start = nullptr;
 	GameObject* next = nullptr; 
@@ -72,8 +74,6 @@ void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpee
 		}
 	}
 	end = m_map->at(endID);
-	Vector3 testVec = Vector3(Math::Lerp(m_gameObject->GetComponent<Rigidbody>()->GetPosition(), next->GetComponent<Rigidbody>()->GetPosition(), lerpSpeed));
-
 	/*std::cout << "TESTVEC: ";
 	testVec.Print();
 	std::cout << std::endl;
@@ -85,7 +85,16 @@ void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpee
 	// lerp to next tile -- use actual lerp
 	m_gameObject->GetComponent<Rigidbody>()->SetPosition(Math::Lerp(m_gameObject->GetComponent<Rigidbody>()->GetPosition(), next->GetComponent<Rigidbody>()->GetPosition(), lerpSpeed));
 
-	//if(m_gameObject->GetComponent<Rigidbody>()->GetPosition())
+	// slerp rotation
+	// back to starting orientation
+	
+	if (m_direction == 0) {
+		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), 80.0f)), slerpSpeed));
+	}
+	else if (m_direction == 1)
+	{
+		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(m_startingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), -80.0f)), slerpSpeed));
+	}
 
 	//std::cout << "distacne: " << Vector3(m_gameObject->GetComponent<Rigidbody>()->GetPosition() - next->GetComponent<Rigidbody>()->GetPosition()).Mag() << std::endl << std::endl;
 	// if the distance between the player and next tile is less than a small number, move to next tile
@@ -97,7 +106,7 @@ void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpee
 			m_firstMove = false;
 			return;
 		}
-		LerpBetweenTiles(nextID, endID, lerpSpeed);
+		LerpBetweenTiles(nextID, endID, lerpSpeed, slerpSpeed);
 	}
 	// ignore this vv
 	/*if (abs(m_gameObject->GetComponent<Rigidbody>()->GetPosition().Mag()) < abs(next->GetComponent<Rigidbody>()->GetPosition().Mag())) {
@@ -133,16 +142,16 @@ void PlayerMapComponent::LerpBetweenTiles(int startID, int endID, float lerpSpee
 }
 
 void PlayerMapComponent::Update(float deltaTime)
-{
-	
+{	
 	if (m_tileIndex != m_destinationIndex) {
 		if (m_startMovement)
 		{
-			LerpBetweenTiles(m_tileIndex, m_destinationIndex, 0.05f); // could make lerpSpeed a variable
+			LerpBetweenTiles(m_tileIndex, m_destinationIndex, deltaTime * lerpSpeed, deltaTime * slerpSpeed); // could make lerpSpeed a variable
 		}
 	}
 	else {
 		m_startMovement = false;
 		m_tileIndex = m_destinationIndex;
+		m_gameObject->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(m_gameObject->GetComponent<Rigidbody>()->GetOrientation(), m_startingOrientation, deltaTime * slerpSpeed));
 	}
 }
