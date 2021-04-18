@@ -104,7 +104,7 @@ ButtonMashingScene::ButtonMashingScene()
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.zAxis, Vector3(kZUnitVector));
 
 	rocketProps.lauchingData.maxParticles = 2000;
-	rocketProps.lauchingData.spawnRate = 16.0f;
+	rocketProps.lauchingData.spawnRate = 1000.0f;
 	rocketProps.lauchingData.speed = 1.0f;
 
 	// dont want the particles to bounce
