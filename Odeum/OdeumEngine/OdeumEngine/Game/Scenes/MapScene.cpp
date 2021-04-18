@@ -15,7 +15,6 @@
 
 MAPScene::MAPScene()
 {
-	slerpSpeed = 0.03f;
 	OdeumEngine::Get().GetCamera().SetPosition(Vector3(0.0f, 25.0f, -19.0f));
 	OdeumEngine::Get().GetCamera().SetLookDirection(Vector3(0.0, 0.0, 17.0));
 
@@ -38,8 +37,6 @@ MAPScene::MAPScene()
 	playerObjects.back()->SetTag("Player1");
 
 	players.push(playerObjects.back()->GetComponent<PlayerMapComponent>());
-
-	playerStartingOrientation = playerObjects.back()->GetComponent<Rigidbody>()->GetOrientation();
 
 	//playerObjects.push_back(new GameObject());
 	//playerObjects.back()->AddComponent<Rigidbody>();
@@ -598,7 +595,9 @@ MAPScene::MAPScene()
 	for (auto p : playerObjects) 
 	{
 		p->GetComponent<PlayerMapComponent>()->AddMap(&gameObjects);
-
+		p->GetComponent<PlayerMapComponent>()->SetStartingOrientation(p->GetComponent<Rigidbody>()->GetOrientation());
+		p->GetComponent<PlayerMapComponent>()->SetLerpSpeed(5.0f);
+		p->GetComponent<PlayerMapComponent>()->SetSlerpSpeed(3.0f);
 	}
 
 }
@@ -907,98 +906,57 @@ bool MAPScene::PlayerTurn()
 
 	int currentTile = m_currentPlayer->GetTile();
 
-	// rotation of player
-	if (currentTile == m_currentPlayer->GetDestination()) {
-		playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(playerObjects.back()->GetComponent<Rigidbody>()->GetOrientation(), playerStartingOrientation, slerpSpeed));
-	}
-	else if (m_currentPlayer->GetDirection() == 0) {
-		playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(playerObjects.back()->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(playerStartingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), 80.0f)), slerpSpeed));
-	}
-	else if (m_currentPlayer->GetDirection() == 1)
+	if (Input::Get().isKeyPressed(Key::D) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
-		playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(Math::Slerp(playerObjects.back()->GetComponent<Rigidbody>()->GetOrientation(), Quaternion(playerStartingOrientation * Quaternion(Vector3(0.0f, 0.0f, 1.0f), -80.0f)), slerpSpeed));
-	}
 
-	if (Input::Get().isKeyPressed(Key::D) && !m_currentPlayer->GetStartMovement())
-	{
-		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
-		if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
+		// code for pressing d to set direction
+		if (currentTile - (numMoves) < 0)
 		{
-			// if other direction is pressed, move twice as much 
-			if (m_currentPlayer->GetDirection() == 1) {
-
-				if (currentTile - (numMoves * 2) < 0)
-				{
-					int temp = (numMoves * 2) - currentTile;
-					m_currentPlayer->SetDestination(gameObjects.size() - temp);
-				}
-				else
-				{
-					m_currentPlayer->SetDestination(currentTile - (numMoves * 2));
-				}
-				m_currentPlayer->SetDirection(0);
-				m_currentPlayer->SetStartMovement(true);
-				//playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(playerStartingOrientation);
-				//playerObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 0.0f, 1.0f, 1.0), -90.0f);
-			}
-			// don't move again if the direction is the same
+			int temp = (numMoves) - currentTile;
+			m_currentPlayer->SetDestination(gameObjects.size() - temp);
 		}
-		else 
+		else
 		{
-			if (currentTile - numMoves < 0)
-			{
-				int temp = numMoves - currentTile;
-				m_currentPlayer->SetDestination(gameObjects.size() - temp);
-			}
-			else
-			{
-				m_currentPlayer->SetDestination(currentTile - numMoves);
-			}
-			m_currentPlayer->SetDirection(0);
-			m_currentPlayer->SetStartMovement(true);
-			//playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(playerStartingOrientation);
-			//playerObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 0.0f, 1.0f, 1.0), -90.0f);
+			m_currentPlayer->SetDestination(currentTile - (numMoves));
 		}
+		m_currentPlayer->SetDirection(0);
 	}
-	else if (Input::Get().isKeyPressed(Key::A) && !m_currentPlayer->GetStartMovement())
+	else if (Input::Get().isKeyPressed(Key::A) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
-		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
-		if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
-		{
-			// if other direction is pressed, move twice as much 
-			if (m_currentPlayer->GetDirection() == 0) {
-				m_currentPlayer->SetDestination((currentTile + numMoves * 2) % gameObjects.size());
-				m_currentPlayer->SetDirection(1);
-				m_currentPlayer->SetStartMovement(true);
-				//playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(playerStartingOrientation);
-				//playerObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 0.0f, 1.0f, 1.0), 90.0f);
-			}
-			// don't move again if the direction is the same
-		}
-		else {
-			m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
-			m_currentPlayer->SetDirection(1);
-			m_currentPlayer->SetStartMovement(true);
-			//playerObjects.back()->GetComponent<Rigidbody>()->SetRotation(playerStartingOrientation);
-			//playerObjects.back()->GetComponent<Rigidbody>()->AddRotation(Vector4(0.0f, 0.0f, 1.0f, 1.0), 90.0f);
-		}
+
+		// code for pressing a to set direction
+		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
+		m_currentPlayer->SetDirection(1);
 	}
 
 	//if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
-	if(Input::Get().isKeyPressed(Key::Space) && !m_currentPlayer->GetStartMovement())
+	if(Input::Get().isKeyPressed(Key::Space) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
-		m_currentPlayer->Move(&gameObjects);
-		int tileID = m_currentPlayer->GetDestination();
-
-		tile = gameObjects[tileID]->Tag();
-
-		LoadLevel((rand() % 9) + 1);
+		m_currentPlayer->SetStartMovement(true);
+		//m_currentPlayer->Move(&gameObjects);
 
 		numMoves = 0;
 		m_currentPlayer->SetFirstMove(true);
 	}
 
-	if (Input::Get().isKeyPressed(Key::Enter) || (numMoves == 0 && hasRolled))
+	if (numMoves == 0 && hasRolled && !m_currentPlayer->GetStartMovement())
+	{
+		int tileID = m_currentPlayer->GetDestination();
+
+		tile = gameObjects[tileID]->Tag();
+
+		if (tile == "Minigame")
+		{
+			LoadLevel((rand() % 9) + 1);
+		}
+
+		dieRoll = 0;
+		hasRolled = false;
+
+		return false;
+	}
+
+	if (Input::Get().isKeyPressed(Key::Enter))
 	{
 		dieRoll = 0;
 		hasRolled = false;
