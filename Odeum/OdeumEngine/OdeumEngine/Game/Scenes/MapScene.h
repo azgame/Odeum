@@ -64,6 +64,8 @@ private:
 
 	bool PlayerTurn();
 
+	void LoadLevel(int level_);
+
 	Graph<GameObject*> map = Graph<GameObject*>(100, false);
 
 	SimpleGraph<PlayerMapComponent*>* m_map;

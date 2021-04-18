@@ -7,6 +7,9 @@
 #include "../../Engine/CoreComponents/AudioSource.h"
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>  
+
+#include "../Engine/JSONUtility/json.hpp"
+
 ButtonMashingScene::ButtonMashingScene()
 {
 	MaxPlayers = 4;
@@ -101,7 +104,7 @@ ButtonMashingScene::ButtonMashingScene()
 	DirectX::XMStoreFloat3(&rocketProps.lauchingData.zAxis, Vector3(kZUnitVector));
 
 	rocketProps.lauchingData.maxParticles = 2000;
-	rocketProps.lauchingData.spawnRate = 16.0f;
+	rocketProps.lauchingData.spawnRate = 32.0f;
 	rocketProps.lauchingData.speed = 1.0f;
 
 	// dont want the particles to bounce
@@ -204,7 +207,22 @@ void ButtonMashingScene::Update(const float deltaTime_)
 			timeToEnd -= deltaTime_;
 			if (timeToEnd <= 0)
 			{
-				OdeumEngine::Get().SetCurrentScene(19);
+				std::ifstream configFile("Game/GameAssets/GameConfig.json");
+				nlohmann::json jsonReader;
+
+				configFile >> jsonReader;
+				configFile.close();
+
+				bool map = jsonReader["Config"]["Map"].get<bool>();
+
+				if (map)
+				{
+					OdeumEngine::Get().SetCurrentScene(17);
+				}
+				else
+				{
+					OdeumEngine::Get().SetCurrentScene(19);
+				}
 				
 				//return who wins
 			}

@@ -11,7 +11,7 @@
 
 #include "../../Engine/DataStructures/SimpleGraph.h"
 
-
+#include <stdlib.h>     /* srand, rand */
 
 MAPScene::MAPScene()
 {
@@ -906,43 +906,8 @@ bool MAPScene::PlayerTurn()
 
 	int currentTile = m_currentPlayer->GetTile();
 
-	if (Input::Get().isKeyPressed(Key::D) && !m_currentPlayer->GetStartMovement())
+	if (Input::Get().isKeyPressed(Key::D) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
-		// code for pressing d to move
-		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
-		/*if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
-		{
-			// if other direction is pressed, move twice as much 
-			if (m_currentPlayer->GetDirection() == 1) {
-
-				if (currentTile - (numMoves * 2) < 0)
-				{
-					int temp = (numMoves * 2) - currentTile;
-					m_currentPlayer->SetDestination(gameObjects.size() - temp);
-				}
-				else
-				{
-					m_currentPlayer->SetDestination(currentTile - (numMoves * 2));
-				}
-				m_currentPlayer->SetDirection(0);
-				m_currentPlayer->SetStartMovement(true);
-			}
-			// don't move again if the direction is the same
-		}
-		else 
-		{
-			if (currentTile - numMoves < 0)
-			{
-				int temp = numMoves - currentTile;
-				m_currentPlayer->SetDestination(gameObjects.size() - temp);
-			}
-			else
-			{
-				m_currentPlayer->SetDestination(currentTile - numMoves);
-			}
-			m_currentPlayer->SetDirection(0);
-			m_currentPlayer->SetStartMovement(true);
-		}*/
 
 		// code for pressing d to set direction
 		if (currentTile - (numMoves) < 0)
@@ -956,25 +921,8 @@ bool MAPScene::PlayerTurn()
 		}
 		m_currentPlayer->SetDirection(0);
 	}
-	else if (Input::Get().isKeyPressed(Key::A) && !m_currentPlayer->GetStartMovement())
+	else if (Input::Get().isKeyPressed(Key::A) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
-		// code for pressing a to move
-		// if character is at the other destination make sure to move double the spaces the other way to make up for what you already moved
-		/*if (currentTile == m_currentPlayer->GetDestination() && !m_currentPlayer->IsFirstMove())
-		{
-			// if other direction is pressed, move twice as much 
-			if (m_currentPlayer->GetDirection() == 0) {
-				m_currentPlayer->SetDestination((currentTile + numMoves * 2) % gameObjects.size());
-				m_currentPlayer->SetDirection(1);
-				m_currentPlayer->SetStartMovement(true);
-			}
-			// don't move again if the direction is the same
-		}
-		else {
-			m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
-			m_currentPlayer->SetDirection(1);
-			m_currentPlayer->SetStartMovement(true);
-		}*/
 
 		// code for pressing a to set direction
 		m_currentPlayer->SetDestination((currentTile + numMoves) % gameObjects.size());
@@ -982,19 +930,33 @@ bool MAPScene::PlayerTurn()
 	}
 
 	//if (Input::Get().isKeyPressed(Key::Space) && currentTile != m_currentPlayer->GetDestination())
-	if(Input::Get().isKeyPressed(Key::Space) && !m_currentPlayer->GetStartMovement())
+	if(Input::Get().isKeyPressed(Key::Space) && !m_currentPlayer->GetStartMovement() && numMoves != 0)
 	{
 		m_currentPlayer->SetStartMovement(true);
 		//m_currentPlayer->Move(&gameObjects);
-		int tileID = m_currentPlayer->GetDestination();
-
-		tile = gameObjects[tileID]->Tag();
 
 		numMoves = 0;
 		m_currentPlayer->SetFirstMove(true);
 	}
 
-	if (Input::Get().isKeyPressed(Key::Enter) || (numMoves == 0 && hasRolled))
+	if (numMoves == 0 && hasRolled && !m_currentPlayer->GetStartMovement())
+	{
+		int tileID = m_currentPlayer->GetDestination();
+
+		tile = gameObjects[tileID]->Tag();
+
+		if (tile == "Minigame")
+		{
+			LoadLevel((rand() % 9) + 1);
+		}
+
+		dieRoll = 0;
+		hasRolled = false;
+
+		return false;
+	}
+
+	if (Input::Get().isKeyPressed(Key::Enter))
 	{
 		dieRoll = 0;
 		hasRolled = false;
@@ -1004,6 +966,44 @@ bool MAPScene::PlayerTurn()
 	return true;
 }
 
+void MAPScene::LoadLevel(int level_)
+{
+	int selection;
+	switch (level_)
+	{
+	case 1:
+		selection = 5;
+		break;
+	case 2:
+		selection = 7;
+		break;
+	case 3:
+		selection = 8;
+		break;
+	case 4:
+		selection = 12;
+		break;
+	case 5:
+		selection = 13;
+		break;
+	case 6:
+		selection = 11;
+		break;
+	case 7:
+		selection = 14;
+		break;
+	case 8:
+		selection = 15;
+		break;
+	case 9:
+		selection = 16;
+		break;
+	default:
+		break;
+	}
+
+	OdeumEngine::Get().SetCurrentScene(selection);
+}
 
 void MAPScene::UIRender()
 {

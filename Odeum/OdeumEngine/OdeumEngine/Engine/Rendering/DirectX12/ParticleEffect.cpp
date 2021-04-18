@@ -93,7 +93,7 @@ void ParticleEffect::Update(ComputeContext& Compute, float deltaTime)
 	Compute.SetPipelineState(ParticleManager::Get().GetParticleSpawnPSO());
 	Compute.SetDynamicConstantBufferView(2, sizeof(ParticleLaunchingData), &m_properties.lauchingData);
 	Compute.SetDynamicDescriptor(4, 0, m_spawnStateBuffer.ShaderResourceView());
-	UINT numSpawnThreads = (UINT)(m_properties.lauchingData.spawnRate * deltaTime);
+	UINT numSpawnThreads = std::max((UINT)1, (UINT)(m_properties.lauchingData.spawnRate * deltaTime));
 	Compute.Dispatch((numSpawnThreads + 63) / 64, 1, 1);
 
 	// Set to finding dispatch args pso
