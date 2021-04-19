@@ -9,7 +9,7 @@ If you want to take a look at our game code, you can find it [here](Odeum/OdeumE
 <br></br>
 <br></br>
 <p align="center">Check out a trailer for our engine and our game below!</p>
-<p align="center"><img src="https://img.youtube.com/vi/PAHP0r7vL6A/0.jpg", href="https://www.youtube.com/watch?v=PAHP0r7vL6A"></p>
+<p align="center"><a href="https://www.youtube.com/watch?v=PAHP0r7vL6A"><img src="https://img.youtube.com/vi/PAHP0r7vL6A/0.jpg"></a></p>
 
 ## OdeumEngine Features
 
