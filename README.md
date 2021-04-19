@@ -6,7 +6,7 @@ Initializing
 
 Create an instance of OdeumEngine, and initialize it with an instance of a GameInterface
 
-'''C++
+```C++
   OdeumEngine* app;
   app = new OdeumEngine();
   app->SetGameInterface(new Game1);
@@ -16,6 +16,6 @@ Create an instance of OdeumEngine, and initialize it with an instance of a GameI
 	  app->Run();
 
   SAFE_DELETE(app);
-'''
+```
 
 [Game Code](Odeum/OdeumEngine/OdeumEngine/Game)
