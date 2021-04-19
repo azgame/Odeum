@@ -1,11 +1,10 @@
-![Odeum Logo](odeummk5beta.png)
+![Odeum Logo](/media/odeumlogo.png)
 
 This is the repository for our Game Programming capstone project at Humber College, developed by [Aidan Zizys](https://aidanzizysgamedev.com), [Benjamin Sayliss](https://benjaminsaylissgamedev.com), [Robert Ward](https://robertwardgamedev.com), [Ryan Thorne](https://www.ryanthornegamedev.com), and [Diego Gregori](https://www.diegogregorigamedev.com). 
 
-For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020. In order to show off these features, we built a Mario-party style game entirely using our engine.
+For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020. In order to show off these features, we built a Mario-party style game entirely using our engine, which we started working on in January, 2021.
 
-Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/Engine).
-If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game).
+Feel free to check out our [wiki](https://github.com/azgame/Odeum/wiki), or navigate directly to our [engine code](Odeum/OdeumEngine/OdeumEngine/Engine) or our [game code](Odeum/OdeumEngine/OdeumEngine/Game).
 <br></br>
 <br></br>
 <p align="center">Check out a trailer for our engine and our game below!</p>
@@ -37,4 +36,21 @@ In order to use our engine to make a game, create an instance of OdeumEngine, an
   SAFE_DELETE(app);
 ```
 
-From here, simply use the concrete implementation of the GameInterface to list and determine which concretely implemented scenes to load, given a new scene index. Scenes (also known as "levels") represent the sections of gameplay that the player will experience.
+From here, simply use the concrete implementation of the GameInterface to list and determine which concretely implemented scenes to load, given a new scene index. Scenes (read: levels) represent the sections of gameplay that the player will experience.
+
+## Expanded Credits
+
+Aidan Zizys - Engine, Graphics, Systems programmer
+  * [Website](https://aidanzizysgamedev.com) | [Github](https://github.com/azgame) | [LinkedIn](https://www.linkedin.com/in/aidan-zizys/)
+
+Benjamin Sayliss - Engine, Physics programmer
+  * [Website](https://benjaminsaylissgamedev.com) | [Github](https://github.com/BenSayliss) | [LinkedIn](https://www.linkedin.com/in/benjamin-sayliss-407311177/)
+
+Robert Ward - Gameplay programmer
+  * [Website](https://robertwardgamedev.com) | [Github](https://github.com/docdodo) | [LinkedIn](https://www.linkedin.com/in/robert-ward-710234175/)
+
+Ryan Thorne - Generalist programmer
+  * [Website](https://www.ryanthornegamedev.com) | [Github](https://github.com/mongoose9304) | [LinkedIn](https://www.linkedin.com/in/ryan-thorne-250366175/)
+
+Diego Gregori - Generalist programmer
+  * [Website](https://www.diegogregorigamedev.com) | [Github](https://github.com/dgmode21) | [LinkedIn](https://www.linkedin.com/in/diego-gregori/)
