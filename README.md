@@ -2,13 +2,13 @@
 
 This is the repository for our Game Programming capstone project at Humber College, developed by [Aidan Zizys](https://aidanzizysgamedev.com), [Benjamin Sayliss](https://benjaminsaylissgamedev.com), [Robert Ward](https://robertwardgamedev.com), [Ryan Thorne](https://www.ryanthornegamedev.com), and [Diego Gregori](https://www.diegogregorigamedev.com). 
 
-### Engine Features
+## Engine Features
 
 For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020.
 
 Our engine features an advanced renderer, fully supported object and material loading, custom shaders in HLSL, compute rendering, real-time physics, animations, scene creation and management, an entity-component system, multithreading, custom navigation mesh creation, audio, input, dynamic window sizing and support for any aspect ratio, event handling, UI via ImGui, File I/O, and custom data structures and design patterns. 
 
-### Game Highlights
+## Game Highlights
 
 In order to show off these features, we built a Mario-party style game entirely using our engine.
 
