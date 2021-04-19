@@ -14,7 +14,7 @@ Our engine features an advanced renderer, fully supported object and material lo
 
 ## Game Highlights
 
-Players move around a small board game. Each space has a different function (play a minigame, gain gold, lose gold etc). Players compete in minigames and the winner gains gold. Having the most gold at the end will make you the winner. A mix of both luck and skill is required!
+Players move around a small board game. Each space has a different function (play a minigame, gain gold, lose gold etc.). Players compete in minigames, with the winner gaining gold. The player with the most gold at the end of the last round will win the game. A mix of both luck and skill is required!
 
 The game features an opening menu that allows the player to play the game normally, or pick from a list of hand-crafted minigames. 
 
