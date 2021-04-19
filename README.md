@@ -20,7 +20,7 @@ Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/En
 
 If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game). 
 
-### Using our engine
+## Using our engine
 
 In order to use our engine to make a game, create an instance of OdeumEngine, and initialize it with an instance of a GameInterface in your entry point.
 
