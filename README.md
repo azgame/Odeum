@@ -8,6 +8,8 @@ Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/En
 
 If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game). 
 
+[![OdeumEngine Trailer](https://img.youtube.com/vi/S66PT2iSSJo/0.jpg)](https://www.youtube.com/watch?v=S66PT2iSSJo)
+
 ## OdeumEngine Features
 
 Our engine features an advanced renderer, fully supported object and material loading, custom shaders in HLSL, compute rendering, real-time physics, animations, scene creation and management, an entity-component system, multithreading, custom navigation mesh creation, audio, input, dynamic window sizing and support for any aspect ratio, event handling, UI via ImGui, File I/O, and custom data structures and design patterns. 
