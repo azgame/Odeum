@@ -41,8 +41,23 @@ From here, simply use the concrete implementation of the GameInterface to list a
 
 ### Expanded Credits
 
-* [Aidan Zizys](https://aidanzizysgamedev.com) (@azgame) - Engine, Graphics, Systems programmer
-* [Benjamin Sayliss](https://benjaminsaylissgamedev.com) (@BenSayliss) - Engine, Physics programmer
-* [Robert Ward](https://robertwardgamedev.com) (@docdodo) - Gameplay programmer
-* [Ryan Thorne](https://www.ryanthornegamedev.com) (@mongoose9304) - Generalist programmer
-* [Diego Gregori](https://www.diegogregorigamedev.com) (@dgmode21) - Generalist programmer
+* Aidan Zizys - Engine, Graphics, Systems programmer
+  * [Website](https://aidanzizysgamedev.com)
+  * [Github](https://github.com/azgame)
+  * [LinkedIn](https://www.linkedin.com/in/aidan-zizys/)
+* Benjamin Sayliss - Engine, Physics programmer
+  * [Website](https://benjaminsaylissgamedev.com)
+  * [Github](https://github.com/BenSayliss)
+  * [LinkedIn](https://www.linkedin.com/in/benjamin-sayliss-407311177/)
+* Robert Ward - Gameplay programmer
+  * [Website](https://robertwardgamedev.com)
+  * [Github](https://github.com/docdodo)
+  * [LinkedIn](https://www.linkedin.com/in/robert-ward-710234175/)
+* Ryan Thorne - Generalist programmer
+  * [Website](https://www.ryanthornegamedev.com)
+  * [Github](https://github.com/mongoose9304)
+  * [LinkedIn](https://www.linkedin.com/in/ryan-thorne-250366175/)
+* Diego Gregori - Generalist programmer
+  * [Website](https://www.diegogregorigamedev.com)
+  * [Github](https://github.com/dgmode21)
+  * [LinkedIn](https://www.linkedin.com/in/diego-gregori/)
