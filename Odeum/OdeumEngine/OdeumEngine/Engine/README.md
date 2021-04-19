@@ -1,0 +1,17 @@
+# Engine
+
+## Initialization
+
+Create an instance of OdeumEngine, and initialize it with an instance of a GameInterface
+
+```C++
+  OdeumEngine* app;
+  app = new OdeumEngine();
+  app->SetGameInterface(new Game1);
+  ASSERT(app != nullptr, "App is null!");
+
+  if (app->Initialize())
+	  app->Run();
+
+  SAFE_DELETE(app);
+```
