@@ -34,4 +34,4 @@ In order to use our engine to make a game, create an instance of OdeumEngine, an
   SAFE_DELETE(app);
 ```
 
-From here, simply use the concrete implementation of the GameInterface to list and determine which concretely implemented scenes to load, given a new scene index. Scenes (or elsewhere known as "levels") represent the sections of gameplay that the player will experience.
+From here, simply use the concrete implementation of the GameInterface to list and determine which concretely implemented scenes to load, given a new scene index. Scenes (also known as "levels") represent the sections of gameplay that the player will experience.
