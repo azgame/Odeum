@@ -12,7 +12,7 @@ Our engine features an advanced renderer, fully supported object and material lo
 
 In order to show off these features, we built a Mario-party style game entirely using our engine.
 
-// Rob here
+Players move around a small board game. Each space has a different function (play a minigame, gain gold, lose gold etc). Players compete in minigames and the winner gains gold. Having the most gold at the end will make you the winner. A mix of both luck and skill is required!
 
 The game features an opening menu that allows the player to play the game normally, or pick from a list of hand-crafted minigames. 
 
