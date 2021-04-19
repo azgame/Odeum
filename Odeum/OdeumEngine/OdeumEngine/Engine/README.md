@@ -1,17 +1,3 @@
-# Engine
+# Engine Wiki
 
-## Initialization
-
-Create an instance of OdeumEngine, and initialize it with an instance of a GameInterface
-
-```C++
-  OdeumEngine* app;
-  app = new OdeumEngine();
-  app->SetGameInterface(new Game1);
-  ASSERT(app != nullptr, "App is null!");
-
-  if (app->Initialize())
-	  app->Run();
-
-  SAFE_DELETE(app);
-```
+Feel free to check out our [wiki](https://github.com/azgame/Odeum/wiki) for information on all the engine related features!
