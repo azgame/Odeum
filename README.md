@@ -38,3 +38,11 @@ In order to use our engine to make a game, create an instance of OdeumEngine, an
 ```
 
 From here, simply use the concrete implementation of the GameInterface to list and determine which concretely implemented scenes to load, given a new scene index. Scenes (also known as "levels") represent the sections of gameplay that the player will experience.
+
+### Expanded Credits
+
+[Aidan Zizys](https://aidanzizysgamedev.com) (@azgame) - Engine, Graphics, Systems programmer
+[Benjamin Sayliss](https://benjaminsaylissgamedev.com) (@BenSayliss) - Engine, Physics programmer
+[Robert Ward](https://robertwardgamedev.com) (@docdodo) - Gameplay programmer
+[Ryan Thorne](https://www.ryanthornegamedev.com) (@mongoose9304) - Generalist programmer
+[Diego Gregori](https://www.diegogregorigamedev.com) (@dgmode21) - Generalist programmer
