@@ -2,7 +2,7 @@
 
 This is the repository for our Game Programming capstone project at Humber College, developed by [Aidan Zizys](https://aidanzizysgamedev.com), [Benjamin Sayliss](https://benjaminsaylissgamedev.com), [Robert Ward](https://robertwardgamedev.com), [Ryan Thorne](https://www.ryanthornegamedev.com), and [Diego Gregori](https://www.diegogregorigamedev.com). 
 
-For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020. In order to show off these features, we built a Mario-party style game entirely using our engine.
+For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020. In order to show off these features, we built a Mario-party style game entirely using our engine, which we started working on in January, 2021.
 
 Feel free to check out our [wiki](https://github.com/azgame/Odeum/wiki), or navigate directly to our [engine code](Odeum/OdeumEngine/OdeumEngine/Engine) or our [game code](Odeum/OdeumEngine/OdeumEngine/Game).
 <br></br>
