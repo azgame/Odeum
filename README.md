@@ -2,7 +2,7 @@
 
 This is the repository for our Game Programming capstone project at Humber College, developed by [Aidan Zizys](https://aidanzizysgamedev.com), [Benjamin Sayliss](https://benjaminsaylissgamedev.com), [Robert Ward](https://robertwardgamedev.com), [Ryan Thorne](https://www.ryanthornegamedev.com), and [Diego Gregori](https://www.diegogregorigamedev.com). 
 
-## Engine Features
+## OdeumEngine Features
 
 For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020.
 
