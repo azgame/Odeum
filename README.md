@@ -8,7 +8,8 @@ Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/En
 
 If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game). 
 
-[![OdeumEngine Trailer](https://img.youtube.com/vi/PAHP0r7vL6A/0.jpg)](https://www.youtube.com/watch?v=PAHP0r7vL6A)
+<p align="center">[![OdeumEngine Trailer](https://img.youtube.com/vi/PAHP0r7vL6A/0.jpg)](https://www.youtube.com/watch?v=PAHP0r7vL6A)</p>
+<p align="center"><img src="https://www.youtube.com/watch?v=PAHP0r7vL6A"></p>
 
 ## OdeumEngine Features
 
