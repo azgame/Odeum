@@ -2,23 +2,21 @@
 
 This is the repository for our Game Programming capstone project at Humber College, developed by [Aidan Zizys](https://aidanzizysgamedev.com), [Benjamin Sayliss](https://benjaminsaylissgamedev.com), [Robert Ward](https://robertwardgamedev.com), [Ryan Thorne](https://www.ryanthornegamedev.com), and [Diego Gregori](https://www.diegogregorigamedev.com). 
 
-## OdeumEngine Features
+For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020. In order to show off these features, we built a Mario-party style game entirely using our engine.
 
-For our capstone, we built a DirectX 12 based game engine entirely in C/C++, which we started writing in late August, 2020.
+Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/Engine).
+
+If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game). 
+
+## OdeumEngine Features
 
 Our engine features an advanced renderer, fully supported object and material loading, custom shaders in HLSL, compute rendering, real-time physics, animations, scene creation and management, an entity-component system, multithreading, custom navigation mesh creation, audio, input, dynamic window sizing and support for any aspect ratio, event handling, UI via ImGui, File I/O, and custom data structures and design patterns. 
 
 ## Game Highlights
 
-In order to show off these features, we built a Mario-party style game entirely using our engine.
-
 Players move around a small board game. Each space has a different function (play a minigame, gain gold, lose gold etc). Players compete in minigames and the winner gains gold. Having the most gold at the end will make you the winner. A mix of both luck and skill is required!
 
 The game features an opening menu that allows the player to play the game normally, or pick from a list of hand-crafted minigames. 
-
-Feel free to navigate to our engine code [here](Odeum/OdeumEngine/OdeumEngine/Engine).
-
-If you want to take a look at our game code, you can find it [here](Odeum/OdeumEngine/OdeumEngine/Game). 
 
 ## Using our engine
 
