@@ -41,8 +41,8 @@ From here, simply use the concrete implementation of the GameInterface to list a
 
 ### Expanded Credits
 
--[Aidan Zizys](https://aidanzizysgamedev.com) (@azgame) - Engine, Graphics, Systems programmer
--[Benjamin Sayliss](https://benjaminsaylissgamedev.com) (@BenSayliss) - Engine, Physics programmer
--[Robert Ward](https://robertwardgamedev.com) (@docdodo) - Gameplay programmer
--[Ryan Thorne](https://www.ryanthornegamedev.com) (@mongoose9304) - Generalist programmer
--[Diego Gregori](https://www.diegogregorigamedev.com) (@dgmode21) - Generalist programmer
+* [Aidan Zizys](https://aidanzizysgamedev.com) (@azgame) - Engine, Graphics, Systems programmer
+* [Benjamin Sayliss](https://benjaminsaylissgamedev.com) (@BenSayliss) - Engine, Physics programmer
+* [Robert Ward](https://robertwardgamedev.com) (@docdodo) - Gameplay programmer
+* [Ryan Thorne](https://www.ryanthornegamedev.com) (@mongoose9304) - Generalist programmer
+* [Diego Gregori](https://www.diegogregorigamedev.com) (@dgmode21) - Generalist programmer
