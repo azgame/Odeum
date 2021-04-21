@@ -54,3 +54,7 @@ Ryan Thorne - Generalist programmer
 
 Diego Gregori - Generalist programmer
   * [Website](https://www.diegogregorigamedev.com) | [Github](https://github.com/dgmode21) | [LinkedIn](https://www.linkedin.com/in/diego-gregori/)
+
+## Copyrights
+
+We've included copyright notices for all of the assets (models, textures, sound, etc.) we used in our game. They can be found in the copyright pdf in this folder.
