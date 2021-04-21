@@ -58,3 +58,5 @@ Diego Gregori - Generalist programmer
 ## Copyrights
 
 We've included copyright notices for all of the assets (models, textures, sound, etc.) we used in our game. They can be found in the copyright pdf in this folder.
+
+We used a few c++ libraries to help build our engine, including FMOD, ImGui, Nlohmann's JSON library, AssImp, and we used a number of files from Microsoft's Mini Engine sample set for developing our renderer. These files include their original licenses.
